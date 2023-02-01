@@ -57,4 +57,5 @@ INCLUDEPATH += $$PWD/src/Input \
 
 INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \
-    $$PWD/src/Utility/Serialize
+    $$PWD/src/Utility/IEHash \
+    $$PWD/src/Utility/IESerialize

@@ -4,7 +4,7 @@
 #include <QDataStream>
 #include <QString>
 
-class Serialize
+class IESerialize
 {
     static inline QDataStream::Version qtVersion = QDataStream::Qt_6_3;
     static inline int masterFormat = 0x00000001;

@@ -34,23 +34,7 @@ void Game::shutdown()
 
 void Game::onUpdateFrame()
 {
-    // TODO test
-    if(input->isPressed("Forward"))
-    {
-        qDebug() << "W pressed";
-    }
-    if(input->isPressed("Backward"))
-    {
-        qDebug() << "S pressed";
-    }
-    if(input->isPressed("Left"))
-    {
-        qDebug() << "A pressed";
-    }
-    if(input->isPressed("Right"))
-    {
-        qDebug() << "D pressed";
-    }
+
 }
 
 void Game::onRenderFrame()
@@ -61,7 +45,7 @@ void Game::onRenderFrame()
     glFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    qDebug() << time->processDeltaTime();
+    time->processDeltaTime();
 }
 
 void Game::initializeGL()
