@@ -35,6 +35,11 @@ QTableWidget* HotkeyTableWidget::createTable(const InputContainer* inputContaine
     return table;
 }
 
+void HotkeyTableWidget::addKeyToMap(InputContainer* inputContainer, const QString name, QMap<QString, InputKey*>& map)
+{
+    map[name] = inputContainer->fetchValue(name);
+}
+
 void HotkeyTableWidget::fillInTable(QTableWidget* table, const InputContainer* inputContainer, const QMap<QString, InputKey*>& keys)
 {
     int row = 0;

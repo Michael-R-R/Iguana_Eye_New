@@ -8,6 +8,7 @@ AppOptionsWindow::AppOptionsWindow(QWidget* parent) :
 {
     this->setWindowFlags(Qt::WindowStaysOnTopHint);
     this->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetFloatable);
+    this->resize(450, 250);
     this->setFloating(true);
     this->setWidget(selectOptionsWidget);
 }

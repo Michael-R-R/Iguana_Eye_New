@@ -9,10 +9,12 @@ SelectAppOptionsWidget::SelectAppOptionsWidget(QWidget* parent) :
     vContentAreaLayout(new QVBoxLayout()),
     gameGroupBox(new QGroupBox("Game", this)), gameGroupLayout(new QVBoxLayout(gameGroupBox)),
     editorGroupBox(new QGroupBox("Editor", this)), editorGroupLayout(new QVBoxLayout(editorGroupBox)),
-    contentWidget(nullptr)
+    contentWidget(new QWidget(this))
 {
     vOptionSelectLayout->addWidget(gameGroupBox);
     vOptionSelectLayout->addWidget(editorGroupBox);
+
+    vContentAreaLayout->addWidget(contentWidget);
 
     hMainLayout->addLayout(vOptionSelectLayout);
     hMainLayout->addLayout(vContentAreaLayout);

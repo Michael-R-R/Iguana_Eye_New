@@ -30,4 +30,5 @@ void IEInput::setupInputContainer()
     inputContainer->addValue("Backward", InputKey(0, Qt::Key_S));
     inputContainer->addValue("Left", InputKey(0, Qt::Key_A));
     inputContainer->addValue("Right", InputKey(0, Qt::Key_D));
+    inputContainer->addValue("Jump", InputKey(0, Qt::Key_Space));
 }
