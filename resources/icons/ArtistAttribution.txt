@@ -1,0 +1,11 @@
+Name: "defaultIcon.png", Artist: Michael Rule
+Name: "IguanaEye.png", Artist: Kaitlyn Murray
+Name: "IguanaEye_256x256.png", Artist: Kaitlyn Murray
+Name: "IguanaEye_512x512.png", Artist: Kaitlyn Murray
+Name: "Docment.png", Artist: Kaitlyn Murray
+Name: "Docment_glsl.png", Artist: Kaitlyn Murray
+Name: "Folder.png", Artist: Kaitlyn Murray
+Name: "Redo.png", Artist: Kaitlyn Murray
+Name: "Undo.png", Artist: Kaitlyn Murray
+Name: "Quit.png", Artist: Kaitlyn Murray
+Name: "SceneHierarchy.png", Artist: Kaitlyn Murray
