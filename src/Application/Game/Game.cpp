@@ -34,6 +34,7 @@ void Game::shutdown()
 
 void Game::onUpdateFrame()
 {
+    // TODO test
     if(input->isPressed("Forward"))
     {
         qDebug() << "W pressed";

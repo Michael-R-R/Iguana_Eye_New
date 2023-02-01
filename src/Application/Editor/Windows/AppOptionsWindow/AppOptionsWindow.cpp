@@ -20,8 +20,11 @@ AppOptionsWindow::~AppOptionsWindow()
 void AppOptionsWindow::setup(const AppStartEvent& event)
 {
     auto editorInput = event.editor()->getInput();
-    auto inputContainer = editorInput->getInputContainer();
+    auto editorInputContainer = editorInput->getInputContainer();
 
-    selectOptionsWidget->setupGameGroupBox(inputContainer);
-    selectOptionsWidget->setupEditorGroupBox(inputContainer);
+    auto gameInput = event.game()->getInput();
+    auto gameInputContainer = gameInput->getInputContainer();
+
+    selectOptionsWidget->setupGameGroupBox(gameInputContainer);
+    selectOptionsWidget->setupEditorGroupBox(editorInputContainer);
 }

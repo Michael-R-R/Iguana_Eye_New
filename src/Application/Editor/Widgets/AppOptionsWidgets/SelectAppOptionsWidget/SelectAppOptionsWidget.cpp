@@ -1,4 +1,5 @@
 #include "SelectAppOptionsWidget.h"
+#include "GameHotkeyTableWidget.h"
 #include "EditorHotkeyTableWidget.h"
 
 SelectAppOptionsWidget::SelectAppOptionsWidget(QWidget* parent) :
@@ -27,10 +28,11 @@ void SelectAppOptionsWidget::setupGameGroupBox(InputContainer* input)
     gameGroupBox->setAlignment(Qt::AlignHCenter);
 
     auto gameHotkeysButton = new QPushButton("Hotkeys", gameGroupBox);
-    connect(gameHotkeysButton, &QPushButton::clicked, gameHotkeysButton, [this]()
+    connect(gameHotkeysButton, &QPushButton::clicked, gameHotkeysButton, [this, input]()
     {
         delete contentWidget;
-        contentWidget = nullptr;
+        contentWidget = new GameHotkeyTableWidget(input, this);
+        vContentAreaLayout->addWidget(contentWidget);
     });
 
     gameGroupLayout->addWidget(gameHotkeysButton);
