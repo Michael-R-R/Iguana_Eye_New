@@ -6,6 +6,7 @@
 
 #include "IETime.h"
 #include "IEInput.h"
+#include "IEScene.h"
 
 class Game : public QOpenGLWidget
 {
@@ -17,6 +18,7 @@ class Game : public QOpenGLWidget
 
     IETime* time;
     IEInput* input;
+    IEScene* scene;
 
 public:
     Game(QWidget* parent = nullptr);
@@ -27,6 +29,7 @@ public:
 
     IETime* getTime() const { return time; }
     IEInput* getInput() const { return input; }
+    IEScene* getScene() const { return scene; }
 
 public slots:
     void onUpdateFrame();

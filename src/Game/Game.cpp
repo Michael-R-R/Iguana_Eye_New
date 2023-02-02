@@ -5,7 +5,8 @@ Game::Game(QWidget* parent) :
     format(new QSurfaceFormat()),
     glFunc(nullptr), glExtraFunc(nullptr),
     time(new IETime(8, 16, this)),
-    input(new IEInput(this, this))
+    input(new IEInput(this, this)),
+    scene(new IEScene(this))
 {
     format->setVersion(4, 3);
     format->setProfile(QSurfaceFormat::CoreProfile);
