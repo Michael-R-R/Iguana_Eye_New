@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QTimer>
+#include <QDataStream>
 
 #include "IEObject.h"
 #include "DeltaTime.h"
@@ -31,11 +32,15 @@ public:
     void stopUpdateTimer();
     void stopRenderTimer();
 
-    void setUpdateRefresh(const int ms);
-    void setRenderRefresh(const int ms);
-
     float processDeltaTime() { return dt.processDeltaTime(); }
     float getDeltaTime() const { return dt.getDeltaTime(); }
     float getFPS() const { return dt.getFPS(); }
+
+    int getUpdateRefresh() const { return updateRefresh; }
+    int getRenderRefresh() const { return renderRefresh; }
+    void setUpdateRefresh(const int ms) { updateRefresh = ms; }
+    void setRenderRefresh(const int ms) { renderRefresh = ms; }
 };
 
+QDataStream& operator<<(QDataStream& out, const IETime& game);
+QDataStream& operator>>(QDataStream& in, IETime& game);

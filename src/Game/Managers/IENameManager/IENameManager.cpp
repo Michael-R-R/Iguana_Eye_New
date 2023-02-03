@@ -79,3 +79,38 @@ const QMap<unsigned long long, QString*>& IENameManager::getResources() const
 {
     return resourceContainer.getResources();
 }
+
+const IEResourceContainer<QString>& IENameManager::getResourceContainer() const
+{
+    return resourceContainer;
+}
+
+void IENameManager::setResourceContainer(const IEResourceContainer<QString> val)
+{
+    resourceContainer = val;
+}
+
+QDataStream& operator<<(QDataStream& out, const IENameManager& manager)
+{
+    out << manager.getResourceContainer();
+
+    return out;
+}
+
+QDataStream& operator>>(QDataStream& in, IENameManager& manager)
+{
+    IEResourceContainer<QString> container;
+
+    in >> container;
+
+    manager.setResourceContainer(container);
+
+    return in;
+}
+
+
+
+
+
+
+

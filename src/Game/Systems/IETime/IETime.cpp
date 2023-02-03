@@ -50,16 +50,22 @@ void IETime::stopRenderTimer()
     renderTimer->stop();
 }
 
-void IETime::setUpdateRefresh(const int ms)
+QDataStream& operator<<(QDataStream& out, const IETime& time)
 {
-    updateRefresh = ms;
-    updateTimer->stop();
-    updateTimer->start(ms);
+    out << time.getUpdateRefresh() << time.getRenderRefresh();
+
+    return out;
 }
 
-void IETime::setRenderRefresh(const int ms)
+QDataStream& operator>>(QDataStream& in, IETime& time)
 {
-    renderRefresh = ms;
-    renderTimer->stop();
-    renderTimer->start(ms);
+    int updateRefresh = 0;
+    int renderRefresh = 0;
+
+    in >> updateRefresh >> renderRefresh;
+
+    time.setUpdateRefresh(updateRefresh);
+    time.setRenderRefresh(renderRefresh);
+
+    return in;
 }

@@ -28,6 +28,7 @@ public:
 
     void clear();
     bool checkStatus(const InputKey& key);
+    void installFilterOnHost(QWidget* host);
 
 protected:
     bool eventFilter(QObject* watched, QEvent* event) override;

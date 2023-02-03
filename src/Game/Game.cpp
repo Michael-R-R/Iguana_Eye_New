@@ -22,6 +22,7 @@ Game::~Game()
 
 void Game::startup()
 {
+    this->setFocus();
     time->setupUpdateTimer(this);
     time->setupRenderTimer(this);
     time->startUpdateTimer();
@@ -30,12 +31,20 @@ void Game::startup()
 
 void Game::shutdown()
 {
+    time->stopUpdateTimer();
+    time->stopRenderTimer();
 
+    delete time;
+    delete input;
+    delete scene;
 }
 
 void Game::onUpdateFrame()
 {
-
+    if(input->isPressed("Forward"))
+    {
+        qDebug() << "pressed";
+    }
 }
 
 void Game::onRenderFrame()
@@ -46,7 +55,7 @@ void Game::onRenderFrame()
     glFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    time->processDeltaTime();
+    qDebug() << time->processDeltaTime();
 }
 
 void Game::initializeGL()
@@ -61,3 +70,35 @@ void Game::resizeGL(int w, int h)
 {
     glFunc->glViewport(0, 0, w, h);
 }
+
+QDataStream& operator<<(QDataStream& out, const Game& game)
+{
+    out << *game.getIETime() << *game.getIEInput() << *game.getIEScene();
+
+    return out;
+}
+
+QDataStream& operator>>(QDataStream& in, Game& game)
+{
+    game.shutdown();
+
+    IETime* time = new IETime(0, 0, &game);
+    IEInput* input = new IEInput(&game, &game);
+    IEScene* scene = new IEScene(&game);
+
+    in >> *time >> *input >> *scene;
+
+    game.setIETime(time);
+    game.setIEInput(input);
+    game.setIEScene(scene);
+
+    game.startup();
+
+    return in;
+}
+
+
+
+
+
+

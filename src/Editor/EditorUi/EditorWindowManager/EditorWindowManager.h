@@ -17,6 +17,8 @@ public:
 
     void setup(const AppStartEvent& event);
 
+    void clear();
+
     void showAll();
     void hideAll();
 

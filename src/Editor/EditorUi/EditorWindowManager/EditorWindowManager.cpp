@@ -11,12 +11,25 @@ EditorWindowManager::EditorWindowManager(QObject* parent) :
 
 EditorWindowManager::~EditorWindowManager()
 {
-
+    clear();
 }
 
 void EditorWindowManager::setup(const AppStartEvent& event)
 {
     setupOptionsWindow(event);
+}
+
+void EditorWindowManager::clear()
+{
+    QMapIterator<QString, Window*> it(windowCollection);
+    while(it.hasNext())
+    {
+        it.next();
+
+        auto temp = it.value();
+        windowCollection[it.key()] = nullptr;
+        delete temp;
+    }
 }
 
 void EditorWindowManager::showAll()

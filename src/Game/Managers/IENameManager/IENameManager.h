@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDataStream>
 #include <tuple>
 
 #include "IEObject.h"
@@ -24,6 +25,9 @@ public:
 
     const QString* getValue(const unsigned long long key) const;
     const QMap<unsigned long long, QString*>& getResources() const;
+    const IEResourceContainer<QString>& getResourceContainer() const;
+
+    void setResourceContainer(const IEResourceContainer<QString> val);
 
 signals:
     void added(const unsigned long long key, const QString* value);
@@ -31,3 +35,5 @@ signals:
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 };
 
+QDataStream& operator<<(QDataStream& out, const IENameManager& manager);
+QDataStream& operator>>(QDataStream& in, IENameManager& manager);

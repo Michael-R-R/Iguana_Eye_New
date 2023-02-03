@@ -43,3 +43,26 @@ void InputKey::update(const int mod, const int key)
     keySequence = QKeySequence(mod | key);
     emit updated(keySequence);
 }
+
+QDataStream& operator<<(QDataStream& out, const InputKey& key)
+{
+    out << key.getMod() << key.getKey();
+
+    return out;
+}
+
+QDataStream& operator>>(QDataStream& in, InputKey& key)
+{
+    int tempMod = 0;
+    int tempKey = 0;
+
+    in >> tempMod >> tempKey;
+
+    QKeySequence tempSequence(tempMod | tempKey);
+
+    key.setMod(tempMod);
+    key.setKey(tempKey);
+    key.setKeySequence(tempSequence);
+
+    return in;
+}

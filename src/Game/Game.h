@@ -3,6 +3,7 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
+#include <QDataStream>
 
 #include "IETime.h"
 #include "IEInput.h"
@@ -27,9 +28,13 @@ public:
     void startup();
     void shutdown();
 
-    IETime* getTime() const { return time; }
-    IEInput* getInput() const { return input; }
-    IEScene* getScene() const { return scene; }
+    IETime* getIETime() const { return time; }
+    IEInput* getIEInput() const { return input; }
+    IEScene* getIEScene() const { return scene; }
+
+    void setIETime(IETime* val) { time = val; }
+    void setIEInput(IEInput* val) { input = val; }
+    void setIEScene(IEScene* val) { scene = val; }
 
 public slots:
     void onUpdateFrame();
@@ -43,3 +48,5 @@ signals:
     void initialized();
 };
 
+QDataStream& operator<<(QDataStream& out, const Game& game);
+QDataStream& operator>>(QDataStream& in, Game& game);

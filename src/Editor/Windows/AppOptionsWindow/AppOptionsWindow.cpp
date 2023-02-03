@@ -23,7 +23,7 @@ void AppOptionsWindow::setup(const AppStartEvent& event)
     auto editorInput = event.editor()->getInput();
     auto editorInputContainer = editorInput->getInputContainer();
 
-    auto gameInput = event.game()->getInput();
+    auto gameInput = event.game()->getIEInput();
     auto gameInputContainer = gameInput->getInputContainer();
 
     selectOptionsWidget->setupGameGroupBox(gameInputContainer);

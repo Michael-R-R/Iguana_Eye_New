@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QDataStream>
+
 #include "IEObject.h"
 #include "InputContainer.h"
 #include "InputCapture.h"
@@ -23,7 +25,11 @@ public:
     InputContainer* getInputContainer() const { return inputContainer; }
     InputCapture* getInputCapture() const { return inputCapture; }
 
+    void setInputContainer(InputContainer* val) { inputContainer = val; }
+
 private:
     void setupInputContainer();
 };
 
+QDataStream& operator<<(QDataStream& out, const IEInput& input);
+QDataStream& operator>>(QDataStream& in, IEInput& input);

@@ -3,9 +3,9 @@
 
 Editor::Editor(QObject* parent) :
     QObject(parent),
-    input(new EditorInput(this)),
-    ui(new EditorUi(this)),
-    actions(new EditorActionManager(this))
+    input(nullptr),
+    ui(nullptr),
+    actions(nullptr)
 {
 
 }
@@ -17,6 +17,10 @@ Editor::~Editor()
 
 void Editor::startup(const AppStartEvent& event)
 {
+    input = new EditorInput(this);
+    ui = new EditorUi(this);
+    actions = new EditorActionManager(this);
+
     // *** Order matters *** //
     input->setup();
     ui->setup(event);
@@ -25,5 +29,7 @@ void Editor::startup(const AppStartEvent& event)
 
 void Editor::shutdown()
 {
-
+    delete actions;
+    delete ui;
+    delete input;
 }

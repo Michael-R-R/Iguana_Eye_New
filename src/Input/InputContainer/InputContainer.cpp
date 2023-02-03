@@ -58,7 +58,43 @@ bool InputContainer::doesExist(const int mod, const int key) const
     return (std::find(keys.begin(), keys.end(), InputKey(mod, key)) != keys.end());
 }
 
-QMap<QString, InputKey>& InputContainer::getKeys()
+QDataStream& operator<<(QDataStream& out, const InputContainer& container)
 {
-    return keys;
+    QMapIterator<QString, InputKey> it(container.getKeys());
+    while(it.hasNext())
+    {
+        it.next();
+
+        out << it.key() << it.value();
+    }
+
+    return out;
 }
+
+QDataStream& operator>>(QDataStream& in, InputContainer& container)
+{
+    QMap<QString, InputKey> keys;
+
+    QString tempStr;
+    InputKey tempKey;
+    while(!in.atEnd())
+    {
+        in >> tempStr >> tempKey;
+        keys[tempStr] = tempKey;
+    }
+
+    container.setKeys(keys);
+
+    return in;
+}
+
+
+
+
+
+
+
+
+
+
+

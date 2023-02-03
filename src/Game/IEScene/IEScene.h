@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QDataStream>
+
 #include "IEObject.h"
 #include "IENameManager.h"
 
@@ -15,4 +17,9 @@ public:
 
 
     IENameManager* getNameManager() const { return nameManager; }
+
+    void setNameManager(IENameManager* val) { nameManager = val; }
 };
+
+QDataStream& operator<<(QDataStream& out, const IEScene& scene);
+QDataStream& operator>>(QDataStream& in, IEScene& scene);

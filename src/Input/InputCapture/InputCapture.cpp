@@ -11,7 +11,6 @@ InputCapture::InputCapture(QWidget* parent) :
     this->setFocusPolicy(Qt::StrongFocus);
     this->setMouseTracking(true);
     this->setFocus();
-
     parent->installEventFilter(this);
 }
 

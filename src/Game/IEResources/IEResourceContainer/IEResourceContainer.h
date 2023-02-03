@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDataStream>
 #include <QMap>
 
 template <class T>
@@ -15,6 +16,11 @@ public:
     }
 
     ~IEResourceContainer()
+    {
+        clear();
+    }
+
+    void clear()
     {
         QMapIterator<unsigned long long, T*> it(resources);
         while(it.hasNext())
@@ -86,5 +92,41 @@ public:
     }
 
     const QMap<unsigned long long, T*>& getResources() const { return resources; }
+    void setResources(QMap<unsigned long long, T*> val) { resources = val; }
 };
 
+template <class T>
+QDataStream& operator<<(QDataStream& out, const IEResourceContainer<T>& manager)
+{
+    QMapIterator<unsigned long long, T*> it(manager.getResources());
+    while(it.hasNext())
+    {
+        it.next();
+
+        out << it.key() << *it.value();
+    }
+
+    return out;
+}
+
+template <class T>
+QDataStream& operator>>(QDataStream& in, IEResourceContainer<T>& manager)
+{
+    manager.clear();
+
+    QMap<unsigned long long, T*> tempMap;
+
+    while(!in.atEnd())
+    {
+        unsigned long long tempKey = 0;
+        T* tempValue = new T();
+
+        in >> tempKey >> *tempValue;
+
+        tempMap[tempKey] = tempValue;
+    }
+
+    manager.setResources(tempMap);
+
+    return in;
+}
