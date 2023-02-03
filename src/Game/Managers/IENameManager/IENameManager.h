@@ -3,30 +3,21 @@
 #include <QDataStream>
 #include <tuple>
 
-#include "IEObject.h"
-#include "IEResourceContainer.h"
+#include "IEManager.h"
 
-class IENameManager : public IEObject
+class IENameManager : public IEManager<QString>
 {
     Q_OBJECT
-
-    IEResourceContainer<QString>* resourceContainer;
 
 public:
     IENameManager(QObject* parent = nullptr);
     ~IENameManager();
 
-    bool add(const unsigned long long key, QString* value);
-    bool remove(const unsigned long long key);
-    bool changeKey(const unsigned long long oldKey, const unsigned long long newKey);
-    bool doesExist(const unsigned long long key) const;
-    bool doesExist(const QString* value) const;
+    bool add(const unsigned long long key, QString* value) override;
+    bool remove(const unsigned long long key) override;
+    bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
+
     std::tuple<unsigned long long, QString> hashString(const QString& value) const;
-
-    const QString* getValue(const unsigned long long key) const;
-    IEResourceContainer<QString>* getResourceContainer() const;
-
-    void setResourceContainer(IEResourceContainer<QString>* val);
 
 signals:
     void added(const unsigned long long key);

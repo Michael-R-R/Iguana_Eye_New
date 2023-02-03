@@ -2,8 +2,7 @@
 #include "IEHash.h"
 
 IENameManager::IENameManager(QObject* parent) :
-    IEObject(parent),
-    resourceContainer(new IEResourceContainer<QString>(this))
+    IEManager(parent)
 {
 
 }
@@ -15,42 +14,29 @@ IENameManager::~IENameManager()
 
 bool IENameManager::add(const unsigned long long key, QString* value)
 {
-    if(!resourceContainer->add(key, value))
+    if(!IEManager::add(key, value))
         return false;
 
     emit added(key);
-
     return true;
 }
 
 bool IENameManager::remove(const unsigned long long key)
 {
-    if(!resourceContainer->remove(key))
+    if(!IEManager::remove(key))
         return false;
 
     emit removed(key);
-
     return true;
 }
 
 bool IENameManager::changeKey(const unsigned long long oldKey, const unsigned long long newKey)
 {
-    if(!resourceContainer->changeKey(oldKey, newKey))
+    if(!IEManager::changeKey(oldKey, newKey))
         return false;
 
     emit keyChanged(oldKey, newKey);
-
     return true;
-}
-
-bool IENameManager::doesExist(const unsigned long long key) const
-{
-    return resourceContainer->doesExist(key);
-}
-
-bool IENameManager::doesExist(const QString* value) const
-{
-    return resourceContainer->doesExist(value);
 }
 
 std::tuple<unsigned long long, QString> IENameManager::hashString(const QString& value) const
@@ -70,21 +56,6 @@ std::tuple<unsigned long long, QString> IENameManager::hashString(const QString&
     return std::make_tuple(hash, temp);
 }
 
-const QString* IENameManager::getValue(const unsigned long long key) const
-{
-    return resourceContainer->getValue(key);
-}
-
-IEResourceContainer<QString>* IENameManager::getResourceContainer() const
-{
-    return resourceContainer;
-}
-
-void IENameManager::setResourceContainer(IEResourceContainer<QString>* val)
-{
-    resourceContainer = val;
-}
-
 QDataStream& operator<<(QDataStream& out, const IENameManager& manager)
 {
     out << *manager.getResourceContainer();
@@ -102,10 +73,4 @@ QDataStream& operator>>(QDataStream& in, IENameManager& manager)
 
     return in;
 }
-
-
-
-
-
-
 

@@ -41,10 +41,7 @@ void Game::shutdown()
 
 void Game::onUpdateFrame()
 {
-    if(input->isPressed("Forward"))
-    {
-        qDebug() << "pressed";
-    }
+
 }
 
 void Game::onRenderFrame()
@@ -55,7 +52,7 @@ void Game::onRenderFrame()
     glFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    qDebug() << time->processDeltaTime();
+    time->processDeltaTime();
 }
 
 void Game::initializeGL()
@@ -96,9 +93,4 @@ QDataStream& operator>>(QDataStream& in, Game& game)
 
     return in;
 }
-
-
-
-
-
 
