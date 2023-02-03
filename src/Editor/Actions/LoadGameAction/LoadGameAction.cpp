@@ -22,7 +22,7 @@ LoadGameAction::~LoadGameAction()
 
 QString LoadGameAction::askForPath(QWidget* parent)
 {
-    return QFileDialog::getOpenFileName(parent, "Save File", ".", "Iguana Eye File (*.iedat)");
+    return QFileDialog::getOpenFileName(parent, "Open File", ".", "Iguana Eye File (*.iedat)");
 }
 
 void LoadGameAction::tryOpenPath(const QString path, ApplicationWindow* window)
@@ -32,5 +32,5 @@ void LoadGameAction::tryOpenPath(const QString path, ApplicationWindow* window)
 
     window->setSavePath(path);
     window->addTextToTitle(path);
-    window->displayApplicationModified(false);
+    window->displayModifiedStatus(false);
 }

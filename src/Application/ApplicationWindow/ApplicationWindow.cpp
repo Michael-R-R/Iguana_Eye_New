@@ -36,7 +36,7 @@ void ApplicationWindow::addTextToTitle(const QString text)
     this->setWindowTitle(windowTitle);
 }
 
-void ApplicationWindow::displayApplicationModified(const bool isModified)
+void ApplicationWindow::displayModifiedStatus(const bool isModified)
 {
     auto lastIndex = windowTitle.length() - 1;
 

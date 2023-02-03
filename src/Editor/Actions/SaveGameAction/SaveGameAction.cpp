@@ -40,5 +40,5 @@ void SaveGameAction::trySavePath(const QString path, ApplicationWindow* window)
 
     window->setSavePath(path);
     window->addTextToTitle(path);
-    window->displayApplicationModified(false);
+    window->displayModifiedStatus(false);
 }

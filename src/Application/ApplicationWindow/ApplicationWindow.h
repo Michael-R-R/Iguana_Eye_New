@@ -29,7 +29,7 @@ public:
     ~ApplicationWindow();
 
     void addTextToTitle(const QString text);
-    void displayApplicationModified(const bool isModified);
+    void displayModifiedStatus(const bool isModified);
     void shutdown();
 
     const QString& getSavePath() const { return savePath; }
