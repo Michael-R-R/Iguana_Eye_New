@@ -60,7 +60,12 @@ bool InputContainer::doesExist(const int mod, const int key) const
 
 QDataStream& operator<<(QDataStream& out, const InputContainer& container)
 {
-    QMapIterator<QString, InputKey> it(container.getKeys());
+    QMap<QString, InputKey> map = container.getKeys();
+    int size = map.size();
+
+    out << size;
+
+    QMapIterator<QString, InputKey> it(map);
     while(it.hasNext())
     {
         it.next();
@@ -73,11 +78,14 @@ QDataStream& operator<<(QDataStream& out, const InputContainer& container)
 
 QDataStream& operator>>(QDataStream& in, InputContainer& container)
 {
+    int size = 0;
+    in >> size;
+
     QMap<QString, InputKey> keys;
 
     QString tempStr;
     InputKey tempKey;
-    while(!in.atEnd())
+    for(int i = 0; i < size; i++)
     {
         in >> tempStr >> tempKey;
         keys[tempStr] = tempKey;

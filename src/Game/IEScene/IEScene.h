@@ -15,7 +15,6 @@ public:
     IEScene(QObject* parent = nullptr);
     ~IEScene();
 
-
     IENameManager* getNameManager() const { return nameManager; }
 
     void setNameManager(IENameManager* val) { nameManager = val; }

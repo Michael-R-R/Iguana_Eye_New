@@ -21,9 +21,7 @@ QDataStream& operator<<(QDataStream& out, const IEScene& scene)
 
 QDataStream& operator>>(QDataStream& in, IEScene& scene)
 {
-    delete scene.getNameManager();
-
-    auto nameManager = new IENameManager(&scene);
+    auto nameManager = scene.getNameManager();
 
     in >> *nameManager;
 

@@ -3,7 +3,7 @@
 
 IENameManager::IENameManager(QObject* parent) :
     IEObject(parent),
-    resourceContainer()
+    resourceContainer(new IEResourceContainer<QString>(this))
 {
 
 }
@@ -15,17 +15,17 @@ IENameManager::~IENameManager()
 
 bool IENameManager::add(const unsigned long long key, QString* value)
 {
-    if(!resourceContainer.add(key, value))
+    if(!resourceContainer->add(key, value))
         return false;
 
-    emit added(key, value);
+    emit added(key);
 
     return true;
 }
 
 bool IENameManager::remove(const unsigned long long key)
 {
-    if(!resourceContainer.remove(key))
+    if(!resourceContainer->remove(key))
         return false;
 
     emit removed(key);
@@ -35,7 +35,7 @@ bool IENameManager::remove(const unsigned long long key)
 
 bool IENameManager::changeKey(const unsigned long long oldKey, const unsigned long long newKey)
 {
-    if(!resourceContainer.changeKey(oldKey, newKey))
+    if(!resourceContainer->changeKey(oldKey, newKey))
         return false;
 
     emit keyChanged(oldKey, newKey);
@@ -45,12 +45,12 @@ bool IENameManager::changeKey(const unsigned long long oldKey, const unsigned lo
 
 bool IENameManager::doesExist(const unsigned long long key) const
 {
-    return resourceContainer.doesExist(key);
+    return resourceContainer->doesExist(key);
 }
 
 bool IENameManager::doesExist(const QString* value) const
 {
-    return resourceContainer.doesExist(value);
+    return resourceContainer->doesExist(value);
 }
 
 std::tuple<unsigned long long, QString> IENameManager::hashString(const QString& value) const
@@ -60,7 +60,7 @@ std::tuple<unsigned long long, QString> IENameManager::hashString(const QString&
     int counter = 0;
     unsigned long long hash = IEHash::Compute(temp);
 
-    while(resourceContainer.doesExist(hash))
+    while(resourceContainer->doesExist(hash))
     {
         temp = value + "_" + QString::number(counter);
         counter++;
@@ -72,36 +72,31 @@ std::tuple<unsigned long long, QString> IENameManager::hashString(const QString&
 
 const QString* IENameManager::getValue(const unsigned long long key) const
 {
-    return resourceContainer.getValue(key);
+    return resourceContainer->getValue(key);
 }
 
-const QMap<unsigned long long, QString*>& IENameManager::getResources() const
-{
-    return resourceContainer.getResources();
-}
-
-const IEResourceContainer<QString>& IENameManager::getResourceContainer() const
+IEResourceContainer<QString>* IENameManager::getResourceContainer() const
 {
     return resourceContainer;
 }
 
-void IENameManager::setResourceContainer(const IEResourceContainer<QString> val)
+void IENameManager::setResourceContainer(IEResourceContainer<QString>* val)
 {
     resourceContainer = val;
 }
 
 QDataStream& operator<<(QDataStream& out, const IENameManager& manager)
 {
-    out << manager.getResourceContainer();
+    out << *manager.getResourceContainer();
 
     return out;
 }
 
 QDataStream& operator>>(QDataStream& in, IENameManager& manager)
 {
-    IEResourceContainer<QString> container;
+    IEResourceContainer<QString>* container = manager.getResourceContainer();
 
-    in >> container;
+    in >> *container;
 
     manager.setResourceContainer(container);
 

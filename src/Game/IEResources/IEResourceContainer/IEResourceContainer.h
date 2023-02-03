@@ -3,13 +3,16 @@
 #include <QDataStream>
 #include <QMap>
 
+#include "IEObject.h"
+
 template <class T>
-class IEResourceContainer
+class IEResourceContainer : public IEObject
 {
     QMap<unsigned long long, T*> resources;
 
 public:
-    IEResourceContainer() :
+    IEResourceContainer(QObject* parent = nullptr) :
+        IEObject(parent),
         resources()
     {
 
@@ -18,19 +21,6 @@ public:
     ~IEResourceContainer()
     {
         clear();
-    }
-
-    void clear()
-    {
-        QMapIterator<unsigned long long, T*> it(resources);
-        while(it.hasNext())
-        {
-            it.next();
-
-            T* temp = it.value();
-            delete temp;
-            temp = nullptr;
-        }
     }
 
     bool add(const unsigned long long key, T* resource)
@@ -67,6 +57,19 @@ public:
         return true;
     }
 
+    void clear()
+    {
+        QMapIterator<unsigned long long, T*> it(resources);
+        while(it.hasNext())
+        {
+            it.next();
+
+            T* temp = it.value();
+            delete temp;
+            temp = nullptr;
+        }
+    }
+
     unsigned long long getKey(const T* value) const
     {
         if(!doesExist(value))
@@ -98,7 +101,12 @@ public:
 template <class T>
 QDataStream& operator<<(QDataStream& out, const IEResourceContainer<T>& manager)
 {
-    QMapIterator<unsigned long long, T*> it(manager.getResources());
+    QMap<unsigned long long, T*> map = manager.getResources();
+    int size = map.size();
+
+    out << size;
+
+    QMapIterator<unsigned long long, QString*> it(map);
     while(it.hasNext())
     {
         it.next();
@@ -112,21 +120,21 @@ QDataStream& operator<<(QDataStream& out, const IEResourceContainer<T>& manager)
 template <class T>
 QDataStream& operator>>(QDataStream& in, IEResourceContainer<T>& manager)
 {
-    manager.clear();
+    int size = 0;
+    in >> size;
 
-    QMap<unsigned long long, T*> tempMap;
-
-    while(!in.atEnd())
+    QMap<unsigned long long, T*> resources;
+    for(int i = 0; i < size; i++)
     {
-        unsigned long long tempKey = 0;
-        T* tempValue = new T();
+        unsigned long long key = 0;
+        T* value = new T();
 
-        in >> tempKey >> *tempValue;
+        in >> key >> *value;
 
-        tempMap[tempKey] = tempValue;
+        resources[key] = value;
     }
 
-    manager.setResources(tempMap);
+    manager.setResources(resources);
 
     return in;
 }

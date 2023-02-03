@@ -26,8 +26,8 @@ public:
     bool doesExist(const QString& name) const;
     bool doesExist(const int mod, const int key) const;
 
-    const QMap<QString, InputKey>& getKeys() const { return keys; } // TODO make this const
-    void setKeys(const QMap<QString, InputKey> val) { keys = val;}
+    const QMap<QString, InputKey>& getKeys() const { return keys; }
+    void setKeys(const QMap<QString, InputKey> val) { keys = val; }
 
 signals:
     void cleared();

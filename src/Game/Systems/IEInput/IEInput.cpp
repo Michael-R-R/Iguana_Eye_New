@@ -10,7 +10,7 @@ IEInput::IEInput(QWidget* hostWidget, QObject* parent) :
 
 IEInput::~IEInput()
 {
-
+    delete inputCapture;
 }
 
 bool IEInput::isPressed(const InputKey& key)
@@ -42,9 +42,7 @@ QDataStream& operator<<(QDataStream& out, const IEInput& input)
 
 QDataStream& operator>>(QDataStream& in, IEInput& input)
 {
-    delete input.getInputContainer();
-
-    auto inputContainer = new InputContainer(&input);
+    auto inputContainer = input.getInputContainer();
 
     in >> *inputContainer;
 

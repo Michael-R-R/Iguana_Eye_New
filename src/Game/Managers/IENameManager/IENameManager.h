@@ -10,7 +10,7 @@ class IENameManager : public IEObject
 {
     Q_OBJECT
 
-    IEResourceContainer<QString> resourceContainer;
+    IEResourceContainer<QString>* resourceContainer;
 
 public:
     IENameManager(QObject* parent = nullptr);
@@ -24,13 +24,12 @@ public:
     std::tuple<unsigned long long, QString> hashString(const QString& value) const;
 
     const QString* getValue(const unsigned long long key) const;
-    const QMap<unsigned long long, QString*>& getResources() const;
-    const IEResourceContainer<QString>& getResourceContainer() const;
+    IEResourceContainer<QString>* getResourceContainer() const;
 
-    void setResourceContainer(const IEResourceContainer<QString> val);
+    void setResourceContainer(IEResourceContainer<QString>* val);
 
 signals:
-    void added(const unsigned long long key, const QString* value);
+    void added(const unsigned long long key);
     void removed(const unsigned long long key);
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 };
