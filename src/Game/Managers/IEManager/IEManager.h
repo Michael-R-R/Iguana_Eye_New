@@ -12,7 +12,7 @@ protected:
 public:
     IEManager(QObject* parent = nullptr) :
         IEObject(parent),
-        resourceContainer(new IEResourceContainer<QString>(this))
+        resourceContainer(new IEResourceContainer<T>(this))
     {
 
     }
@@ -24,26 +24,17 @@ public:
 
     virtual bool add(const unsigned long long key, T* value)
     {
-        if(!resourceContainer->add(key, value))
-            return false;
-
-        return true;
+        return resourceContainer->add(key, value);
     }
 
     virtual bool remove(const unsigned long long key)
     {
-        if(!resourceContainer->remove(key))
-            return false;
-
-        return true;
+        return resourceContainer->remove(key);
     }
 
     virtual bool changeKey(const unsigned long long oldKey, const unsigned long long newKey)
     {
-        if(!resourceContainer->changeKey(oldKey, newKey))
-            return false;
-
-        return true;
+        return resourceContainer->changeKey(oldKey, newKey);
     }
 
     bool doesExist(const unsigned long long key) const

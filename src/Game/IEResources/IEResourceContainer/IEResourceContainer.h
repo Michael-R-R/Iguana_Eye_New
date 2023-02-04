@@ -106,7 +106,7 @@ QDataStream& operator<<(QDataStream& out, const IEResourceContainer<T>& manager)
 
     out << size;
 
-    QMapIterator<unsigned long long, QString*> it(map);
+    QMapIterator<unsigned long long, T*> it(map);
     while(it.hasNext())
     {
         it.next();
