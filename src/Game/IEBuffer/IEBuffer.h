@@ -22,54 +22,53 @@ public:
     bool add(const QString key, QOpenGLBuffer* value);
     bool remove(const QString& key);
     bool doesExist(const QString& key) const;
+    bool bind(const QString& key);
+    bool release(const QString& key);
+    void releaseAll();
 
-    template<class T>
-    void buildIndexBuffer(const QString& name, QVector<T>& data, int typeSize)
+    void buildIndexBuffer(const QString& key, QVector<unsigned>& data)
     {
-        QOpenGLBuffer* buffer = buffers[name];
+        QOpenGLBuffer* buffer = buffers[key];
         if(!buffer || buffer->type() != QOpenGLBuffer::IndexBuffer)
             return;
 
+        buffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
         buffer->create();
         buffer->bind();
-        buffer->allocate(data.data(), data.size() * typeSize);
-        buffer->release();
+        buffer->allocate(data.data(), (int)(data.size() * sizeof(unsigned)));
     }
 
     template<class T>
-    void buildVertexBuffer(const QString& name, QVector<T>& data, int typeSize,
-                           int tupleSize, int stride, int divisorSize, IEShader* shader)
+    void buildVertexBuffer(const QString& key, QVector<T>& data,
+                           int tupleSize, int divisorSize, IEShader* shader)
     {
-        QOpenGLBuffer* buffer = buffers[name];
+        QOpenGLBuffer* buffer = buffers[key];
         if(!buffer || buffer->type() != QOpenGLBuffer::VertexBuffer)
             return;
 
         buffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
         buffer->create();
         buffer->bind();
-        buffer->allocate(data.data(), data.size() * typeSize);
+        buffer->allocate(data.data(), (int)(data.size() * sizeof(T)));
 
-        int attribLoc = shader->attributeLocation(name);
+        int attribLoc = shader->attributeLocation(key);
 
         QOpenGLFunctions* func = QOpenGLContext::currentContext()->functions();
         if(divisorSize < 1)
         {
-            func->glVertexAttribPointer(attribLoc, tupleSize, GL_FLOAT, false, stride, 0);
+            func->glVertexAttribPointer(attribLoc, tupleSize, GL_FLOAT, false, 0, 0);
             func->glEnableVertexAttribArray(attribLoc);
         }
         else
         {
             QOpenGLExtraFunctions* extraFunc = QOpenGLContext::currentContext()->extraFunctions();
-
             for(int i = 0; i < divisorSize; i++)
             {
-                func->glVertexAttribPointer(attribLoc + i, tupleSize, GL_FLOAT, false, stride, i * typeSize);
+                func->glVertexAttribPointer(attribLoc + i, tupleSize, GL_FLOAT, false, 0, (void*)(i * sizeof(T)));
                 func->glEnableVertexAttribArray(attribLoc + i);
                 extraFunc->glVertexBindingDivisor(attribLoc + i, 1);
             }
         }
-
-        buffer->release();
     }
 };
 

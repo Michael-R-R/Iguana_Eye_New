@@ -53,7 +53,7 @@ QDataStream& operator>>(QDataStream& in, IEMesh& mesh)
     QVector<QVector2D> textures;
     QVector<QVector3D> tangents;
     QVector<QVector3D> bitangents;
-    QVector<int> indices;
+    QVector<unsigned> indices;
 
     in >> id >> pos >> normals >> textures
        >> tangents >> bitangents >> indices;

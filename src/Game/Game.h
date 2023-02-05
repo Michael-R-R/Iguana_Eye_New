@@ -9,6 +9,13 @@
 #include "IEInput.h"
 #include "IEScene.h"
 
+// TODO test
+#include <QOpenGLVertexArrayObject>
+#include "IEBuffer.h"
+#include "IEMesh.h"
+#include "IEMaterial.h"
+#include "IEShader.h"
+
 class Game : public QOpenGLWidget
 {
     Q_OBJECT
@@ -20,6 +27,13 @@ class Game : public QOpenGLWidget
     IETime* time;
     IEInput* input;
     IEScene* scene;
+
+    // TODO test
+    QOpenGLVertexArrayObject* vao;
+    IEBuffer* buffer;
+    IEMesh* mesh;
+    IEMaterial* material;
+    IEShader* shader;
 
 public:
     Game(QWidget* parent = nullptr);

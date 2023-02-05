@@ -12,6 +12,7 @@ Game::Game(QWidget* parent) :
     format->setProfile(QSurfaceFormat::CoreProfile);
     format->setSwapBehavior(QSurfaceFormat::DoubleBuffer);
     format->setSwapInterval(1);
+    format->setSamples(16);
     this->setFormat(*format); // must be set before window is shown
 }
 
@@ -47,18 +48,68 @@ void Game::onRenderFrame()
     glExtraFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // TODO test
+
+    shader->bind();
+    vao->bind();
+    material->bindUniformData(shader);
+    glExtraFunc->glDrawArrays(GL_TRIANGLES, 0, mesh->getPosVertices().size());
+    vao->release();
+    shader->release();
+
+    // -------------------------
+
     time->processDeltaTime();
 }
 
 void Game::initializeGL()
 {
     glFunc = QOpenGLContext::currentContext()->functions();
-    glFunc->initializeOpenGLFunctions();
-
     glExtraFunc = QOpenGLContext::currentContext()->extraFunctions();
+
+    glFunc->initializeOpenGLFunctions();
     glExtraFunc->initializeOpenGLFunctions();
 
+    glExtraFunc->glEnable(GL_MULTISAMPLE);
     glExtraFunc->glEnable(GL_DEPTH_TEST);
+
+    // TODO test
+    QVector<QVector3D> vertices =
+    {
+        QVector3D(0.5f, 0.5f, 0.0f),
+        QVector3D(0.5f, -0.5f, 0.0f),
+        QVector3D(-0.5f, -0.5f, 0.0f),
+        QVector3D(-0.5f, 0.5f, 0.0f)
+    };
+
+    vao = new QOpenGLVertexArrayObject();
+    buffer = new IEBuffer();
+    mesh = new IEMesh(1);
+    material = new IEMaterial(2);
+    shader = new IEShader(3, "./resources/shaders/Test.glsl");
+
+    mesh->setPosVertices(vertices);
+    auto uniform = material->getUniformData();
+    uniform.add("uColor", QColor(99, 130, 82, 255));
+    material->setUniformData(uniform);
+
+    shader->create();
+    shader->addShaderFromSourceCode(QOpenGLShader::Vertex, shader->getVertexSrc());
+    shader->addShaderFromSourceCode(QOpenGLShader::Fragment, shader->getFragmentSrc());
+    shader->link();
+    shader->bind();
+
+    vao->create();
+    vao->bind();
+
+    buffer->add("aPos", new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer));
+    buffer->buildVertexBuffer<QVector3D>("aPos", vertices, 3, 0, shader);
+
+    vao->release();
+    buffer->releaseAll();
+    shader->release();
+
+    //------------------------------------------------------- //
 
     emit initialized();
 }

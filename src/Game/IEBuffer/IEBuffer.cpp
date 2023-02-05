@@ -52,3 +52,42 @@ bool IEBuffer::doesExist(const QString& key) const
 {
     return buffers.contains(key);
 }
+
+bool IEBuffer::bind(const QString& key)
+{
+    if(!doesExist(key))
+        return false;
+
+    QOpenGLBuffer* buffer = buffers[key];
+    if(!buffer)
+        return false;
+
+    buffer->bind();
+
+    return true;
+}
+
+bool IEBuffer::release(const QString& key)
+{
+    if(!doesExist(key))
+        return false;
+
+    QOpenGLBuffer* buffer = buffers[key];
+    if(!buffer)
+        return false;
+
+    buffer->release();
+
+    return true;
+}
+
+void IEBuffer::releaseAll()
+{
+    QMapIterator<QString, QOpenGLBuffer*> it(buffers);
+    while(it.hasNext())
+    {
+        it.next();
+
+        it.value()->release();
+    }
+}
