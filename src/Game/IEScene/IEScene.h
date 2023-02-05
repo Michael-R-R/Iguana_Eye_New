@@ -5,12 +5,14 @@
 #include "IEObject.h"
 #include "IENameManager.h"
 #include "IEShaderManager.h"
+#include "IEMeshManager.h"
 
 class IEScene : public IEObject
 {
     Q_OBJECT
 
     IENameManager* nameManager;
+    IEMeshManager* meshManager;
     IEShaderManager* shaderManager;
 
 public:
@@ -21,9 +23,11 @@ public:
     void shutdown();
 
     IENameManager* getNameManager() const { return nameManager; }
+    IEMeshManager* getMeshManager() const { return meshManager; }
     IEShaderManager* getShaderManager() const { return shaderManager; }
 
     void setNameManager(IENameManager* val) { nameManager = val; }
+    void setMeshManager(IEMeshManager* val) { meshManager = val; }
     void setShaderManager(IEShaderManager* val) { shaderManager = val; }
 };
 
