@@ -45,6 +45,7 @@ INCLUDEPATH += $$PWD/src/Events \
     $$PWD/src/Events/AppStartEvent
 
 INCLUDEPATH += $$PWD/src/Game \
+    $$PWD/src/Game/IEBuffer \
     $$PWD/src/Game/IEObject \
     $$PWD/src/Game/IEScene \
     $$PWD/src/Game/IEUniform
