@@ -4,8 +4,9 @@
 
 #include "IEObject.h"
 #include "IENameManager.h"
-#include "IEShaderManager.h"
 #include "IEMeshManager.h"
+#include "IEMaterialManager.h"
+#include "IEShaderManager.h"
 
 class IEScene : public IEObject
 {
@@ -13,6 +14,7 @@ class IEScene : public IEObject
 
     IENameManager* nameManager;
     IEMeshManager* meshManager;
+    IEMaterialManager* materialManager;
     IEShaderManager* shaderManager;
 
 public:
@@ -24,10 +26,12 @@ public:
 
     IENameManager* getNameManager() const { return nameManager; }
     IEMeshManager* getMeshManager() const { return meshManager; }
+    IEMaterialManager* getMaterialManager() const { return materialManager; }
     IEShaderManager* getShaderManager() const { return shaderManager; }
 
     void setNameManager(IENameManager* val) { nameManager = val; }
     void setMeshManager(IEMeshManager* val) { meshManager = val; }
+    void setMaterialManager(IEMaterialManager* val) { materialManager = val; }
     void setShaderManager(IEShaderManager* val) { shaderManager = val; }
 };
 

@@ -26,7 +26,7 @@ IEUniform::~IEUniform()
 
 }
 
-void IEUniform::bind(IEShader* shader)
+void IEUniform::bind(IEShader* shader) const
 {
     QMapIterator<QString, int> it1(intData);
     while(it1.hasNext()) { it1.next(); shader->setUniformValue(shader->uniformLocation(it1.key()), it1.value()); }

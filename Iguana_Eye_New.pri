@@ -58,6 +58,7 @@ INCLUDEPATH += $$PWD/src/Game/IEResources \
 
 INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IEManager \
+    $$PWD/src/Game/Managers/IEMaterialManager \
     $$PWD/src/Game/Managers/IEMeshManager \
     $$PWD/src/Game/Managers/IENameManager \
     $$PWD/src/Game/Managers/IEShaderManager
