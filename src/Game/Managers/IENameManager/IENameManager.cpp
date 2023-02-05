@@ -12,6 +12,16 @@ IENameManager::~IENameManager()
 
 }
 
+void IENameManager::startup()
+{
+
+}
+
+void IENameManager::shutdown()
+{
+    resourceContainer->clear();
+}
+
 bool IENameManager::add(const unsigned long long key, QString* value)
 {
     if(!IEManager::add(key, value))

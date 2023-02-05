@@ -13,6 +13,18 @@ IEScene::~IEScene()
 
 }
 
+void IEScene::startup()
+{
+    nameManager->startup();
+    shaderManager->startup();
+}
+
+void IEScene::shutdown()
+{
+    shaderManager->shutdown();
+    nameManager->shutdown();
+}
+
 QDataStream& operator<<(QDataStream& out, const IEScene& scene)
 {
     out << *scene.getNameManager() << *scene.getShaderManager();

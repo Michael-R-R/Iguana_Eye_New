@@ -17,6 +17,9 @@ public:
     IEScene(QObject* parent = nullptr);
     ~IEScene();
 
+    void startup();
+    void shutdown();
+
     IENameManager* getNameManager() const { return nameManager; }
     IEShaderManager* getShaderManager() const { return shaderManager; }
 

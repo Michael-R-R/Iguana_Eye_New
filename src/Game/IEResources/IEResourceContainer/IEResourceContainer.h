@@ -68,6 +68,8 @@ public:
             delete temp;
             temp = nullptr;
         }
+
+        resources.clear();
     }
 
     unsigned long long getKey(const T* value) const
@@ -77,7 +79,7 @@ public:
         return resources.key(value);
     }
 
-    const T* getValue(const unsigned long long key) const
+    T* getValue(const unsigned long long key) const
     {
         if(!doesExist(key))
             return nullptr;

@@ -38,10 +38,13 @@ public:
 
 public slots:
     void onUpdateFrame();
+
+private:
     void onRenderFrame();
 
 protected:
     void initializeGL() override;
+    void paintGL() override;
     void resizeGL(int w, int h) override;
 
 signals:

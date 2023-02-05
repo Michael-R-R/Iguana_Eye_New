@@ -16,16 +16,30 @@ IETime::~IETime()
 
 }
 
+void IETime::startup(Game* game)
+{
+    this->setupUpdateTimer(game);
+    this->setupRenderTimer(game);
+    this->startUpdateTimer();
+    this->startRenderTimer();
+}
+
+void IETime::shutdown()
+{
+    this->stopUpdateTimer();
+    this->stopRenderTimer();
+}
+
 void IETime::setupUpdateTimer(Game* game)
 {
     updateTimer->setTimerType(Qt::PreciseTimer);
-    connect(updateTimer, &QTimer::timeout, game, &Game::onUpdateFrame);
+    connect(updateTimer, &QTimer::timeout, this, [game]() { game->onUpdateFrame(); });
 }
 
 void IETime::setupRenderTimer(Game* game)
 {
     renderTimer->setTimerType(Qt::PreciseTimer);
-    connect(renderTimer, &QTimer::timeout, game, &Game::onRenderFrame);
+    connect(renderTimer, &QTimer::timeout, this, [game]() { game->update(); });
 }
 
 void IETime::startUpdateTimer()

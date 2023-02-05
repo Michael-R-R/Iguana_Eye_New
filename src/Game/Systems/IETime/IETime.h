@@ -23,6 +23,9 @@ public:
     IETime(const int msUpdate, const int msRender, QObject* parent = nullptr);
     ~IETime();
 
+    void startup(Game* game);
+    void shutdown();
+
     void setupUpdateTimer(Game* game);
     void setupRenderTimer(Game* game);
 

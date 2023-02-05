@@ -13,9 +13,16 @@ public:
     IEShaderManager(QObject* parent = nullptr);
     ~IEShaderManager();
 
+    void startup() override;
+    void shutdown() override;
+
     bool add(const unsigned long long key, IEShader* value) override;
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
+
+private:
+    void buildShader(IEShader* shader);
+    void buildAllShaders();
 
 signals:
     void added(const unsigned long long key);

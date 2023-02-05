@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QOpenGLShaderProgram>
+#include <QOpenGLShader>
 #include <QString>
 #include <QDataStream>
 
@@ -17,6 +18,11 @@ public:
     IEShader(unsigned long long id, QString vSrc, QString fSrc);
     IEShader(unsigned long long id, QString filePath);
     ~IEShader();
+
+    bool operator==(const IEShader& other) { return IEResource::operator==(other); }
+    bool operator!=(const IEShader& other) { return IEResource::operator!=(other); }
+    bool operator<(const IEShader& other) { return IEResource::operator<(other); }
+    bool operator>(const IEShader& other) { return IEResource::operator>(other); }
 
     const QString& getVertexSrc() const { return vertexSource; }
     const QString& getFragmentSrc() const { return fragmentSource; }

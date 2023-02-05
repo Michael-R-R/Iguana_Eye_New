@@ -22,6 +22,9 @@ public:
 
     }
 
+    virtual void startup() = 0;
+    virtual void shutdown() = 0;
+
     virtual bool add(const unsigned long long key, T* value)
     {
         return resourceContainer->add(key, value);
@@ -47,7 +50,7 @@ public:
         return resourceContainer->doesExist(value);
     }
 
-    const T* getValue(const unsigned long long key) const
+    T* getValue(const unsigned long long key) const
     {
         return resourceContainer->getValue(key);
     }

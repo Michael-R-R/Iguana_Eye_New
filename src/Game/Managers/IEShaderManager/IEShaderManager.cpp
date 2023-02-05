@@ -11,10 +11,22 @@ IEShaderManager::~IEShaderManager()
 
 }
 
+void IEShaderManager::startup()
+{
+    this->buildAllShaders();
+}
+
+void IEShaderManager::shutdown()
+{
+    resourceContainer->clear();
+}
+
 bool IEShaderManager::add(const unsigned long long key, IEShader* value)
 {
     if(!IEManager::add(key, value))
         return false;
+
+    this->buildShader(value);
 
     emit added(key);
 
@@ -39,6 +51,25 @@ bool IEShaderManager::changeKey(const unsigned long long oldKey, const unsigned 
     emit keyChanged(oldKey, newKey);
 
     return true;
+}
+
+void IEShaderManager::buildShader(IEShader* shader)
+{
+    if(shader->shaders().size() > 0)
+        shader->removeAllShaders();
+
+    shader->create();
+    shader->addShaderFromSourceCode(QOpenGLShader::Vertex, shader->getVertexSrc());
+    shader->addShaderFromSourceCode(QOpenGLShader::Fragment, shader->getFragmentSrc());
+    shader->link();
+}
+
+void IEShaderManager::buildAllShaders()
+{
+    for(auto& shader : resourceContainer->getResources())
+    {
+        this->buildShader(shader);
+    }
 }
 
 QDataStream& operator<<(QDataStream& out, const IEShaderManager& manager)

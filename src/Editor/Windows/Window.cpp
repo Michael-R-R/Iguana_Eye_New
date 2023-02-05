@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "IEFile.h"
 
 Window::Window(QString title, QWidget* parent) :
     QDockWidget(title, parent),
@@ -27,7 +28,11 @@ void Window::setStyleByString(const QString& style)
 
 void Window::setStyleByFile(const QString& path)
 {
-    // TODO implement, once File util is added
+    QString style = "";
+    if(!IEFile::read(path, &style))
+        return;
+
+    this->setStyleSheet(style);
 }
 
 void Window::showEvent(QShowEvent* event)

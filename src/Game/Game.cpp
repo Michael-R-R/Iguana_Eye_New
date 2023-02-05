@@ -22,17 +22,15 @@ Game::~Game()
 
 void Game::startup()
 {
+    scene->startup();
+    time->startup(this);
     this->setFocus();
-    time->setupUpdateTimer(this);
-    time->setupRenderTimer(this);
-    time->startUpdateTimer();
-    time->startRenderTimer();
 }
 
 void Game::shutdown()
 {
-    time->stopUpdateTimer();
-    time->stopRenderTimer();
+    time->shutdown();
+    scene->shutdown();
 
     delete time;
     delete input;
@@ -46,11 +44,8 @@ void Game::onUpdateFrame()
 
 void Game::onRenderFrame()
 {
-    this->makeCurrent();
-    this->update();
-
-    glFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-    glFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glExtraFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+    glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     time->processDeltaTime();
 }
@@ -58,9 +53,19 @@ void Game::onRenderFrame()
 void Game::initializeGL()
 {
     glFunc = QOpenGLContext::currentContext()->functions();
+    glFunc->initializeOpenGLFunctions();
+
     glExtraFunc = QOpenGLContext::currentContext()->extraFunctions();
+    glExtraFunc->initializeOpenGLFunctions();
+
+    glExtraFunc->glEnable(GL_DEPTH_TEST);
 
     emit initialized();
+}
+
+void Game::paintGL()
+{
+    onRenderFrame();
 }
 
 void Game::resizeGL(int w, int h)

@@ -13,6 +13,9 @@ public:
     IENameManager(QObject* parent = nullptr);
     ~IENameManager();
 
+    void startup() override;
+    void shutdown() override;
+
     bool add(const unsigned long long key, QString* value) override;
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
