@@ -29,6 +29,13 @@ IEShader::IEShader(unsigned long long id, QString filePath) :
     parseFile(filePath);
 }
 
+IEShader::IEShader(const IEShader& other) :
+    QOpenGLShaderProgram(), IEResource(0),
+    vertexSource(other.vertexSource), fragmentSource(other.fragmentSource)
+{
+
+}
+
 IEShader::~IEShader()
 {
 

@@ -19,6 +19,7 @@ class IEMesh : public IEResource
 public:
     IEMesh();
     IEMesh(const unsigned long long id);
+    IEMesh(const IEMesh& other);
     ~IEMesh();
 
     bool operator==(const IEMesh& other) { return IEResource::operator==(other); }

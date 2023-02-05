@@ -46,9 +46,11 @@ INCLUDEPATH += $$PWD/src/Events \
 
 INCLUDEPATH += $$PWD/src/Game \
     $$PWD/src/Game/IEObject \
-    $$PWD/src/Game/IEScene
+    $$PWD/src/Game/IEScene \
+    $$PWD/src/Game/IEUniform
 
 INCLUDEPATH += $$PWD/src/Game/IEResources \
+    $$PWD/src/Game/IEResources/IEMaterial \
     $$PWD/src/Game/IEResources/IEMesh \
     $$PWD/src/Game/IEResources/IEResource \
     $$PWD/src/Game/IEResources/IEResourceContainer \

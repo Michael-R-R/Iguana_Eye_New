@@ -17,6 +17,7 @@ public:
     IEShader(unsigned long long id);
     IEShader(unsigned long long id, QString vSrc, QString fSrc);
     IEShader(unsigned long long id, QString filePath);
+    IEShader(const IEShader& other);
     ~IEShader();
 
     bool operator==(const IEShader& other) { return IEResource::operator==(other); }
