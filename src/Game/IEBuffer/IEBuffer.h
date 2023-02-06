@@ -74,6 +74,18 @@ public:
         buffer->bind();
         buffer->allocate(data.data(), (int)(data.size() * sizeof(unsigned)));
     }
+
+    template<class T>
+    void subAllocateBuffer(const QString& key, int offset, T& data)
+    {
+        QOpenGLBuffer* buffer = buffers[key];
+        if(!buffer)
+            return;
+
+        buffer->bind();
+        buffer->write((int)(offset * sizeof(T)), data, sizeof(T));
+        buffer->release();
+    }
 };
 
 QDataStream& operator<<(QDataStream& out, const IEBuffer& buffer);
