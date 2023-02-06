@@ -6,6 +6,27 @@ IEBuffer::IEBuffer() :
 
 }
 
+IEBuffer::IEBuffer(const IEBuffer& other) :
+    buffers()
+{
+    QMap<QString, QOpenGLBuffer*> tempBuffers;
+
+    QMapIterator<QString, QOpenGLBuffer*> it(other.buffers);
+    while(it.hasNext())
+    {
+        QString key;
+        QOpenGLBuffer::Type type;
+
+        key = it.key();
+        type = it.value()->type();
+
+        auto tempBuffer = new QOpenGLBuffer(type);
+        tempBuffers[key] = tempBuffer;
+    }
+
+    buffers = tempBuffers;
+}
+
 IEBuffer::~IEBuffer()
 {
     clear();
@@ -107,8 +128,8 @@ QDataStream& operator<<(QDataStream& out, const IEBuffer& buffer)
 
 QDataStream& operator>>(QDataStream& in, IEBuffer& buffer)
 {
-    QMap<QString, QOpenGLBuffer*> buffers;
     int size = 0;
+    QMap<QString, QOpenGLBuffer*> buffers;
 
     in >> size;
 
@@ -120,7 +141,6 @@ QDataStream& operator>>(QDataStream& in, IEBuffer& buffer)
         in >> key >> type;
 
         auto tempBuffer = new QOpenGLBuffer(type);
-
         buffers[key] = tempBuffer;
     }
 

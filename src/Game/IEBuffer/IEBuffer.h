@@ -17,6 +17,7 @@ class IEBuffer
 
 public:
     IEBuffer();
+    IEBuffer(const IEBuffer& other);
     ~IEBuffer();
 
     void clear();
