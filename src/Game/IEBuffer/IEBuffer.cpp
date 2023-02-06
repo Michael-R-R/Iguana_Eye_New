@@ -48,11 +48,6 @@ bool IEBuffer::remove(const QString& key)
     return true;
 }
 
-bool IEBuffer::doesExist(const QString& key) const
-{
-    return buffers.contains(key);
-}
-
 bool IEBuffer::bind(const QString& key)
 {
     if(!doesExist(key))
@@ -83,11 +78,53 @@ bool IEBuffer::release(const QString& key)
 
 void IEBuffer::releaseAll()
 {
-    QMapIterator<QString, QOpenGLBuffer*> it(buffers);
+    for(auto& buffer : buffers)
+    {
+        buffer->release();
+    }
+}
+
+bool IEBuffer::doesExist(const QString& key) const
+{
+    return buffers.contains(key);
+}
+
+QDataStream& operator<<(QDataStream& out, const IEBuffer& buffer)
+{
+    int size = buffer.getBuffers().size();
+    out << size;
+
+    QMapIterator<QString, QOpenGLBuffer*> it(buffer.getBuffers());
     while(it.hasNext())
     {
         it.next();
 
-        it.value()->release();
+        out << it.key() << it.value()->type();
     }
+
+    return out;
+}
+
+QDataStream& operator>>(QDataStream& in, IEBuffer& buffer)
+{
+    QMap<QString, QOpenGLBuffer*> buffers;
+    int size = 0;
+
+    in >> size;
+
+    for(int i = 0; i < size; i++)
+    {
+        QString key;
+        QOpenGLBuffer::Type type;
+
+        in >> key >> type;
+
+        auto tempBuffer = new QOpenGLBuffer(type);
+
+        buffers[key] = tempBuffer;
+    }
+
+    buffer.setBuffers(buffers);
+
+    return in;
 }

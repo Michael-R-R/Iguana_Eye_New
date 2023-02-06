@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QDataStream>
 #include <QMap>
 #include <QString>
 #include <QVector>
@@ -21,22 +22,13 @@ public:
     void clear();
     bool add(const QString key, QOpenGLBuffer* value);
     bool remove(const QString& key);
-    bool doesExist(const QString& key) const;
     bool bind(const QString& key);
     bool release(const QString& key);
     void releaseAll();
+    bool doesExist(const QString& key) const;
 
-    void buildIndexBuffer(const QString& key, QVector<unsigned>& data)
-    {
-        QOpenGLBuffer* buffer = buffers[key];
-        if(!buffer || buffer->type() != QOpenGLBuffer::IndexBuffer)
-            return;
-
-        buffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
-        buffer->create();
-        buffer->bind();
-        buffer->allocate(data.data(), (int)(data.size() * sizeof(unsigned)));
-    }
+    const QMap<QString, QOpenGLBuffer*>& getBuffers() const { return buffers; }
+    void setBuffers(const QMap<QString, QOpenGLBuffer*> val) { buffers = val; }
 
     template<class T>
     void buildVertexBuffer(const QString& key, QVector<T>& data,
@@ -70,5 +62,19 @@ public:
             }
         }
     }
+
+    void buildIndexBuffer(const QString& key, QVector<unsigned>& data)
+    {
+        QOpenGLBuffer* buffer = buffers[key];
+        if(!buffer || buffer->type() != QOpenGLBuffer::IndexBuffer)
+            return;
+
+        buffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
+        buffer->create();
+        buffer->bind();
+        buffer->allocate(data.data(), (int)(data.size() * sizeof(unsigned)));
+    }
 };
 
+QDataStream& operator<<(QDataStream& out, const IEBuffer& buffer);
+QDataStream& operator>>(QDataStream& in, IEBuffer& buffer);
