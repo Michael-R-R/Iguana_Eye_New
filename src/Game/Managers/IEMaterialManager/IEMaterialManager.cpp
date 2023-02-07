@@ -1,4 +1,5 @@
 #include "IEMaterialManager.h"
+#include "GameStartEvent.h"
 
 IEMaterialManager::IEMaterialManager(QObject* parent) :
     IEManager(parent)
@@ -11,7 +12,7 @@ IEMaterialManager::~IEMaterialManager()
 
 }
 
-void IEMaterialManager::startup()
+void IEMaterialManager::startup(const GameStartEvent& event)
 {
     // Not used
 }

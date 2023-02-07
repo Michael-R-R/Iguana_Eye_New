@@ -1,4 +1,5 @@
 #include "IEScene.h"
+#include "GameStartEvent.h"
 
 IEScene::IEScene(QObject* parent) :
     IEObject(parent),
@@ -16,13 +17,13 @@ IEScene::~IEScene()
 
 }
 
-void IEScene::startup()
+void IEScene::startup(const GameStartEvent& event)
 {
-    nameManager->startup();
-    meshManager->startup();
-    materialManager->startup();
-    shaderManager->startup();
-    renderableManager->startup();
+    nameManager->startup(event);
+    meshManager->startup(event);
+    materialManager->startup(event);
+    shaderManager->startup(event);
+    renderableManager->startup(event);
 }
 
 void IEScene::shutdown()

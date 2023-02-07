@@ -43,7 +43,7 @@ void EditorUi::setupMainMenuBar(const AppStartEvent& event)
     mainMenuBar->setupFileSubMenu(event);
     mainMenuBar->setupGameSubMenu(event);
 
-    auto applicationWindow = event.applicationWindow();
+    auto applicationWindow = event.getApplicationWindow();
     applicationWindow->setMenuBar(mainMenuBar);
 }
 
@@ -51,7 +51,7 @@ void EditorUi::setupStatusBar(const AppStartEvent& event)
 {
     statusBar->setupIEObjectConnections(event);
 
-    auto applicationWindow = event.applicationWindow();
+    auto applicationWindow = event.getApplicationWindow();
     applicationWindow->setStatusBar(statusBar);
 }
 

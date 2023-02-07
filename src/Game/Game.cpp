@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "GameStartEvent.h"
 
 Game::Game(QWidget* parent) :
     QOpenGLWidget(parent),
@@ -23,8 +24,11 @@ Game::~Game()
 
 void Game::startup()
 {
-    scene->startup();
+    GameStartEvent event(time, input, scene);
+
+    scene->startup(event);
     time->startup(this);
+
     this->setFocus();
 }
 

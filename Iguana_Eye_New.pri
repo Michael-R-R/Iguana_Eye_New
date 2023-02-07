@@ -42,13 +42,17 @@ INCLUDEPATH += $$PWD/src/Editor/Windows \
     $$PWD/src/Editor/Windows/AppOptionsWindow
 
 INCLUDEPATH += $$PWD/src/Events \
-    $$PWD/src/Events/AppStartEvent
+    $$PWD/src/Events/AppStartEvent \
+    $$PWD/src/Events/GameStartEvent
 
 INCLUDEPATH += $$PWD/src/Game \
-    $$PWD/src/Game/IEBuffer \
     $$PWD/src/Game/IEObject \
     $$PWD/src/Game/IEScene \
     $$PWD/src/Game/IEUniform
+
+INCLUDEPATH += $$PWD/src/Game/IEBuffers \
+    $$PWD/src/Game/IEBuffers/IEBuffer \
+    $$PWD/src/Game/IEBuffers/IEBufferContainer \
 
 INCLUDEPATH += $$PWD/src/Game/IEResources \
     $$PWD/src/Game/IEResources/IEMaterial \

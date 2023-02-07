@@ -79,7 +79,7 @@ Window* EditorWindowManager::getWindow(const QString& title) const
 
 void EditorWindowManager::setupOptionsWindow(const AppStartEvent& event)
 {
-    auto applicationWindow = event.applicationWindow();
+    auto applicationWindow = event.getApplicationWindow();
 
     auto optionsWindow = new AppOptionsWindow(applicationWindow);
     optionsWindow->setup(event);

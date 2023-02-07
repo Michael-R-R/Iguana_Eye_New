@@ -15,10 +15,10 @@ EditorActionManager::~EditorActionManager()
 
 void EditorActionManager::setup(const AppStartEvent& event)
 {
-    auto input = event.editor()->getInput();
+    auto input = event.getEditor()->getInput();
     auto inputContainer = input->getInputContainer();
-    auto ui = event.editor()->getUi();
-    auto applicationWindow = event.applicationWindow();
+    auto ui = event.getEditor()->getUi();
+    auto applicationWindow = event.getApplicationWindow();
 
     applicationWindow->addAction(new ToggleUiAction(inputContainer->fetchValue("Toggle Ui"), ui, this));
 }

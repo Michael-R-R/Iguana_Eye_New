@@ -9,6 +9,8 @@
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
 
+class GameStartEvent;
+
 class IEScene : public IEObject
 {
     Q_OBJECT
@@ -23,7 +25,7 @@ public:
     IEScene(QObject* parent = nullptr);
     ~IEScene();
 
-    void startup();
+    void startup(const GameStartEvent& event);
     void shutdown();
 
     IENameManager* getNameManager() const { return nameManager; }

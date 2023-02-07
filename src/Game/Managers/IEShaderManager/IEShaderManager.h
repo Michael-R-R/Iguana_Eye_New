@@ -5,6 +5,8 @@
 #include "IEManager.h"
 #include "IEShader.h"
 
+class GameStartEvent;
+
 class IEShaderManager : public IEManager<IEShader>
 {
     Q_OBJECT
@@ -13,7 +15,7 @@ public:
     IEShaderManager(QObject* parent = nullptr);
     ~IEShaderManager();
 
-    void startup() override;
+    void startup(const GameStartEvent& event) override;
     void shutdown() override;
 
     bool add(const unsigned long long key, IEShader* value) override;

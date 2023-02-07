@@ -1,4 +1,5 @@
 #include "IENameManager.h"
+#include "GameStartEvent.h"
 #include "IEHash.h"
 
 IENameManager::IENameManager(QObject* parent) :
@@ -12,9 +13,9 @@ IENameManager::~IENameManager()
 
 }
 
-void IENameManager::startup()
+void IENameManager::startup(const GameStartEvent& event)
 {
-
+    // Not used
 }
 
 void IENameManager::shutdown()

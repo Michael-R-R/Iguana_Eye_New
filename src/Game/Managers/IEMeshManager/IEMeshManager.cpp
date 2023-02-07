@@ -1,4 +1,5 @@
 #include "IEMeshManager.h"
+#include "GameStartEvent.h"
 
 IEMeshManager::IEMeshManager(QObject* parent) :
     IEManager(parent)
@@ -11,7 +12,7 @@ IEMeshManager::~IEMeshManager()
 
 }
 
-void IEMeshManager::startup()
+void IEMeshManager::startup(const GameStartEvent& event)
 {
     // Not used
 }

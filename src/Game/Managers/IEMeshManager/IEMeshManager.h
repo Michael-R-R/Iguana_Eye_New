@@ -5,6 +5,8 @@
 #include "IEManager.h"
 #include "IEMesh.h"
 
+class GameStartEvent;
+
 class IEMeshManager : public IEManager<IEMesh>
 {
     Q_OBJECT
@@ -13,7 +15,7 @@ public:
     IEMeshManager(QObject* parent = nullptr);
     ~IEMeshManager();
 
-    void startup() override;
+    void startup(const GameStartEvent& event) override;
     void shutdown() override;
 
     bool add(const unsigned long long key, IEMesh* value) override;

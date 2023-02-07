@@ -1,7 +1,7 @@
 #include "AppStartEvent.h"
 
 AppStartEvent::AppStartEvent(ApplicationWindow* appWindow, Editor* editor_, Game* game_) :
-    myAppWindow(appWindow), myEditor(editor_), myGame(game_)
+    appWindow(appWindow), editor(editor_), game(game_)
 {
 
 }
@@ -9,19 +9,4 @@ AppStartEvent::AppStartEvent(ApplicationWindow* appWindow, Editor* editor_, Game
 AppStartEvent::~AppStartEvent()
 {
 
-}
-
-ApplicationWindow* AppStartEvent::applicationWindow() const
-{
-    return myAppWindow;
-}
-
-Editor* AppStartEvent::editor() const
-{
-    return myEditor;
-}
-
-Game* AppStartEvent::game() const
-{
-    return myGame;
 }

@@ -1,4 +1,5 @@
 #include "IERenderableManager.h"
+#include "GameStartEvent.h"
 
 IERenderableManager::IERenderableManager(QObject* parent) :
     IEManager(parent)
@@ -11,9 +12,9 @@ IERenderableManager::~IERenderableManager()
 
 }
 
-void IERenderableManager::startup()
+void IERenderableManager::startup(const GameStartEvent& event)
 {
-
+    // TODO implement
 }
 
 void IERenderableManager::shutdown()
@@ -49,6 +50,16 @@ bool IERenderableManager::changeKey(const unsigned long long oldKey, const unsig
     emit keyChanged(oldKey, newKey);
 
     return true;
+}
+
+void IERenderableManager::rebuildRenderable(const GameStartEvent& event, IERenderable* renderable)
+{
+    auto shaderManager = event.getScene()->getShaderManager();
+    auto shader = shaderManager->getValue(renderable->getShaderId());
+    if(!shader)
+        return;
+
+    renderable->rebuildAllBuffers(shader);
 }
 
 QDataStream& operator<<(QDataStream& out, const IERenderableManager& manager)

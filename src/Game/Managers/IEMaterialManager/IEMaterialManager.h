@@ -5,6 +5,8 @@
 #include "IEManager.h"
 #include "IEMaterial.h"
 
+class GameStartEvent;
+
 class IEMaterialManager: public IEManager<IEMaterial>
 {
     Q_OBJECT
@@ -13,7 +15,7 @@ public:
     IEMaterialManager(QObject* parent = nullptr);
     ~IEMaterialManager();
 
-    void startup() override;
+    void startup(const GameStartEvent& event) override;
     void shutdown() override;
 
     bool add(const unsigned long long key, IEMaterial* value) override;

@@ -14,7 +14,7 @@ StatusBar::~StatusBar()
 
 void StatusBar::setupIEObjectConnections(const AppStartEvent& event)
 {
-    auto time = event.game()->getIETime();
+    auto time = event.getGame()->getIETime();
 
     connect(time, &IETime::message, this, [this](const QString msg) { this->showMessage(msg); });
 }

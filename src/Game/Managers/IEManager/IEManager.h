@@ -3,6 +3,8 @@
 #include "IEObject.h"
 #include "IEResourceContainer.h"
 
+class GameStartEvent;
+
 template <class T>
 class IEManager : public IEObject
 {
@@ -22,7 +24,7 @@ public:
 
     }
 
-    virtual void startup() = 0;
+    virtual void startup(const GameStartEvent& event) = 0;
     virtual void shutdown() = 0;
 
     virtual bool add(const unsigned long long key, T* value)

@@ -19,9 +19,9 @@ FileSubMenu::~FileSubMenu()
 
 void FileSubMenu::setupActions(const AppStartEvent& event)
 {
-    auto inputContainer = event.editor()->getInput()->getInputContainer();
-    auto windowManager = event.editor()->getUi()->getWindowManager();
-    auto applicationWindow = event.applicationWindow();
+    auto inputContainer = event.getEditor()->getInput()->getInputContainer();
+    auto windowManager = event.getEditor()->getUi()->getWindowManager();
+    auto applicationWindow = event.getApplicationWindow();
 
     appendAction("Open", new LoadGameAction(applicationWindow, inputContainer->fetchValue("Open"), this));
     appendAction("Save", new SaveGameAction(applicationWindow, inputContainer->fetchValue("Save"), this));

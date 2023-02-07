@@ -5,6 +5,8 @@
 
 #include "IEManager.h"
 
+class GameStartEvent;
+
 class IENameManager : public IEManager<QString>
 {
     Q_OBJECT
@@ -13,7 +15,7 @@ public:
     IENameManager(QObject* parent = nullptr);
     ~IENameManager();
 
-    void startup() override;
+    void startup(const GameStartEvent& event) override;
     void shutdown() override;
 
     bool add(const unsigned long long key, QString* value) override;

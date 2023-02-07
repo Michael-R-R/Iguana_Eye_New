@@ -1,4 +1,5 @@
 #include "IEShaderManager.h"
+#include "GameStartEvent.h"
 
 IEShaderManager::IEShaderManager(QObject* parent) :
     IEManager(parent)
@@ -11,7 +12,7 @@ IEShaderManager::~IEShaderManager()
 
 }
 
-void IEShaderManager::startup()
+void IEShaderManager::startup(const GameStartEvent& event)
 {
     this->buildAllShaders();
 }
