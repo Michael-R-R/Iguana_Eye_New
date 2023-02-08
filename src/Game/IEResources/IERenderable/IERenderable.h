@@ -23,7 +23,7 @@ private:
     unsigned long long materialId;
     unsigned long long shaderId;
 
-    IEBufferContainer<QVector2D>* vec2BufferContainer;
+    IEBufferContainer<QVector3D>* vec3BufferContainer;
 
 public:
     IERenderable();
@@ -36,19 +36,19 @@ public:
     bool operator<(const IERenderable& other) { return IEResource::operator<(other); }
     bool operator>(const IERenderable& other) { return IEResource::operator>(other); }
 
-    void rebuildAllBuffers(IEShader* shader);
+    void build(IEShader* shader);
 
     Type getType() const { return type; }
     unsigned long long getMeshId() const { return meshId; }
     unsigned long long getMaterialId() const { return materialId; }
     unsigned long long getShaderId() const { return shaderId; }
-    IEBufferContainer<QVector2D>* getVec2BufferContainer() const { return vec2BufferContainer; }
+    IEBufferContainer<QVector3D>* getVec3BufferContainer() const { return vec3BufferContainer; }
 
     void setType(const Type val) { type = val; }
     void setMeshId(const unsigned long long val) { meshId = val; }
     void setMaterialId(const unsigned long long val) { materialId = val; }
     void setShaderId(const unsigned long long val) { shaderId = val; }
-    void setVec2BufferContainer(IEBufferContainer<QVector2D>* val) { vec2BufferContainer = val; }
+    void setVec3BufferContainer(IEBufferContainer<QVector3D>* val) { vec3BufferContainer = val; }
 };
 
 QDataStream& operator<<(QDataStream& out, const IERenderable& renderable);

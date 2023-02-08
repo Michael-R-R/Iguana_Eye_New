@@ -23,7 +23,6 @@ public:
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
 
 private:
-    void buildShader(IEShader* shader);
     void buildAllShaders();
 
 signals:

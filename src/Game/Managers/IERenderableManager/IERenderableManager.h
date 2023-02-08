@@ -6,6 +6,7 @@
 #include "IERenderable.h"
 
 class GameStartEvent;
+class IEShader;
 
 class IERenderableManager : public IEManager<IERenderable>
 {
@@ -23,7 +24,7 @@ public:
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
 
 private:
-    void rebuildRenderable(const GameStartEvent& event, IERenderable* renderable);
+    void buildAllRenderables(const GameStartEvent& event);
 
 signals:
     void added(const unsigned long long key);

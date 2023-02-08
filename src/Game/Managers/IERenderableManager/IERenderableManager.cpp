@@ -14,7 +14,7 @@ IERenderableManager::~IERenderableManager()
 
 void IERenderableManager::startup(const GameStartEvent& event)
 {
-    // TODO implement
+    this->buildAllRenderables(event);
 }
 
 void IERenderableManager::shutdown()
@@ -52,14 +52,17 @@ bool IERenderableManager::changeKey(const unsigned long long oldKey, const unsig
     return true;
 }
 
-void IERenderableManager::rebuildRenderable(const GameStartEvent& event, IERenderable* renderable)
+void IERenderableManager::buildAllRenderables(const GameStartEvent& event)
 {
     auto shaderManager = event.getScene()->getShaderManager();
-    auto shader = shaderManager->getValue(renderable->getShaderId());
-    if(!shader)
-        return;
 
-    renderable->rebuildAllBuffers(shader);
+    for(auto& renderable : resourceContainer->getResources())
+    {
+        auto shader = shaderManager->getValue(renderable->getShaderId());
+        if(!shader)
+            continue;
+        renderable->build(shader);
+    }
 }
 
 QDataStream& operator<<(QDataStream& out, const IERenderableManager& manager)

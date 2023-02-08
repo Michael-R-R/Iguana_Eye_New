@@ -41,6 +41,17 @@ IEShader::~IEShader()
 
 }
 
+void IEShader::build()
+{
+    if(this->shaders().size() > 0)
+        this->removeAllShaders();
+
+    this->create();
+    this->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexSource);
+    this->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentSource);
+    this->link();
+}
+
 void IEShader::parseFile(QString filePath)
 {
     QString content = "";

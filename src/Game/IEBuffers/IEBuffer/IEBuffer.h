@@ -11,9 +11,9 @@ template <class T>
 class IEBuffer : public QOpenGLBuffer
 {
    QVector<T> data;
-   unsigned tuple;
-   unsigned stride;
-   unsigned divisor;
+   int tuple;
+   int stride;
+   int divisor;
 
 public:
     IEBuffer(QOpenGLBuffer::Type type) :
@@ -34,8 +34,8 @@ public:
 
     ~IEBuffer() {}
 
-    void build(QVector<T>& data_, const unsigned tuple_,
-               const unsigned stride_, const unsigned divisor_,
+    void build(QVector<T>& data_, const int tuple_,
+               const int stride_, const int divisor_,
                const int attribLoc)
     {
         data = data_;
@@ -85,14 +85,14 @@ public:
     }
 
     const QVector<T>& getData() const { return data; }
-    unsigned getTuple() const { return tuple; }
-    unsigned getStride() const { return stride; }
-    unsigned getDivisor() const { return divisor; }
+    int getTuple() const { return tuple; }
+    int getStride() const { return stride; }
+    int getDivisor() const { return divisor; }
 
     void setData(const QVector<T>& val) { data = val; }
-    void setTuple(const unsigned val) { tuple = val; }
-    void setStride(const unsigned val) { stride = val; }
-    void setDivisor(const unsigned val) { divisor = val; }
+    void setTuple(const int val) { tuple = val; }
+    void setStride(const int val) { stride = val; }
+    void setDivisor(const int val) { divisor = val; }
 };
 
 template <class T>
@@ -110,9 +110,9 @@ template <class T>
 QDataStream& operator>>(QDataStream& in, IEBuffer<T>& buffer)
 {
     QVector<T> data;
-    unsigned tuple;
-    unsigned stride;
-    unsigned divisor;
+    int tuple;
+    int stride;
+    int divisor;
 
     in >> data
        >> tuple
