@@ -53,21 +53,6 @@ void Game::onRenderFrame()
     glExtraFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // TODO test
-    auto material = scene->getMaterialManager()->getValue(2);
-    auto shader = scene->getShaderManager()->getValue(3);
-    auto renderable = scene->getRenderableManager()->getValue(4);
-    if(material || shader || renderable)
-    {
-        shader->bind();
-        renderable->bind();
-        material->bindUniformData(shader);
-        glExtraFunc->glDrawArrays(GL_TRIANGLES, 0, 3);
-        renderable->release();
-        shader->release();
-    }
-    // -------------
-
     time->processDeltaTime();
 }
 

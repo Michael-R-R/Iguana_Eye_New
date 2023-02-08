@@ -38,21 +38,6 @@ public:
         clear();
     }
 
-    void clear()
-    {
-        QMapIterator<QString, IEBuffer<T>*> it(buffers);
-        while(it.hasNext())
-        {
-            it.next();
-
-            auto temp = it.value();
-            buffers[it.key()] = nullptr;
-            delete temp;
-        }
-
-        buffers.clear();
-    }
-
     bool add(const QString key, IEBuffer<T>* value)
     {
         if(doesExist(key))
@@ -75,27 +60,22 @@ public:
         return true;
     }
 
-    bool bind(const QString& key)
+    void clear()
     {
-        if(!doesExist(key))
-            return false;
+        QMapIterator<QString, IEBuffer<T>*> it(buffers);
+        while(it.hasNext())
+        {
+            it.next();
 
-        buffers[key]->bind();
+            auto temp = it.value();
+            buffers[it.key()] = nullptr;
+            delete temp;
+        }
 
-        return true;
+        buffers.clear();
     }
 
-    bool release(const QString& key)
-    {
-        if(!doesExist(key))
-            return false;
-
-        buffers[key]->release();
-
-        return true;
-    }
-
-    void releaseAll()
+    void releaseAllBuffers()
     {
         for(auto& buffer : buffers)
         {
@@ -108,24 +88,16 @@ public:
         return buffers.contains(key);
     }
 
-    void rebuildBuffer(const QString& key, const int attribLoc)
+    IEBuffer<T>* getValue(const QString& key) const
     {
         if(!doesExist(key))
-            return;
+            return nullptr;
 
-        buffers[key]->rebuild(attribLoc);
-    }
-
-    void subAllocateBuffer(const QString& key, int offset, T& data)
-    {
-        if(!doesExist(key))
-            return;
-
-        buffers[key]->subAllocate(offset, data);
+        return buffers[key];
     }
 
     const QMap<QString, IEBuffer<T>*>& getBuffers() const { return buffers; }
-    void setBuffers(const QMap<QString, IEBuffer<T>*> val) { buffers = val; }
+    void setBuffers(const QMap<QString, IEBuffer<T>*>& val) { buffers = val; }
 };
 
 template <class T>
@@ -138,8 +110,9 @@ QDataStream& operator<<(QDataStream& out, const IEBufferContainer<T>& container)
     while(it.hasNext())
     {
         it.next();
-
-        out << it.key() << it.value()->type() << *it.value();
+        out << it.key()
+            << it.value()->type()
+            << *it.value();
     }
 
     return out;
@@ -152,13 +125,15 @@ QDataStream& operator>>(QDataStream& in, IEBufferContainer<T>& container)
     in >> size;
 
     QMap<QString, IEBuffer<T>*> tempBuffers;
+    QString key;
+    QOpenGLBuffer::Type type;
+
     for(int i = 0; i < size; i++)
     {
-        QString key;
-        QOpenGLBuffer::Type type;
         in >> key >> type;
 
         auto buffer = new IEBuffer<T>(type);
+
         in >> *buffer;
 
         tempBuffers[key] = buffer;

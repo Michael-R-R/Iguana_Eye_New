@@ -38,7 +38,7 @@ IEShader::IEShader(const IEShader& other) :
 
 IEShader::~IEShader()
 {
-
+    this->removeAllShaders();
 }
 
 void IEShader::build()

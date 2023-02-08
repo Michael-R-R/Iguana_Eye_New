@@ -32,19 +32,26 @@ public:
 
     }
 
-    ~IEBuffer() {}
+    ~IEBuffer()
+    {
+        if(this->isCreated())
+            this->destroy();
+    }
 
-    void build(QVector<T>& data_, const int tuple_,
-               const int stride_, const int divisor_,
-               const int attribLoc)
+    void initData(const QVector<T>& data_, const int tuple_,
+                  const int stride_, const int divisor_)
     {
         data = data_;
         tuple = tuple_;
         stride = stride_;
         divisor = divisor_;
+    }
 
+    void build(const int attribLoc)
+    {
+        if(!this->isCreated())
+            this->create();
         this->setUsagePattern(QOpenGLBuffer::StaticDraw);
-        this->create();
         this->bind();
         this->allocate(data.data(), (int)(data.size() * sizeof(T)));
 
@@ -59,7 +66,7 @@ public:
             else
             {
                 QOpenGLExtraFunctions* extraFunc = QOpenGLContext::currentContext()->extraFunctions();
-                for(unsigned i = 0; i < divisor; i++)
+                for(int i = 0; i < divisor; i++)
                 {
                     func->glVertexAttribPointer(attribLoc + i, tuple, GL_FLOAT, false, stride, (void*)(i * sizeof(T)));
                     func->glEnableVertexAttribArray(attribLoc + i);
@@ -67,11 +74,6 @@ public:
                 }
             }
         }
-    }
-
-    void rebuild(const int attribLoc)
-    {
-        this->build(data, tuple, stride, divisor, attribLoc);
     }
 
     void subAllocate(const int offset, const void* subData)
