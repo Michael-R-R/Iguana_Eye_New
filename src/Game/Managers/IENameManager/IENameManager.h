@@ -28,7 +28,17 @@ signals:
     void added(const unsigned long long key);
     void removed(const unsigned long long key);
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
-};
 
-QDataStream& operator<<(QDataStream& out, const IENameManager& manager);
-QDataStream& operator>>(QDataStream& in, IENameManager& manager);
+public:
+    friend QDataStream& operator<<(QDataStream& out, const IENameManager& manager)
+    {
+        out << *manager.resourceContainer;
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IENameManager& manager)
+    {
+        in >> *manager.resourceContainer;
+        return in;
+    }
+};

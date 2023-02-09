@@ -13,5 +13,5 @@ enum class IEComponentType : unsigned long long
     Shader = 64,            //
     Renderable = 128,       //
     Physics = 256,          //
-    ParentChild = 512       //
+    Hierarchy = 512         //
 };

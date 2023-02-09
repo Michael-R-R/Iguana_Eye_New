@@ -61,9 +61,4 @@ public:
     {
         return resourceContainer;
     }
-
-    void setResourceContainer(IEResourceContainer<T>* val)
-    {
-        resourceContainer = val;
-    }
 };

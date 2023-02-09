@@ -31,7 +31,17 @@ public:
 
 signals:
     void cleared();
-};
 
-QDataStream& operator<<(QDataStream& out, const InputContainer& container);
-QDataStream& operator>>(QDataStream& in, InputContainer& container);
+public:
+    friend QDataStream& operator<<(QDataStream& out, const InputContainer& container)
+    {
+        out << container.keys;
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, InputContainer& container)
+    {
+        in >> container.keys;
+        return in;
+    }
+};

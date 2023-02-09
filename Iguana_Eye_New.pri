@@ -57,6 +57,7 @@ INCLUDEPATH += $$PWD/src/Game/ECS \
     $$PWD/src/Game/ECS/IEEntityManager
 
 INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
+    $$PWD/src/Game/ECS/Systems/IEECSHierarchySystem \
     $$PWD/src/Game/ECS/Systems/IEECSInputSystem \
     $$PWD/src/Game/ECS/Systems/IEECSSystem
 

@@ -24,14 +24,21 @@ public:
     bool hasComponent(const IEEntity& key, const unsigned long long component) const;
     unsigned long long getAttachComponents(const IEEntity& key) const;
 
-    const QMap<IEEntity, unsigned long long>& getEntityMap() const { return entityMap; }
-    const QStack<int>& getFreeIdStack() const { return freeIdStack; }
-    int getNextId() const { return nextId; }
+    friend QDataStream& operator<<(QDataStream& out, const IEEntityManager& manager)
+    {
+        out << manager.entityMap
+            << manager.freeIdStack
+            << manager.nextId;
 
-    void setEntityMap(const QMap<IEEntity, unsigned long long>& val) { entityMap = val; }
-    void setFreeIdStack(const QStack<int>& val) { freeIdStack = val; }
-    void setNextId(const int val) { nextId = val; }
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEEntityManager& manager)
+    {
+        in >> manager.entityMap
+           >> manager.freeIdStack
+           >> manager.nextId;
+
+        return in;
+    }
 };
-
-QDataStream& operator<<(QDataStream& out, const IEEntityManager& manager);
-QDataStream& operator>>(QDataStream& in, IEEntityManager& manager);

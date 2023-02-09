@@ -20,9 +20,15 @@ public:
     bool operator<(const IEEntity& other) const { return this->id < other.id; }
     bool operator>(const IEEntity& other) const { return this->id > other.id; }
 
-    int getId() const { return id; }
-    void setId(const int val) { id = val; }
-};
+    friend QDataStream& operator<<(QDataStream& out, const IEEntity& entity)
+    {
+        out << entity.id;
+        return out;
+    }
 
-QDataStream& operator<<(QDataStream& out, const IEEntity& entity);
-QDataStream& operator>>(QDataStream& in, IEEntity& entity);
+    friend QDataStream& operator>>(QDataStream& in, IEEntity& entity)
+    {
+        in >> entity.id;
+        return in;
+    }
+};

@@ -82,30 +82,3 @@ void Game::resizeGL(int w, int h)
 {
     glFunc->glViewport(0, 0, w, h);
 }
-
-QDataStream& operator<<(QDataStream& out, const Game& game)
-{
-    out << *game.getIETime() << *game.getIEInput() << *game.getIEScene();
-
-    return out;
-}
-
-QDataStream& operator>>(QDataStream& in, Game& game)
-{
-    game.shutdown();
-
-    IETime* time = new IETime(0, 0, &game);
-    IEInput* input = new IEInput(&game, &game);
-    IEScene* scene = new IEScene(&game);
-
-    in >> *time >> *input >> *scene;
-
-    game.setIETime(time);
-    game.setIEInput(input);
-    game.setIEScene(scene);
-
-    game.startup();
-
-    return in;
-}
-

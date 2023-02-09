@@ -64,21 +64,3 @@ void IERenderableManager::buildAllRenderables(const GameStartEvent& event)
         renderable->build(shader);
     }
 }
-
-QDataStream& operator<<(QDataStream& out, const IERenderableManager& manager)
-{
-    out << *manager.getResourceContainer();
-
-    return out;
-}
-
-QDataStream& operator>>(QDataStream& in, IERenderableManager& manager)
-{
-    IEResourceContainer<IERenderable>* container = manager.getResourceContainer();
-
-    in >> *container;
-
-    manager.setResourceContainer(container);
-
-    return in;
-}

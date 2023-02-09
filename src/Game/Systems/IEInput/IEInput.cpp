@@ -32,21 +32,3 @@ void IEInput::setupInputContainer()
     inputContainer->addValue("Right", InputKey(0, Qt::Key_D));
     inputContainer->addValue("Jump", InputKey(0, Qt::Key_Space));
 }
-
-QDataStream& operator<<(QDataStream& out, const IEInput& input)
-{
-    out << *input.getInputContainer();
-
-    return out;
-}
-
-QDataStream& operator>>(QDataStream& in, IEInput& input)
-{
-    auto inputContainer = input.getInputContainer();
-
-    in >> *inputContainer;
-
-    input.setInputContainer(inputContainer);
-
-    return in;
-}

@@ -59,21 +59,3 @@ void IEShaderManager::buildAllShaders()
         shader->build();
     }
 }
-
-QDataStream& operator<<(QDataStream& out, const IEShaderManager& manager)
-{
-    out << *manager.getResourceContainer();
-
-    return out;
-}
-
-QDataStream& operator>>(QDataStream& in, IEShaderManager& manager)
-{
-    IEResourceContainer<IEShader>* container = manager.getResourceContainer();
-
-    in >> *container;
-
-    manager.setResourceContainer(container);
-
-    return in;
-}

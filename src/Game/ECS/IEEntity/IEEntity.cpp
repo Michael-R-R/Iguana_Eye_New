@@ -1,19 +1,19 @@
 #include "IEEntity.h"
 
-QDataStream& operator<<(QDataStream& out, const IEEntity& entity)
-{
-    out << entity.getId();
+//QDataStream& operator<<(QDataStream& out, const IEEntity& entity)
+//{
+//    out << entity.getId();
 
-    return out;
-}
+//    return out;
+//}
 
-QDataStream& operator>>(QDataStream& in, IEEntity& entity)
-{
-    int id;
+//QDataStream& operator>>(QDataStream& in, IEEntity& entity)
+//{
+//    int id;
 
-    in >> id;
+//    in >> id;
 
-    entity.setId(id);
+//    entity.setId(id);
 
-    return in;
-}
+//    return in;
+//}

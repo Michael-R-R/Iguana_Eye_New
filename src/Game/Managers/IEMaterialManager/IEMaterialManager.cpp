@@ -51,21 +51,3 @@ bool IEMaterialManager::changeKey(const unsigned long long oldKey, const unsigne
 
     return true;
 }
-
-QDataStream& operator<<(QDataStream& out, const IEMaterialManager& manager)
-{
-    out << *manager.getResourceContainer();
-
-    return out;
-}
-
-QDataStream& operator>>(QDataStream& in, IEMaterialManager& manager)
-{
-    IEResourceContainer<IEMaterial>* container = manager.getResourceContainer();
-
-    in >> *container;
-
-    manager.setResourceContainer(container);
-
-    return in;
-}

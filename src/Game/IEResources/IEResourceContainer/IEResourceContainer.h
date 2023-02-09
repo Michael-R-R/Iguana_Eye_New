@@ -97,46 +97,36 @@ public:
     }
 
     const QMap<unsigned long long, T*>& getResources() const { return resources; }
-    void setResources(QMap<unsigned long long, T*> val) { resources = val; }
+
+    friend QDataStream& operator<<(QDataStream& out, const IEResourceContainer<T>& container)
+    {
+        out << (int)container.resources.size();
+
+        QMapIterator<unsigned long long, T*> it(container.resources);
+        while(it.hasNext())
+        {
+            it.next();
+            out << it.key() << *it.value();
+        }
+
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEResourceContainer<T>& container)
+    {
+        int size = 0;
+        in >> size;
+
+        for(int i = 0; i < size; i++)
+        {
+            unsigned long long key = 0;
+            T* value = new T();
+
+            in >> key >> *value;
+
+            container.resources[key] = value;
+        }
+
+        return in;
+    }
 };
-
-template <class T>
-QDataStream& operator<<(QDataStream& out, const IEResourceContainer<T>& manager)
-{
-    QMap<unsigned long long, T*> map = manager.getResources();
-    int size = map.size();
-
-    out << size;
-
-    QMapIterator<unsigned long long, T*> it(map);
-    while(it.hasNext())
-    {
-        it.next();
-
-        out << it.key() << *it.value();
-    }
-
-    return out;
-}
-
-template <class T>
-QDataStream& operator>>(QDataStream& in, IEResourceContainer<T>& manager)
-{
-    int size = 0;
-    in >> size;
-
-    QMap<unsigned long long, T*> resources;
-    for(int i = 0; i < size; i++)
-    {
-        unsigned long long key = 0;
-        T* value = new T();
-
-        in >> key >> *value;
-
-        resources[key] = value;
-    }
-
-    manager.setResources(resources);
-
-    return in;
-}

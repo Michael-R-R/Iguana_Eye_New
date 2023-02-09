@@ -25,11 +25,19 @@ public:
     InputContainer* getInputContainer() const { return inputContainer; }
     InputCapture* getInputCapture() const { return inputCapture; }
 
-    void setInputContainer(InputContainer* val) { inputContainer = val; }
-
 private:
     void setupInputContainer();
-};
 
-QDataStream& operator<<(QDataStream& out, const IEInput& input);
-QDataStream& operator>>(QDataStream& in, IEInput& input);
+public:
+    friend QDataStream& operator<<(QDataStream& out, const IEInput& input)
+    {
+        out << *input.inputContainer;
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEInput& input)
+    {
+        in >> *input.inputContainer;
+        return in;
+    }
+};

@@ -51,21 +51,3 @@ bool IEMeshManager::changeKey(const unsigned long long oldKey, const unsigned lo
 
     return true;
 }
-
-QDataStream& operator<<(QDataStream& out, const IEMeshManager& manager)
-{
-    out << *manager.getResourceContainer();
-
-    return out;
-}
-
-QDataStream& operator>>(QDataStream& in, IEMeshManager& manager)
-{
-    IEResourceContainer<IEMesh>* container = manager.getResourceContainer();
-
-    in >> *container;
-
-    manager.setResourceContainer(container);
-
-    return in;
-}

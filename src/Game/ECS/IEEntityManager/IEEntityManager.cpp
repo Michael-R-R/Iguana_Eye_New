@@ -85,27 +85,3 @@ unsigned long long IEEntityManager::getAttachComponents(const IEEntity& key) con
 
     return entityMap[key];
 }
-
-QDataStream& operator<<(QDataStream& out, const IEEntityManager& manager)
-{
-    out << manager.getEntityMap()
-        << manager.getFreeIdStack()
-        << manager.getNextId();
-
-    return out;
-}
-
-QDataStream& operator>>(QDataStream& in, IEEntityManager& manager)
-{
-    QMap<IEEntity, unsigned long long> entityMap;
-    QStack<int> freeIdStack;
-    int nextId;
-
-    in >> entityMap >> freeIdStack >> nextId;
-
-    manager.setEntityMap(entityMap);
-    manager.setFreeIdStack(freeIdStack);
-    manager.setNextId(nextId);
-
-    return in;
-}

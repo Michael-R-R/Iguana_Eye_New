@@ -40,9 +40,15 @@ public:
     bool getHasInput(const int index) const;
     void setHasInput(const int index, const bool val);
 
-    const InputDataECS& getData() const { return data; }
-    void setData(const InputDataECS& val) { data = val; }
-};
+    friend QDataStream& operator<<(QDataStream& out, const IEECSInputSystem& system)
+    {
+        out << system.entityMap << system.data;
+        return out;
+    }
 
-QDataStream& operator<<(QDataStream& out, const IEECSInputSystem& system);
-QDataStream& operator>>(QDataStream& in, IEECSInputSystem& system);
+    friend QDataStream& operator>>(QDataStream& in, IEECSInputSystem& system)
+    {
+        in >> system.entityMap >> system.data;
+        return in;
+    }
+};

@@ -43,7 +43,16 @@ public:
     int getRenderRefresh() const { return renderRefresh; }
     void setUpdateRefresh(const int ms) { updateRefresh = ms; }
     void setRenderRefresh(const int ms) { renderRefresh = ms; }
-};
 
-QDataStream& operator<<(QDataStream& out, const IETime& game);
-QDataStream& operator>>(QDataStream& in, IETime& game);
+    friend QDataStream& operator<<(QDataStream& out, const IETime& time)
+    {
+        out << time.updateRefresh << time.renderRefresh;
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IETime& time)
+    {
+        in >> time.updateRefresh >> time.renderRefresh;
+        return in;
+    }
+};

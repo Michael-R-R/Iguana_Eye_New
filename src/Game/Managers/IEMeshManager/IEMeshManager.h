@@ -26,7 +26,17 @@ signals:
     void added(const unsigned long long key);
     void removed(const unsigned long long key);
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
-};
 
-QDataStream& operator<<(QDataStream& out, const IEMeshManager& manager);
-QDataStream& operator>>(QDataStream& in, IEMeshManager& manager);
+public:
+    friend QDataStream& operator<<(QDataStream& out, const IEMeshManager& manager)
+    {
+        out << *manager.resourceContainer;
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEMeshManager& manager)
+    {
+        in >> *manager.resourceContainer;
+        return in;
+    }
+};

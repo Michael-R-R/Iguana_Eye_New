@@ -32,10 +32,6 @@ public:
     IEInput* getIEInput() const { return input; }
     IEScene* getIEScene() const { return scene; }
 
-    void setIETime(IETime* val) { time = val; }
-    void setIEInput(IEInput* val) { input = val; }
-    void setIEScene(IEScene* val) { scene = val; }
-
 public slots:
     void onUpdateFrame();
 
@@ -49,7 +45,26 @@ protected:
 
 signals:
     void initialized();
-};
 
-QDataStream& operator<<(QDataStream& out, const Game& game);
-QDataStream& operator>>(QDataStream& in, Game& game);
+public:
+    friend QDataStream& operator<<(QDataStream& out, const Game& game)
+    {
+        out << *game.time << *game.input << *game.scene;
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, Game& game)
+    {
+        game.shutdown();
+
+        game.time = new IETime(0, 0, &game);
+        game.input = new IEInput(&game, &game);
+        game.scene = new IEScene(&game);
+
+        in >> *game.time >> *game.input >> *game.scene;
+
+        game.startup();
+
+        return in;
+    }
+};

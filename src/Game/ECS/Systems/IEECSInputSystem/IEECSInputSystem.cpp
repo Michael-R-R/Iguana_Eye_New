@@ -79,23 +79,3 @@ void IEECSInputSystem::setHasInput(const int index, const bool val)
 
     data.hasInputList[index] = val;
 }
-
-QDataStream& operator<<(QDataStream& out, const IEECSInputSystem& system)
-{
-    out << system.getEntityMap() << system.getData();
-
-    return out;
-}
-
-QDataStream& operator>>(QDataStream& in, IEECSInputSystem& system)
-{
-    QMap<IEEntity, int> entityMap;
-    InputDataECS data;
-
-    in >> entityMap >> data;
-
-    system.setEntityMap(entityMap);
-    system.setData(data);
-
-    return in;
-}

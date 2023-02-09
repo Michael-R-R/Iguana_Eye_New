@@ -67,21 +67,3 @@ std::tuple<unsigned long long, QString> IENameManager::hashString(const QString&
     return std::make_tuple(hash, temp);
 }
 
-QDataStream& operator<<(QDataStream& out, const IENameManager& manager)
-{
-    out << *manager.getResourceContainer();
-
-    return out;
-}
-
-QDataStream& operator>>(QDataStream& in, IENameManager& manager)
-{
-    IEResourceContainer<QString>* container = manager.getResourceContainer();
-
-    in >> *container;
-
-    manager.setResourceContainer(container);
-
-    return in;
-}
-

@@ -32,13 +32,22 @@ public:
     int getKey() const { return key; }
     QKeySequence getKeySequence() const { return keySequence; }
 
-    void setMod(const int val) { mod = val; }
-    void setKey(const int val) { key = val; }
-    void setKeySequence(const QKeySequence val) { keySequence = val; }
-
 signals:
     void updated(const QKeySequence newBinding);
-};
 
-QDataStream& operator<<(QDataStream& out, const InputKey& key);
-QDataStream& operator>>(QDataStream& in, InputKey& key);
+public:
+    friend QDataStream& operator<<(QDataStream& out, const InputKey& input)
+    {
+        out << input.mod << input.key;
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, InputKey& input)
+    {
+        in >> input.mod >> input.key;
+
+        input.keySequence = QKeySequence(input.mod | input.key);
+
+        return in;
+    }
+};
