@@ -50,6 +50,10 @@ INCLUDEPATH += $$PWD/src/Game \
     $$PWD/src/Game/IEScene \
     $$PWD/src/Game/IEUniform
 
+INCLUDEPATH += $$PWD/src/Game/ECS \
+    $$PWD/src/Game/ECS/IEEntity \
+    $$PWD/src/Game/ECS/IEEntityManager
+
 INCLUDEPATH += $$PWD/src/Game/IEBuffers \
     $$PWD/src/Game/IEBuffers/IEBuffer \
     $$PWD/src/Game/IEBuffers/IEBufferContainer \

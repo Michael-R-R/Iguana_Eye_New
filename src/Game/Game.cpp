@@ -24,23 +24,26 @@ Game::~Game()
 
 void Game::startup()
 {
+    this->makeCurrent();
+
     GameStartEvent event(time, input, scene);
 
     scene->startup(event);
     time->startup(this);
+
     this->setFocus();
 }
 
 void Game::shutdown()
 {
+    this->makeCurrent();
+
     time->shutdown();
     scene->shutdown();
 
     delete time;
     delete input;
     delete scene;
-
-    this->makeCurrent();
 }
 
 void Game::onUpdateFrame()
