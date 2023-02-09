@@ -45,7 +45,32 @@ public:
     void setSpecularTexId(const unsigned long long val) { specularTexId = val; }
     void setNormalTexId(const unsigned long long val) { normalTexId = val; }
     void setHeightTexId(const unsigned long long val) { heightTexId = val; }
-};
 
-QDataStream& operator<<(QDataStream& out, const IEMaterial& material);
-QDataStream& operator>>(QDataStream& in, IEMaterial& material);
+    friend QDataStream& operator<<(QDataStream& out, const IEMaterial& material)
+    {
+        out << material.id
+            << material.uniformData
+            << material.objectColor
+            << material.atlasTexId
+            << material.diffuseTexId
+            << material.specularTexId
+            << material.normalTexId
+            << material.heightTexId;
+
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEMaterial& material)
+    {
+        in >> material.id
+            >> material.uniformData
+            >> material.objectColor
+            >> material.atlasTexId
+            >> material.diffuseTexId
+            >> material.specularTexId
+            >> material.normalTexId
+            >> material.heightTexId;
+
+        return in;
+    }
+};

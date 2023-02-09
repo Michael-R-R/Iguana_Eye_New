@@ -35,7 +35,23 @@ public:
 
 private:
     void parseFile(QString filePath);
-};
 
-QDataStream& operator<<(QDataStream& out, const IEShader& shader);
-QDataStream& operator>>(QDataStream& in, IEShader& shader);
+public:
+    friend QDataStream& operator<<(QDataStream& out, const IEShader& shader)
+    {
+        out << shader.id
+            << shader.vertexSource
+            << shader.fragmentSource;
+
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEShader& shader)
+    {
+        in >> shader.id
+            >> shader.vertexSource
+            >> shader.fragmentSource;
+
+        return in;
+    }
+};

@@ -86,45 +86,23 @@ public:
         this->release();
     }
 
-    const QVector<T>& getData() const { return data; }
-    int getTuple() const { return tuple; }
-    int getStride() const { return stride; }
-    int getDivisor() const { return divisor; }
+    friend QDataStream& operator<<(QDataStream& out, const IEBuffer<T>& buffer)
+    {
+        out << buffer.data
+            << buffer.tuple
+            << buffer.stride
+            << buffer.divisor;
 
-    void setData(const QVector<T>& val) { data = val; }
-    void setTuple(const int val) { tuple = val; }
-    void setStride(const int val) { stride = val; }
-    void setDivisor(const int val) { divisor = val; }
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEBuffer<T>& buffer)
+    {
+        in >> buffer.data
+            >> buffer.tuple
+            >> buffer.stride
+            >> buffer.divisor;
+
+        return in;
+    }
 };
-
-template <class T>
-QDataStream& operator<<(QDataStream& out, const IEBuffer<T>& buffer)
-{
-    out << buffer.getData()
-        << buffer.getTuple()
-        << buffer.getStride()
-        << buffer.getDivisor();
-
-    return out;
-}
-
-template <class T>
-QDataStream& operator>>(QDataStream& in, IEBuffer<T>& buffer)
-{
-    QVector<T> data;
-    int tuple;
-    int stride;
-    int divisor;
-
-    in >> data
-       >> tuple
-       >> stride
-       >> divisor;
-
-    buffer.setData(data);
-    buffer.setTuple(tuple);
-    buffer.setStride(stride);
-    buffer.setDivisor(divisor);
-
-    return in;
-}

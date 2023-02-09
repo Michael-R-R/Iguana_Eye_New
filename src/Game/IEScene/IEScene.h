@@ -30,12 +30,12 @@ public:
     void startup(const GameStartEvent& event);
     void shutdown();
 
-    const IENameManager* getNameManager() const { return nameManager; }
-    const IEMeshManager* getMeshManager() const { return meshManager; }
-    const IEMaterialManager* getMaterialManager() const { return materialManager; }
-    const IEShaderManager* getShaderManager() const { return shaderManager; }
-    const IERenderableManager* getRenderableManager() const { return renderableManager; }
-    const IEECS* getECS() const { return ecs; }
+    IENameManager* getNameManager() const { return nameManager; }
+    IEMeshManager* getMeshManager() const { return meshManager; }
+    IEMaterialManager* getMaterialManager() const { return materialManager; }
+    IEShaderManager* getShaderManager() const { return shaderManager; }
+    IERenderableManager* getRenderableManager() const { return renderableManager; }
+    IEECS* getECS() const { return ecs; }
 
     friend QDataStream& operator<<(QDataStream& out, const IEScene& scene)
     {

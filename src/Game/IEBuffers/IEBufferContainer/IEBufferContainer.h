@@ -97,49 +97,42 @@ public:
     }
 
     const QMap<QString, IEBuffer<T>*>& getBuffers() const { return buffers; }
-    void setBuffers(const QMap<QString, IEBuffer<T>*>& val) { buffers = val; }
+
+    friend QDataStream& operator<<(QDataStream& out, const IEBufferContainer<T>& container)
+    {
+        out << (int)container.buffers.size();
+
+        QMapIterator<QString, IEBuffer<T>*> it(container.buffers);
+        while(it.hasNext())
+        {
+            it.next();
+            out << it.key()
+                << it.value()->type()
+                << *it.value();
+        }
+
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEBufferContainer<T>& container)
+    {
+        int size = 0;
+        in >> size;
+
+        QString key;
+        QOpenGLBuffer::Type type;
+
+        for(int i = 0; i < size; i++)
+        {
+            in >> key >> type;
+
+            auto buffer = new IEBuffer<T>(type);
+
+            in >> *buffer;
+
+            container.buffers[key] = buffer;
+        }
+
+        return in;
+    }
 };
-
-template <class T>
-QDataStream& operator<<(QDataStream& out, const IEBufferContainer<T>& container)
-{
-    int size = container.getBuffers().size();
-    out << size;
-
-    QMapIterator<QString, IEBuffer<T>*> it(container.getBuffers());
-    while(it.hasNext())
-    {
-        it.next();
-        out << it.key()
-            << it.value()->type()
-            << *it.value();
-    }
-
-    return out;
-}
-
-template <class T>
-QDataStream& operator>>(QDataStream& in, IEBufferContainer<T>& container)
-{
-    int size = 0;
-    in >> size;
-
-    QMap<QString, IEBuffer<T>*> tempBuffers;
-    QString key;
-    QOpenGLBuffer::Type type;
-
-    for(int i = 0; i < size; i++)
-    {
-        in >> key >> type;
-
-        auto buffer = new IEBuffer<T>(type);
-
-        in >> *buffer;
-
-        tempBuffers[key] = buffer;
-    }
-
-    container.setBuffers(tempBuffers);
-
-    return in;
-}

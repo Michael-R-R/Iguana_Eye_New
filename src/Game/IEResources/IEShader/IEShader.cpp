@@ -76,25 +76,3 @@ void IEShader::parseFile(QString filePath)
     int fStart = fIndex + fDelimiter.length() + 1;
     fragmentSource = content.mid(fStart);
 }
-
-QDataStream& operator<<(QDataStream& out, const IEShader& shader)
-{
-    out << shader.getId() << shader.getVertexSrc() << shader.getFragmentSrc();
-
-    return out;
-}
-
-QDataStream& operator>>(QDataStream& in, IEShader& shader)
-{
-    unsigned long long id = 0;
-    QString vSrc;
-    QString fSrc;
-
-    in >> id >> vSrc >> fSrc;
-
-    shader.setId(id);
-    shader.setVertexSrc(vSrc);
-    shader.setFragmentSrc(fSrc);
-
-    return in;
-}

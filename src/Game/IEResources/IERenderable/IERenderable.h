@@ -53,15 +53,37 @@ public:
     IEBufferContainer<QVector4D>* getVec4BufferContainer() const { return vec4BufferContainer; }
     IEBufferContainer<QMatrix4x4>* getMat4BufferContainer() const { return mat4BufferContainer; }
 
-    void setType(const Type val) { type = val; }
     void setMeshId(const unsigned long long val) { meshId = val; }
     void setMaterialId(const unsigned long long val) { materialId = val; }
     void setShaderId(const unsigned long long val) { shaderId = val; }
-    void setVec2BufferContainer(IEBufferContainer<QVector2D>* val) { vec2BufferContainer = val; }
-    void setVec3BufferContainer(IEBufferContainer<QVector3D>* val) { vec3BufferContainer = val; }
-    void setVec4BufferContainer(IEBufferContainer<QVector4D>* val) { vec4BufferContainer = val; }
-    void setMat4BufferContainer(IEBufferContainer<QMatrix4x4>* val) { mat4BufferContainer = val; }
-};
 
-QDataStream& operator<<(QDataStream& out, const IERenderable& renderable);
-QDataStream& operator>>(QDataStream& in, IERenderable& renderable);
+    friend QDataStream& operator<<(QDataStream& out, const IERenderable& renderable)
+    {
+        out << renderable.id
+            << renderable.type
+            << renderable.meshId
+            << renderable.materialId
+            << renderable.shaderId
+            << *renderable.vec2BufferContainer
+            << *renderable.vec3BufferContainer
+            << *renderable.vec4BufferContainer
+            << *renderable.mat4BufferContainer;
+
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IERenderable& renderable)
+    {
+        in >> renderable.id
+           >> renderable.type
+           >> renderable.meshId
+           >> renderable.materialId
+           >> renderable.shaderId
+           >> *renderable.vec2BufferContainer
+           >> *renderable.vec3BufferContainer
+           >> *renderable.vec4BufferContainer
+           >> *renderable.mat4BufferContainer;
+
+        return in;
+    }
+};
