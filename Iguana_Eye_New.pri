@@ -57,6 +57,8 @@ INCLUDEPATH += $$PWD/src/Game/ECS \
     $$PWD/src/Game/ECS/IEEntityManager
 
 INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
+    $$PWD/src/Game/ECS/Systems/IEECSInputSystem \
+    $$PWD/src/Game/ECS/Systems/IEECSSystem
 
 INCLUDEPATH += $$PWD/src/Game/IEBuffers \
     $$PWD/src/Game/IEBuffers/IEBuffer \

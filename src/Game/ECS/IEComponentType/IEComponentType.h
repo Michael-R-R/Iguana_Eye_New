@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QDataStream>
+
 enum class IEComponentType : unsigned long long
 {
     Input = 1,              //
@@ -11,6 +13,5 @@ enum class IEComponentType : unsigned long long
     Shader = 64,            //
     Renderable = 128,       //
     Physics = 256,          //
-    Name = 512,             //
-    ParentChild = 1024      //
+    ParentChild = 512       //
 };

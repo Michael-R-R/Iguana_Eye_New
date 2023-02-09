@@ -25,7 +25,7 @@ void IEScene::startup(const GameStartEvent& event)
     materialManager->startup(event);
     shaderManager->startup(event);
     renderableManager->startup(event);
-    ecs->startup();
+    ecs->startup(event);
 }
 
 void IEScene::shutdown()

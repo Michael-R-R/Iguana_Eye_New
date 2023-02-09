@@ -1,24 +1,28 @@
 #pragma once
 
 #include <QDataStream>
-#include <QVector>
+#include <QMap>
 
 #include "IEObject.h"
-#include "IEEntityManager.h"
-#include "IEEntity.h"
 #include "IEComponentType.h"
+#include "IEEntityManager.h"
+#include "IEECSSystem.h"
+#include "IEEntity.h"
+
+class GameStartEvent;
 
 class IEECS : public IEObject
 {
     Q_OBJECT
 
     IEEntityManager* entityManager;
+    QMap<IEComponentType, IEECSSystem*> systems;
 
 public:
     IEECS(QObject* parent = nullptr);
     ~IEECS();
 
-    void startup();
+    void startup(const GameStartEvent& event);
     void shutdown();
 
     IEEntity create();
@@ -26,9 +30,16 @@ public:
     int attachComponent(const IEEntity entity, const IEComponentType type);
     bool detachComponent(const IEEntity entity, const IEComponentType type);
     bool hasComponent(const IEEntity entity, const IEComponentType type);
+    void clearSystems();
 
     IEEntityManager* getEntityManager() const { return entityManager; }
+    const QMap<IEComponentType, IEECSSystem*>& getSystems() const { return systems; }
+
     void setEntityManager(IEEntityManager* val) { entityManager = val; }
+    void setSystems(const QMap<IEComponentType, IEECSSystem*>& val) { systems = val; }
+
+private:
+    void initSystems();
 
 signals:
     void entityCreated(const IEEntity entity);
