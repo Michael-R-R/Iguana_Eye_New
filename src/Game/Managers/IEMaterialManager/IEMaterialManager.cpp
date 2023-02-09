@@ -12,7 +12,7 @@ IEMaterialManager::~IEMaterialManager()
 
 }
 
-void IEMaterialManager::startup(const GameStartEvent& event)
+void IEMaterialManager::startup(const GameStartEvent&)
 {
     // Not used
 }

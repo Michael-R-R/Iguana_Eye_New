@@ -13,7 +13,7 @@ IENameManager::~IENameManager()
 
 }
 
-void IENameManager::startup(const GameStartEvent& event)
+void IENameManager::startup(const GameStartEvent&)
 {
     // Not used
 }

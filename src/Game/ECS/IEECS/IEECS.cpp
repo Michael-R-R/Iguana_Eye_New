@@ -1,6 +1,5 @@
 #include "IEECS.h"
 #include "GameStartEvent.h"
-#include "IEECSInputSystem.h"
 
 IEECS::IEECS(QObject* parent) :
     IEObject(parent),
@@ -37,10 +36,16 @@ IEEntity IEECS::create()
 
 void IEECS::remove(const IEEntity entity)
 {
-    entityManager->remove(entity);
-
     // TODO remove children entities
-    // TODO remove entity from components
+    QMapIterator<IEComponentType, IEECSSystem*> it(systems);
+    while(it.hasNext())
+    {
+        it.next();
+
+        detachComponent(entity, it.key());
+    }
+
+    entityManager->remove(entity);
 
     emit entityRemoved(entity);
 }
@@ -50,22 +55,10 @@ int IEECS::attachComponent(const IEEntity entity, const IEComponentType type)
     if(!entityManager->attachComponent(entity, (unsigned long long)type))
         return -1;
 
-    // TODO get system and then attach
+    if(!doesSystemExist(type))
+        return false;
 
-    switch(type)
-    {
-    case IEComponentType::Input: { return -1; }
-    case IEComponentType::Transform: { return -1; }
-    case IEComponentType::Camera: { return -1; }
-    case IEComponentType::CameraController: { return -1; }
-    case IEComponentType::Material: { return -1; }
-    case IEComponentType::Mesh: { return -1; }
-    case IEComponentType::Shader: { return -1; }
-    case IEComponentType::Renderable: { return -1; }
-    case IEComponentType::Physics: { return -1; }
-    case IEComponentType::ParentChild: { return -1; }
-    default: { return -1; }
-    }
+    return systems[type]->attach(entity);
 }
 
 bool IEECS::detachComponent(const IEEntity entity, const IEComponentType type)
@@ -73,27 +66,20 @@ bool IEECS::detachComponent(const IEEntity entity, const IEComponentType type)
     if(!entityManager->detachComponent(entity, (unsigned long long)type))
         return false;
 
-    // TODO get system and then detach
+    if(!doesSystemExist(type))
+        return false;
 
-    switch(type)
-    {
-    case IEComponentType::Input: { return true; }
-    case IEComponentType::Transform: { return true; }
-    case IEComponentType::Camera: { return true; }
-    case IEComponentType::CameraController: { return true; }
-    case IEComponentType::Material: { return true; }
-    case IEComponentType::Mesh: { return true; }
-    case IEComponentType::Shader: { return true; }
-    case IEComponentType::Renderable: { return true; }
-    case IEComponentType::Physics: { return true; }
-    case IEComponentType::ParentChild: { return true; }
-    default: { return false; }
-    }
+    return systems[type]->detach(entity);
 }
 
 bool IEECS::hasComponent(const IEEntity entity, const IEComponentType type)
 {
     return entityManager->hasComponent(entity, (unsigned long long)type);
+}
+
+bool IEECS::doesSystemExist(const IEComponentType type)
+{
+    return systems.contains(type);
 }
 
 void IEECS::clearSystems()

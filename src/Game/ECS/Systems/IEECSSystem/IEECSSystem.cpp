@@ -11,12 +11,12 @@ IEECSSystem::~IEECSSystem()
 
 }
 
-bool IEECSSystem::doesExist(const IEEntity& key)
+bool IEECSSystem::doesExist(const IEEntity& key) const
 {
     return entityMap.contains(key);
 }
 
-int IEECSSystem::lookUpIndex(const IEEntity& key)
+int IEECSSystem::lookUpIndex(const IEEntity& key) const
 {
     if(!doesExist(key))
         return -1;
@@ -24,7 +24,7 @@ int IEECSSystem::lookUpIndex(const IEEntity& key)
     return entityMap[key];
 }
 
-bool IEECSSystem::indexBoundCheck(const int index)
+bool IEECSSystem::indexBoundCheck(const int index) const
 {
     return (index > -1 && index < entityMap.size());
 }

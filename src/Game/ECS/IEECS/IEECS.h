@@ -5,9 +5,10 @@
 
 #include "IEObject.h"
 #include "IEComponentType.h"
+#include "IEEntity.h"
 #include "IEEntityManager.h"
 #include "IEECSSystem.h"
-#include "IEEntity.h"
+#include "IEECSInputSystem.h"
 
 class GameStartEvent;
 
@@ -30,6 +31,7 @@ public:
     int attachComponent(const IEEntity entity, const IEComponentType type);
     bool detachComponent(const IEEntity entity, const IEComponentType type);
     bool hasComponent(const IEEntity entity, const IEComponentType type);
+    bool doesSystemExist(const IEComponentType type);
     void clearSystems();
 
     IEEntityManager* getEntityManager() const { return entityManager; }
@@ -40,6 +42,16 @@ public:
 
 private:
     void initSystems();
+
+public:
+    template <class T>
+    T* getComponent(const IEComponentType type)
+    {
+        if(!doesSystemExist(type))
+            return nullptr;
+
+        return dynamic_cast<T*>(systems[type]);
+    }
 
 signals:
     void entityCreated(const IEEntity entity);

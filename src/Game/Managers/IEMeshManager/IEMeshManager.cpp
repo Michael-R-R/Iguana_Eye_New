@@ -12,7 +12,7 @@ IEMeshManager::~IEMeshManager()
 
 }
 
-void IEMeshManager::startup(const GameStartEvent& event)
+void IEMeshManager::startup(const GameStartEvent&)
 {
     // Not used
 }

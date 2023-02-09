@@ -12,7 +12,7 @@ IEShaderManager::~IEShaderManager()
 
 }
 
-void IEShaderManager::startup(const GameStartEvent& event)
+void IEShaderManager::startup(const GameStartEvent&)
 {
     this->buildAllShaders();
 }

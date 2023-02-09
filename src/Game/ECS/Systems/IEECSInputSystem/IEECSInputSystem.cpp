@@ -1,9 +1,10 @@
 #include "IEECSInputSystem.h"
 
 IEECSInputSystem::IEECSInputSystem() :
-    IEECSSystem()
+    IEECSSystem(),
+    data()
 {
-
+    IEECSInputSystem::attach(IEEntity(-1));
 }
 
 IEECSInputSystem::~IEECSInputSystem()
@@ -13,32 +14,75 @@ IEECSInputSystem::~IEECSInputSystem()
 
 int IEECSInputSystem::attach(const IEEntity entity)
 {
-    return -1;
+    if(doesExist(entity))
+        return -1;
+
+    int index = (int)entityMap.size();
+
+    entityMap[entity] = index;
+
+    data.entityList.append(entity);
+    data.hasInputList.append(true);
+
+    return index;
 }
 
 bool IEECSInputSystem::detach(const IEEntity entity)
 {
-    return false;
+    if(!doesExist(entity))
+        return false;
+
+    int indexToRemove = entityMap[entity];
+    int lastIndex = entityMap.size() - 1;
+
+    IEEntity lastEntity = data.entityList[lastIndex];
+
+    data.entityList[indexToRemove] = data.entityList[lastIndex];
+    data.hasInputList[indexToRemove] = data.hasInputList[lastIndex];
+
+    data.entityList.removeAt(lastIndex);
+    data.hasInputList.removeAt(lastIndex);
+
+    entityMap[lastEntity] = indexToRemove;
+    entityMap.remove(entity);
+
+    return true;
 }
 
 void IEECSInputSystem::onUpdateFrame()
 {
-
+    // Not used
 }
 
 void IEECSInputSystem::onPostUpdateFrame()
 {
-
+    // Not used
 }
 
 void IEECSInputSystem::onRenderFrame()
 {
+    // Not used
+}
 
+bool IEECSInputSystem::getHasInput(const int index) const
+{
+    if(!indexBoundCheck(index))
+        return data.hasInputList[0];
+
+    return data.hasInputList[index];
+}
+
+void IEECSInputSystem::setHasInput(const int index, const bool val)
+{
+    if(!indexBoundCheck(index))
+        return;
+
+    data.hasInputList[index] = val;
 }
 
 QDataStream& operator<<(QDataStream& out, const IEECSInputSystem& system)
 {
-    out << system.getEntityMap();
+    out << system.getEntityMap() << system.getData();
 
     return out;
 }
@@ -46,10 +90,12 @@ QDataStream& operator<<(QDataStream& out, const IEECSInputSystem& system)
 QDataStream& operator>>(QDataStream& in, IEECSInputSystem& system)
 {
     QMap<IEEntity, int> entityMap;
+    InputDataECS data;
 
-    in >> entityMap;
+    in >> entityMap >> data;
 
     system.setEntityMap(entityMap);
+    system.setData(data);
 
     return in;
 }

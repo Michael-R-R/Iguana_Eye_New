@@ -20,9 +20,9 @@ public:
     virtual void onPostUpdateFrame() = 0;
     virtual void onRenderFrame() = 0;
 
-    bool doesExist(const IEEntity& key);
-    int lookUpIndex(const IEEntity& key);
-    bool indexBoundCheck(const int index);
+    bool doesExist(const IEEntity& key) const;
+    int lookUpIndex(const IEEntity& key) const;
+    bool indexBoundCheck(const int index) const;
 
     const QMap<IEEntity, int>& getEntityMap() const { return entityMap; }
     void setEntityMap(const QMap<IEEntity, int>& val) { entityMap = val; }
