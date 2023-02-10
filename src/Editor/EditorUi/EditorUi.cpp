@@ -1,5 +1,6 @@
 #include "EditorUi.h"
 #include "AppStartEvent.h"
+#include "ApplicationWindow.h"
 
 EditorUi::EditorUi(QObject* parent) :
     QObject(parent),
@@ -43,7 +44,7 @@ void EditorUi::setupMainMenuBar(const AppStartEvent& event)
     mainMenuBar->setupFileSubMenu(event);
     mainMenuBar->setupGameSubMenu(event);
 
-    auto applicationWindow = event.getApplicationWindow();
+    auto applicationWindow = event.getAppWindow();
     applicationWindow->setMenuBar(mainMenuBar);
 }
 
@@ -51,7 +52,7 @@ void EditorUi::setupStatusBar(const AppStartEvent& event)
 {
     statusBar->setupIEObjectConnections(event);
 
-    auto applicationWindow = event.getApplicationWindow();
+    auto applicationWindow = event.getAppWindow();
     applicationWindow->setStatusBar(statusBar);
 }
 

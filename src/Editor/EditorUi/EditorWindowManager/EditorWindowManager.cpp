@@ -1,6 +1,7 @@
 #include "EditorWindowManager.h"
-#include "AppStartEvent.h"
 #include "AppOptionsWindow.h"
+#include "AppStartEvent.h"
+#include "ApplicationWindow.h"
 
 EditorWindowManager::EditorWindowManager(QObject* parent) :
     QObject(parent),
@@ -79,7 +80,7 @@ Window* EditorWindowManager::getWindow(const QString& title) const
 
 void EditorWindowManager::setupOptionsWindow(const AppStartEvent& event)
 {
-    auto applicationWindow = event.getApplicationWindow();
+    auto applicationWindow = event.getAppWindow();
 
     auto optionsWindow = new AppOptionsWindow(applicationWindow);
     optionsWindow->setup(event);

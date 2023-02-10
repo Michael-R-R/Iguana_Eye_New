@@ -1,7 +1,9 @@
 #include "GameSubMenu.h"
-#include "AppStartEvent.h"
 #include "ToggleGameRenderAction.h"
 #include "ToggleGameUpdateAction.h"
+#include "AppStartEvent.h"
+#include "Editor.h"
+#include "Game.h"
 
 GameSubMenu::GameSubMenu(QWidget* parent) :
     SubMenu("Game", parent)

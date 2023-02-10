@@ -5,6 +5,8 @@
 
 #include "IEEntity.h"
 
+class ECSOnUpdateEvent;
+
 class IEECSSystem
 {
 protected:
@@ -16,7 +18,7 @@ public:
 
     virtual int attach(const IEEntity entity) = 0;
     virtual bool detach(const IEEntity entity) = 0;
-    virtual void onUpdateFrame() = 0;
+    virtual void onUpdateFrame(ECSOnUpdateEvent* event) = 0;
     virtual void onPostUpdateFrame() = 0;
     virtual void onRenderFrame() = 0;
 

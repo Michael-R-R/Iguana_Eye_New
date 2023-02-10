@@ -8,14 +8,18 @@
 #include "IEEntity.h"
 #include "IEEntityManager.h"
 #include "IEECSSystem.h"
-#include "IEECSInputSystem.h"
 #include "IEECSHierarchySystem.h"
+#include "IEECSInputSystem.h"
+#include "IEECSTransformSystem.h"
+#include "ECSOnUpdateEvent.h"
 
 class GameStartEvent;
 
 class IEECS : public IEObject
 {
     Q_OBJECT
+
+    ECSOnUpdateEvent* onUpdateEvent;
 
     IEEntityManager* entityManager;
     QMap<IEComponentType, IEECSSystem*> systems;
@@ -68,7 +72,7 @@ public:
             switch(it.key())
             {
             case IEComponentType::Input: { out << *static_cast<IEECSInputSystem*>(it.value()); break; }
-            case IEComponentType::Transform: { break; }
+            case IEComponentType::Transform: { out << *static_cast<IEECSTransformSystem*>(it.value()); break; }
             case IEComponentType::Camera: { break; }
             case IEComponentType::CameraController: { break; }
             case IEComponentType::Material: { break; }
@@ -98,7 +102,7 @@ public:
             switch(type)
             {
             case IEComponentType::Input: { in >> *static_cast<IEECSInputSystem*>(ecs.systems[type]); break; }
-            case IEComponentType::Transform: { break; }
+            case IEComponentType::Transform: { in >> *static_cast<IEECSTransformSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Camera: { break; }
             case IEComponentType::CameraController: { break; }
             case IEComponentType::Material: { break; }

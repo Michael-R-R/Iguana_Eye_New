@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ApplicationWindow.h"
-#include "Editor.h"
-#include "Game.h"
+class ApplicationWindow;
+class Editor;
+class Game;
 
 class AppStartEvent
 {
@@ -15,8 +15,8 @@ public:
     AppStartEvent(ApplicationWindow* appWindow, Editor* editor_, Game* game_);
     ~AppStartEvent();
 
-    ApplicationWindow* getApplicationWindow() const { return appWindow; }
-    Editor* getEditor() const { return editor; }
-    Game* getGame() const { return game; }
+    ApplicationWindow* getAppWindow() const;
+    Editor* getEditor() const;
+    Game* getGame() const;
 };
 

@@ -1,4 +1,5 @@
 #include "IEECSHierarchySystem.h"
+#include "ECSOnUpdateEvent.h"
 
 IEECSHierarchySystem::IEECSHierarchySystem() :
     IEECSSystem(),
@@ -56,7 +57,7 @@ bool IEECSHierarchySystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSHierarchySystem::onUpdateFrame()
+void IEECSHierarchySystem::onUpdateFrame(ECSOnUpdateEvent*)
 {
     // Not used
 }

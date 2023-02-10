@@ -1,10 +1,12 @@
 #include "FileSubMenu.h"
-#include "AppStartEvent.h"
 #include "LoadGameAction.h"
 #include "SaveGameAction.h"
 #include "SaveAsGameAction.h"
 #include "AppOptionsAction.h"
 #include "QuitAppAction.h"
+#include "AppStartEvent.h"
+#include "ApplicationWindow.h"
+#include "Editor.h"
 
 FileSubMenu::FileSubMenu(QWidget* parent) :
     SubMenu("File", parent)
@@ -21,7 +23,7 @@ void FileSubMenu::setupActions(const AppStartEvent& event)
 {
     auto inputContainer = event.getEditor()->getInput()->getInputContainer();
     auto windowManager = event.getEditor()->getUi()->getWindowManager();
-    auto applicationWindow = event.getApplicationWindow();
+    auto applicationWindow = event.getAppWindow();
 
     appendAction("Open", new LoadGameAction(applicationWindow, inputContainer->fetchValue("Open"), this));
     appendAction("Save", new SaveGameAction(applicationWindow, inputContainer->fetchValue("Save"), this));

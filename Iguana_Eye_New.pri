@@ -43,6 +43,7 @@ INCLUDEPATH += $$PWD/src/Editor/Windows \
 
 INCLUDEPATH += $$PWD/src/Events \
     $$PWD/src/Events/AppStartEvent \
+    $$PWD/src/Events/ECSOnUpdateEvent \
     $$PWD/src/Events/GameStartEvent
 
 INCLUDEPATH += $$PWD/src/Game \
@@ -59,7 +60,8 @@ INCLUDEPATH += $$PWD/src/Game/ECS \
 INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
     $$PWD/src/Game/ECS/Systems/IEECSHierarchySystem \
     $$PWD/src/Game/ECS/Systems/IEECSInputSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSSystem
+    $$PWD/src/Game/ECS/Systems/IEECSSystem \
+    $$PWD/src/Game/ECS/Systems/IEECSTransformSystem
 
 INCLUDEPATH += $$PWD/src/Game/IEBuffers \
     $$PWD/src/Game/IEBuffers/IEBuffer \

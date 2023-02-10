@@ -1,4 +1,5 @@
 #include "IEECSInputSystem.h"
+#include "ECSOnUpdateEvent.h"
 
 IEECSInputSystem::IEECSInputSystem() :
     IEECSSystem(),
@@ -49,7 +50,7 @@ bool IEECSInputSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSInputSystem::onUpdateFrame()
+void IEECSInputSystem::onUpdateFrame(ECSOnUpdateEvent*)
 {
     // Not used
 }

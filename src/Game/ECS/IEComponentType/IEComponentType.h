@@ -4,7 +4,7 @@
 
 enum class IEComponentType : unsigned long long
 {
-    Input = 1,              //
+    Input = 1,              // implemeneted
     Transform = 2,          //
     Camera = 4,             //
     CameraController = 8,   //
@@ -13,5 +13,5 @@ enum class IEComponentType : unsigned long long
     Shader = 64,            //
     Renderable = 128,       //
     Physics = 256,          //
-    Hierarchy = 512         //
+    Hierarchy = 512         // implemeneted
 };

@@ -3,6 +3,7 @@
 
 IEECS::IEECS(QObject* parent) :
     IEObject(parent),
+    onUpdateEvent(nullptr),
     entityManager(new IEEntityManager()),
     systems()
 {
@@ -11,6 +12,7 @@ IEECS::IEECS(QObject* parent) :
 
 IEECS::~IEECS()
 {
+    delete onUpdateEvent;
     delete entityManager;
     clearSystems();
 }
@@ -111,7 +113,11 @@ void IEECS::initSystems()
 {
     auto hierarchySystem = new IEECSHierarchySystem();
     auto inputSystem = new IEECSInputSystem();
+    auto transformSystem = new IEECSTransformSystem();
 
     systems[IEComponentType::Hierarchy] = hierarchySystem;
     systems[IEComponentType::Input] = inputSystem;
+    systems[IEComponentType::Transform] = transformSystem;
+
+    onUpdateEvent = new ECSOnUpdateEvent(hierarchySystem, inputSystem, transformSystem);
 }

@@ -2,27 +2,34 @@
 
 #include <QDataStream>
 #include <QVector>
+#include <QVector3D>
+#include <QMatrix4x4>
 
 #include "IEECSSystem.h"
 
 class ECSOnUpdateEvent;
 
-class IEECSInputSystem : public IEECSSystem
+class IEECSTransformSystem : public IEECSSystem
 {
     struct Data
     {
         QVector<IEEntity> entityList;
-        QVector<bool> hasInputList;
+        QVector<QVector3D> positionList;
+        QVector<QVector3D> rotationList;
+        QVector<QVector3D> scaleList;
+        QVector<QMatrix4x4> transformList;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entityList << data.hasInputList;
+            out << data.entityList << data.positionList << data.rotationList
+                << data.scaleList << data.transformList;
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entityList >> data.hasInputList;
+            in >> data.entityList >> data.positionList >> data.rotationList
+               >> data.scaleList >> data.transformList;
             return in;
         }
     };
@@ -30,8 +37,8 @@ class IEECSInputSystem : public IEECSSystem
     Data data;
 
 public:
-    IEECSInputSystem();
-    ~IEECSInputSystem();
+    IEECSTransformSystem();
+    ~IEECSTransformSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
@@ -39,18 +46,16 @@ public:
     void onPostUpdateFrame() override;
     void onRenderFrame() override;
 
-    bool getHasInput(const int index) const;
-    void setHasInput(const int index, const bool val);
-
-    friend QDataStream& operator<<(QDataStream& out, const IEECSInputSystem& system)
+    friend QDataStream& operator<<(QDataStream& out, const IEECSTransformSystem& system)
     {
         out << system.entityMap << system.data;
         return out;
     }
 
-    friend QDataStream& operator>>(QDataStream& in, IEECSInputSystem& system)
+    friend QDataStream& operator>>(QDataStream& in, IEECSTransformSystem& system)
     {
         in >> system.entityMap >> system.data;
         return in;
     }
 };
+
