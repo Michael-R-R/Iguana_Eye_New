@@ -8,15 +8,15 @@ class AppStartEvent
 {
     // Does not own these pointers
     ApplicationWindow* appWindow;
-    Editor* editor;
-    Game* game;
+    const Editor* editor;
+    const Game* game;
 
 public:
     AppStartEvent(ApplicationWindow* appWindow, Editor* editor_, Game* game_);
     ~AppStartEvent();
 
     ApplicationWindow* getAppWindow() const;
-    Editor* getEditor() const;
-    Game* getGame() const;
+    const Editor* getEditor() const;
+    const Game* getGame() const;
 };
 

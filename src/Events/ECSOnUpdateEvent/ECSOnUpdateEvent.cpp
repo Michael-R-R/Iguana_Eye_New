@@ -15,17 +15,17 @@ ECSOnUpdateEvent::~ECSOnUpdateEvent()
 
 }
 
-IEECSHierarchySystem* ECSOnUpdateEvent::getHierarchy() const
+const IEECSHierarchySystem* ECSOnUpdateEvent::getHierarchy() const
 {
     return hierarchy;
 }
 
-IEECSInputSystem* ECSOnUpdateEvent::getInput() const
+const IEECSInputSystem* ECSOnUpdateEvent::getInput() const
 {
     return input;
 }
 
-IEECSTransformSystem* ECSOnUpdateEvent::getTransform() const
+const IEECSTransformSystem* ECSOnUpdateEvent::getTransform() const
 {
     return transform;
 }

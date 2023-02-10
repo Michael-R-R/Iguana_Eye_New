@@ -23,8 +23,8 @@ public:
     void startup(const AppStartEvent& event);
     void shutdown();
 
-    EditorInput* getInput() { return input; }
-    EditorUi* getUi() { return ui; }
-    EditorActionManager* getActionManager() { return actions; }
+    EditorInput* getInput() const { return input; }
+    EditorUi* getUi() const { return ui; }
+    EditorActionManager* getActionManager() const { return actions; }
 };
 

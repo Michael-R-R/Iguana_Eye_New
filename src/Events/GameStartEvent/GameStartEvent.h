@@ -1,22 +1,22 @@
 #pragma once
 
-#include "IETime.h"
-#include "IEInput.h"
-#include "IEScene.h"
+class IETime;
+class IEInput;
+class IEScene;
 
 class GameStartEvent
 {
-    // Does not own these
-    IETime* time;
-    IEInput* input;
-    IEScene* scene;
+    // Does not own these pointers
+    const IETime* time;
+    const IEInput* input;
+    const IEScene* scene;
 
 public:
     GameStartEvent(IETime* time_, IEInput* input_, IEScene* scene_);
     ~GameStartEvent();
 
-    IETime* getTime() const { return time; }
-    IEInput* getInput() const { return input; }
-    IEScene* getScene() const { return scene; }
+    const IETime* getTime() const;
+    const IEInput* getInput() const;
+    const IEScene* getScene() const;
 };
 

@@ -7,17 +7,17 @@ class IEECSTransformSystem;
 class ECSOnUpdateEvent
 {
     // Does not own these pointers
-    IEECSHierarchySystem* hierarchy;
-    IEECSInputSystem* input;
-    IEECSTransformSystem* transform;
+    const IEECSHierarchySystem* hierarchy;
+    const IEECSInputSystem* input;
+    const IEECSTransformSystem* transform;
 
 public:
     ECSOnUpdateEvent(IEECSHierarchySystem* hierarchy_, IEECSInputSystem* input_,
                      IEECSTransformSystem* transform_);
     ~ECSOnUpdateEvent();
 
-    IEECSHierarchySystem* getHierarchy() const;
-    IEECSInputSystem* getInput() const;
-    IEECSTransformSystem* getTransform() const;
+    const IEECSHierarchySystem* getHierarchy() const;
+    const IEECSInputSystem* getInput() const;
+    const IEECSTransformSystem* getTransform() const;
 };
 

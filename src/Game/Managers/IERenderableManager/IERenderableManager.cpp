@@ -1,5 +1,6 @@
 #include "IERenderableManager.h"
 #include "GameStartEvent.h"
+#include "IEScene.h"
 
 IERenderableManager::IERenderableManager(QObject* parent) :
     IEManager(parent)
