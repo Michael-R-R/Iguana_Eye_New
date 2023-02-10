@@ -60,6 +60,7 @@ INCLUDEPATH += $$PWD/src/Game/ECS \
 INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
     $$PWD/src/Game/ECS/Systems/IEECSHierarchySystem \
     $$PWD/src/Game/ECS/Systems/IEECSInputSystem \
+    $$PWD/src/Game/ECS/Systems/IEECSMeshSystem \
     $$PWD/src/Game/ECS/Systems/IEECSSystem \
     $$PWD/src/Game/ECS/Systems/IEECSTransformSystem
 

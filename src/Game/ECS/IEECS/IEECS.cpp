@@ -115,10 +115,12 @@ void IEECS::initSystems()
     auto hierarchySystem = new IEECSHierarchySystem();
     auto inputSystem = new IEECSInputSystem();
     auto transformSystem = new IEECSTransformSystem();
+    auto meshSystem = new IEECSMeshSystem();
 
     systems[IEComponentType::Hierarchy] = hierarchySystem;
     systems[IEComponentType::Input] = inputSystem;
     systems[IEComponentType::Transform] = transformSystem;
+    systems[IEComponentType::Mesh] = meshSystem;
 
-    onUpdateEvent = new ECSOnUpdateEvent(hierarchySystem, inputSystem, transformSystem);
+    onUpdateEvent = new ECSOnUpdateEvent(hierarchySystem, inputSystem, transformSystem, meshSystem);
 }

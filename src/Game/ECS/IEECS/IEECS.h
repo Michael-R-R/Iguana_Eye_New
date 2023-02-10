@@ -11,6 +11,7 @@
 #include "IEECSHierarchySystem.h"
 #include "IEECSInputSystem.h"
 #include "IEECSTransformSystem.h"
+#include "IEECSMeshSystem.h"
 #include "ECSOnUpdateEvent.h"
 
 class GameStartEvent;
@@ -76,7 +77,7 @@ public:
             case IEComponentType::Camera: { break; }
             case IEComponentType::CameraController: { break; }
             case IEComponentType::Material: { break; }
-            case IEComponentType::Mesh: { break; }
+            case IEComponentType::Mesh: { out << *static_cast<IEECSMeshSystem*>(it.value()); break; }
             case IEComponentType::Shader: { break; }
             case IEComponentType::Renderable: { break; }
             case IEComponentType::Physics: { break; }
@@ -106,7 +107,7 @@ public:
             case IEComponentType::Camera: { break; }
             case IEComponentType::CameraController: { break; }
             case IEComponentType::Material: { break; }
-            case IEComponentType::Mesh: { break; }
+            case IEComponentType::Mesh: { in >> *static_cast<IEECSMeshSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Shader: { break; }
             case IEComponentType::Renderable: { break; }
             case IEComponentType::Physics: { break; }

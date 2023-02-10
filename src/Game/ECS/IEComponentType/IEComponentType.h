@@ -5,7 +5,7 @@
 enum class IEComponentType : unsigned long long
 {
     Input = 1,              // implemeneted
-    Transform = 2,          //
+    Transform = 2,          // implemeneted
     Camera = 4,             //
     CameraController = 8,   //
     Material = 16,          //
