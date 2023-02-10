@@ -23,7 +23,4 @@ public:
     bool doesExist(const IEEntity& key) const;
     int lookUpIndex(const IEEntity& key) const;
     bool indexBoundCheck(const int index) const;
-
-    const QMap<IEEntity, int>& getEntityMap() const { return entityMap; }
-    void setEntityMap(const QMap<IEEntity, int>& val) { entityMap = val; }
 };

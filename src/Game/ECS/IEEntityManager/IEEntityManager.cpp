@@ -41,6 +41,7 @@ bool IEEntityManager::remove(const IEEntity key)
         return false;
 
     entityMap.remove(key);
+    freeIdStack.push(key.getId());
 
     return true;
 }

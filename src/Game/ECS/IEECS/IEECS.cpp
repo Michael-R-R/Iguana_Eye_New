@@ -29,6 +29,8 @@ IEEntity IEECS::create()
 {
     IEEntity entity = entityManager->create();
 
+    this->attachComponent(entity, IEComponentType::Hierarchy);
+
     emit entityCreated(entity);
 
     return entity;
@@ -36,12 +38,20 @@ IEEntity IEECS::create()
 
 void IEECS::remove(const IEEntity entity)
 {
-    // TODO remove children entities
+    // Recursively remove child entities
+    auto hierarchyComponent = this->getComponent<IEECSHierarchySystem>(IEComponentType::Hierarchy);
+    int hierarchyIndex = hierarchyComponent->lookUpIndex(entity);
+    auto childrenList = hierarchyComponent->getChildrenList(hierarchyIndex);
+    for(auto& child : childrenList)
+    {
+        this->remove(child);
+    }
+
+    // Iterate through the systems, removing the entity from them
     QMapIterator<IEComponentType, IEECSSystem*> it(systems);
     while(it.hasNext())
     {
         it.next();
-
         detachComponent(entity, it.key());
     }
 
@@ -99,7 +109,9 @@ void IEECS::clearSystems()
 
 void IEECS::initSystems()
 {
+    auto hierarchySystem = new IEECSHierarchySystem();
     auto inputSystem = new IEECSInputSystem();
 
+    systems[IEComponentType::Hierarchy] = hierarchySystem;
     systems[IEComponentType::Input] = inputSystem;
 }

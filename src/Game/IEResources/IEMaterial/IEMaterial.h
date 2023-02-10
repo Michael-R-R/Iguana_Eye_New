@@ -30,7 +30,7 @@ public:
 
     void bindUniformData(IEShader* shader) const;
 
-    const IEUniform& getUniformData() const { return uniformData; }
+    IEUniform& getUniformData() { return uniformData; }
     const QColor getObjectColor() const { return objectColor; }
     const unsigned long long getAtlasTexId() const { return atlasTexId; }
     const unsigned long long getDiffuseTexId() const { return diffuseTexId; }

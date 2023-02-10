@@ -9,6 +9,7 @@
 #include "IEEntityManager.h"
 #include "IEECSSystem.h"
 #include "IEECSInputSystem.h"
+#include "IEECSHierarchySystem.h"
 
 class GameStartEvent;
 
@@ -75,7 +76,7 @@ public:
             case IEComponentType::Shader: { break; }
             case IEComponentType::Renderable: { break; }
             case IEComponentType::Physics: { break; }
-            case IEComponentType::Hierarchy: { break; }
+            case IEComponentType::Hierarchy: { out << *static_cast<IEECSHierarchySystem*>(it.value()); break; }
             default: { break; }
             }
         }
@@ -105,7 +106,7 @@ public:
             case IEComponentType::Shader: { break; }
             case IEComponentType::Renderable: { break; }
             case IEComponentType::Physics: { break; }
-            case IEComponentType::Hierarchy: { break; }
+            case IEComponentType::Hierarchy: { in >> *static_cast<IEECSHierarchySystem*>(ecs.systems[type]); break; }
             default: { break; }
             }
         }

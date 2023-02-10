@@ -20,6 +20,8 @@ public:
     bool operator<(const IEEntity& other) const { return this->id < other.id; }
     bool operator>(const IEEntity& other) const { return this->id > other.id; }
 
+    int getId() const { return id; }
+
     friend QDataStream& operator<<(QDataStream& out, const IEEntity& entity)
     {
         out << entity.id;

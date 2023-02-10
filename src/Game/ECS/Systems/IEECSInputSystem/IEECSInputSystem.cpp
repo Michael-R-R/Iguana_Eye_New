@@ -33,15 +33,15 @@ bool IEECSInputSystem::detach(const IEEntity entity)
         return false;
 
     int indexToRemove = entityMap[entity];
-    int lastIndex = entityMap.size() - 1;
 
+    int lastIndex = entityMap.size() - 1;
     IEEntity lastEntity = data.entityList[lastIndex];
 
     data.entityList[indexToRemove] = data.entityList[lastIndex];
     data.hasInputList[indexToRemove] = data.hasInputList[lastIndex];
 
-    data.entityList.removeAt(lastIndex);
-    data.hasInputList.removeAt(lastIndex);
+    data.entityList.removeLast();
+    data.hasInputList.removeLast();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);
