@@ -32,6 +32,7 @@ IEEntity IEECS::create()
     IEEntity entity = entityManager->create();
 
     this->attachComponent(entity, IEComponentType::Hierarchy);
+    this->attachComponent(entity, IEComponentType::Transform);
 
     emit entityCreated(entity);
 

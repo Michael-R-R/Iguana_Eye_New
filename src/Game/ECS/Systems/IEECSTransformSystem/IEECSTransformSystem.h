@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDataStream>
+#include <QMap>
 #include <QVector>
 #include <QVector3D>
 #include <QMatrix4x4>
@@ -8,6 +9,7 @@
 #include "IEECSSystem.h"
 
 class ECSOnUpdateEvent;
+class IEECSHierarchySystem;
 
 class IEECSTransformSystem : public IEECSSystem
 {
@@ -36,6 +38,8 @@ class IEECSTransformSystem : public IEECSSystem
 
     Data data;
 
+    QMap<IEEntity, int> dirtyParents;
+
 public:
     IEECSTransformSystem();
     ~IEECSTransformSystem();
@@ -46,6 +50,23 @@ public:
     void onPostUpdateFrame() override;
     void onRenderFrame() override;
 
+    const QVector3D& getPosition(const int index) const;
+    const QVector3D& getRotation(const int index) const;
+    const QVector3D& getScale(const int index) const;
+    const QMatrix4x4& getTransform(const int index) const;
+
+    void setPosition(const int index, const QVector3D& val);
+    void setRotation(const int index, const QVector3D& val);
+    void setScale(const int index, const QVector3D& val);
+    void setTransform(const int index, const QMatrix4x4& val);
+
+private:
+    void updateTransform(const int index,
+                         QMap<IEEntity, int>& dirtyChildren,
+                         const IEECSHierarchySystem* hierarchySystem);
+    QMatrix4x4 calcModelMatrix(const int index);
+
+public:
     friend QDataStream& operator<<(QDataStream& out, const IEECSTransformSystem& system)
     {
         out << system.entityMap << system.data;
