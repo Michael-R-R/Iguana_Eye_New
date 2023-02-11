@@ -9,7 +9,7 @@ enum class IEComponentType : unsigned long long
     Camera = 4,             //
     CameraController = 8,   //
     Material = 16,          //
-    Mesh = 32,              //
+    Mesh = 32,              // implemeneted
     Shader = 64,            //
     Renderable = 128,       //
     Physics = 256,          //
