@@ -37,8 +37,6 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
-    void onPostUpdateFrame() override;
-    void onRenderFrame() override;
 
     void addChild(const int parentIndex, const IEEntity childEntity);
     void removeChild(const int parentIndex, IEEntity childEntity);

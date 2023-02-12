@@ -36,8 +36,6 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
-    void onPostUpdateFrame() override;
-    void onRenderFrame() override;
 
     QVector<unsigned long long> massReplaceMeshId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeMeshId(const unsigned long long idToPurge);

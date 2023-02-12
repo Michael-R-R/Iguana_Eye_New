@@ -50,16 +50,6 @@ void IEECSShaderSystem::onUpdateFrame(ECSOnUpdateEvent*)
     // Not used
 }
 
-void IEECSShaderSystem::onPostUpdateFrame()
-{
-    // Not used
-}
-
-void IEECSShaderSystem::onRenderFrame()
-{
-    // Not used
-}
-
 QVector<unsigned long long> IEECSShaderSystem::massReplaceShaderId(const unsigned long long oldId, const unsigned long long newId)
 {
     QVector<unsigned long long> result;

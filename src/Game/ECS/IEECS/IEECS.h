@@ -35,6 +35,8 @@ public:
     void startup(const GameStartEvent& event);
     void shutdown();
 
+    void onUpdateFrame();
+
     IEEntity create();
     void remove(const IEEntity entity);
     int attachComponent(const IEEntity entity, const IEComponentType type);

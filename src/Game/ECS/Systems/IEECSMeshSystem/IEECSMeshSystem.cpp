@@ -55,16 +55,6 @@ void IEECSMeshSystem::onUpdateFrame(ECSOnUpdateEvent*)
     // Not used
 }
 
-void IEECSMeshSystem::onPostUpdateFrame()
-{
-    // Not used
-}
-
-void IEECSMeshSystem::onRenderFrame()
-{
-    // Not used
-}
-
 QVector<unsigned long long> IEECSMeshSystem::massReplaceMeshId(const unsigned long long oldId, const unsigned long long newId)
 {
     QVector<unsigned long long> result;

@@ -88,16 +88,6 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     dirtyParents.clear();
 }
 
-void IEECSTransformSystem::onPostUpdateFrame()
-{
-
-}
-
-void IEECSTransformSystem::onRenderFrame()
-{
-
-}
-
 const QVector3D& IEECSTransformSystem::getPosition(const int index) const
 {
     if(!indexBoundCheck(index))

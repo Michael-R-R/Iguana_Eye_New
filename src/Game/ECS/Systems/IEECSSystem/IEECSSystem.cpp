@@ -26,5 +26,5 @@ int IEECSSystem::lookUpIndex(const IEEntity& key) const
 
 bool IEECSSystem::indexBoundCheck(const int index) const
 {
-    return (index > -1 && index < entityMap.size());
+    return (index > 0 && index < entityMap.size());
 }

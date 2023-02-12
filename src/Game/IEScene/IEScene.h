@@ -30,6 +30,8 @@ public:
     void startup(const GameStartEvent& event);
     void shutdown();
 
+    void onUpdateFrame();
+
     IENameManager* getNameManager() const { return nameManager; }
     IEMeshManager* getMeshManager() const { return meshManager; }
     IEMaterialManager* getMaterialManager() const { return materialManager; }

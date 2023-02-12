@@ -37,3 +37,8 @@ void IEScene::shutdown()
     meshManager->shutdown();
     nameManager->shutdown();
 }
+
+void IEScene::onUpdateFrame()
+{
+    ecs->onUpdateFrame();
+}

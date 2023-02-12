@@ -36,8 +36,6 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
-    void onPostUpdateFrame() override;
-    void onRenderFrame() override;
 
     bool getHasInput(const int index) const;
     void setHasInput(const int index, const bool val);

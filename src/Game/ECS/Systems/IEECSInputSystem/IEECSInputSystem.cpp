@@ -55,16 +55,6 @@ void IEECSInputSystem::onUpdateFrame(ECSOnUpdateEvent*)
     // Not used
 }
 
-void IEECSInputSystem::onPostUpdateFrame()
-{
-    // Not used
-}
-
-void IEECSInputSystem::onRenderFrame()
-{
-    // Not used
-}
-
 bool IEECSInputSystem::getHasInput(const int index) const
 {
     if(!indexBoundCheck(index))

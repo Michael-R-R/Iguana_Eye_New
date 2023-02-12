@@ -62,16 +62,6 @@ void IEECSHierarchySystem::onUpdateFrame(ECSOnUpdateEvent*)
     // Not used
 }
 
-void IEECSHierarchySystem::onPostUpdateFrame()
-{
-    // Not used
-}
-
-void IEECSHierarchySystem::onRenderFrame()
-{
-    // Not used
-}
-
 void IEECSHierarchySystem::addChild(const int parentIndex, const IEEntity childEntity)
 {
     if(!indexBoundCheck(parentIndex))

@@ -47,8 +47,6 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
-    void onPostUpdateFrame() override;
-    void onRenderFrame() override;
 
     const QVector3D& getPosition(const int index) const;
     const QVector3D& getRotation(const int index) const;

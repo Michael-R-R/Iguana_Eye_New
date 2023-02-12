@@ -27,6 +27,14 @@ void IEECS::shutdown()
     clearSystems();
 }
 
+void IEECS::onUpdateFrame()
+{
+    for(auto* system : qAsConst(systems))
+    {
+        system->onUpdateFrame(onUpdateEvent);
+    }
+}
+
 IEEntity IEECS::create()
 {
     IEEntity entity = entityManager->create();

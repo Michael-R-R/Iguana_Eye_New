@@ -50,16 +50,6 @@ void IEECSMaterialSystem::onUpdateFrame(ECSOnUpdateEvent*)
     // Not used
 }
 
-void IEECSMaterialSystem::onPostUpdateFrame()
-{
-    // Not used
-}
-
-void IEECSMaterialSystem::onRenderFrame()
-{
-    // Not used
-}
-
 QVector<unsigned long long> IEECSMaterialSystem::massReplaceMaterialId(const unsigned long long oldId, const unsigned long long newId)
 {
     QVector<unsigned long long> result;

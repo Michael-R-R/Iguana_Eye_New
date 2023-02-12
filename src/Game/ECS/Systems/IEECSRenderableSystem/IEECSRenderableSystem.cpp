@@ -53,16 +53,6 @@ void IEECSRenderableSystem::onUpdateFrame(ECSOnUpdateEvent*)
     // Not used
 }
 
-void IEECSRenderableSystem::onPostUpdateFrame()
-{
-    // Not used
-}
-
-void IEECSRenderableSystem::onRenderFrame()
-{
-    // Not used
-}
-
 QVector<unsigned long long> IEECSRenderableSystem::massReplaceRenderableId(const unsigned long long oldId, const unsigned long long newId)
 {
     QVector<unsigned long long> result;

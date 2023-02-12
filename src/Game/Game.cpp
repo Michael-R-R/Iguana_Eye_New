@@ -58,7 +58,7 @@ void Game::shutdown()
 
 void Game::onUpdateFrame()
 {
-
+    scene->onUpdateFrame();
 }
 
 void Game::onRenderFrame()
