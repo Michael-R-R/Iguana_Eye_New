@@ -30,18 +30,6 @@ void IETime::shutdown()
     this->stopRenderTimer();
 }
 
-void IETime::setupUpdateTimer(const ApplicationWindow* application)
-{
-    updateTimer->setTimerType(Qt::PreciseTimer);
-    connect(updateTimer, &QTimer::timeout, this, [application]() { application->onUpdateFrame(); });
-}
-
-void IETime::setupRenderTimer(const ApplicationWindow* application)
-{
-    renderTimer->setTimerType(Qt::PreciseTimer);
-    connect(renderTimer, &QTimer::timeout, this, [application]() { application->onRenderFrame(); });
-}
-
 void IETime::startUpdateTimer()
 {
     if(updateTimer->isActive()) return;
@@ -62,4 +50,16 @@ void IETime::stopUpdateTimer()
 void IETime::stopRenderTimer()
 {
     renderTimer->stop();
+}
+
+void IETime::setupUpdateTimer(const ApplicationWindow* application)
+{
+    updateTimer->setTimerType(Qt::PreciseTimer);
+    connect(updateTimer, &QTimer::timeout, this, [application]() { application->onUpdateFrame(); });
+}
+
+void IETime::setupRenderTimer(const ApplicationWindow* application)
+{
+    renderTimer->setTimerType(Qt::PreciseTimer);
+    connect(renderTimer, &QTimer::timeout, this, [application]() { application->onRenderFrame(); });
 }

@@ -26,9 +26,6 @@ public:
     void startup(const ApplicationWindow* application);
     void shutdown();
 
-    void setupUpdateTimer(const ApplicationWindow* application);
-    void setupRenderTimer(const ApplicationWindow* application);
-
     void startUpdateTimer();
     void startRenderTimer();
 
@@ -44,6 +41,11 @@ public:
     void setUpdateRefresh(const int ms) { updateRefresh = ms; }
     void setRenderRefresh(const int ms) { renderRefresh = ms; }
 
+private:
+    void setupUpdateTimer(const ApplicationWindow* application);
+    void setupRenderTimer(const ApplicationWindow* application);
+
+public:
     friend QDataStream& operator<<(QDataStream& out, const IETime& time)
     {
         out << time.updateRefresh << time.renderRefresh;

@@ -22,6 +22,10 @@ INCLUDEPATH += $$PWD/src/Editor/Widgets/AppOptionsWidgets \
     $$PWD/src/Editor/Widgets/AppOptionsWidgets/HotkeyTableWidget \
     $$PWD/src/Editor/Widgets/AppOptionsWidgets/SelectAppOptionsWidget
 
+INCLUDEPATH += $$PWD/src/Editor/Widgets/GLViewport \
+    $$PWD/src/Editor/Widgets/GLViewport/GLInput \
+    $$PWD/src/Editor/Widgets/GLViewport/GLTime
+
 INCLUDEPATH += $$PWD/src/Editor/Actions/ \
     $$PWD/src/Editor/Actions/AppOptionsAction \
     $$PWD/src/Editor/Actions/OpenGameFileAction \
