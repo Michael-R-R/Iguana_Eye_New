@@ -116,11 +116,15 @@ void IEECS::initSystems()
     auto inputSystem = new IEECSInputSystem();
     auto transformSystem = new IEECSTransformSystem();
     auto meshSystem = new IEECSMeshSystem();
+    auto materialSystem = new IEECSMaterialSystem();
+    auto shaderSystem = new IEECSShaderSystem();
 
     systems[IEComponentType::Hierarchy] = hierarchySystem;
     systems[IEComponentType::Input] = inputSystem;
     systems[IEComponentType::Transform] = transformSystem;
     systems[IEComponentType::Mesh] = meshSystem;
+    systems[IEComponentType::Material] = materialSystem;
+    systems[IEComponentType::Shader] = shaderSystem;
 
     onUpdateEvent = new ECSOnUpdateEvent(hierarchySystem, inputSystem, transformSystem, meshSystem);
 }

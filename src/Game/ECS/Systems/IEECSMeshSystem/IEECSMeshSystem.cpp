@@ -65,22 +65,36 @@ void IEECSMeshSystem::onRenderFrame()
     // Not used
 }
 
-void IEECSMeshSystem::massReplaceMeshId(const unsigned long long oldId, const unsigned long long newId)
+QVector<unsigned long long> IEECSMeshSystem::massReplaceMeshId(const unsigned long long oldId, const unsigned long long newId)
 {
+    QVector<unsigned long long> result;
+
     for(int i = 1; i < data.meshIdList.size(); i++)
     {
         if(data.meshIdList[i] == oldId)
+        {
             this->setMeshId(i, newId);
+            result.append(i);
+        }
     }
+
+    return result;
 }
 
-void IEECSMeshSystem::massPurgeMeshId(const unsigned long long idToPurge)
+QVector<unsigned long long> IEECSMeshSystem::massPurgeMeshId(const unsigned long long idToPurge)
 {
+    QVector<unsigned long long> result;
+
     for(int i = 1; i < data.meshIdList.size(); i++)
     {
         if(data.meshIdList[i] == idToPurge)
+        {
             this->setMeshId(i, 0);
+            result.append(i);
+        }
     }
+
+    return result;
 }
 
 unsigned long long IEECSMeshSystem::getMeshId(const int index)

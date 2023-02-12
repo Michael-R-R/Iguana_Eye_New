@@ -12,6 +12,8 @@
 #include "IEECSInputSystem.h"
 #include "IEECSTransformSystem.h"
 #include "IEECSMeshSystem.h"
+#include "IEECSMaterialSystem.h"
+#include "IEECSShaderSystem.h"
 #include "ECSOnUpdateEvent.h"
 
 class GameStartEvent;
@@ -76,9 +78,9 @@ public:
             case IEComponentType::Transform: { out << *static_cast<IEECSTransformSystem*>(it.value()); break; }
             case IEComponentType::Camera: { break; }
             case IEComponentType::CameraController: { break; }
-            case IEComponentType::Material: { break; }
+            case IEComponentType::Material: { out << *static_cast<IEECSMaterialSystem*>(it.value()); break; }
             case IEComponentType::Mesh: { out << *static_cast<IEECSMeshSystem*>(it.value()); break; }
-            case IEComponentType::Shader: { break; }
+            case IEComponentType::Shader: { out << *static_cast<IEECSShaderSystem*>(it.value()); break; }
             case IEComponentType::Renderable: { break; }
             case IEComponentType::Physics: { break; }
             case IEComponentType::Hierarchy: { out << *static_cast<IEECSHierarchySystem*>(it.value()); break; }
@@ -106,9 +108,9 @@ public:
             case IEComponentType::Transform: { in >> *static_cast<IEECSTransformSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Camera: { break; }
             case IEComponentType::CameraController: { break; }
-            case IEComponentType::Material: { break; }
+            case IEComponentType::Material: { in >> *static_cast<IEECSMaterialSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Mesh: { in >> *static_cast<IEECSMeshSystem*>(ecs.systems[type]); break; }
-            case IEComponentType::Shader: { break; }
+            case IEComponentType::Shader: { in >> *static_cast<IEECSShaderSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Renderable: { break; }
             case IEComponentType::Physics: { break; }
             case IEComponentType::Hierarchy: { in >> *static_cast<IEECSHierarchySystem*>(ecs.systems[type]); break; }
