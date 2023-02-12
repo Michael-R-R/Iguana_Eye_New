@@ -9,6 +9,7 @@
 
 #include "IEResource.h"
 #include "IEBufferContainer.h"
+#include "IEUniform.h"
 
 class IEShader;
 
@@ -31,6 +32,8 @@ private:
     IEBufferContainer<QVector4D>* vec4BufferContainer;
     IEBufferContainer<QMatrix4x4>* mat4BufferContainer;
 
+    IEUniform uniformData;
+
 public:
     IERenderable();
     IERenderable(const unsigned long long id);
@@ -43,6 +46,7 @@ public:
     bool operator>(const IERenderable& other) { return IEResource::operator>(other); }
 
     void build(IEShader* shader);
+    void bindUniformData(IEShader* shader);
 
     Type getType() const { return type; }
     unsigned long long getMeshId() const { return meshId; }
@@ -52,6 +56,7 @@ public:
     IEBufferContainer<QVector3D>* getVec3BufferContainer() const { return vec3BufferContainer; }
     IEBufferContainer<QVector4D>* getVec4BufferContainer() const { return vec4BufferContainer; }
     IEBufferContainer<QMatrix4x4>* getMat4BufferContainer() const { return mat4BufferContainer; }
+    IEUniform& getUniformData() { return uniformData; }
 
     void setMeshId(const unsigned long long val) { meshId = val; }
     void setMaterialId(const unsigned long long val) { materialId = val; }
@@ -67,7 +72,8 @@ public:
             << *renderable.vec2BufferContainer
             << *renderable.vec3BufferContainer
             << *renderable.vec4BufferContainer
-            << *renderable.mat4BufferContainer;
+            << *renderable.mat4BufferContainer
+            << renderable.uniformData;
 
         return out;
     }
@@ -82,7 +88,8 @@ public:
            >> *renderable.vec2BufferContainer
            >> *renderable.vec3BufferContainer
            >> *renderable.vec4BufferContainer
-           >> *renderable.mat4BufferContainer;
+           >> *renderable.mat4BufferContainer
+           >> renderable.uniformData;
 
         return in;
     }

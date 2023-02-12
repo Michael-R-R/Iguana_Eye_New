@@ -7,7 +7,8 @@ IERenderable::IERenderable() :
     vec2BufferContainer(new IEBufferContainer<QVector2D>()),
     vec3BufferContainer(new IEBufferContainer<QVector3D>()),
     vec4BufferContainer(new IEBufferContainer<QVector4D>()),
-    mat4BufferContainer(new IEBufferContainer<QMatrix4x4>())
+    mat4BufferContainer(new IEBufferContainer<QMatrix4x4>()),
+    uniformData()
 {
 
 }
@@ -19,7 +20,8 @@ IERenderable::IERenderable(const unsigned long long id) :
     vec2BufferContainer(new IEBufferContainer<QVector2D>()),
     vec3BufferContainer(new IEBufferContainer<QVector3D>()),
     vec4BufferContainer(new IEBufferContainer<QVector4D>()),
-    mat4BufferContainer(new IEBufferContainer<QMatrix4x4>())
+    mat4BufferContainer(new IEBufferContainer<QMatrix4x4>()),
+    uniformData()
 {
 
 }
@@ -32,7 +34,8 @@ IERenderable::IERenderable(const IERenderable& other) :
     vec2BufferContainer(other.vec2BufferContainer),
     vec3BufferContainer(other.vec3BufferContainer),
     vec4BufferContainer(other.vec4BufferContainer),
-    mat4BufferContainer(other.mat4BufferContainer)
+    mat4BufferContainer(other.mat4BufferContainer),
+    uniformData(other.uniformData)
 {
 
 }
@@ -73,4 +76,9 @@ void IERenderable::build(IEShader* shader)
     mat4BufferContainer->releaseAllBuffers();
     this->release();
     shader->release();
+}
+
+void IERenderable::bindUniformData(IEShader* shader)
+{
+    uniformData.bind(shader);
 }
