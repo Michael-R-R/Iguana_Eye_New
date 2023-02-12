@@ -1,4 +1,4 @@
-    // TODO test
+// TODO test
     QVector<QVector3D> vertices =
     {
         QVector3D(0.0f, 0.5f, 0.0f),
@@ -19,7 +19,7 @@
     scene->getShaderManager()->add(3, shader);
 
     auto posBuffer = new IEBuffer<QVector3D>(QOpenGLBuffer::VertexBuffer);
-    posBuffer->initData(mesh->getPosVertices(), 3, 0, 0);
+    posBuffer->initData(mesh->getPosVertices());
 
     auto renderable = new IERenderable(4);
     renderable->setRenderType(IERenderable::RenderType::Vertex);
@@ -30,20 +30,4 @@
     renderable->getVec3BufferContainer()->add("aPos", posBuffer);
     renderable->build(shader);
     scene->getRenderableManager()->add(4, renderable);
-    // --------------------
-	
-	// TODO test
-    auto mesh = scene->getMeshManager()->getValue(1);
-    auto material = scene->getMaterialManager()->getValue(2);
-    auto shader = scene->getShaderManager()->getValue(3);
-    auto renderable = scene->getRenderableManager()->getValue(4);
-    if(mesh && shader && renderable)
-    {
-        shader->bind();
-        renderable->bind();
-        material->bindUniformData(shader);
-        glExtraFunc->glDrawArrays(GL_TRIANGLES, 0, mesh->getPosVertices().size());
-        shader->release();
-        renderable->release();
-    }
     // --------------------

@@ -136,6 +136,7 @@ void IEECS::initSystems()
     systems[IEComponentType::Shader] = shaderSystem;
     systems[IEComponentType::Renderable] = renderableSystem;
 
-    onUpdateEvent = new ECSOnUpdateEvent(hierarchySystem, inputSystem, transformSystem, meshSystem,
-                                         materialSystem, shaderSystem, renderableSystem);
+    onUpdateEvent = new ECSOnUpdateEvent(hierarchySystem, inputSystem, transformSystem,
+                                         meshSystem, materialSystem, shaderSystem,
+                                         renderableSystem);
 }

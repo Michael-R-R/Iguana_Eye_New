@@ -73,6 +73,7 @@ public:
     {
         out << renderable.id
             << renderable.renderType
+            << renderable.drawType
             << renderable.meshId
             << renderable.materialId
             << renderable.shaderId
@@ -89,6 +90,7 @@ public:
     {
         in >> renderable.id
            >> renderable.renderType
+           >> renderable.drawType
            >> renderable.meshId
            >> renderable.materialId
            >> renderable.shaderId

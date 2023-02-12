@@ -38,11 +38,10 @@ public:
             this->destroy();
     }
 
-    void initData(const QVector<T>& data_, const int tuple_,
-                  const int stride_, const int divisor_)
+    void initData(const QVector<T>& data_, const int stride_ = 0, const int divisor_ = 0)
     {
         data = data_;
-        tuple = tuple_;
+        tuple = (sizeof(T) / 4);
         stride = stride_;
         divisor = divisor_;
     }
