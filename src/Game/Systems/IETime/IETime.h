@@ -6,7 +6,7 @@
 #include "IEObject.h"
 #include "DeltaTime.h"
 
-class IEGame;
+class ApplicationWindow;
 
 class IETime : public IEObject
 {
@@ -23,11 +23,11 @@ public:
     IETime(const int msUpdate, const int msRender, QObject* parent = nullptr);
     ~IETime();
 
-    void startup(IEGame* game);
+    void startup(const ApplicationWindow* application);
     void shutdown();
 
-    void setupUpdateTimer(IEGame* game);
-    void setupRenderTimer(IEGame* game);
+    void setupUpdateTimer(const ApplicationWindow* application);
+    void setupRenderTimer(const ApplicationWindow* application);
 
     void startUpdateTimer();
     void startRenderTimer();

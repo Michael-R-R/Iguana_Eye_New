@@ -28,12 +28,13 @@ public:
     ApplicationWindow(QWidget *parent = nullptr);
     ~ApplicationWindow();
 
+    void onUpdateFrame() const;
+    void onRenderFrame() const;
+
     void addTextToTitle(const QString text);
     void modifiedStatus(const bool isModified);
-    void shutdown();
 
-    const QString& getSavePath() const { return savePath; }
-    void setSavePath(const QString val) { savePath = val; }
+    void shutdown();
 
 private slots:
     void startup();
@@ -41,5 +42,9 @@ private slots:
 public slots:
     void newFile();
     bool saveToFile(const QString& path);
-    bool loadFromFile(const QString& path);
+    bool openFromFile(const QString& path);
+
+public:
+    const QString& getSavePath() const { return savePath; }
+    void setSavePath(const QString val) { savePath = val; }
 };

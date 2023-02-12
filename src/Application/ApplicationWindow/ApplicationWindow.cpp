@@ -30,6 +30,16 @@ ApplicationWindow::~ApplicationWindow()
     delete ui;
 }
 
+void ApplicationWindow::onUpdateFrame() const
+{
+    game->onUpdateFrame();
+}
+
+void ApplicationWindow::onRenderFrame() const
+{
+    game->update();
+}
+
 void ApplicationWindow::addTextToTitle(const QString text)
 {
     windowTitle = (text.isEmpty()) ? applicationTitle : applicationTitle + " - " + text;
@@ -66,19 +76,19 @@ void ApplicationWindow::shutdown()
 void ApplicationWindow::startup()
 {
     game->init();
-    game->startup();
+    game->startup(this);
 
     #ifdef EDITOR_ENABLED
     AppStartEvent startEvent(this, editor, game);
     editor->startup(startEvent);
-#endif
+    #endif
 }
 
 void ApplicationWindow::newFile()
 {
     game->shutdown();
     game->init();
-    game->startup();
+    game->startup(this);
 
     #ifdef EDITOR_ENABLED
     AppStartEvent startEvent(this, editor, game);
@@ -92,10 +102,12 @@ bool ApplicationWindow::saveToFile(const QString& path)
     return IESerialize::write<IEGame>(path, game);
 }
 
-bool ApplicationWindow::loadFromFile(const QString& path)
+bool ApplicationWindow::openFromFile(const QString& path)
 {
-    if(!IESerialize::read<IEGame>(path, game))
-        return false;
+    game->shutdown();
+    game->init();
+    IESerialize::read<IEGame>(path, game);
+    game->startup(this);
 
     #ifdef EDITOR_ENABLED
     AppStartEvent startEvent(this, editor, game);

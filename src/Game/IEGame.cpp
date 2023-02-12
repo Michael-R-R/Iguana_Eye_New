@@ -1,4 +1,5 @@
 #include "IEGame.h"
+#include "ApplicationWindow.h"
 #include "GameStartEvent.h"
 
 IEGame::IEGame(QWidget* parent) :
@@ -29,7 +30,7 @@ void IEGame::init()
     scene = new IEScene(this);
 }
 
-void IEGame::startup()
+void IEGame::startup(const ApplicationWindow* appWindow)
 {
     this->makeCurrent();
 
@@ -37,7 +38,7 @@ void IEGame::startup()
 
     scene->startup(event);
     renderEngine->startup(event);
-    time->startup(this);
+    time->startup(appWindow);
 
     this->setFocus();
 }

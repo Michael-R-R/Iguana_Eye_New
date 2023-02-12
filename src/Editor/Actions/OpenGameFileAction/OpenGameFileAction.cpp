@@ -38,7 +38,7 @@ QString OpenGameFileAction::askForPath(QWidget* parent)
 
 void OpenGameFileAction::tryOpenPath(const QString path, ApplicationWindow* window)
 {
-    if(!window->loadFromFile(path))
+    if(!window->openFromFile(path))
         return;
 
     window->setSavePath(path);
