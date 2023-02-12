@@ -64,7 +64,6 @@ void IEGame::onUpdateFrame()
 
 void IEGame::onRenderFrame()
 {
-    glExtraFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     renderEngine->onRenderFrame();
@@ -82,6 +81,8 @@ void IEGame::initializeGL()
 
     glExtraFunc->glEnable(GL_MULTISAMPLE);
     glExtraFunc->glEnable(GL_DEPTH_TEST);
+
+    glExtraFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
     emit initialized();
 }

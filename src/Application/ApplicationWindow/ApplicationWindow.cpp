@@ -37,6 +37,10 @@ void ApplicationWindow::onUpdateFrame() const
 
 void ApplicationWindow::onRenderFrame() const
 {
+    #ifdef EDITOR_ENABLED
+    editor->onRenderFrame();
+    #endif
+
     game->update();
 }
 

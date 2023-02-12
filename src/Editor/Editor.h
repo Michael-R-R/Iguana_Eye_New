@@ -6,11 +6,15 @@
 #include "EditorUi.h"
 #include "EditorActionManager.h"
 
+class QOpenGLExtraFunctions;
 class AppStartEvent;
 
 class Editor : public QObject
 {
     Q_OBJECT
+
+    // Does not own this pointer
+    QOpenGLExtraFunctions* glExtraFunc;
 
     EditorInput* input;
     EditorUi* ui;
@@ -22,6 +26,8 @@ public:
 
     void startup(const AppStartEvent& event);
     void shutdown();
+
+    void onRenderFrame();
 
     EditorInput* getInput() const { return input; }
     EditorUi* getUi() const { return ui; }
