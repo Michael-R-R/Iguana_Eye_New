@@ -7,6 +7,7 @@
 
 #include "IETime.h"
 #include "IEInput.h"
+#include "IERenderEngine.h"
 #include "IEScene.h"
 
 class Game : public QOpenGLWidget
@@ -19,17 +20,20 @@ class Game : public QOpenGLWidget
 
     IETime* time;
     IEInput* input;
+    IERenderEngine* renderEngine;
     IEScene* scene;
 
 public:
     Game(QWidget* parent = nullptr);
     ~Game();
 
+    void init();
     void startup();
     void shutdown();
 
     IETime* getIETime() const { return time; }
     IEInput* getIEInput() const { return input; }
+    IERenderEngine* getIERenderEngine() const { return renderEngine; }
     IEScene* getIEScene() const { return scene; }
 
 public slots:
@@ -56,10 +60,7 @@ public:
     friend QDataStream& operator>>(QDataStream& in, Game& game)
     {
         game.shutdown();
-
-        game.time = new IETime(0, 0, &game);
-        game.input = new IEInput(&game, &game);
-        game.scene = new IEScene(&game);
+        game.init();
 
         in >> *game.time >> *game.input >> *game.scene;
 

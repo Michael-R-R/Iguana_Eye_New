@@ -65,6 +65,7 @@ void ApplicationWindow::shutdown()
 
 void ApplicationWindow::startup()
 {
+    game->init();
     game->startup();
 
     #ifdef EDITOR_ENABLED

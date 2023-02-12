@@ -2,7 +2,7 @@
 #include "IEShader.h"
 IERenderable::IERenderable() :
     QOpenGLVertexArrayObject(), IEResource(0),
-    type(Type::None),
+    renderType(RenderType::None), drawType(GL_TRIANGLES),
     meshId(0), materialId(0), shaderId(0),
     vec2BufferContainer(new IEBufferContainer<QVector2D>()),
     vec3BufferContainer(new IEBufferContainer<QVector3D>()),
@@ -15,7 +15,7 @@ IERenderable::IERenderable() :
 
 IERenderable::IERenderable(const unsigned long long id) :
     QOpenGLVertexArrayObject(), IEResource(id),
-    type(Type::None),
+    renderType(RenderType::None), drawType(GL_TRIANGLES),
     meshId(0), materialId(0), shaderId(0),
     vec2BufferContainer(new IEBufferContainer<QVector2D>()),
     vec3BufferContainer(new IEBufferContainer<QVector3D>()),
@@ -28,7 +28,7 @@ IERenderable::IERenderable(const unsigned long long id) :
 
 IERenderable::IERenderable(const IERenderable& other) :
     QOpenGLVertexArrayObject(), IEResource(0),
-    type(other.type),
+    renderType(other.renderType), drawType(other.drawType),
     meshId(other.meshId), materialId(other.materialId),
     shaderId(other.shaderId),
     vec2BufferContainer(other.vec2BufferContainer),
@@ -81,4 +81,10 @@ void IERenderable::build(IEShader* shader)
 void IERenderable::bindUniformData(IEShader* shader)
 {
     uniformData.bind(shader);
+}
+
+int IERenderable::instanceCount() const
+{
+    // TODO implement
+    return 1;
 }

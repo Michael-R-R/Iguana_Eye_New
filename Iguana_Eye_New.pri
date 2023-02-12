@@ -88,7 +88,8 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IEShaderManager
 
 INCLUDEPATH += $$PWD/src/Game/Systems \
-    $$PWD/src/Game/Systems/IEInput
+    $$PWD/src/Game/Systems/IEInput \
+    $$PWD/src/Game/Systems/IERenderEngine
 
 INCLUDEPATH += $$PWD/src/Game/Systems/IETime \
     $$PWD/src/Game/Systems/IETime/DeltaTime

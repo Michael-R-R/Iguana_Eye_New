@@ -22,6 +22,8 @@
     posBuffer->initData(mesh->getPosVertices(), 3, 0, 0);
 
     auto renderable = new IERenderable(4);
+    renderable->setRenderType(IERenderable::RenderType::Vertex);
+    renderable->setDrawType(GL_TRIANGLES);
     renderable->setMeshId(1);
     renderable->setMaterialId(2);
     renderable->setShaderId(3);

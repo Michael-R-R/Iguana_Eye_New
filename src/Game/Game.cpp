@@ -5,9 +5,8 @@ Game::Game(QWidget* parent) :
     QOpenGLWidget(parent),
     format(new QSurfaceFormat()),
     glFunc(nullptr), glExtraFunc(nullptr),
-    time(new IETime(8, 16, this)),
-    input(new IEInput(this, this)),
-    scene(new IEScene(this))
+    time(nullptr), input(nullptr),
+    renderEngine(nullptr), scene(nullptr)
 {
     format->setVersion(4, 3);
     format->setProfile(QSurfaceFormat::CoreProfile);
@@ -22,6 +21,14 @@ Game::~Game()
 
 }
 
+void Game::init()
+{
+    time = new IETime(8, 16, this);
+    input = new IEInput(this, this);
+    renderEngine = new IERenderEngine(this);
+    scene = new IEScene(this);
+}
+
 void Game::startup()
 {
     this->makeCurrent();
@@ -29,6 +36,7 @@ void Game::startup()
     GameStartEvent event(time, input, scene);
 
     scene->startup(event);
+    renderEngine->startup(event);
     time->startup(this);
 
     this->setFocus();
@@ -39,10 +47,12 @@ void Game::shutdown()
     this->makeCurrent();
 
     time->shutdown();
+    renderEngine->shutdown();
     scene->shutdown();
 
     delete time;
     delete input;
+    delete renderEngine;
     delete scene;
 }
 
@@ -55,6 +65,8 @@ void Game::onRenderFrame()
 {
     glExtraFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    renderEngine->onRenderFrame();
 
     time->processDeltaTime();
 }
