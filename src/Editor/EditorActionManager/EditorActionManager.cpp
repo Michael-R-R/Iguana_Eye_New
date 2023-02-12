@@ -1,5 +1,5 @@
 #include "EditorActionManager.h"
-#include "ToggleUiAction.h"
+#include "ToggleEditorUiAction.h"
 #include "AppStartEvent.h"
 #include "ApplicationWindow.h"
 #include "Editor.h"
@@ -22,5 +22,5 @@ void EditorActionManager::setup(const AppStartEvent& event)
     auto ui = event.getEditor()->getUi();
     auto applicationWindow = event.getAppWindow();
 
-    applicationWindow->addAction(new ToggleUiAction(inputContainer->fetchValue("Toggle Ui"), ui, this));
+    applicationWindow->addAction(new ToggleEditorUiAction(inputContainer->fetchValue("Toggle Ui"), ui, this));
 }

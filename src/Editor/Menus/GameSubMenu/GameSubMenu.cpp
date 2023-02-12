@@ -3,7 +3,7 @@
 #include "ToggleGameUpdateAction.h"
 #include "AppStartEvent.h"
 #include "Editor.h"
-#include "Game.h"
+#include "IEGame.h"
 
 GameSubMenu::GameSubMenu(QWidget* parent) :
     SubMenu("Game", parent)

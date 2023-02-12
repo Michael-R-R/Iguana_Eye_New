@@ -1,7 +1,7 @@
-#include "Game.h"
+#include "IEGame.h"
 #include "GameStartEvent.h"
 
-Game::Game(QWidget* parent) :
+IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(new QSurfaceFormat()),
     glFunc(nullptr), glExtraFunc(nullptr),
@@ -16,12 +16,12 @@ Game::Game(QWidget* parent) :
     this->setFormat(*format); // must be set before window is shown
 }
 
-Game::~Game()
+IEGame::~IEGame()
 {
 
 }
 
-void Game::init()
+void IEGame::init()
 {
     time = new IETime(8, 16, this);
     input = new IEInput(this, this);
@@ -29,7 +29,7 @@ void Game::init()
     scene = new IEScene(this);
 }
 
-void Game::startup()
+void IEGame::startup()
 {
     this->makeCurrent();
 
@@ -42,7 +42,7 @@ void Game::startup()
     this->setFocus();
 }
 
-void Game::shutdown()
+void IEGame::shutdown()
 {
     this->makeCurrent();
 
@@ -56,12 +56,12 @@ void Game::shutdown()
     delete scene;
 }
 
-void Game::onUpdateFrame()
+void IEGame::onUpdateFrame()
 {
     scene->onUpdateFrame();
 }
 
-void Game::onRenderFrame()
+void IEGame::onRenderFrame()
 {
     glExtraFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -71,7 +71,7 @@ void Game::onRenderFrame()
     time->processDeltaTime();
 }
 
-void Game::initializeGL()
+void IEGame::initializeGL()
 {
     glFunc = QOpenGLContext::currentContext()->functions();
     glExtraFunc = QOpenGLContext::currentContext()->extraFunctions();
@@ -85,12 +85,12 @@ void Game::initializeGL()
     emit initialized();
 }
 
-void Game::paintGL()
+void IEGame::paintGL()
 {
     onRenderFrame();
 }
 
-void Game::resizeGL(int w, int h)
+void IEGame::resizeGL(int w, int h)
 {
     glFunc->glViewport(0, 0, w, h);
 }

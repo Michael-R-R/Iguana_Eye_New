@@ -4,7 +4,7 @@
 
 #include "PreprocessDirectives.h"
 
-class Game;
+class IEGame;
 class Editor;
 
 QT_BEGIN_NAMESPACE
@@ -17,7 +17,7 @@ class ApplicationWindow : public QMainWindow
 
     Ui::ApplicationWindow *ui;
 
-    Game* game;
+    IEGame* game;
     Editor* editor;
 
     const QString applicationTitle;

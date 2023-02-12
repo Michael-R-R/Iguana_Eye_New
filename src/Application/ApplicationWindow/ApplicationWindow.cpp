@@ -1,7 +1,7 @@
 #include "ApplicationWindow.h"
 #include "ui_ApplicationWindow.h"
 #include "IESerialize.h"
-#include "Game.h"
+#include "IEGame.h"
 
 #ifdef EDITOR_ENABLED
 #include "AppStartEvent.h"
@@ -11,14 +11,14 @@
 ApplicationWindow::ApplicationWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ApplicationWindow),
-    game(new Game(this)), editor(nullptr),
+    game(new IEGame(this)), editor(nullptr),
     applicationTitle("Iguana Eye"), windowTitle(applicationTitle),
     savePath("")
 {
     ui->setupUi(this);
 
     this->setCentralWidget(game);
-    connect(game, &Game::initialized, this, &ApplicationWindow::startup);
+    connect(game, &IEGame::initialized, this, &ApplicationWindow::startup);
 
     #ifdef EDITOR_ENABLED
     editor = new Editor(this);
@@ -89,12 +89,12 @@ void ApplicationWindow::newFile()
 
 bool ApplicationWindow::saveToFile(const QString& path)
 {
-    return IESerialize::write<Game>(path, game);
+    return IESerialize::write<IEGame>(path, game);
 }
 
 bool ApplicationWindow::loadFromFile(const QString& path)
 {
-    if(!IESerialize::read<Game>(path, game))
+    if(!IESerialize::read<IEGame>(path, game))
         return false;
 
     #ifdef EDITOR_ENABLED

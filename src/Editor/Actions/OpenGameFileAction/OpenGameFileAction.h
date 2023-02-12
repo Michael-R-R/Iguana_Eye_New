@@ -4,12 +4,12 @@
 
 class ApplicationWindow;
 
-class LoadGameAction : public MenuAction
+class OpenGameFileAction : public MenuAction
 {
 
 public:
-    LoadGameAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent = nullptr);
-    ~LoadGameAction();
+    OpenGameFileAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent = nullptr);
+    ~OpenGameFileAction();
 
 private:
     QString askForPath(QWidget* parent);

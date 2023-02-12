@@ -1,6 +1,6 @@
 #include "StatusBar.h"
 #include "AppStartEvent.h"
-#include "Game.h"
+#include "IEGame.h"
 
 StatusBar::StatusBar(QWidget* parent) :
     QStatusBar(parent)

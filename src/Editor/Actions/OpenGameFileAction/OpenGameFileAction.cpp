@@ -1,12 +1,12 @@
-#include "LoadGameAction.h"
+#include "OpenGameFileAction.h"
 #include "ApplicationWindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
 
-LoadGameAction::LoadGameAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent) :
+OpenGameFileAction::OpenGameFileAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent) :
     MenuAction("Open File", shortcut, parent)
 {
-    connect(this, &LoadGameAction::triggered, window, [this, window]()
+    connect(this, &OpenGameFileAction::triggered, window, [this, window]()
     {
         // Ask to save file before opening a new file
         QString savePath = window->getSavePath();
@@ -26,17 +26,17 @@ LoadGameAction::LoadGameAction(ApplicationWindow* window, InputKey* shortcut, QO
     });
 }
 
-LoadGameAction::~LoadGameAction()
+OpenGameFileAction::~OpenGameFileAction()
 {
 
 }
 
-QString LoadGameAction::askForPath(QWidget* parent)
+QString OpenGameFileAction::askForPath(QWidget* parent)
 {
     return QFileDialog::getOpenFileName(parent, "Open File", ".", "Iguana Eye File (*.iedat)");
 }
 
-void LoadGameAction::tryOpenPath(const QString path, ApplicationWindow* window)
+void OpenGameFileAction::tryOpenPath(const QString path, ApplicationWindow* window)
 {
     if(!window->loadFromFile(path))
         return;

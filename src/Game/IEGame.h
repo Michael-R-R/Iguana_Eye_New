@@ -10,7 +10,7 @@
 #include "IERenderEngine.h"
 #include "IEScene.h"
 
-class Game : public QOpenGLWidget
+class IEGame : public QOpenGLWidget
 {
     Q_OBJECT
 
@@ -24,8 +24,8 @@ class Game : public QOpenGLWidget
     IEScene* scene;
 
 public:
-    Game(QWidget* parent = nullptr);
-    ~Game();
+    IEGame(QWidget* parent = nullptr);
+    ~IEGame();
 
     void init();
     void startup();
@@ -51,13 +51,13 @@ signals:
     void initialized();
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const Game& game)
+    friend QDataStream& operator<<(QDataStream& out, const IEGame& game)
     {
         out << *game.time << *game.input << *game.scene;
         return out;
     }
 
-    friend QDataStream& operator>>(QDataStream& in, Game& game)
+    friend QDataStream& operator>>(QDataStream& in, IEGame& game)
     {
         game.shutdown();
         game.init();

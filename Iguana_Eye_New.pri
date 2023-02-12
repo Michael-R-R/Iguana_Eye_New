@@ -24,15 +24,15 @@ INCLUDEPATH += $$PWD/src/Editor/Widgets/AppOptionsWidgets \
 
 INCLUDEPATH += $$PWD/src/Editor/Actions/ \
     $$PWD/src/Editor/Actions/AppOptionsAction \
-    $$PWD/src/Editor/Actions/LoadGameAction \
+    $$PWD/src/Editor/Actions/OpenGameFileAction \
     $$PWD/src/Editor/Actions/MenuAction \
     $$PWD/src/Editor/Actions/NewGameFileAction \
     $$PWD/src/Editor/Actions/QuitAppAction \
-    $$PWD/src/Editor/Actions/SaveAsGameAction \
-    $$PWD/src/Editor/Actions/SaveGameAction \
+    $$PWD/src/Editor/Actions/SaveAsGameFileAction \
+    $$PWD/src/Editor/Actions/SaveGameFileAction \
     $$PWD/src/Editor/Actions/ToggleGameRenderAction \
     $$PWD/src/Editor/Actions/ToggleGameUpdateAction \
-    $$PWD/src/Editor/Actions/ToggleUiAction
+    $$PWD/src/Editor/Actions/ToggleEditorUiAction
 
 INCLUDEPATH += $$PWD/src/Editor/Menus \
     $$PWD/src/Editor/Menus/FileSubMenu \

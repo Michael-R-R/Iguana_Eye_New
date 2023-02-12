@@ -1,7 +1,7 @@
-#include "ToggleUiAction.h"
+#include "ToggleEditorUiAction.h"
 #include "EditorUi.h"
 
-ToggleUiAction::ToggleUiAction(InputKey* shortcut, EditorUi* ui, QObject* parent) :
+ToggleEditorUiAction::ToggleEditorUiAction(InputKey* shortcut, EditorUi* ui, QObject* parent) :
     MenuAction("Toggle Ui", shortcut, parent),
     status(true)
 {
@@ -13,7 +13,7 @@ ToggleUiAction::ToggleUiAction(InputKey* shortcut, EditorUi* ui, QObject* parent
     });
 }
 
-ToggleUiAction::~ToggleUiAction()
+ToggleEditorUiAction::~ToggleEditorUiAction()
 {
 
 }

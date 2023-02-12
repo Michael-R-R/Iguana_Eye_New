@@ -1,9 +1,9 @@
 #include "AppStartEvent.h"
 #include "ApplicationWindow.h"
 #include "Editor.h"
-#include "Game.h"
+#include "IEGame.h"
 
-AppStartEvent::AppStartEvent(ApplicationWindow* appWindow, Editor* editor_, Game* game_) :
+AppStartEvent::AppStartEvent(ApplicationWindow* appWindow, Editor* editor_, IEGame* game_) :
     appWindow(appWindow), editor(editor_), game(game_)
 {
 
@@ -24,7 +24,7 @@ const Editor* AppStartEvent::getEditor() const
     return editor;
 }
 
-const Game* AppStartEvent::getGame() const
+const IEGame* AppStartEvent::getGame() const
 {
     return game;
 }

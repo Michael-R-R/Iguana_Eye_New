@@ -2,7 +2,7 @@
 #include "SelectAppOptionsWidget.h"
 #include "AppStartEvent.h"
 #include "Editor.h"
-#include "Game.h"
+#include "IEGame.h"
 
 AppOptionsWindow::AppOptionsWindow(QWidget* parent) :
     Window("Options", parent),

@@ -4,12 +4,12 @@
 
 class ApplicationWindow;
 
-class SaveGameAction : public MenuAction
+class SaveAsGameFileAction : public MenuAction
 {
 
 public:
-    SaveGameAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent = nullptr);
-    ~SaveGameAction();
+    SaveAsGameFileAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent = nullptr);
+    ~SaveAsGameFileAction();
 
 private:
     QString askForPath(QWidget* parent);

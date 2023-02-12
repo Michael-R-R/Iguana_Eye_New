@@ -1,11 +1,11 @@
-#include "SaveAsGameAction.h"
+#include "SaveAsGameFileAction.h"
 #include <QFileDialog>
 #include "ApplicationWindow.h"
 
-SaveAsGameAction::SaveAsGameAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent) :
+SaveAsGameFileAction::SaveAsGameFileAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent) :
     MenuAction("Save File As", shortcut, parent)
 {
-    connect(this, &SaveAsGameAction::triggered, window, [this, window]()
+    connect(this, &SaveAsGameFileAction::triggered, window, [this, window]()
     {
         QString path = askForPath(window);
         if(path.isEmpty())
@@ -15,17 +15,17 @@ SaveAsGameAction::SaveAsGameAction(ApplicationWindow* window, InputKey* shortcut
     });
 }
 
-SaveAsGameAction::~SaveAsGameAction()
+SaveAsGameFileAction::~SaveAsGameFileAction()
 {
 
 }
 
-QString SaveAsGameAction::askForPath(QWidget* parent)
+QString SaveAsGameFileAction::askForPath(QWidget* parent)
 {
     return QFileDialog::getSaveFileName(parent, "Save As File", ".", "Iguana Eye File (*.iedat)");
 }
 
-void SaveAsGameAction::trySavePath(const QString path, ApplicationWindow* window)
+void SaveAsGameFileAction::trySavePath(const QString path, ApplicationWindow* window)
 {
     if(!window->saveToFile(path))
         return;

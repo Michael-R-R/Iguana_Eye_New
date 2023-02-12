@@ -2,21 +2,21 @@
 
 class ApplicationWindow;
 class Editor;
-class Game;
+class IEGame;
 
 class AppStartEvent
 {
     // Does not own these pointers
     ApplicationWindow* appWindow;
     const Editor* editor;
-    const Game* game;
+    const IEGame* game;
 
 public:
-    AppStartEvent(ApplicationWindow* appWindow, Editor* editor_, Game* game_);
+    AppStartEvent(ApplicationWindow* appWindow, Editor* editor_, IEGame* game_);
     ~AppStartEvent();
 
     ApplicationWindow* getAppWindow() const;
     const Editor* getEditor() const;
-    const Game* getGame() const;
+    const IEGame* getGame() const;
 };
 
