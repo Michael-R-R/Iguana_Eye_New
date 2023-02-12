@@ -2,8 +2,7 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLContext>
-#include "GameStartEvent.h"
-#include "IEScene.h"
+#include "RenderEngineStartEvent.h"
 #include "IEMeshManager.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
@@ -17,12 +16,12 @@ IERenderEngine::IERenderEngine(QObject* parent) :
 
 }
 
-void IERenderEngine::startup(const GameStartEvent& event)
+void IERenderEngine::startup(const RenderEngineStartEvent& event)
 {
-    meshManager = event.getScene()->getMeshManager();
-    materialManager = event.getScene()->getMaterialManager();
-    shaderManager = event.getScene()->getShaderManager();
-    renderableManager = event.getScene()->getRenderableManager();
+    meshManager = event.getMeshManager();
+    materialManager = event.getMaterialManager();
+    shaderManager = event.getShaderManager();
+    renderableManager = event.getRenderableManager();
 }
 
 void IERenderEngine::shutdown()

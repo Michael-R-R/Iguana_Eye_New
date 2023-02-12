@@ -6,6 +6,11 @@
 
 #include "GLTime.h"
 #include "GLInput.h"
+#include "IERenderEngine.h"
+#include "IEMeshManager.h"
+#include "IEMaterialManager.h"
+#include "IEShaderManager.h"
+#include "IERenderableManager.h"
 
 class GLViewport : public QOpenGLWidget
 {
@@ -15,6 +20,13 @@ class GLViewport : public QOpenGLWidget
 
     GLTime* time;
     GLInput* input;
+
+    IERenderEngine* renderEngine;
+
+    IEMeshManager* meshManager;
+    IEMaterialManager* materialManager;
+    IEShaderManager* shaderManager;
+    IERenderableManager* renderableManager;
 
 public:
     GLViewport(const QString title, QWidget* parent = nullptr);

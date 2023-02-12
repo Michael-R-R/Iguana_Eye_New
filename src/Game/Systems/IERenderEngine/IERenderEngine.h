@@ -4,7 +4,7 @@
 
 #include "IEObject.h"
 
-class GameStartEvent;
+class RenderEngineStartEvent;
 class IEMeshManager;
 class IEMaterialManager;
 class IEShaderManager;
@@ -17,16 +17,16 @@ class IEMesh;
 class IERenderEngine : public IEObject
 {
      // Does not own these pointers
-    IEMeshManager* meshManager;
-    IEMaterialManager* materialManager;
-    IEShaderManager* shaderManager;
-    IERenderableManager* renderableManager;
+    const IEMeshManager* meshManager;
+    const IEMaterialManager* materialManager;
+    const IEShaderManager* shaderManager;
+    const IERenderableManager* renderableManager;
 
 public:
     IERenderEngine(QObject* parent = nullptr);
     ~IERenderEngine() {}
 
-    void startup(const GameStartEvent& event);
+    void startup(const RenderEngineStartEvent& event);
     void shutdown();
 
     void onRenderFrame();

@@ -1,11 +1,15 @@
 #include "GLViewport.h"
+#include "RenderEngineStartEvent.h"
 
 GLViewport::GLViewport(const QString title, QWidget* parent) :
     QOpenGLWidget(parent),
     format(new QSurfaceFormat()),
     glFunc(nullptr), glExtraFunc(nullptr),
     time(new GLTime(33, 33, this)),
-    input(new GLInput(this, this))
+    input(new GLInput(this, this)),
+    renderEngine(new IERenderEngine(this)),
+    meshManager(new IEMeshManager(this)), materialManager(new IEMaterialManager(this)),
+    shaderManager(new IEShaderManager(this)), renderableManager(new IERenderableManager(this))
 {
     this->setWindowTitle(title);
     format->setVersion(4, 3);
@@ -23,6 +27,10 @@ GLViewport::~GLViewport()
 
 void GLViewport::startup()
 {
+    RenderEngineStartEvent renderStartEvent(meshManager, materialManager,
+                                            shaderManager, renderableManager);
+
+    renderEngine->startup(renderStartEvent);
     time->startup(this);
 }
 
@@ -39,6 +47,8 @@ void GLViewport::onUpdateFrame()
 void GLViewport::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    renderEngine->onRenderFrame();
 
     time->processDeltaTime();
 }

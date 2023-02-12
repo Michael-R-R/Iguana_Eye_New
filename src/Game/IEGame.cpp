@@ -1,6 +1,7 @@
 #include "IEGame.h"
 #include "ApplicationWindow.h"
 #include "GameStartEvent.h"
+#include "RenderEngineStartEvent.h"
 
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
@@ -34,10 +35,12 @@ void IEGame::startup(const ApplicationWindow* appWindow)
 {
     this->makeCurrent();
 
-    GameStartEvent event(time, input, scene);
+    GameStartEvent gameStartEvent(time, input, scene);
+    RenderEngineStartEvent renderStartEvent(scene->getMeshManager(), scene->getMaterialManager(),
+                                            scene->getShaderManager(), scene->getRenderableManager());
 
-    scene->startup(event);
-    renderEngine->startup(event);
+    scene->startup(gameStartEvent);
+    renderEngine->startup(renderStartEvent);
     time->startup(appWindow);
 
     this->setFocus();
