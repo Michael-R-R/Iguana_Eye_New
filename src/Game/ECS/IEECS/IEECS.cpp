@@ -65,21 +65,21 @@ void IEECS::remove(const IEEntity entity)
 
 int IEECS::attachComponent(const IEEntity entity, const IEComponentType type)
 {
-    if(!entityManager->attachComponent(entity, (unsigned long long)type))
+    if(!doesSystemExist(type))
         return -1;
 
-    if(!doesSystemExist(type))
-        return false;
+    if(!entityManager->attachComponent(entity, (unsigned long long)type))
+        return -1;
 
     return systems[type]->attach(entity);
 }
 
 bool IEECS::detachComponent(const IEEntity entity, const IEComponentType type)
 {
-    if(!entityManager->detachComponent(entity, (unsigned long long)type))
+    if(!doesSystemExist(type))
         return false;
 
-    if(!doesSystemExist(type))
+    if(!entityManager->detachComponent(entity, (unsigned long long)type))
         return false;
 
     return systems[type]->detach(entity);
@@ -118,6 +118,7 @@ void IEECS::initSystems()
     auto meshSystem = new IEECSMeshSystem();
     auto materialSystem = new IEECSMaterialSystem();
     auto shaderSystem = new IEECSShaderSystem();
+    auto renderableSystem = new IEECSRenderableSystem();
 
     systems[IEComponentType::Hierarchy] = hierarchySystem;
     systems[IEComponentType::Input] = inputSystem;
@@ -125,6 +126,8 @@ void IEECS::initSystems()
     systems[IEComponentType::Mesh] = meshSystem;
     systems[IEComponentType::Material] = materialSystem;
     systems[IEComponentType::Shader] = shaderSystem;
+    systems[IEComponentType::Renderable] = renderableSystem;
 
-    onUpdateEvent = new ECSOnUpdateEvent(hierarchySystem, inputSystem, transformSystem, meshSystem);
+    onUpdateEvent = new ECSOnUpdateEvent(hierarchySystem, inputSystem, transformSystem, meshSystem,
+                                         materialSystem, shaderSystem, renderableSystem);
 }

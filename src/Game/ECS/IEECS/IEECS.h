@@ -14,6 +14,7 @@
 #include "IEECSMeshSystem.h"
 #include "IEECSMaterialSystem.h"
 #include "IEECSShaderSystem.h"
+#include "IEECSRenderableSystem.h"
 #include "ECSOnUpdateEvent.h"
 
 class GameStartEvent;
@@ -81,7 +82,7 @@ public:
             case IEComponentType::Material: { out << *static_cast<IEECSMaterialSystem*>(it.value()); break; }
             case IEComponentType::Mesh: { out << *static_cast<IEECSMeshSystem*>(it.value()); break; }
             case IEComponentType::Shader: { out << *static_cast<IEECSShaderSystem*>(it.value()); break; }
-            case IEComponentType::Renderable: { break; }
+            case IEComponentType::Renderable: { out << *static_cast<IEECSRenderableSystem*>(it.value()); break; }
             case IEComponentType::Physics: { break; }
             case IEComponentType::Hierarchy: { out << *static_cast<IEECSHierarchySystem*>(it.value()); break; }
             default: { break; }
@@ -111,7 +112,7 @@ public:
             case IEComponentType::Material: { in >> *static_cast<IEECSMaterialSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Mesh: { in >> *static_cast<IEECSMeshSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Shader: { in >> *static_cast<IEECSShaderSystem*>(ecs.systems[type]); break; }
-            case IEComponentType::Renderable: { break; }
+            case IEComponentType::Renderable: { in >> *static_cast<IEECSRenderableSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Physics: { break; }
             case IEComponentType::Hierarchy: { in >> *static_cast<IEECSHierarchySystem*>(ecs.systems[type]); break; }
             default: { break; }

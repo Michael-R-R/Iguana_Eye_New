@@ -1,4 +1,5 @@
 #include "IEECSShaderSystem.h"
+#include "ECSOnUpdateEvent.h"
 
 IEECSShaderSystem::IEECSShaderSystem() :
     IEECSSystem(),

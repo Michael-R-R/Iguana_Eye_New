@@ -11,7 +11,7 @@ enum class IEComponentType : unsigned long long
     Material = 16,          // implemented
     Mesh = 32,              // implemented
     Shader = 64,            // implemented
-    Renderable = 128,       //
+    Renderable = 128,       // implemented
     Physics = 256,          //
     Hierarchy = 512         // implemented
 };
