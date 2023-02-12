@@ -29,7 +29,7 @@ public:
     ~ApplicationWindow();
 
     void addTextToTitle(const QString text);
-    void displayModifiedStatus(const bool isModified);
+    void modifiedStatus(const bool isModified);
     void shutdown();
 
     const QString& getSavePath() const { return savePath; }
@@ -39,6 +39,7 @@ private slots:
     void startup();
 
 public slots:
+    void newFile();
     bool saveToFile(const QString& path);
     bool loadFromFile(const QString& path);
 };

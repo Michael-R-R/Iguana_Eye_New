@@ -3,7 +3,7 @@
 #include "ApplicationWindow.h"
 
 SaveGameAction::SaveGameAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent) :
-    MenuAction("Save", shortcut, parent)
+    MenuAction("Save File", shortcut, parent)
 {
     connect(this, &SaveGameAction::triggered, window, [this, window]()
     {
@@ -40,5 +40,5 @@ void SaveGameAction::trySavePath(const QString path, ApplicationWindow* window)
 
     window->setSavePath(path);
     window->addTextToTitle(path);
-    window->displayModifiedStatus(false);
+    window->modifiedStatus(false);
 }

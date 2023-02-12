@@ -36,7 +36,7 @@ void ApplicationWindow::addTextToTitle(const QString text)
     this->setWindowTitle(windowTitle);
 }
 
-void ApplicationWindow::displayModifiedStatus(const bool isModified)
+void ApplicationWindow::modifiedStatus(const bool isModified)
 {
     auto lastIndex = windowTitle.length() - 1;
 
@@ -70,6 +70,19 @@ void ApplicationWindow::startup()
 
     #ifdef EDITOR_ENABLED
     AppStartEvent startEvent(this, editor, game);
+    editor->startup(startEvent);
+#endif
+}
+
+void ApplicationWindow::newFile()
+{
+    game->shutdown();
+    game->init();
+    game->startup();
+
+    #ifdef EDITOR_ENABLED
+    AppStartEvent startEvent(this, editor, game);
+    editor->shutdown();
     editor->startup(startEvent);
     #endif
 }

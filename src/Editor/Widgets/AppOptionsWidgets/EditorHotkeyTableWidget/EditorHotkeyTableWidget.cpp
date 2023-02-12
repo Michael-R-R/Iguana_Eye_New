@@ -14,9 +14,10 @@ EditorHotkeyTableWidget::~EditorHotkeyTableWidget()
 void EditorHotkeyTableWidget::setupTables(InputContainer* inputContainer)
 {
     QMap<QString, InputKey*> applicationKeys;
-    addKeyToMap(inputContainer, "Open", applicationKeys);
-    addKeyToMap(inputContainer, "Save", applicationKeys);
-    addKeyToMap(inputContainer, "Save As", applicationKeys);
+    addKeyToMap(inputContainer, "New File", applicationKeys);
+    addKeyToMap(inputContainer, "Open File", applicationKeys);
+    addKeyToMap(inputContainer, "Save File", applicationKeys);
+    addKeyToMap(inputContainer, "Save File As", applicationKeys);
     addKeyToMap(inputContainer, "Options", applicationKeys);
     addKeyToMap(inputContainer, "Toggle Ui", applicationKeys);
     addKeyToMap(inputContainer, "Quit", applicationKeys);

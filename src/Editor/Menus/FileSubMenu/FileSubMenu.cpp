@@ -1,4 +1,5 @@
 #include "FileSubMenu.h"
+#include "NewGameFileAction.h"
 #include "LoadGameAction.h"
 #include "SaveGameAction.h"
 #include "SaveAsGameAction.h"
@@ -25,9 +26,10 @@ void FileSubMenu::setupActions(const AppStartEvent& event)
     auto windowManager = event.getEditor()->getUi()->getWindowManager();
     auto applicationWindow = event.getAppWindow();
 
-    appendAction("Open", new LoadGameAction(applicationWindow, inputContainer->fetchValue("Open"), this));
-    appendAction("Save", new SaveGameAction(applicationWindow, inputContainer->fetchValue("Save"), this));
-    appendAction("Save As", new SaveAsGameAction(applicationWindow, inputContainer->fetchValue("Save As"), this));
+    appendAction("New File", new NewGameFileAction(applicationWindow, inputContainer->fetchValue("New File"), this));
+    appendAction("Open File", new LoadGameAction(applicationWindow, inputContainer->fetchValue("Open File"), this));
+    appendAction("Save File", new SaveGameAction(applicationWindow, inputContainer->fetchValue("Save File"), this));
+    appendAction("Save File As", new SaveAsGameAction(applicationWindow, inputContainer->fetchValue("Save File As"), this));
     this->addSeparator();
     appendAction("Options", new AppOptionsAction(inputContainer->fetchValue("Options"), windowManager, this));
     appendAction("Quit", new QuitAppAction(inputContainer->fetchValue("Quit"), this));

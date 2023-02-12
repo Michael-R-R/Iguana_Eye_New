@@ -46,6 +46,14 @@ public:
         divisor = divisor_;
     }
 
+    void initData(const QVector<T>& data_, const int tuple_, const int stride_ = 0, const int divisor_ = 0)
+    {
+        data = data_;
+        tuple = tuple_;
+        stride = stride_;
+        divisor = divisor_;
+    }
+
     void build(const int attribLoc)
     {
         if(!this->isCreated())
