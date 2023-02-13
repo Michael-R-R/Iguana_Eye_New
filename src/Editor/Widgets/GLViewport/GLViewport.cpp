@@ -37,6 +37,11 @@ void GLViewport::startup()
 void GLViewport::shutdown()
 {
     time->shutdown();
+    renderEngine->shutdown();
+    meshManager->shutdown();
+    materialManager->shutdown();
+    shaderManager->shutdown();
+    renderableManager->shutdown();
 }
 
 void GLViewport::addRenderableCopy(const IEMesh* mesh, const IEMaterial* material,

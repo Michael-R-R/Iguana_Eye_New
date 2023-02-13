@@ -11,37 +11,21 @@
 ApplicationWindow::ApplicationWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ApplicationWindow),
-    game(new IEGame(this)), editor(nullptr),
-    applicationTitle("Iguana Eye"), windowTitle(applicationTitle),
+    game(new IEGame(this)),
+    editor(nullptr),
+    applicationTitle("Iguana Eye"),
+    windowTitle(applicationTitle),
     savePath("")
 {
     ui->setupUi(this);
 
-    this->setCentralWidget(game);
-    connect(game, &IEGame::initialized, this, &ApplicationWindow::startup);
-
-    #ifdef EDITOR_ENABLED
-    editor = new Editor(this);
-    #endif
+    setupGame();
+    setupEditor();
 }
 
 ApplicationWindow::~ApplicationWindow()
 {
     delete ui;
-}
-
-void ApplicationWindow::onUpdateFrame() const
-{
-    game->onUpdateFrame();
-}
-
-void ApplicationWindow::onRenderFrame() const
-{
-    #ifdef EDITOR_ENABLED
-    editor->onRenderFrame();
-    #endif
-
-    game->update();
 }
 
 void ApplicationWindow::addTextToTitle(const QString text)
@@ -50,7 +34,7 @@ void ApplicationWindow::addTextToTitle(const QString text)
     this->setWindowTitle(windowTitle);
 }
 
-void ApplicationWindow::modifiedStatus(const bool isModified)
+void ApplicationWindow::setModifiedStatus(const bool isModified)
 {
     auto lastIndex = windowTitle.length() - 1;
 
@@ -66,6 +50,20 @@ void ApplicationWindow::modifiedStatus(const bool isModified)
     }
 
     this->setWindowTitle(windowTitle);
+}
+
+void ApplicationWindow::onUpdateFrame() const
+{
+    game->onUpdateFrame();
+}
+
+void ApplicationWindow::onRenderFrame() const
+{
+    #ifdef EDITOR_ENABLED
+    editor->onRenderFrame();
+    #endif
+
+    game->update();
 }
 
 void ApplicationWindow::shutdown()
@@ -110,7 +108,7 @@ bool ApplicationWindow::openFromFile(const QString& path)
 {
     game->shutdown();
     game->init();
-    IESerialize::read<IEGame>(path, game);
+    bool success = IESerialize::read<IEGame>(path, game);
     game->startup(this);
 
     #ifdef EDITOR_ENABLED
@@ -119,5 +117,18 @@ bool ApplicationWindow::openFromFile(const QString& path)
     editor->startup(startEvent);
     #endif
 
-    return true;
+    return success;
+}
+
+void ApplicationWindow::setupGame()
+{
+    this->setCentralWidget(game);
+    connect(game, &IEGame::initialized, this, &ApplicationWindow::startup);
+}
+
+void ApplicationWindow::setupEditor()
+{
+    #ifdef EDITOR_ENABLED
+    editor = new Editor(this);
+    #endif
 }

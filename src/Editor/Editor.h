@@ -13,9 +13,6 @@ class Editor : public QObject
 {
     Q_OBJECT
 
-    // Does not own this pointer
-    QOpenGLExtraFunctions* glExtraFunc;
-
     EditorInput* input;
     EditorUi* ui;
     EditorActionManager* actions;

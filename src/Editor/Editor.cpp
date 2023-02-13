@@ -5,7 +5,6 @@
 
 Editor::Editor(QObject* parent) :
     QObject(parent),
-    glExtraFunc(nullptr),
     input(nullptr),
     ui(nullptr),
     actions(nullptr)
@@ -20,8 +19,6 @@ Editor::~Editor()
 
 void Editor::startup(const AppStartEvent& event)
 {
-    glExtraFunc = QOpenGLContext::currentContext()->extraFunctions();
-
     input = new EditorInput(this);
     ui = new EditorUi(this);
     actions = new EditorActionManager(this);
@@ -41,5 +38,7 @@ void Editor::shutdown()
 
 void Editor::onRenderFrame()
 {
+    QOpenGLExtraFunctions* glExtraFunc = QOpenGLContext::currentContext()->extraFunctions();
+
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

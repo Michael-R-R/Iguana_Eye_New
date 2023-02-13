@@ -28,11 +28,11 @@ public:
     ApplicationWindow(QWidget *parent = nullptr);
     ~ApplicationWindow();
 
+    void addTextToTitle(const QString text);
+    void setModifiedStatus(const bool isModified);
+
     void onUpdateFrame() const;
     void onRenderFrame() const;
-
-    void addTextToTitle(const QString text);
-    void modifiedStatus(const bool isModified);
 
     void shutdown();
 
@@ -43,6 +43,10 @@ public slots:
     void newFile();
     bool saveToFile(const QString& path);
     bool openFromFile(const QString& path);
+
+private:
+    void setupGame();
+    void setupEditor();
 
 public:
     const QString& getSavePath() const { return savePath; }
