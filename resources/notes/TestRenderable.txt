@@ -31,3 +31,49 @@
     renderable->build(shader);
     scene->getRenderableManager()->add(4, renderable);
     // --------------------
+	
+	------------------------------------------------------------------------------
+	
+// TODO test
+    glViewport = new GLViewport("Viewport");
+    connect(glViewport, &GLViewport::initialized, glViewport, [this]()
+    {
+        this->makeCurrent();
+
+        QVector<QVector3D> vertices =
+        {
+            QVector3D(0.0f, 0.5f, 0.0f),
+            QVector3D(0.5f, 0.0f, 0.0f),
+            QVector3D(-0.5f, 0.0f, 0.0f)
+        };
+        auto mesh = new IEMesh(1);
+        mesh->setPosVertices(vertices);
+        scene->getMeshManager()->add(1, mesh);
+
+        QColor color(0, 0, 255, 255);
+        auto material = new IEMaterial(2);
+        material->getUniformData().add("uColor", color);
+        scene->getMaterialManager()->add(2, material);
+
+        auto shader = new IEShader(3, "./resources/shaders/Test.glsl");
+        shader->build();
+        scene->getShaderManager()->add(3, shader);
+
+        auto posBuffer = new IEBuffer<QVector3D>(QOpenGLBuffer::VertexBuffer);
+        posBuffer->initData(mesh->getPosVertices());
+
+        auto renderable = new IERenderable(4);
+        renderable->setRenderType(IERenderable::RenderType::Vertex);
+        renderable->setDrawType(GL_TRIANGLES);
+        renderable->setMeshId(1);
+        renderable->setMaterialId(2);
+        renderable->setShaderId(3);
+        renderable->getVec3BufferContainer()->add("aPos", posBuffer);
+        renderable->build(shader);
+        scene->getRenderableManager()->add(4, renderable);
+
+        glViewport->startup();
+        glViewport->addRenderableCopy(mesh, material, shader, renderable);
+    });
+    glViewport->show();
+    // --------------------

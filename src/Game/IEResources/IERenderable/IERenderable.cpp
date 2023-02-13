@@ -31,10 +31,10 @@ IERenderable::IERenderable(const IERenderable& other) :
     renderType(other.renderType), drawType(other.drawType),
     meshId(other.meshId), materialId(other.materialId),
     shaderId(other.shaderId),
-    vec2BufferContainer(other.vec2BufferContainer),
-    vec3BufferContainer(other.vec3BufferContainer),
-    vec4BufferContainer(other.vec4BufferContainer),
-    mat4BufferContainer(other.mat4BufferContainer),
+    vec2BufferContainer(new IEBufferContainer<QVector2D>(*other.vec2BufferContainer)),
+    vec3BufferContainer(new IEBufferContainer<QVector3D>(*other.vec3BufferContainer)),
+    vec4BufferContainer(new IEBufferContainer<QVector4D>(*other.vec4BufferContainer)),
+    mat4BufferContainer(new IEBufferContainer<QMatrix4x4>(*other.mat4BufferContainer)),
     uniformData(other.uniformData)
 {
 

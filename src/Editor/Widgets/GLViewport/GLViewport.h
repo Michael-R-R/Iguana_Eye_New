@@ -14,6 +14,8 @@
 
 class GLViewport : public QOpenGLWidget
 {
+    Q_OBJECT
+
     QSurfaceFormat* format;
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
@@ -35,6 +37,9 @@ public:
     void startup();
     void shutdown();
 
+    void addRenderableCopy(const IEMesh* mesh, const IEMaterial* material,
+                           const IEShader* shader, const IERenderable* renderable);
+
     virtual void onUpdateFrame();
 
 protected:
@@ -43,5 +48,8 @@ protected:
     void initializeGL() override;
     void resizeGL(int w, int h) override;
     void paintGL() override;
+
+signals:
+    void initialized();
 };
 

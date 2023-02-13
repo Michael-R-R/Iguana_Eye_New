@@ -39,6 +39,42 @@ void GLViewport::shutdown()
     time->shutdown();
 }
 
+void GLViewport::addRenderableCopy(const IEMesh* mesh, const IEMaterial* material,
+                                   const IEShader* shader, const IERenderable* renderable)
+{
+    if(!mesh || !material || !shader || !renderable)
+        return;
+
+    this->makeCurrent();
+
+    auto meshId = mesh->getId();
+    auto meshCopy = new IEMesh(*mesh);
+    meshCopy->setId(meshId);
+    meshManager->add(meshId, meshCopy);
+
+    auto materialId = material->getId();
+    auto materialCopy = new IEMaterial(*material);
+    materialCopy->setId(materialId);
+    materialManager->add(materialId, materialCopy);
+
+    auto shaderId = shader->getId();
+    auto shaderCopy = new IEShader(*shader);
+    shaderCopy->setId(shaderId);
+    shaderCopy->build();
+    shaderManager->add(shaderId, shaderCopy);
+
+    auto renderableId = renderable->getId();
+    auto renderableCopy = new IERenderable(*renderable);
+    renderableCopy->setId(renderableId);
+    renderableCopy->setMeshId(meshId);
+    renderableCopy->setMaterialId(materialId);
+    renderableCopy->setShaderId(shaderId);
+    renderableCopy->build(shaderCopy);
+    renderableManager->add(renderableId, renderableCopy);
+
+    this->doneCurrent();
+}
+
 void GLViewport::onUpdateFrame()
 {
 
@@ -65,6 +101,8 @@ void GLViewport::initializeGL()
     glExtraFunc->glEnable(GL_DEPTH_TEST);
 
     glExtraFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+
+    emit initialized();
 }
 
 void GLViewport::resizeGL(int w, int h)

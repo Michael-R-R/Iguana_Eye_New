@@ -22,12 +22,13 @@ public:
     IEBufferContainer(const IEBufferContainer& other) :
         buffers()
     {
-        QMap<QString, IEBuffer*> tempBuffers;
+        QMap<QString, IEBuffer<T>*> tempBuffers;
 
-        QMapIterator<QString, IEBuffer*> it(other.buffers);
+        QMapIterator<QString, IEBuffer<T>*> it(other.buffers);
         while(it.hasNext())
         {
-            tempBuffers[it.key()] = new IEBuffer(*it.value());;
+            it.next();
+            tempBuffers[it.key()] = new IEBuffer<T>(*it.value());;
         }
 
         buffers = tempBuffers;
