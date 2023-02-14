@@ -7,6 +7,26 @@ INCLUDEPATH += $$PWD/src/Editor \
     $$PWD/src/Editor/EditorActionManager \
     $$PWD/src/Editor/EditorInput \
 
+INCLUDEPATH += $$PWD/src/Editor/EditorSceneStartup \
+
+INCLUDEPATH += $$PWD/src/Editor/EditorSceneStartup/Materials \
+    $$PWD/src/Editor/EditorSceneStartup/Materials/EDefaultMaterial
+
+INCLUDEPATH += $$PWD/src/Editor/EditorSceneStartup/Meshes \
+    $$PWD/src/Editor/EditorSceneStartup/Meshes/EGridMesh
+
+INCLUDEPATH += $$PWD/src/Editor/Actions/ \
+    $$PWD/src/Editor/Actions/AppOptionsAction \
+    $$PWD/src/Editor/Actions/OpenGameFileAction \
+    $$PWD/src/Editor/Actions/MenuAction \
+    $$PWD/src/Editor/Actions/NewGameFileAction \
+    $$PWD/src/Editor/Actions/QuitAppAction \
+    $$PWD/src/Editor/Actions/SaveAsGameFileAction \
+    $$PWD/src/Editor/Actions/SaveGameFileAction \
+    $$PWD/src/Editor/Actions/ToggleGameRenderAction \
+    $$PWD/src/Editor/Actions/ToggleGameUpdateAction \
+    $$PWD/src/Editor/Actions/ToggleEditorUiAction
+
 INCLUDEPATH += $$PWD/src/Editor/EditorUi \
     $$PWD/src/Editor/EditorUi/MainMenuBar \
     $$PWD/src/Editor/EditorUi/EditorWindowManager \
@@ -25,18 +45,6 @@ INCLUDEPATH += $$PWD/src/Editor/Widgets/AppOptionsWidgets \
 INCLUDEPATH += $$PWD/src/Editor/Widgets/GLViewport \
     $$PWD/src/Editor/Widgets/GLViewport/GLInput \
     $$PWD/src/Editor/Widgets/GLViewport/GLTime
-
-INCLUDEPATH += $$PWD/src/Editor/Actions/ \
-    $$PWD/src/Editor/Actions/AppOptionsAction \
-    $$PWD/src/Editor/Actions/OpenGameFileAction \
-    $$PWD/src/Editor/Actions/MenuAction \
-    $$PWD/src/Editor/Actions/NewGameFileAction \
-    $$PWD/src/Editor/Actions/QuitAppAction \
-    $$PWD/src/Editor/Actions/SaveAsGameFileAction \
-    $$PWD/src/Editor/Actions/SaveGameFileAction \
-    $$PWD/src/Editor/Actions/ToggleGameRenderAction \
-    $$PWD/src/Editor/Actions/ToggleGameUpdateAction \
-    $$PWD/src/Editor/Actions/ToggleEditorUiAction
 
 INCLUDEPATH += $$PWD/src/Editor/Menus \
     $$PWD/src/Editor/Menus/FileSubMenu \

@@ -21,13 +21,11 @@ public:
     Editor(QObject* parent = nullptr);
     ~Editor();
 
+    void init();
     void startup(const AppStartEvent& event);
     void shutdown();
-
-    void onRenderFrame();
 
     EditorInput* getInput() const { return input; }
     EditorUi* getUi() const { return ui; }
     EditorActionManager* getActionManager() const { return actions; }
 };
-

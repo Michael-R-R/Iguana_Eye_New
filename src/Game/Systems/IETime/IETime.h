@@ -6,7 +6,7 @@
 #include "IEObject.h"
 #include "DeltaTime.h"
 
-class ApplicationWindow;
+class IEGame;
 
 class IETime : public IEObject
 {
@@ -23,7 +23,7 @@ public:
     IETime(const int msUpdate, const int msRender, QObject* parent = nullptr);
     ~IETime();
 
-    void startup(const ApplicationWindow* application);
+    void startup(IEGame* game);
     void shutdown();
 
     void startUpdateTimer();
@@ -42,8 +42,8 @@ public:
     void setRenderRefresh(const int ms) { renderRefresh = ms; }
 
 private:
-    void setupUpdateTimer(const ApplicationWindow* application);
-    void setupRenderTimer(const ApplicationWindow* application);
+    void setupUpdateTimer(IEGame* game);
+    void setupRenderTimer(IEGame* game);
 
 public:
     friend QDataStream& operator<<(QDataStream& out, const IETime& time)

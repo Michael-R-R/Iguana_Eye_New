@@ -1,5 +1,4 @@
 #include "IEGame.h"
-#include "ApplicationWindow.h"
 #include "GameStartEvent.h"
 #include "RenderEngineStartEvent.h"
 
@@ -31,7 +30,7 @@ void IEGame::init()
     scene = new IEScene(this);
 }
 
-void IEGame::startup(const ApplicationWindow* appWindow)
+void IEGame::startup()
 {
     this->makeCurrent();
 
@@ -41,7 +40,7 @@ void IEGame::startup(const ApplicationWindow* appWindow)
 
     scene->startup(gameStartEvent);
     renderEngine->startup(renderStartEvent);
-    time->startup(appWindow);
+    time->startup(this);
 
     this->setFocus();
 }

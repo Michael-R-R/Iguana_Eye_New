@@ -31,9 +31,6 @@ public:
     void addTextToTitle(const QString text);
     void setModifiedStatus(const bool isModified);
 
-    void onUpdateFrame() const;
-    void onRenderFrame() const;
-
     void shutdown();
 
 private slots:

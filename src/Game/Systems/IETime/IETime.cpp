@@ -1,5 +1,5 @@
 #include "IETime.h"
-#include "ApplicationWindow.h"
+#include "IEGame.h"
 
 IETime::IETime(const int msUpdate, const int msRender, QObject* parent) :
     IEObject(parent),
@@ -16,10 +16,10 @@ IETime::~IETime()
 
 }
 
-void IETime::startup(const ApplicationWindow* application)
+void IETime::startup(IEGame* game)
 {
-    this->setupUpdateTimer(application);
-    this->setupRenderTimer(application);
+    this->setupUpdateTimer(game);
+    this->setupRenderTimer(game);
     this->startUpdateTimer();
     this->startRenderTimer();
 }
@@ -52,14 +52,14 @@ void IETime::stopRenderTimer()
     renderTimer->stop();
 }
 
-void IETime::setupUpdateTimer(const ApplicationWindow* application)
+void IETime::setupUpdateTimer(IEGame* game)
 {
     updateTimer->setTimerType(Qt::PreciseTimer);
-    connect(updateTimer, &QTimer::timeout, this, [application]() { application->onUpdateFrame(); });
+    connect(updateTimer, &QTimer::timeout, this, [game]() { game->onUpdateFrame(); });
 }
 
-void IETime::setupRenderTimer(const ApplicationWindow* application)
+void IETime::setupRenderTimer(IEGame* game)
 {
     renderTimer->setTimerType(Qt::PreciseTimer);
-    connect(renderTimer, &QTimer::timeout, this, [application]() { application->onRenderFrame(); });
+    connect(renderTimer, &QTimer::timeout, this, [game]() { game->update(); });
 }

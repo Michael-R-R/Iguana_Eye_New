@@ -25,7 +25,10 @@ void IEMaterialManager::shutdown()
 bool IEMaterialManager::add(const unsigned long long key, IEMaterial* value)
 {
     if(!IEManager::add(key, value))
+    {
+        delete value;
         return false;
+    }
 
     emit added(key);
 

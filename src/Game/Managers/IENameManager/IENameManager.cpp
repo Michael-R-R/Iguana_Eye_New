@@ -26,9 +26,13 @@ void IENameManager::shutdown()
 bool IENameManager::add(const unsigned long long key, QString* value)
 {
     if(!IEManager::add(key, value))
+    {
+        delete value;
         return false;
+    }
 
     emit added(key);
+
     return true;
 }
 
@@ -38,6 +42,7 @@ bool IENameManager::remove(const unsigned long long key)
         return false;
 
     emit removed(key);
+
     return true;
 }
 
@@ -47,6 +52,7 @@ bool IENameManager::changeKey(const unsigned long long oldKey, const unsigned lo
         return false;
 
     emit keyChanged(oldKey, newKey);
+
     return true;
 }
 

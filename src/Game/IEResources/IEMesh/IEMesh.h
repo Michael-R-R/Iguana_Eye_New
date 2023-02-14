@@ -9,6 +9,7 @@
 
 class IEMesh : public IEResource
 {
+protected:
     QVector<QVector3D> positionVertices;
     QVector<QVector3D> normalVertices;
     QVector<QVector2D> textureVertices;

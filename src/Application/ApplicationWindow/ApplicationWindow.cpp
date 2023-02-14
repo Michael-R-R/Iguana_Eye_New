@@ -11,7 +11,7 @@
 ApplicationWindow::ApplicationWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ApplicationWindow),
-    game(new IEGame(this)),
+    game(nullptr),
     editor(nullptr),
     applicationTitle("Iguana Eye"),
     windowTitle(applicationTitle),
@@ -52,20 +52,6 @@ void ApplicationWindow::setModifiedStatus(const bool isModified)
     this->setWindowTitle(windowTitle);
 }
 
-void ApplicationWindow::onUpdateFrame() const
-{
-    game->onUpdateFrame();
-}
-
-void ApplicationWindow::onRenderFrame() const
-{
-    #ifdef EDITOR_ENABLED
-    editor->onRenderFrame();
-    #endif
-
-    game->update();
-}
-
 void ApplicationWindow::shutdown()
 {
     #ifdef EDITOR_ENABLED
@@ -77,8 +63,7 @@ void ApplicationWindow::shutdown()
 
 void ApplicationWindow::startup()
 {
-    game->init();
-    game->startup(this);
+    game->startup();
 
     #ifdef EDITOR_ENABLED
     AppStartEvent startEvent(this, editor, game);
@@ -90,11 +75,12 @@ void ApplicationWindow::newFile()
 {
     game->shutdown();
     game->init();
-    game->startup(this);
+    game->startup();
 
     #ifdef EDITOR_ENABLED
     AppStartEvent startEvent(this, editor, game);
     editor->shutdown();
+    editor->init();
     editor->startup(startEvent);
     #endif
 }
@@ -109,11 +95,12 @@ bool ApplicationWindow::openFromFile(const QString& path)
     game->shutdown();
     game->init();
     bool success = IESerialize::read<IEGame>(path, game);
-    game->startup(this);
+    game->startup();
 
     #ifdef EDITOR_ENABLED
     AppStartEvent startEvent(this, editor, game);
     editor->shutdown();
+    editor->init();
     editor->startup(startEvent);
     #endif
 
@@ -122,13 +109,17 @@ bool ApplicationWindow::openFromFile(const QString& path)
 
 void ApplicationWindow::setupGame()
 {
-    this->setCentralWidget(game);
+    game = new IEGame(this);
+    game->init();
     connect(game, &IEGame::initialized, this, &ApplicationWindow::startup);
+
+    this->setCentralWidget(game);
 }
 
 void ApplicationWindow::setupEditor()
 {
     #ifdef EDITOR_ENABLED
     editor = new Editor(this);
+    editor->init();
     #endif
 }

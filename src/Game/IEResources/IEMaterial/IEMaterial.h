@@ -9,6 +9,7 @@ class IEShader;
 
 class IEMaterial : public IEResource
 {
+protected:
     IEUniform uniformData;
     QColor objectColor;
     unsigned long long atlasTexId;

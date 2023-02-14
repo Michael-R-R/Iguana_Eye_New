@@ -1,7 +1,6 @@
 #include "Editor.h"
 #include "AppStartEvent.h"
-#include <QOpenGLContext>
-#include <QOpenGLExtraFunctions>
+#include "EditorSceneStartup.h"
 
 Editor::Editor(QObject* parent) :
     QObject(parent),
@@ -17,16 +16,21 @@ Editor::~Editor()
 
 }
 
-void Editor::startup(const AppStartEvent& event)
+void Editor::init()
 {
     input = new EditorInput(this);
     ui = new EditorUi(this);
     actions = new EditorActionManager(this);
+}
 
+void Editor::startup(const AppStartEvent& event)
+{
     // *** Order matters *** //
     input->setup();
     ui->setup(event);
     actions->setup(event);
+
+    EditorSceneStartup::startup(event);
 }
 
 void Editor::shutdown()
@@ -34,11 +38,4 @@ void Editor::shutdown()
     delete actions;
     delete ui;
     delete input;
-}
-
-void Editor::onRenderFrame()
-{
-    QOpenGLExtraFunctions* glExtraFunc = QOpenGLContext::currentContext()->extraFunctions();
-
-    glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

@@ -29,14 +29,14 @@ public:
     IEGame(QWidget* parent = nullptr);
     ~IEGame();
 
-    void init();
-    void startup(const ApplicationWindow* appWindow);
-    void shutdown();
-
     IETime* getIETime() const { return time; }
     IEInput* getIEInput() const { return input; }
     IERenderEngine* getIERenderEngine() const { return renderEngine; }
     IEScene* getIEScene() const { return scene; }
+
+    void init();
+    void startup();
+    void shutdown();
 
 public slots:
     void onUpdateFrame();

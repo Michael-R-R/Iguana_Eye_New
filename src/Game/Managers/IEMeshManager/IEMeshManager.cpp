@@ -25,7 +25,10 @@ void IEMeshManager::shutdown()
 bool IEMeshManager::add(const unsigned long long key, IEMesh* value)
 {
     if(!IEManager::add(key, value))
+    {
+        delete value;
         return false;
+    }
 
     emit added(key);
 
