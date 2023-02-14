@@ -25,6 +25,7 @@ public:
 private:
     RenderType renderType;
     GLenum drawType;
+    bool isRenderable;
 
     unsigned long long meshId;
     unsigned long long materialId;
@@ -54,6 +55,7 @@ public:
 
     RenderType getRenderType() const { return renderType; }
     GLenum getDrawType() const { return drawType; }
+    bool getIsRenderable() const { return isRenderable; }
     unsigned long long getMeshId() const { return meshId; }
     unsigned long long getMaterialId() const { return materialId; }
     unsigned long long getShaderId() const { return shaderId; }
@@ -65,6 +67,7 @@ public:
 
     void setRenderType(const RenderType val) { renderType = val; }
     void setDrawType(const GLenum val) { drawType = val; }
+    void setIsRenderable(const bool val) { isRenderable = val; }
     void setMeshId(const unsigned long long val) { meshId = val; }
     void setMaterialId(const unsigned long long val) { materialId = val; }
     void setShaderId(const unsigned long long val) { shaderId = val; }
@@ -74,6 +77,7 @@ public:
         out << renderable.id
             << renderable.renderType
             << renderable.drawType
+            << renderable.isRenderable
             << renderable.meshId
             << renderable.materialId
             << renderable.shaderId
@@ -91,6 +95,7 @@ public:
         in >> renderable.id
            >> renderable.renderType
            >> renderable.drawType
+           >> renderable.isRenderable
            >> renderable.meshId
            >> renderable.materialId
            >> renderable.shaderId

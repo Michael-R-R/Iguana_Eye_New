@@ -2,6 +2,7 @@
 #include "IEShader.h"
 IERenderable::IERenderable() :
     QOpenGLVertexArrayObject(), IEResource(0),
+    isRenderable(true),
     renderType(RenderType::None), drawType(GL_TRIANGLES),
     meshId(0), materialId(0), shaderId(0),
     vec2BufferContainer(new IEBufferContainer<QVector2D>()),
@@ -15,6 +16,7 @@ IERenderable::IERenderable() :
 
 IERenderable::IERenderable(const unsigned long long id) :
     QOpenGLVertexArrayObject(), IEResource(id),
+    isRenderable(true),
     renderType(RenderType::None), drawType(GL_TRIANGLES),
     meshId(0), materialId(0), shaderId(0),
     vec2BufferContainer(new IEBufferContainer<QVector2D>()),
@@ -28,6 +30,7 @@ IERenderable::IERenderable(const unsigned long long id) :
 
 IERenderable::IERenderable(const IERenderable& other) :
     QOpenGLVertexArrayObject(), IEResource(0),
+    isRenderable(other.isRenderable),
     renderType(other.renderType), drawType(other.drawType),
     meshId(other.meshId), materialId(other.materialId),
     shaderId(other.shaderId),

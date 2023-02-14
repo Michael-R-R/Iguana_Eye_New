@@ -37,6 +37,9 @@ void IERenderEngine::onRenderFrame()
     auto renderables = renderableManager->getResourceContainer()->getResources();
     for(auto* renderable : renderables)
     {
+        if(!renderable->getIsRenderable())
+            continue;
+
         auto mesh = meshManager->getValue(renderable->getMeshId());
         auto material = materialManager->getValue(renderable->getMaterialId());
         auto shader = shaderManager->getValue(renderable->getShaderId());
