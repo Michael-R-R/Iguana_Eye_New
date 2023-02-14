@@ -54,7 +54,7 @@ public:
         divisor = divisor_;
     }
 
-    void build(const int attribLoc)
+    void build(const int attribLoc = -1)
     {
         if(!this->isCreated())
             this->create();

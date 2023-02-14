@@ -116,4 +116,5 @@ INCLUDEPATH += $$PWD/src/Input \
 INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \
     $$PWD/src/Utility/IEHash \
+    $$PWD/src/Utility/IEObjLoader \
     $$PWD/src/Utility/IESerialize

@@ -28,12 +28,12 @@ public:
     bool operator<(const IEMesh& other) { return IEResource::operator<(other); }
     bool operator>(const IEMesh& other) { return IEResource::operator>(other); }
 
-    const QVector<QVector3D>& getPosVertices() const { return positionVertices; }
-    const QVector<QVector3D>& getNormVertices() const { return normalVertices; }
-    const QVector<QVector2D>& getTexVertices() const { return textureVertices; }
-    const QVector<QVector3D>& getTanVertices() const { return tangentVertices; }
-    const QVector<QVector3D>& getBiTanVertices() const { return bitangentVertices; }
-    const QVector<unsigned>& getIndices() const { return indices; }
+    QVector<QVector3D>& getPosVertices() { return positionVertices; }
+    QVector<QVector3D>& getNormVertices() { return normalVertices; }
+    QVector<QVector2D>& getTexVertices() { return textureVertices; }
+    QVector<QVector3D>& getTanVertices() { return tangentVertices; }
+    QVector<QVector3D>& getBiTanVertices() { return bitangentVertices; }
+    QVector<unsigned>& getIndices() { return indices; }
 
     void setPosVertices(const QVector<QVector3D> val) { positionVertices = val; }
     void setNormVertices(const QVector<QVector3D> val) { normalVertices = val; }

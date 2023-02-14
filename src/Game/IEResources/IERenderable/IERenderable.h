@@ -31,6 +31,7 @@ private:
     unsigned long long materialId;
     unsigned long long shaderId;
 
+    IEBufferContainer<unsigned>* unsignedBufferContainer;
     IEBufferContainer<QVector2D>* vec2BufferContainer;
     IEBufferContainer<QVector3D>* vec3BufferContainer;
     IEBufferContainer<QVector4D>* vec4BufferContainer;
@@ -59,6 +60,7 @@ public:
     unsigned long long getMeshId() const { return meshId; }
     unsigned long long getMaterialId() const { return materialId; }
     unsigned long long getShaderId() const { return shaderId; }
+    IEBufferContainer<unsigned>* getUnsignedBufferContainer() const { return unsignedBufferContainer; }
     IEBufferContainer<QVector2D>* getVec2BufferContainer() const { return vec2BufferContainer; }
     IEBufferContainer<QVector3D>* getVec3BufferContainer() const { return vec3BufferContainer; }
     IEBufferContainer<QVector4D>* getVec4BufferContainer() const { return vec4BufferContainer; }
@@ -81,6 +83,7 @@ public:
             << renderable.meshId
             << renderable.materialId
             << renderable.shaderId
+            << *renderable.unsignedBufferContainer
             << *renderable.vec2BufferContainer
             << *renderable.vec3BufferContainer
             << *renderable.vec4BufferContainer
@@ -99,6 +102,7 @@ public:
            >> renderable.meshId
            >> renderable.materialId
            >> renderable.shaderId
+           >> *renderable.unsignedBufferContainer
            >> *renderable.vec2BufferContainer
            >> *renderable.vec3BufferContainer
            >> *renderable.vec4BufferContainer
