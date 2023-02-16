@@ -4,56 +4,88 @@ InputContainer::InputContainer(QObject *parent) :
     QObject(parent),
     keys()
 {
-    addValue("Invalid", InputKey(-1, -1));
+    addValue("Invalid", new InputKey(-1, -1));
 }
 
 InputContainer::~InputContainer()
 {
-
+    clear();
 }
 
-void InputContainer::clear()
+bool InputContainer::addValue(const QString key, InputKey* value)
 {
-    keys.clear();
-    emit cleared();
+    if(doesExist(key))
+    {
+        delete value;
+        return false;
+    }
+
+    keys[key] = value;
+
+    return true;
 }
 
-void InputContainer::addValue(const QString name, const InputKey key)
+bool InputContainer::removeValue(const QString& key)
 {
-    if(doesExist(name)) { return; }
-    keys[name] = key;
+    if(!doesExist(key))
+        return false;
+
+    auto temp = keys[key];
+    keys.remove(key);
+    delete temp;
+
+    return true;
 }
 
-void InputContainer::removeValue(const QString& name)
+bool InputContainer::updateValue(const QString& key, const int modVal, const int keyVal)
 {
-    if(!doesExist(name)) { return; }
-    keys.remove(name);
-}
+    if(!doesExist(key))
+        return false;
 
-void InputContainer::updateValue(const QString name, const InputKey key)
-{
-    if(!doesExist(name)) { return; }
-    keys[name] = key;
-}
+    keys[key]->update(modVal, keyVal);
 
-InputKey* InputContainer::fetchValue(const QString& name)
-{
-    if(!doesExist(name)) { return &keys["Invalid"]; }
-    return &keys[name];
+    return true;
 }
 
 QString InputContainer::fetchKey(const int mod, const int key) const
 {
     if(!doesExist(mod, key)) { return ""; }
-    return keys.key(InputKey(mod, key));
+
+    auto value = InputKey(mod, key);
+
+    return keys.key(&value);
 }
 
-bool InputContainer::doesExist(const QString& name) const
+InputKey* InputContainer::fetchValue(const QString& key) const
 {
-    return (keys.find(name) != keys.end());
+    if(!doesExist(key)) { return keys["Invalid"]; }
+
+    return keys[key];
+}
+
+bool InputContainer::doesExist(const QString& key) const
+{
+    return (keys.find(key) != keys.end());
 }
 
 bool InputContainer::doesExist(const int mod, const int key) const
 {
-    return (std::find(keys.begin(), keys.end(), InputKey(mod, key)) != keys.end());
+    auto value = InputKey(mod, key);
+    return (std::find(keys.begin(), keys.end(), &value) != keys.end());
+}
+
+void InputContainer::clear()
+{
+    QMapIterator<QString, InputKey*> it(keys);
+    while(it.hasNext())
+    {
+        it.next();
+
+        auto temp = it.value();
+        keys[it.key()] = nullptr;
+        delete temp;
+    }
+
+    keys.clear();
+    emit cleared();
 }

@@ -18,6 +18,6 @@ public:
     EWApplicationOptions(QWidget* parent = nullptr);
     ~EWApplicationOptions();
 
-    void setup(const AppStartEvent& event);
+    void startup(const AppStartEvent& event);
 };
 

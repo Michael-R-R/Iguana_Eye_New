@@ -117,10 +117,13 @@ public:
         int size = 0;
         in >> size;
 
+        unsigned long long key = 0;
+        T* value = nullptr;
+
+        container.clear();
         for(int i = 0; i < size; i++)
         {
-            unsigned long long key = 0;
-            T* value = new T();
+            value = new T();
 
             in >> key >> *value;
 

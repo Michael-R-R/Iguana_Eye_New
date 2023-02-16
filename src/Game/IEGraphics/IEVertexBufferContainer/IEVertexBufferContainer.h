@@ -124,6 +124,7 @@ public:
         QString key;
         IEVertexBuffer<T>* value = nullptr;
 
+        container.clear();
         for(int i = 0; i < size; i++)
         {
             in >> key;

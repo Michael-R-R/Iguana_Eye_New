@@ -20,7 +20,7 @@ EWApplicationOptions::~EWApplicationOptions()
 
 }
 
-void EWApplicationOptions::setup(const AppStartEvent& event)
+void EWApplicationOptions::startup(const AppStartEvent& event)
 {
     auto editorInput = event.getEditor()->getInput();
     auto editorInputContainer = editorInput->getInputContainer();

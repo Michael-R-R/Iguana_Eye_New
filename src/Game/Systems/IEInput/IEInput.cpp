@@ -26,9 +26,9 @@ bool IEInput::isPressed(const char* keyName)
 
 void IEInput::setupInputContainer()
 {
-    inputContainer->addValue("Forward", InputKey(0, Qt::Key_W));
-    inputContainer->addValue("Backward", InputKey(0, Qt::Key_S));
-    inputContainer->addValue("Left", InputKey(0, Qt::Key_A));
-    inputContainer->addValue("Right", InputKey(0, Qt::Key_D));
-    inputContainer->addValue("Jump", InputKey(0, Qt::Key_Space));
+    inputContainer->addValue("Forward", new InputKey(0, Qt::Key_W));
+    inputContainer->addValue("Backward", new InputKey(0, Qt::Key_S));
+    inputContainer->addValue("Left", new InputKey(0, Qt::Key_A));
+    inputContainer->addValue("Right", new InputKey(0, Qt::Key_D));
+    inputContainer->addValue("Jump", new InputKey(0, Qt::Key_Space));
 }

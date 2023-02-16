@@ -83,7 +83,7 @@ void EWindowManager::setupOptionsWindow(const AppStartEvent& event)
     auto applicationWindow = event.getAppWindow();
 
     auto optionsWindow = new EWApplicationOptions(applicationWindow);
-    optionsWindow->setup(event);
+    optionsWindow->startup(event);
 
     this->appendWindow("Options", optionsWindow);
     applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, optionsWindow);
