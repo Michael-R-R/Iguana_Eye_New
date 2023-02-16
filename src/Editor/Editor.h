@@ -2,9 +2,9 @@
 
 #include <QObject>
 
-#include "EditorInput.h"
-#include "EditorUi.h"
-#include "EditorActionManager.h"
+#include "EInput.h"
+#include "EGUI.h"
+#include "EActionManager.h"
 
 class QOpenGLExtraFunctions;
 class AppStartEvent;
@@ -13,9 +13,9 @@ class Editor : public QObject
 {
     Q_OBJECT
 
-    EditorInput* input;
-    EditorUi* ui;
-    EditorActionManager* actions;
+    EInput* input;
+    EGUI* ui;
+    EActionManager* actions;
 
 public:
     Editor(QObject* parent = nullptr);
@@ -25,7 +25,7 @@ public:
     void startup(const AppStartEvent& event);
     void shutdown();
 
-    EditorInput* getInput() const { return input; }
-    EditorUi* getUi() const { return ui; }
-    EditorActionManager* getActionManager() const { return actions; }
+    EInput* getInput() const { return input; }
+    EGUI* getUi() const { return ui; }
+    EActionManager* getActionManager() const { return actions; }
 };

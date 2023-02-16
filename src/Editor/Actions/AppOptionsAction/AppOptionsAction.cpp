@@ -1,8 +1,8 @@
 #include "AppOptionsAction.h"
-#include "EditorWindowManager.h"
+#include "EWindowManager.h"
 
 AppOptionsAction::AppOptionsAction(InputKey* shortcut,
-                                   EditorWindowManager* windowManager,
+                                   EWindowManager* windowManager,
                                    QObject *parent) :
     MenuAction("Options", shortcut, parent)
 {

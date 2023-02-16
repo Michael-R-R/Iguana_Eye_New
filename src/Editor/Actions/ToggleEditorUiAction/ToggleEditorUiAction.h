@@ -2,14 +2,14 @@
 
 #include <MenuAction.h>
 
-class EditorUi;
+class EGUI;
 
 class ToggleEditorUiAction : public MenuAction
 {
     bool status;
 
 public:
-    ToggleEditorUiAction(InputKey* shortcut, EditorUi* ui, QObject* parent = nullptr);
+    ToggleEditorUiAction(InputKey* shortcut, EGUI* ui, QObject* parent = nullptr);
     ~ToggleEditorUiAction();
 };
 

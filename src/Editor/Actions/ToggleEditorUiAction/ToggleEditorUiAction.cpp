@@ -1,7 +1,7 @@
 #include "ToggleEditorUiAction.h"
-#include "EditorUi.h"
+#include "EGUI.h"
 
-ToggleEditorUiAction::ToggleEditorUiAction(InputKey* shortcut, EditorUi* ui, QObject* parent) :
+ToggleEditorUiAction::ToggleEditorUiAction(InputKey* shortcut, EGUI* ui, QObject* parent) :
     MenuAction("Toggle Ui", shortcut, parent),
     status(true)
 {

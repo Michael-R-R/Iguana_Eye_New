@@ -4,19 +4,10 @@ INCLUDEPATH += $$PWD/src/Application \
     $$PWD/src/Application/ApplicationWindow
 
 INCLUDEPATH += $$PWD/src/Editor \
-    $$PWD/src/Editor/EditorActionManager \
-    $$PWD/src/Editor/EditorInput \
 
-INCLUDEPATH += $$PWD/src/Editor/EditorSceneStartup \
-
-INCLUDEPATH += $$PWD/src/Editor/EditorSceneStartup/Materials \
-    $$PWD/src/Editor/EditorSceneStartup/Materials/EDefaultMaterial
-
-INCLUDEPATH += $$PWD/src/Editor/EditorSceneStartup/Meshes \
-    $$PWD/src/Editor/EditorSceneStartup/Meshes/EGridMesh
-
-INCLUDEPATH += $$PWD/src/Editor/Actions/ \
+INCLUDEPATH += $$PWD/src/Editor/Actions \
     $$PWD/src/Editor/Actions/AppOptionsAction \
+    $$PWD/src/Editor/Actions/EActionManager \
     $$PWD/src/Editor/Actions/OpenGameFileAction \
     $$PWD/src/Editor/Actions/MenuAction \
     $$PWD/src/Editor/Actions/NewGameFileAction \
@@ -27,32 +18,53 @@ INCLUDEPATH += $$PWD/src/Editor/Actions/ \
     $$PWD/src/Editor/Actions/ToggleGameUpdateAction \
     $$PWD/src/Editor/Actions/ToggleEditorUiAction
 
-INCLUDEPATH += $$PWD/src/Editor/EditorUi \
-    $$PWD/src/Editor/EditorUi/MainMenuBar \
-    $$PWD/src/Editor/EditorUi/EditorWindowManager \
-    $$PWD/src/Editor/EditorUi/StatusBar
-
-INCLUDEPATH += $$PWD/src/Editor/Widgets \
-    $$PWD/src/Editor/Widgets/CollapsingHeader
-
-INCLUDEPATH += $$PWD/src/Editor/Widgets/AppOptionsWidgets \
-    $$PWD/src/Editor/Widgets/AppOptionsWidgets/EditorHotkeyTableWidget \
-    $$PWD/src/Editor/Widgets/AppOptionsWidgets/FetchUserInputWidget \
-    $$PWD/src/Editor/Widgets/AppOptionsWidgets/GameHotkeyTableWidget \
-    $$PWD/src/Editor/Widgets/AppOptionsWidgets/HotkeyTableWidget \
-    $$PWD/src/Editor/Widgets/AppOptionsWidgets/SelectAppOptionsWidget
-
-INCLUDEPATH += $$PWD/src/Editor/Widgets/GLViewport \
-    $$PWD/src/Editor/Widgets/GLViewport/GLInput \
-    $$PWD/src/Editor/Widgets/GLViewport/GLTime
+INCLUDEPATH += $$PWD/src/Editor/GUI \
+    $$PWD/src/Editor/GUI/MainMenuBar \
+    $$PWD/src/Editor/GUI/StatusBar \
 
 INCLUDEPATH += $$PWD/src/Editor/Menus \
     $$PWD/src/Editor/Menus/FileSubMenu \
     $$PWD/src/Editor/Menus/GameSubMenu \
-    $$PWD/src/Editor/Menus/SubMenu
 
-INCLUDEPATH += $$PWD/src/Editor/Windows \
-    $$PWD/src/Editor/Windows/AppOptionsWindow
+INCLUDEPATH += $$PWD/src/Editor/GUI/SubMenus \
+    $$PWD/src/Editor/GUI/SubMenus/FileSubMenu \
+    $$PWD/src/Editor/GUI/SubMenus/GameSubMenu \
+    $$PWD/src/Editor/GUI/SubMenus/SubMenu \
+
+INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets \
+
+INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/ApplicationOptions \
+    $$PWD/src/Editor/GUI/Widgets/ApplicationOptions/EWEditorHotkeyTable \
+    $$PWD/src/Editor/GUI/Widgets/ApplicationOptions/EWFetchUserInput \
+    $$PWD/src/Editor/GUI/Widgets/ApplicationOptions/EWGameHotkeyTable \
+    $$PWD/src/Editor/GUI/Widgets/ApplicationOptions/EWHotkeyTable \
+    $$PWD/src/Editor/GUI/Widgets/ApplicationOptions/EWSelectApplicationOption
+
+INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWCollapsingHeader
+
+INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport \
+    $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportInput \
+    $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportTime \
+
+INCLUDEPATH += $$PWD/src/Editor/GUI/Windows \
+    $$PWD/src/Editor/GUI/Windows/EWApplicationOptions \
+    $$PWD/src/Editor/GUI/Windows/EWindowManager \
+    $$PWD/src/Editor/GUI/Windows/EWWindow \
+
+INCLUDEPATH += $$PWD/src/Editor/Input \
+    $$PWD/src/Editor/Input/EInput \
+    $$PWD/src/Editor/Input/InputCapture \
+    $$PWD/src/Editor/Input/InputKey \
+    $$PWD/src/Editor/Input/InputContainer \
+
+INCLUDEPATH += $$PWD/src/Editor/Startup \
+    $$PWD/src/Editor/Startup/ESceneStartup
+
+INCLUDEPATH += $$PWD/src/Editor/Startup/Materials \
+    $$PWD/src/Editor/Startup/Materials/EDefaultMaterial
+
+INCLUDEPATH += $$PWD/src/Editor/Startup/Meshes \
+    $$PWD/src/Editor/Startup/Meshes/EGridMesh
 
 INCLUDEPATH += $$PWD/src/Events \
     $$PWD/src/Events/AppStartEvent \
@@ -63,7 +75,6 @@ INCLUDEPATH += $$PWD/src/Events \
 INCLUDEPATH += $$PWD/src/Game \
     $$PWD/src/Game/IEObject \
     $$PWD/src/Game/IEScene \
-    $$PWD/src/Game/IEUniform
 
 INCLUDEPATH += $$PWD/src/Game/ECS \
     $$PWD/src/Game/ECS/IEComponentType \
@@ -81,9 +92,10 @@ INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
     $$PWD/src/Game/ECS/Systems/IEECSSystem \
     $$PWD/src/Game/ECS/Systems/IEECSTransformSystem
 
-INCLUDEPATH += $$PWD/src/Game/IEBuffers \
-    $$PWD/src/Game/IEBuffers/IEBuffer \
-    $$PWD/src/Game/IEBuffers/IEBufferContainer \
+INCLUDEPATH += $$PWD/src/Game/IEGraphics \
+    $$PWD/src/Game/IEGraphics/IEBuffer \
+    $$PWD/src/Game/IEGraphics/IEBufferContainer \
+    $$PWD/src/Game/IEGraphics/IEUniform \
 
 INCLUDEPATH += $$PWD/src/Game/IEResources \
     $$PWD/src/Game/IEResources/IEMaterial \
@@ -107,11 +119,6 @@ INCLUDEPATH += $$PWD/src/Game/Systems \
 
 INCLUDEPATH += $$PWD/src/Game/Systems/IETime \
     $$PWD/src/Game/Systems/IETime/DeltaTime
-
-INCLUDEPATH += $$PWD/src/Input \
-    $$PWD/src/Input/InputContainer \
-    $$PWD/src/Input/InputCapture \
-    $$PWD/src/Input/InputKey
 
 INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \

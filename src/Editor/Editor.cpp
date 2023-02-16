@@ -1,6 +1,6 @@
 #include "Editor.h"
 #include "AppStartEvent.h"
-#include "EditorSceneStartup.h"
+#include "ESceneStartup.h"
 
 Editor::Editor(QObject* parent) :
     QObject(parent),
@@ -18,9 +18,9 @@ Editor::~Editor()
 
 void Editor::init()
 {
-    input = new EditorInput(this);
-    ui = new EditorUi(this);
-    actions = new EditorActionManager(this);
+    input = new EInput(this);
+    ui = new EGUI(this);
+    actions = new EActionManager(this);
 }
 
 void Editor::startup(const AppStartEvent& event)
@@ -30,7 +30,7 @@ void Editor::startup(const AppStartEvent& event)
     ui->setup(event);
     actions->setup(event);
 
-    EditorSceneStartup::startup(event);
+    ESceneStartup::startup(event);
 }
 
 void Editor::shutdown()

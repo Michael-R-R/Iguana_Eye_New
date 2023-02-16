@@ -2,14 +2,14 @@
 
 #include <MenuAction.h>
 
-class EditorWindowManager;
+class EWindowManager;
 
 class AppOptionsAction : public MenuAction
 {
 
 public:
     AppOptionsAction(InputKey* shortcut,
-                     EditorWindowManager* windowManager,
+                     EWindowManager* windowManager,
                      QObject *parent = nullptr);
     ~AppOptionsAction();
 };
