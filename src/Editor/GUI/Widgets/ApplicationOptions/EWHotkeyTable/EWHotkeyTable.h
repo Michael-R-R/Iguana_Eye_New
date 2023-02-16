@@ -20,7 +20,6 @@ public:
 protected:
     void addTable(QString title, QTableWidget* table);
     QTableWidget* createTable(const InputContainer* inputContainer, const QMap<QString, InputKey*>& keys);
-    void addKeyToMap(InputContainer* inputContainer, const QString name, QMap<QString, InputKey*>& map);
 
 private:
     void fillInTable(QTableWidget* table, const InputContainer* inputContainer, const QMap<QString, InputKey*>& keys);

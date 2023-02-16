@@ -35,11 +35,6 @@ QTableWidget* EWHotkeyTable::createTable(const InputContainer* inputContainer, c
     return table;
 }
 
-void EWHotkeyTable::addKeyToMap(InputContainer* inputContainer, const QString name, QMap<QString, InputKey*>& map)
-{
-    map[name] = inputContainer->fetchValue(name);
-}
-
 void EWHotkeyTable::fillInTable(QTableWidget* table, const InputContainer* inputContainer, const QMap<QString, InputKey*>& keys)
 {
     int row = 0;

@@ -4,6 +4,7 @@
 
 class EWGameHotkeyTable : public EWHotkeyTable
 {
+
 public:
     EWGameHotkeyTable(InputContainer* inputContainer, QWidget* parent = nullptr);
     ~EWGameHotkeyTable();

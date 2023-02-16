@@ -14,10 +14,10 @@ EWGameHotkeyTable::~EWGameHotkeyTable()
 void EWGameHotkeyTable::setupTables(InputContainer* inputContainer)
 {
     QMap<QString, InputKey*> movementKeys;
-    addKeyToMap(inputContainer, "Forward", movementKeys);
-    addKeyToMap(inputContainer, "Backward", movementKeys);
-    addKeyToMap(inputContainer, "Left", movementKeys);
-    addKeyToMap(inputContainer, "Right", movementKeys);
-    addKeyToMap(inputContainer, "Jump", movementKeys);
-    this->addTable("Movement", createTable(inputContainer, movementKeys));
+    movementKeys["Forward"] = inputContainer->fetchValue("Forward");
+    movementKeys["Backward"] = inputContainer->fetchValue("Backward");
+    movementKeys["Left"] = inputContainer->fetchValue("Left");
+    movementKeys["Right"] = inputContainer->fetchValue("Right");
+    movementKeys["Jump"] = inputContainer->fetchValue("Jump");
+    this->addTable("Movement", this->createTable(inputContainer, movementKeys));
 }

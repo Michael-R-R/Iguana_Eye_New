@@ -14,17 +14,17 @@ EWEditorHotkeyTable::~EWEditorHotkeyTable()
 void EWEditorHotkeyTable::setupTables(InputContainer* inputContainer)
 {
     QMap<QString, InputKey*> applicationKeys;
-    addKeyToMap(inputContainer, "New File", applicationKeys);
-    addKeyToMap(inputContainer, "Open File", applicationKeys);
-    addKeyToMap(inputContainer, "Save File", applicationKeys);
-    addKeyToMap(inputContainer, "Save File As", applicationKeys);
-    addKeyToMap(inputContainer, "Options", applicationKeys);
-    addKeyToMap(inputContainer, "Toggle Ui", applicationKeys);
-    addKeyToMap(inputContainer, "Quit", applicationKeys);
-    this->addTable("Application", createTable(inputContainer, applicationKeys));
+    applicationKeys["New File"] = inputContainer->fetchValue("New File");
+    applicationKeys["Open File"] = inputContainer->fetchValue("Open File");
+    applicationKeys["Save File"] = inputContainer->fetchValue("Save File");
+    applicationKeys["Save File As"] = inputContainer->fetchValue("Save File As");
+    applicationKeys["Options"] = inputContainer->fetchValue("Options");
+    applicationKeys["Toggle Ui"] = inputContainer->fetchValue("Toggle Ui");
+    applicationKeys["Quit"] = inputContainer->fetchValue("Quit");
+    this->addTable("Application", this->createTable(inputContainer, applicationKeys));
 
     QMap<QString, InputKey*> gameKeys;
-    addKeyToMap(inputContainer, "Toggle Rendering", gameKeys);
-    addKeyToMap(inputContainer, "Toggle Updating", gameKeys);
-    this->addTable("Game", createTable(inputContainer, gameKeys));
+    gameKeys["Toggle Rendering"] = inputContainer->fetchValue("Toggle Rendering");
+    gameKeys["Toggle Updating"] = inputContainer->fetchValue("Toggle Updating");
+    this->addTable("Game", this->createTable(inputContainer, gameKeys));
 }
