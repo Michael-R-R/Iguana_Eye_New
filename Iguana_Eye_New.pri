@@ -7,7 +7,6 @@ INCLUDEPATH += $$PWD/src/Editor \
 
 INCLUDEPATH += $$PWD/src/Editor/Actions \
     $$PWD/src/Editor/Actions/AppOptionsAction \
-    $$PWD/src/Editor/Actions/EActionManager \
     $$PWD/src/Editor/Actions/OpenGameFileAction \
     $$PWD/src/Editor/Actions/MenuAction \
     $$PWD/src/Editor/Actions/NewGameFileAction \
@@ -58,7 +57,8 @@ INCLUDEPATH += $$PWD/src/Editor/Input \
     $$PWD/src/Editor/Input/InputContainer \
 
 INCLUDEPATH += $$PWD/src/Editor/Startup \
-    $$PWD/src/Editor/Startup/ESceneStartup
+    $$PWD/src/Editor/Startup/EActionStartup \
+    $$PWD/src/Editor/Startup/ESceneStartup \
 
 INCLUDEPATH += $$PWD/src/Editor/Startup/Materials \
     $$PWD/src/Editor/Startup/Materials/EDefaultMaterial

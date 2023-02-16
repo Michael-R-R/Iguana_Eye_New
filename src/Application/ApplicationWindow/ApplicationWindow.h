@@ -36,14 +36,14 @@ public:
 private slots:
     void startup();
 
+private:
+    void setupGame();
+    void setupEditor();
+
 public slots:
     void newFile();
     bool saveToFile(const QString& path);
     bool openFromFile(const QString& path);
-
-private:
-    void setupGame();
-    void setupEditor();
 
 public:
     const QString& getSavePath() const { return savePath; }

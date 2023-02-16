@@ -71,6 +71,23 @@ void ApplicationWindow::startup()
     #endif
 }
 
+void ApplicationWindow::setupGame()
+{
+    game = new IEGame(this);
+    game->init();
+    connect(game, &IEGame::initialized, this, &ApplicationWindow::startup);
+
+    this->setCentralWidget(game);
+}
+
+void ApplicationWindow::setupEditor()
+{
+    #ifdef EDITOR_ENABLED
+    editor = new Editor(this);
+    editor->init();
+    #endif
+}
+
 void ApplicationWindow::newFile()
 {
     game->shutdown();
@@ -105,21 +122,4 @@ bool ApplicationWindow::openFromFile(const QString& path)
     #endif
 
     return success;
-}
-
-void ApplicationWindow::setupGame()
-{
-    game = new IEGame(this);
-    game->init();
-    connect(game, &IEGame::initialized, this, &ApplicationWindow::startup);
-
-    this->setCentralWidget(game);
-}
-
-void ApplicationWindow::setupEditor()
-{
-    #ifdef EDITOR_ENABLED
-    editor = new Editor(this);
-    editor->init();
-    #endif
 }

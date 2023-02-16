@@ -4,7 +4,6 @@
 
 #include "EInput.h"
 #include "EGUI.h"
-#include "EActionManager.h"
 
 class QOpenGLExtraFunctions;
 class AppStartEvent;
@@ -15,7 +14,6 @@ class Editor : public QObject
 
     EInput* input;
     EGUI* ui;
-    EActionManager* actions;
 
 public:
     Editor(QObject* parent = nullptr);
@@ -27,5 +25,4 @@ public:
 
     EInput* getInput() const { return input; }
     EGUI* getUi() const { return ui; }
-    EActionManager* getActionManager() const { return actions; }
 };
