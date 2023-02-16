@@ -18,7 +18,7 @@ public:
     EGUI(QObject* parent = nullptr);
     ~EGUI();
 
-    void setup(const AppStartEvent& event);
+    void startup(const AppStartEvent& event);
 
     MainMenuBar* getMainMenuBar() const { return mainMenuBar; }
     StatusBar* getStatusBar() const { return statusBar; }

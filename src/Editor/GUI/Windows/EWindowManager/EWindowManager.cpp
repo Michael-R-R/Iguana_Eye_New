@@ -20,19 +20,6 @@ void EWindowManager::setup(const AppStartEvent& event)
     setupOptionsWindow(event);
 }
 
-void EWindowManager::clear()
-{
-    QMapIterator<QString, EWWindow*> it(windowCollection);
-    while(it.hasNext())
-    {
-        it.next();
-
-        auto temp = it.value();
-        windowCollection[it.key()] = nullptr;
-        delete temp;
-    }
-}
-
 void EWindowManager::showAll()
 {
     foreach(auto item, windowCollection.values())
@@ -67,15 +54,28 @@ bool EWindowManager::removeWindow(const QString& title)
     return true;
 }
 
+EWWindow* EWindowManager::getValue(const QString& title) const
+{
+    if(!doesExist(title)) { return nullptr; }
+    return windowCollection[title];
+}
+
 bool EWindowManager::doesExist(const QString& title) const
 {
     return (windowCollection.find(title) != windowCollection.end());
 }
 
-EWWindow* EWindowManager::getWindow(const QString& title) const
+void EWindowManager::clear()
 {
-    if(!doesExist(title)) { return nullptr; }
-    return windowCollection[title];
+    QMapIterator<QString, EWWindow*> it(windowCollection);
+    while(it.hasNext())
+    {
+        it.next();
+
+        auto temp = it.value();
+        windowCollection[it.key()] = nullptr;
+        delete temp;
+    }
 }
 
 void EWindowManager::setupOptionsWindow(const AppStartEvent& event)

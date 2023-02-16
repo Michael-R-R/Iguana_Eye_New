@@ -25,8 +25,8 @@ void Editor::init()
 void Editor::startup(const AppStartEvent& event)
 {
     // *** Order matters *** //
-    input->setup();
-    ui->setup(event);
+    input->startup();
+    ui->startup(event);
 
     EActionStartup::startup(event);
     ESceneStartup::startup(event);

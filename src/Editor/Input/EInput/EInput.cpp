@@ -12,7 +12,7 @@ EInput::~EInput()
 
 }
 
-void EInput::setup()
+void EInput::startup()
 {
     inputContainer->addValue("New File", new InputKey(Qt::CTRL, Qt::Key_N));
     inputContainer->addValue("Open File", new InputKey(Qt::CTRL, Qt::Key_O));

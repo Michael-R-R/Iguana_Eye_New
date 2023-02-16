@@ -5,7 +5,6 @@
 #include "EInput.h"
 #include "EGUI.h"
 
-class QOpenGLExtraFunctions;
 class AppStartEvent;
 
 class Editor : public QObject

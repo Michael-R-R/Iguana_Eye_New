@@ -16,7 +16,7 @@ EGUI::~EGUI()
 
 }
 
-void EGUI::setup(const AppStartEvent& event)
+void EGUI::startup(const AppStartEvent& event)
 {
     setupMainMenuBar(event);
     setupStatusBar(event);

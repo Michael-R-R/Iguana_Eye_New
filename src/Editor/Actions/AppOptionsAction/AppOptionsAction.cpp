@@ -8,7 +8,7 @@ AppOptionsAction::AppOptionsAction(InputKey* shortcut,
 {
     connect(this, &QAction::triggered, this, [this, windowManager]()
     {
-        auto window = windowManager->getWindow("Options");
+        auto window = windowManager->getValue("Options");
         if(!window) { return; }
 
         if(window->isHidden()) { window->show(); }

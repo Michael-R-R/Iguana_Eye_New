@@ -12,7 +12,7 @@ public:
     EInput(QObject *parent = nullptr);
     ~EInput();
 
-    void setup();
+    void startup();
 
     InputContainer* getInputContainer() { return inputContainer; }
 };

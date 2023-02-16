@@ -17,16 +17,15 @@ public:
 
     void setup(const AppStartEvent& event);
 
-    void clear();
-
     void showAll();
     void hideAll();
 
     bool appendWindow(const QString title, EWWindow* window);
     bool removeWindow(const QString& title);
+    EWWindow* getValue(const QString& title) const;
     bool doesExist(const QString& title) const;
 
-    EWWindow* getWindow(const QString& title) const;
+    void clear();
 
 private:
     void setupOptionsWindow(const AppStartEvent& event);
