@@ -71,9 +71,7 @@ void ESceneStartup::buildGridRenderable(const AppStartEvent& event)
     gridRenderable->setMeshId(IEHash::Compute("grid_mesh"));
     gridRenderable->setMaterialId(IEHash::Compute("default_material"));
     gridRenderable->setShaderId(IEHash::Compute("grid_shader"));
-    auto gridPosBuffer = new IEBuffer<QVector3D>(QOpenGLBuffer::VertexBuffer);
-    gridPosBuffer->initData(gridMesh->getPosVertices());
-    gridRenderable->getVec3BufferContainer()->add("aPos", gridPosBuffer);
+    gridRenderable->addVec3Buffer("aPos", new IEVertexBuffer<QVector3D>(gridMesh->getPosVertices(), 3));
     gridRenderable->build(gridShader);
     renderableManager->add(id, gridRenderable);
 }

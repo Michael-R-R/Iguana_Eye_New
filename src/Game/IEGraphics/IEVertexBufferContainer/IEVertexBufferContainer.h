@@ -5,44 +5,46 @@
 #include <QString>
 #include <QVector>
 
-#include "IEBuffer.h"
+#include "IEVertexBuffer.h"
 
 template <class T>
-class IEBufferContainer
+class IEVertexBufferContainer
 {
-    QMap<QString, IEBuffer<T>*> buffers;
+    QMap<QString, IEVertexBuffer<T>*> buffers;
 
 public:
-    IEBufferContainer() :
+    IEVertexBufferContainer() :
         buffers()
     {
 
     }
 
-    IEBufferContainer(const IEBufferContainer& other) :
+    IEVertexBufferContainer(const IEVertexBufferContainer& other) :
         buffers()
     {
-        QMap<QString, IEBuffer<T>*> tempBuffers;
-
-        QMapIterator<QString, IEBuffer<T>*> it(other.buffers);
+        QMap<QString, IEVertexBuffer<T>*> tempBuffers;
+        QMapIterator<QString, IEVertexBuffer<T>*> it(other.buffers);
         while(it.hasNext())
         {
             it.next();
-            tempBuffers[it.key()] = new IEBuffer<T>(*it.value());;
+            tempBuffers[it.key()] = new IEVertexBuffer<T>();
         }
 
         buffers = tempBuffers;
     }
 
-    ~IEBufferContainer()
+    ~IEVertexBufferContainer()
     {
         clear();
     }
 
-    bool add(const QString key, IEBuffer<T>* value)
+    bool add(const QString key, IEVertexBuffer<T>* value)
     {
         if(doesExist(key))
+        {
+            delete value;
             return false;
+        }
 
         buffers[key] = value;
 
@@ -63,7 +65,7 @@ public:
 
     void clear()
     {
-        QMapIterator<QString, IEBuffer<T>*> it(buffers);
+        QMapIterator<QString, IEVertexBuffer<T>*> it(buffers);
         while(it.hasNext())
         {
             it.next();
@@ -89,7 +91,7 @@ public:
         return buffers.contains(key);
     }
 
-    IEBuffer<T>* getValue(const QString& key) const
+    IEVertexBuffer<T>* getValue(const QString& key) const
     {
         if(!doesExist(key))
             return nullptr;
@@ -97,41 +99,40 @@ public:
         return buffers[key];
     }
 
-    const QMap<QString, IEBuffer<T>*>& getBuffers() const { return buffers; }
+    const QMap<QString, IEVertexBuffer<T>*>& getBuffers() const { return buffers; }
 
-    friend QDataStream& operator<<(QDataStream& out, const IEBufferContainer<T>& container)
+    friend QDataStream& operator<<(QDataStream& out, const IEVertexBufferContainer<T>& container)
     {
         out << (int)container.buffers.size();
 
-        QMapIterator<QString, IEBuffer<T>*> it(container.buffers);
+        QMapIterator<QString, IEVertexBuffer<T>*> it(container.buffers);
         while(it.hasNext())
         {
             it.next();
             out << it.key()
-                << it.value()->type()
                 << *it.value();
         }
 
         return out;
     }
 
-    friend QDataStream& operator>>(QDataStream& in, IEBufferContainer<T>& container)
+    friend QDataStream& operator>>(QDataStream& in, IEVertexBufferContainer<T>& container)
     {
         int size = 0;
         in >> size;
 
         QString key;
-        QOpenGLBuffer::Type type;
+        IEVertexBuffer<T>* value = nullptr;
 
         for(int i = 0; i < size; i++)
         {
-            in >> key >> type;
+            in >> key;
 
-            auto buffer = new IEBuffer<T>(type);
+            value = new IEVertexBuffer<T>();
 
-            in >> *buffer;
+            in >> *value;
 
-            container.buffers[key] = buffer;
+            container.buffers[key] = value;
         }
 
         return in;

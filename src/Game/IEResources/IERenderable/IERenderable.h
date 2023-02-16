@@ -9,7 +9,8 @@
 #include <gl/GL.h>
 
 #include "IEResource.h"
-#include "IEBufferContainer.h"
+#include "IEIndexBuffer.h"
+#include "IEVertexBufferContainer.h"
 #include "IEUniform.h"
 
 class IEShader;
@@ -24,18 +25,18 @@ public:
 
 private:
     RenderType renderType;
-    GLenum drawType;
+    GLenum drawMode;
     bool isRenderable;
 
     unsigned long long meshId;
     unsigned long long materialId;
     unsigned long long shaderId;
 
-    IEBufferContainer<unsigned>* unsignedBufferContainer;
-    IEBufferContainer<QVector2D>* vec2BufferContainer;
-    IEBufferContainer<QVector3D>* vec3BufferContainer;
-    IEBufferContainer<QVector4D>* vec4BufferContainer;
-    IEBufferContainer<QMatrix4x4>* mat4BufferContainer;
+    IEIndexBuffer* indexBuffer;
+    IEVertexBufferContainer<QVector2D>* vec2BufferContainer;
+    IEVertexBufferContainer<QVector3D>* vec3BufferContainer;
+    IEVertexBufferContainer<QVector4D>* vec4BufferContainer;
+    IEVertexBufferContainer<QMatrix4x4>* mat4BufferContainer;
 
     IEUniform uniformData;
 
@@ -50,40 +51,41 @@ public:
     bool operator<(const IERenderable& other) { return IEResource::operator<(other); }
     bool operator>(const IERenderable& other) { return IEResource::operator>(other); }
 
+    void addIndexBuffer(IEIndexBuffer* buffer);
+    void addVec2Buffer(const QString& key, IEVertexBuffer<QVector2D>* value);
+    void addVec3Buffer(const QString& key, IEVertexBuffer<QVector3D>* value);
+    void addVec4Buffer(const QString& key, IEVertexBuffer<QVector4D>* value);
+    void addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>* value);
+
     void build(IEShader* shader);
     void bindUniformData(IEShader* shader);
     int instanceCount() const;
 
     RenderType getRenderType() const { return renderType; }
-    GLenum getDrawType() const { return drawType; }
+    GLenum getDrawMode() const { return drawMode; }
     bool getIsRenderable() const { return isRenderable; }
     unsigned long long getMeshId() const { return meshId; }
     unsigned long long getMaterialId() const { return materialId; }
     unsigned long long getShaderId() const { return shaderId; }
-    IEBufferContainer<unsigned>* getUnsignedBufferContainer() const { return unsignedBufferContainer; }
-    IEBufferContainer<QVector2D>* getVec2BufferContainer() const { return vec2BufferContainer; }
-    IEBufferContainer<QVector3D>* getVec3BufferContainer() const { return vec3BufferContainer; }
-    IEBufferContainer<QVector4D>* getVec4BufferContainer() const { return vec4BufferContainer; }
-    IEBufferContainer<QMatrix4x4>* getMat4BufferContainer() const { return mat4BufferContainer; }
-    IEUniform& getUniformData() { return uniformData; }
 
     void setRenderType(const RenderType val) { renderType = val; }
-    void setDrawType(const GLenum val) { drawType = val; }
+    void setDrawType(const GLenum val) { drawMode = val; }
     void setIsRenderable(const bool val) { isRenderable = val; }
     void setMeshId(const unsigned long long val) { meshId = val; }
     void setMaterialId(const unsigned long long val) { materialId = val; }
     void setShaderId(const unsigned long long val) { shaderId = val; }
+    void setUniformData(const IEUniform& val) { uniformData = val; }
 
     friend QDataStream& operator<<(QDataStream& out, const IERenderable& renderable)
     {
         out << renderable.id
             << renderable.renderType
-            << renderable.drawType
+            << renderable.drawMode
             << renderable.isRenderable
             << renderable.meshId
             << renderable.materialId
             << renderable.shaderId
-            << *renderable.unsignedBufferContainer
+            << *renderable.indexBuffer
             << *renderable.vec2BufferContainer
             << *renderable.vec3BufferContainer
             << *renderable.vec4BufferContainer
@@ -97,12 +99,12 @@ public:
     {
         in >> renderable.id
            >> renderable.renderType
-           >> renderable.drawType
+           >> renderable.drawMode
            >> renderable.isRenderable
            >> renderable.meshId
            >> renderable.materialId
            >> renderable.shaderId
-           >> *renderable.unsignedBufferContainer
+           >> *renderable.indexBuffer
            >> *renderable.vec2BufferContainer
            >> *renderable.vec3BufferContainer
            >> *renderable.vec4BufferContainer

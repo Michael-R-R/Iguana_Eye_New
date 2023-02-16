@@ -48,8 +48,8 @@ void IERenderEngine::onRenderFrame()
 
         prepareShader(shader);
         //prepareViewProjection(shader, /* matrix here */);
-        prepareUniformData(shader, material->getUniformData());
-        prepareUniformData(shader, renderable->getUniformData());
+        prepareUniformData(shader, material);
+        prepareUniformData(shader, renderable);
         prepareRenderable(renderable);
         draw(renderable, mesh);
         cleanup(shader, renderable);
@@ -66,9 +66,14 @@ void IERenderEngine::prepareViewProjection(IEShader* shader, const QMatrix4x4& m
     shader->setUniformValue("uViewProjection", matrix);
 }
 
-void IERenderEngine::prepareUniformData(IEShader* shader, const IEUniform& data)
+void IERenderEngine::prepareUniformData(IEShader* shader, IEMaterial* material)
 {
-    data.bind(shader);
+    material->bindUniformData(shader);
+}
+
+void IERenderEngine::prepareUniformData(IEShader* shader, IERenderable* renderable)
+{
+    renderable->bindUniformData(shader);
 }
 
 void IERenderEngine::prepareRenderable(IERenderable* renderable)
@@ -84,21 +89,21 @@ void IERenderEngine::draw(IERenderable* renderable, IEMesh* mesh)
     {
     case IERenderable::RenderType::Vertex:
     {
-        GLenum mode = renderable->getDrawType();
+        GLenum mode = renderable->getDrawMode();
         int count = mesh->getPosVertices().size();
         glFunc->glDrawArrays(mode, 0, count);
         break;
     }
     case IERenderable::RenderType::Index:
     {
-        GLenum mode = renderable->getDrawType();
+        GLenum mode = renderable->getDrawMode();
         int count = mesh->getIndices().size();
         glFunc->glDrawElements(mode, count, GL_UNSIGNED_INT, 0);
         break;
     }
     case IERenderable::RenderType::I_Vertex:
     {
-        GLenum mode = renderable->getDrawType();
+        GLenum mode = renderable->getDrawMode();
         int count = mesh->getPosVertices().size();
         int instanceCount = renderable->instanceCount();
         glFunc->glDrawArraysInstanced(mode, 0, count, instanceCount);
@@ -106,7 +111,7 @@ void IERenderEngine::draw(IERenderable* renderable, IEMesh* mesh)
     }
     case IERenderable::RenderType::I_Index:
     {
-        GLenum mode = renderable->getDrawType();
+        GLenum mode = renderable->getDrawMode();
         int count = mesh->getIndices().size();
         int instanceCount = renderable->instanceCount();
         glFunc->glDrawElementsInstanced(mode, count, GL_UNSIGNED_INT, 0, instanceCount);

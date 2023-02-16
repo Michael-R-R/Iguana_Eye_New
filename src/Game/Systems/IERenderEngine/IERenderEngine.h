@@ -9,6 +9,7 @@ class IEMeshManager;
 class IEMaterialManager;
 class IEShaderManager;
 class IERenderableManager;
+class IEMaterial;
 class IEShader;
 class IEUniform;
 class IERenderable;
@@ -34,7 +35,8 @@ public:
 private:
     void prepareShader(IEShader* shader);
     void prepareViewProjection(IEShader* shader, const QMatrix4x4& matrix);
-    void prepareUniformData(IEShader* shader, const IEUniform& data);
+    void prepareUniformData(IEShader* shader, IEMaterial* material);
+    void prepareUniformData(IEShader* shader, IERenderable* renderable);
     void prepareRenderable(IERenderable* renderable);
     void draw(IERenderable* renderable, IEMesh* mesh);
     void cleanup(IEShader* shader, IERenderable* renderable);

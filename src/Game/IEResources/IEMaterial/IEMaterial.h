@@ -31,15 +31,14 @@ public:
 
     void bindUniformData(IEShader* shader) const;
 
-    IEUniform& getUniformData() { return uniformData; }
-    const QColor getObjectColor() const { return objectColor; }
-    const unsigned long long getAtlasTexId() const { return atlasTexId; }
-    const unsigned long long getDiffuseTexId() const { return diffuseTexId; }
-    const unsigned long long getSpecularTexId() const { return specularTexId; }
-    const unsigned long long getNormalTexId() const { return normalTexId; }
-    const unsigned long long getHeightTexId() const { return heightTexId; }
+    QColor getObjectColor() const { return objectColor; }
+    unsigned long long getAtlasTexId() const { return atlasTexId; }
+    unsigned long long getDiffuseTexId() const { return diffuseTexId; }
+    unsigned long long getSpecularTexId() const { return specularTexId; }
+    unsigned long long getNormalTexId() const { return normalTexId; }
+    unsigned long long getHeightTexId() const { return heightTexId; }
 
-    void setUniformData(const IEUniform val) { uniformData = val; }
+    void setUniformData(const IEUniform& val) { uniformData = val; }
     void setObjectColor(const QColor val) { objectColor = val; }
     void setAtlasTexId(const unsigned long long val) { atlasTexId = val; }
     void setDiffuseTexId(const unsigned long long val) { diffuseTexId = val; }
