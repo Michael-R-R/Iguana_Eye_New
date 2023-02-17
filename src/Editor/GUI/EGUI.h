@@ -25,7 +25,7 @@ public:
     EWindowManager* getWindowManager() const { return windowManager; }
 
 public slots:
-    void showUi(bool val);
+    void toggleUi(bool val);
 
 private:
     void setupMainMenuBar(const AppStartEvent& event);

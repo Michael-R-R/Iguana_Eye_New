@@ -2,6 +2,7 @@
 #include "AppStartEvent.h"
 #include "FileSubMenu.h"
 #include "GameSubMenu.h"
+#include "WindowSubMenu.h"
 
 MainMenuBar::MainMenuBar(QWidget* parent) :
     QMenuBar(parent),
@@ -15,18 +16,11 @@ MainMenuBar::~MainMenuBar()
 
 }
 
-void MainMenuBar::setupFileSubMenu(const AppStartEvent& event)
+void MainMenuBar::startup(const AppStartEvent& event)
 {
-    auto fileMenu = new FileSubMenu(this);
-    fileMenu->setupActions(event);
-    appendSubMenu("File", fileMenu);
-}
-
-void MainMenuBar::setupGameSubMenu(const AppStartEvent& event)
-{
-    auto gameMenu = new GameSubMenu(this);
-    gameMenu->setupActions(event);
-    appendSubMenu("Game", gameMenu);
+    setupFileSubMenu(event);
+    setupGameSubMenu(event);
+    setupWindowSubMenu(event);
 }
 
 bool MainMenuBar::appendSubMenu(QString title, SubMenu* menu)
@@ -63,4 +57,25 @@ QAction* MainMenuBar::getMenuAction(const QString& menuTitle, const QString& act
 {
     if(!doesExist(menuTitle)) { return nullptr; }
     return menuCollection[menuTitle]->getAction(actionTitle);
+}
+
+void MainMenuBar::setupFileSubMenu(const AppStartEvent& event)
+{
+    auto fileMenu = new FileSubMenu(this);
+    fileMenu->setupActions(event);
+    appendSubMenu("File", fileMenu);
+}
+
+void MainMenuBar::setupGameSubMenu(const AppStartEvent& event)
+{
+    auto gameMenu = new GameSubMenu(this);
+    gameMenu->setupActions(event);
+    appendSubMenu("Game", gameMenu);
+}
+
+void MainMenuBar::setupWindowSubMenu(const AppStartEvent& event)
+{
+    auto windowMenu = new WindowSubMenu(this);
+    windowMenu->setupActions(event);
+    appendSubMenu("Window", windowMenu);
 }

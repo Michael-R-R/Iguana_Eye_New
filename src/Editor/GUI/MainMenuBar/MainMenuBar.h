@@ -16,8 +16,7 @@ public:
     MainMenuBar(QWidget* parent = nullptr);
     ~MainMenuBar();
 
-    void setupFileSubMenu(const AppStartEvent& event);
-    void setupGameSubMenu(const AppStartEvent& event);
+    void startup(const AppStartEvent& event);
 
     bool appendSubMenu(QString title, SubMenu* menu);
     bool removeSubMenu(const QString& title);
@@ -25,5 +24,10 @@ public:
 
     SubMenu* getMenu(const QString& title);
     QAction* getMenuAction(const QString& menuTitle, const QString& actionTitle);
+
+private:
+    void setupFileSubMenu(const AppStartEvent& event);
+    void setupGameSubMenu(const AppStartEvent& event);
+    void setupWindowSubMenu(const AppStartEvent& event);
 };
 

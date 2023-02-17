@@ -1,7 +1,7 @@
-#include "EWWindow.h"
+#include "EWindow.h"
 #include "IEFile.h"
 
-EWWindow::EWWindow(QString title, QWidget* parent) :
+EWindow::EWindow(QString title, QWidget* parent) :
     QDockWidget(title, parent),
     isActive(false)
 {
@@ -10,23 +10,23 @@ EWWindow::EWWindow(QString title, QWidget* parent) :
     this->hide();
 }
 
-EWWindow::~EWWindow()
+EWindow::~EWindow()
 {
 
 }
 
-void EWWindow::toggleVisibilty(bool status)
+void EWindow::toggleVisibilty(bool status)
 {
     if(status) { this->show(); }
     else { this->hide(); }
 }
 
-void EWWindow::setStyleByString(const QString& style)
+void EWindow::setStyleByString(const QString& style)
 {
     this->setStyleSheet(style);
 }
 
-void EWWindow::setStyleByFile(const QString& path)
+void EWindow::setStyleByFile(const QString& path)
 {
     QString style = "";
     if(!IEFile::read(path, &style))
@@ -35,13 +35,13 @@ void EWWindow::setStyleByFile(const QString& path)
     this->setStyleSheet(style);
 }
 
-void EWWindow::showEvent(QShowEvent* event)
+void EWindow::showEvent(QShowEvent* event)
 {
     QDockWidget::showEvent(event);
     isActive = true;
 }
 
-void EWWindow::closeEvent(QCloseEvent* event)
+void EWindow::closeEvent(QCloseEvent* event)
 {
     QDockWidget::closeEvent(event);
     isActive = false;

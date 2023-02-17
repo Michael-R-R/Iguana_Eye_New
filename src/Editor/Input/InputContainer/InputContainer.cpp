@@ -56,7 +56,7 @@ QString InputContainer::fetchKey(const int mod, const int key) const
     return keys.key(&value);
 }
 
-InputKey* InputContainer::fetchValue(const QString& key) const
+InputKey* InputContainer::getValue(const QString& key) const
 {
     if(!doesExist(key)) { return keys["Invalid"]; }
 

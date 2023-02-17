@@ -24,7 +24,7 @@ void Editor::init()
 
 void Editor::startup(const AppStartEvent& event)
 {
-    // *** Order matters *** //
+    // *** DO NOT REORDER *** //
     input->startup();
     ui->startup(event);
 

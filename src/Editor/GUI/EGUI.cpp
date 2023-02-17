@@ -18,12 +18,13 @@ EGUI::~EGUI()
 
 void EGUI::startup(const AppStartEvent& event)
 {
-    setupMainMenuBar(event);
-    setupStatusBar(event);
+    // *** DO NOT REORDER *** //
     setupWindowManager(event);
+    setupStatusBar(event);
+    setupMainMenuBar(event);
 }
 
-void EGUI::showUi(bool val)
+void EGUI::toggleUi(bool val)
 {
     if(val)
     {
@@ -41,8 +42,7 @@ void EGUI::showUi(bool val)
 
 void EGUI::setupMainMenuBar(const AppStartEvent& event)
 {
-    mainMenuBar->setupFileSubMenu(event);
-    mainMenuBar->setupGameSubMenu(event);
+    mainMenuBar->startup(event);
 
     auto applicationWindow = event.getAppWindow();
     applicationWindow->setMenuBar(mainMenuBar);
@@ -58,5 +58,5 @@ void EGUI::setupStatusBar(const AppStartEvent& event)
 
 void EGUI::setupWindowManager(const AppStartEvent& event)
 {
-    windowManager->setup(event);
+    windowManager->startup(event);
 }

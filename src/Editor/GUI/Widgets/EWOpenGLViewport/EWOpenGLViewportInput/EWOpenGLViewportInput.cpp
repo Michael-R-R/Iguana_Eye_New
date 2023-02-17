@@ -20,6 +20,6 @@ bool EWOpenGLViewportInput::isPressed(const InputKey& key)
 
 bool EWOpenGLViewportInput::isPressed(const char* keyName)
 {
-    const InputKey* key = inputContainer->fetchValue(keyName);
+    const InputKey* key = inputContainer->getValue(keyName);
     return inputCapture->checkStatus(*key);
 }

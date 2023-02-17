@@ -1,12 +1,12 @@
 INCLUDEPATH += $$PWD/required/include
 
 INCLUDEPATH += $$PWD/src/Application \
-    $$PWD/src/Application/ApplicationWindow
+    $$PWD/src/Application/ApplicationWindow \
 
 INCLUDEPATH += $$PWD/src/Editor \
 
 INCLUDEPATH += $$PWD/src/Editor/Actions \
-    $$PWD/src/Editor/Actions/AppOptionsAction \
+    $$PWD/src/Editor/Actions/ToggleWindowAction \
     $$PWD/src/Editor/Actions/OpenGameFileAction \
     $$PWD/src/Editor/Actions/MenuAction \
     $$PWD/src/Editor/Actions/NewGameFileAction \
@@ -29,26 +29,31 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/SubMenus \
     $$PWD/src/Editor/GUI/SubMenus/FileSubMenu \
     $$PWD/src/Editor/GUI/SubMenus/GameSubMenu \
     $$PWD/src/Editor/GUI/SubMenus/SubMenu \
+    $$PWD/src/Editor/GUI/SubMenus/WindowSubMenu \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets \
 
-INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/ApplicationOptions \
-    $$PWD/src/Editor/GUI/Widgets/ApplicationOptions/EWEditorHotkeyTable \
-    $$PWD/src/Editor/GUI/Widgets/ApplicationOptions/EWFetchUserInput \
-    $$PWD/src/Editor/GUI/Widgets/ApplicationOptions/EWGameHotkeyTable \
-    $$PWD/src/Editor/GUI/Widgets/ApplicationOptions/EWHotkeyTable \
-    $$PWD/src/Editor/GUI/Widgets/ApplicationOptions/EWSelectApplicationOption
+INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets \
+    $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets/EWEditorHotkeyTable \
+    $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets/EWFetchUserInput \
+    $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets/EWGameHotkeyTable \
+    $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets/EWHotkeyTable \
+    $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets/EWSelectApplicationOption \
 
-INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWCollapsingHeader
+INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditor \
+
+INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWCollapsingHeader \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportInput \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportTime \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Windows \
-    $$PWD/src/Editor/GUI/Windows/EWApplicationOptions \
+    $$PWD/src/Editor/GUI/Windows/EApplicationOptionsWindow \
     $$PWD/src/Editor/GUI/Windows/EWindowManager \
-    $$PWD/src/Editor/GUI/Windows/EWWindow \
+    $$PWD/src/Editor/GUI/Windows/EGlslEditorWindow \
+    $$PWD/src/Editor/GUI/Windows/EWindow \
 
 INCLUDEPATH += $$PWD/src/Editor/Input \
     $$PWD/src/Editor/Input/EInput \
@@ -64,13 +69,13 @@ INCLUDEPATH += $$PWD/src/Editor/Startup/Materials \
     $$PWD/src/Editor/Startup/Materials/EDefaultMaterial
 
 INCLUDEPATH += $$PWD/src/Editor/Startup/Meshes \
-    $$PWD/src/Editor/Startup/Meshes/EGridMesh
+    $$PWD/src/Editor/Startup/Meshes/EGridMesh \
 
 INCLUDEPATH += $$PWD/src/Events \
     $$PWD/src/Events/AppStartEvent \
     $$PWD/src/Events/ECSOnUpdateEvent \
     $$PWD/src/Events/GameStartEvent \
-    $$PWD/src/Events/RenderEngineStartEvent
+    $$PWD/src/Events/RenderEngineStartEvent \
 
 INCLUDEPATH += $$PWD/src/Game \
     $$PWD/src/Game/IEObject \
@@ -80,7 +85,7 @@ INCLUDEPATH += $$PWD/src/Game/ECS \
     $$PWD/src/Game/ECS/IEComponentType \
     $$PWD/src/Game/ECS/IEECS \
     $$PWD/src/Game/ECS/IEEntity \
-    $$PWD/src/Game/ECS/IEEntityManager
+    $$PWD/src/Game/ECS/IEEntityManager \
 
 INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
     $$PWD/src/Game/ECS/Systems/IEECSHierarchySystem \
@@ -90,7 +95,7 @@ INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
     $$PWD/src/Game/ECS/Systems/IEECSRenderableSystem \
     $$PWD/src/Game/ECS/Systems/IEECSShaderSystem \
     $$PWD/src/Game/ECS/Systems/IEECSSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSTransformSystem
+    $$PWD/src/Game/ECS/Systems/IEECSTransformSystem \
 
 INCLUDEPATH += $$PWD/src/Game/IEGraphics \
     $$PWD/src/Game/IEGraphics/IEBuffer \
@@ -105,7 +110,7 @@ INCLUDEPATH += $$PWD/src/Game/IEResources \
     $$PWD/src/Game/IEResources/IERenderable \
     $$PWD/src/Game/IEResources/IEResource \
     $$PWD/src/Game/IEResources/IEResourceContainer \
-    $$PWD/src/Game/IEResources/IEShader
+    $$PWD/src/Game/IEResources/IEShader \
 
 INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IEManager \
@@ -113,11 +118,11 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IEMeshManager \
     $$PWD/src/Game/Managers/IENameManager \
     $$PWD/src/Game/Managers/IERenderableManager \
-    $$PWD/src/Game/Managers/IEShaderManager
+    $$PWD/src/Game/Managers/IEShaderManager \
 
 INCLUDEPATH += $$PWD/src/Game/Systems \
     $$PWD/src/Game/Systems/IEInput \
-    $$PWD/src/Game/Systems/IERenderEngine
+    $$PWD/src/Game/Systems/IERenderEngine \
 
 INCLUDEPATH += $$PWD/src/Game/Systems/IETime \
     $$PWD/src/Game/Systems/IETime/DeltaTime
@@ -126,4 +131,4 @@ INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \
     $$PWD/src/Utility/IEHash \
     $$PWD/src/Utility/IEObjLoader \
-    $$PWD/src/Utility/IESerialize
+    $$PWD/src/Utility/IESerialize \

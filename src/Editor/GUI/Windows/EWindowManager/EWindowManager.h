@@ -3,31 +3,32 @@
 #include <QObject>
 #include <QMap>
 
-#include "EWWindow.h"
+#include "EWindow.h"
 
 class AppStartEvent;
 
 class EWindowManager : public QObject
 {
-    QMap<QString, EWWindow*> windowCollection;
+    QMap<QString, EWindow*> windowCollection;
 
 public:
     EWindowManager(QObject* parent = nullptr);
     ~EWindowManager();
 
-    void setup(const AppStartEvent& event);
+    void startup(const AppStartEvent& event);
 
     void showAll();
     void hideAll();
 
-    bool appendWindow(const QString title, EWWindow* window);
+    bool appendWindow(const QString title, EWindow* window);
     bool removeWindow(const QString& title);
-    EWWindow* getValue(const QString& title) const;
+    EWindow* getValue(const QString& title) const;
     bool doesExist(const QString& title) const;
 
     void clear();
 
 private:
     void setupOptionsWindow(const AppStartEvent& event);
+    void setupGlslEditorWindow(const AppStartEvent& event);
 };
 

@@ -1,11 +1,11 @@
-#include "EWApplicationOptions.h"
+#include "EApplicationOptionsWindow.h"
 #include "EWSelectApplicationOption.h"
 #include "AppStartEvent.h"
 #include "Editor.h"
 #include "IEGame.h"
 
-EWApplicationOptions::EWApplicationOptions(QWidget* parent) :
-    EWWindow("Options", parent),
+EApplicationOptionsWindow::EApplicationOptionsWindow(QWidget* parent) :
+    EWindow("Options", parent),
     selectOptionsWidget(new EWSelectApplicationOption(this))
 {
     this->setWindowFlags(Qt::WindowStaysOnTopHint);
@@ -15,12 +15,12 @@ EWApplicationOptions::EWApplicationOptions(QWidget* parent) :
     this->setWidget(selectOptionsWidget);
 }
 
-EWApplicationOptions::~EWApplicationOptions()
+EApplicationOptionsWindow::~EApplicationOptionsWindow()
 {
 
 }
 
-void EWApplicationOptions::startup(const AppStartEvent& event)
+void EApplicationOptionsWindow::startup(const AppStartEvent& event)
 {
     auto editorInput = event.getEditor()->getInput();
     auto editorInputContainer = editorInput->getInputContainer();

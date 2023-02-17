@@ -9,7 +9,7 @@ ToggleEditorUiAction::ToggleEditorUiAction(InputKey* shortcut, EGUI* ui, QObject
     {
         status = !status;
 
-        ui->showUi(status);
+        ui->toggleUi(status);
     });
 }
 

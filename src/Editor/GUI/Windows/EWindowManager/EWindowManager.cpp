@@ -1,7 +1,8 @@
 #include "EWindowManager.h"
-#include "EWApplicationOptions.h"
 #include "AppStartEvent.h"
 #include "ApplicationWindow.h"
+#include "EApplicationOptionsWindow.h"
+#include "EGlslEditorWindow.h"
 
 EWindowManager::EWindowManager(QObject* parent) :
     QObject(parent),
@@ -15,9 +16,10 @@ EWindowManager::~EWindowManager()
     clear();
 }
 
-void EWindowManager::setup(const AppStartEvent& event)
+void EWindowManager::startup(const AppStartEvent& event)
 {
     setupOptionsWindow(event);
+    setupGlslEditorWindow(event);
 }
 
 void EWindowManager::showAll()
@@ -36,7 +38,7 @@ void EWindowManager::hideAll()
     }
 }
 
-bool EWindowManager::appendWindow(const QString title, EWWindow* window)
+bool EWindowManager::appendWindow(const QString title, EWindow* window)
 {
     if(doesExist(title)) { return false; }
     windowCollection[title] = window;
@@ -54,7 +56,7 @@ bool EWindowManager::removeWindow(const QString& title)
     return true;
 }
 
-EWWindow* EWindowManager::getValue(const QString& title) const
+EWindow* EWindowManager::getValue(const QString& title) const
 {
     if(!doesExist(title)) { return nullptr; }
     return windowCollection[title];
@@ -67,7 +69,7 @@ bool EWindowManager::doesExist(const QString& title) const
 
 void EWindowManager::clear()
 {
-    QMapIterator<QString, EWWindow*> it(windowCollection);
+    QMapIterator<QString, EWindow*> it(windowCollection);
     while(it.hasNext())
     {
         it.next();
@@ -82,9 +84,22 @@ void EWindowManager::setupOptionsWindow(const AppStartEvent& event)
 {
     auto applicationWindow = event.getAppWindow();
 
-    auto optionsWindow = new EWApplicationOptions(applicationWindow);
+    auto optionsWindow = new EApplicationOptionsWindow(applicationWindow);
     optionsWindow->startup(event);
 
     this->appendWindow("Options", optionsWindow);
+
     applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, optionsWindow);
+}
+
+void EWindowManager::setupGlslEditorWindow(const AppStartEvent& event)
+{
+    auto applicationWindow = event.getAppWindow();
+
+    auto glslEditorWindow = new EGlslEditorWindow(applicationWindow);
+    glslEditorWindow->startup(event);
+
+    this->appendWindow("GLSL Editor", glslEditorWindow);
+
+    applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, glslEditorWindow);
 }

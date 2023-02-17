@@ -11,5 +11,5 @@ void EActionStartup::startup(const AppStartEvent& event)
     auto ui = event.getEditor()->getUi();
     auto applicationWindow = event.getAppWindow();
 
-    applicationWindow->addAction(new ToggleEditorUiAction(inputContainer->fetchValue("Toggle Ui"), ui, applicationWindow));
+    applicationWindow->addAction(new ToggleEditorUiAction(inputContainer->getValue("Toggle Ui"), ui, applicationWindow));
 }

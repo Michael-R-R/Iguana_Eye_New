@@ -21,6 +21,6 @@ void GameSubMenu::setupActions(const AppStartEvent& event)
     auto inputContainer = event.getEditor()->getInput()->getInputContainer();
     auto time = event.getGame()->getIETime();
 
-    appendAction("Render", new ToggleGameRenderAction(inputContainer->fetchValue("Toggle Rendering"), time, this));
-    appendAction("Update", new ToggleGameUpdateAction(inputContainer->fetchValue("Toggle Updating"), time, this));
+    appendAction("Render", new ToggleGameRenderAction(inputContainer->getValue("Toggle Rendering"), time, this));
+    appendAction("Update", new ToggleGameUpdateAction(inputContainer->getValue("Toggle Updating"), time, this));
 }

@@ -2,15 +2,15 @@
 
 #include <QDockWidget>
 
-class EWWindow : public QDockWidget
+class EWindow : public QDockWidget
 {
     Q_OBJECT
 
     bool isActive;
 
 public:
-    EWWindow(QString title, QWidget* parent = nullptr);
-    ~EWWindow();
+    EWindow(QString title, QWidget* parent = nullptr);
+    ~EWindow();
 
     void toggleVisibilty(bool status);
     void setStyleByString(const QString& style);

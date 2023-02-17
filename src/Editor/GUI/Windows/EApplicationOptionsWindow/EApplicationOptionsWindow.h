@@ -3,20 +3,20 @@
 #include <QEvent>
 #include <QMouseEvent>
 
-#include "EWWindow.h"
+#include "EWindow.h"
 
 class AppStartEvent;
 class EWSelectApplicationOption;
 
-class EWApplicationOptions : public EWWindow
+class EApplicationOptionsWindow : public EWindow
 {
     Q_OBJECT
 
     EWSelectApplicationOption* selectOptionsWidget;
 
 public:
-    EWApplicationOptions(QWidget* parent = nullptr);
-    ~EWApplicationOptions();
+    EApplicationOptionsWindow(QWidget* parent = nullptr);
+    ~EApplicationOptionsWindow();
 
     void startup(const AppStartEvent& event);
 };
