@@ -49,11 +49,19 @@ bool InputContainer::updateValue(const QString& key, const int modVal, const int
 
 QString InputContainer::fetchKey(const int mod, const int key) const
 {
-    if(!doesExist(mod, key)) { return ""; }
+    auto temp = InputKey(mod, key);
 
-    auto value = InputKey(mod, key);
+    QMapIterator<QString, InputKey*> it(keys);
+    while(it.hasNext())
+    {
+        it.next();
+        if(*it.value() == temp)
+        {
+            return it.key();
+        }
+    }
 
-    return keys.key(&value);
+    return "";
 }
 
 InputKey* InputContainer::getValue(const QString& key) const
@@ -70,8 +78,19 @@ bool InputContainer::doesExist(const QString& key) const
 
 bool InputContainer::doesExist(const int mod, const int key) const
 {
-    auto value = InputKey(mod, key);
-    return (std::find(keys.begin(), keys.end(), &value) != keys.end());
+    auto temp = InputKey(mod, key);
+
+    QMapIterator<QString, InputKey*> it(keys);
+    while(it.hasNext())
+    {
+        it.next();
+        if(*it.value() == temp)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void InputContainer::clear()

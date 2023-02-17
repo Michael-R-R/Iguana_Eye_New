@@ -5,11 +5,11 @@ EGlslEditorWindow::EGlslEditorWindow(QWidget* parent) :
     EWindow("GLSL Editor", parent),
     glslEditorWidget(new EWGlslEditor(this))
 {
-    this->setWidget(glslEditorWidget);
     this->setFloating(true);
+    this->setWidget(glslEditorWidget);
 }
 
-void EGlslEditorWindow::startup(const AppStartEvent&)
+void EGlslEditorWindow::startup(const AppStartEvent& event)
 {
-
+    glslEditorWidget->startup(event);
 }

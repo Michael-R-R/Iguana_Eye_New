@@ -15,7 +15,8 @@ INCLUDEPATH += $$PWD/src/Editor/Actions \
     $$PWD/src/Editor/Actions/SaveGameFileAction \
     $$PWD/src/Editor/Actions/ToggleGameRenderAction \
     $$PWD/src/Editor/Actions/ToggleGameUpdateAction \
-    $$PWD/src/Editor/Actions/ToggleEditorUiAction
+    $$PWD/src/Editor/Actions/ToggleGlslEditorViewAction \
+    $$PWD/src/Editor/Actions/ToggleEditorUiAction \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI \
     $$PWD/src/Editor/GUI/MainMenuBar \
@@ -42,6 +43,13 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditor \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditorEditMenu \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditorFileMenu \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditorMenuBar \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditorViewMenu \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslPlainTextEdit \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslSrcEditor \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWShaderComboBox \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWCollapsingHeader \
 
