@@ -54,8 +54,8 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWShaderComboBox \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour \
-    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour/GlslDataTypeHighlight \
-    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour/GlslNumberHighlight \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour/GlslCollectionHighlight \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour/GlslExpressionHighlight \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour/SyntaxHighlightBehaviour \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWCollapsingHeader \

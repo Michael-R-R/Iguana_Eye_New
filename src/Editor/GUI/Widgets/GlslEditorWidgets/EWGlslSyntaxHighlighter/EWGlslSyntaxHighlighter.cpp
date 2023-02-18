@@ -1,6 +1,6 @@
 #include "EWGlslSyntaxHighlighter.h"
-#include "GlslDataTypeHighlight.h"
-#include "GlslNumberHighlight.h"
+#include "GlslCollectionHighlight.h"
+#include "GlslExpressionHighlight.h"
 
 EWGlslSyntaxHighlighter::EWGlslSyntaxHighlighter(QTextDocument* parent) :
     QSyntaxHighlighter(parent),
@@ -34,8 +34,14 @@ void EWGlslSyntaxHighlighter::highlightBlock(const QString& word)
 
 void EWGlslSyntaxHighlighter::setupHighlightBehaviours()
 {
-    highlightingBehaviours.append(new GlslDataTypeHighlight(":/syntax/glsl_dataType.txt"));
-    highlightingBehaviours.append(new GlslNumberHighlight());
+    highlightingBehaviours.append(new GlslCollectionHighlight(QColor(82, 150, 236), "\\b[0-9A-Za-z_]+\\b", ":/syntax/glsl_dataType.txt"));
+    highlightingBehaviours.append(new GlslCollectionHighlight(QColor(20, 144, 249), "\\b[0-9A-Za-z_]+\\b", ":/syntax/glsl_keywords.txt"));
+    highlightingBehaviours.append(new GlslCollectionHighlight(QColor(144, 193, 255), "\\b[0-9A-Za-z_]+\\b", ":/syntax/glsl_variables.txt"));
+    highlightingBehaviours.append(new GlslCollectionHighlight(QColor(226, 136, 60), "\\b[0-9A-Za-z_]+\\b", ":/syntax/glsl_functions.txt"));
+    highlightingBehaviours.append(new GlslExpressionHighlight("\\b\\d+", "\\b\\d+", QColor(174, 246, 183)));
+    highlightingBehaviours.append(new GlslExpressionHighlight("({)|(})|(\\()|(\\))", "({)|(})|(\\()|(\\))", QColor(250, 53, 101)));
+    highlightingBehaviours.append(new GlslExpressionHighlight("#", "\\s+", QColor(235, 74, 210)));
+    highlightingBehaviours.append(new GlslExpressionHighlight("//", "$", QColor(88, 205, 71)));
 }
 
 void EWGlslSyntaxHighlighter::clearBehaviours()
