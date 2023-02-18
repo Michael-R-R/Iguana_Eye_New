@@ -5,15 +5,26 @@
 
 #include <QSyntaxHighlighter>
 #include <QTextDocument>
+#include <QVector>
+
+#include "SyntaxHighlightBehaviour.h"
 
 class EWGlslSyntaxHighlighter : public QSyntaxHighlighter
 {
+    QVector<SyntaxHighlightBehaviour*> highlightingBehaviours;
 
 public:
     EWGlslSyntaxHighlighter(QTextDocument* parent);
-    ~EWGlslSyntaxHighlighter() {}
+    ~EWGlslSyntaxHighlighter();
+
+    void updateFormat(const int start, const int end, const QTextCharFormat& textFormat);
+    void updateCurrentBlockState(int state);
 
 protected:
-    void highlightBlock(const QString& text) override;
+    void highlightBlock(const QString& word) override;
+
+private:
+    void setupHighlightBehaviours();
+    void clearBehaviours();
 };
 

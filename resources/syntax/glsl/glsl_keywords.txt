@@ -1,0 +1,14 @@
+in
+out
+uniform
+discard
+layout
+location
+core
+const
+for
+while
+if
+else
+return
+struct

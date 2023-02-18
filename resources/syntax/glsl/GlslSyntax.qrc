@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/syntax">
+        <file>glsl_dataType.txt</file>
+        <file>glsl_functions.txt</file>
+        <file>glsl_keywords.txt</file>
+        <file>glsl_variables.txt</file>
+    </qresource>
+</RCC>
