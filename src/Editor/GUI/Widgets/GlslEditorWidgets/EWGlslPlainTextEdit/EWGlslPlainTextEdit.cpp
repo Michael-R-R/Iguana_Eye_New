@@ -4,9 +4,14 @@
 
 EWGlslPlainTextEdit::EWGlslPlainTextEdit(QWidget* parent) :
     QPlainTextEdit(parent),
+    syntaxHighlighter(new EWGlslSyntaxHighlighter(this->document())),
     lineHighlightColor(32, 32, 32),
     lineNumWidget(new EWGlslTextEditLineNumArea(this))
 {
+    this->setWordWrapMode(QTextOption::NoWrap);
+    this->setTabStopDistance(20.0);
+    this->setUndoRedoEnabled(true);
+
     connect(this, &EWGlslPlainTextEdit::blockCountChanged, this, &EWGlslPlainTextEdit::updateLineNumberAreaWidth);
     connect(this, &EWGlslPlainTextEdit::updateRequest, this, &EWGlslPlainTextEdit::updateLineNumberArea);
     connect(this, &EWGlslPlainTextEdit::cursorPositionChanged, this, &EWGlslPlainTextEdit::highlightCurrentLine);
@@ -60,6 +65,111 @@ int EWGlslPlainTextEdit::getLineNumAreaWidth()
     return space;
 }
 
+void EWGlslPlainTextEdit::insertTab(const int count)
+{
+    for(int i = 0; i < count; i++)
+    {
+        textCursor().insertText("\t");
+    }
+}
+
+void EWGlslPlainTextEdit::insertText(const char* text)
+{
+    textCursor().insertText(text);
+}
+
+void EWGlslPlainTextEdit::moveCursorLeft(const unsigned count)
+{
+    QTextCursor cursor = textCursor();
+
+    int pos = cursor.position();
+    cursor.setPosition(pos - count);
+
+    setTextCursor(cursor);
+}
+
+void EWGlslPlainTextEdit::moveCursorRight(const unsigned count)
+{
+    QTextCursor cursor = textCursor();
+
+    int pos = cursor.position();
+    cursor.setPosition(pos + count);
+
+    setTextCursor(cursor);
+}
+
+void EWGlslPlainTextEdit::moveCursorToPosition(const unsigned pos)
+{
+    QTextCursor cursor = textCursor();
+    cursor.setPosition(pos);
+    setTextCursor(cursor);
+}
+
+void EWGlslPlainTextEdit::handleReturnPressed()
+{
+    int tabCount = fetchPrevLineTabCount();
+    insertTab(tabCount);
+}
+
+void EWGlslPlainTextEdit::handleLeftParenPressed()
+{
+    insertText(")");
+    moveCursorLeft(1);
+}
+
+void EWGlslPlainTextEdit::handleLeftBracketPressed()
+{
+    insertText("\n");
+    insertText("\t");
+
+    const int tabCount = fetchPrevLineTabCount();
+    insertTab(tabCount);
+
+    const int cursorRecallPos = textCursor().position();
+
+    insertText("\n");
+    insertTab(tabCount);
+    insertText("}");
+
+    moveCursorToPosition(cursorRecallPos);
+}
+
+int EWGlslPlainTextEdit::fetchPrevLineTabCount()
+{
+    QString text = fetchPrevLineText();
+
+    int tabCount  = 0;
+    int tabIndex = text.indexOf("\t", 0);
+
+    while(tabIndex > -1)
+    {
+        tabCount++;
+        tabIndex = text.indexOf("\t", tabIndex + 1);
+    }
+
+    return tabCount;
+}
+
+QString EWGlslPlainTextEdit::fetchPrevLineText()
+{
+    QTextCursor cursor = textCursor();
+
+    const int cursorRecallPos = cursor.position();
+
+    cursor.movePosition(QTextCursor::Up);
+    cursor.movePosition(QTextCursor::EndOfLine);
+    cursor.select(QTextCursor::LineUnderCursor);
+
+    QString selectedText = cursor.selectedText();
+
+    cursor.clearSelection();
+
+    setTextCursor(cursor);
+    moveCursorToPosition(cursorRecallPos);
+
+    return selectedText;
+}
+
 void EWGlslPlainTextEdit::highlightCurrentLine()
 {
     QList<QTextEdit::ExtraSelection> extraSelect;
@@ -102,4 +212,17 @@ void EWGlslPlainTextEdit::resizeEvent(QResizeEvent* event)
 
     QRect rect = this->contentsRect();
     lineNumWidget->setGeometry(QRect(rect.left(), rect.top(), this->getLineNumAreaWidth(), rect.height()));
+}
+
+void EWGlslPlainTextEdit::keyPressEvent(QKeyEvent* event)
+{
+    QPlainTextEdit::keyPressEvent(event);
+
+    switch(event->key())
+    {
+    case Qt::Key_Return: { handleReturnPressed(); break;}
+    case '(': { handleLeftParenPressed(); break;}
+    case '{': { handleLeftBracketPressed(); break;}
+    default: { break; }
+    }
 }

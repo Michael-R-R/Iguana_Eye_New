@@ -9,6 +9,8 @@ IEGame::IEGame(QWidget* parent) :
     time(nullptr), input(nullptr),
     renderEngine(nullptr), scene(nullptr)
 {
+    this->setFocusPolicy(Qt::StrongFocus);
+
     format->setVersion(4, 3);
     format->setProfile(QSurfaceFormat::CoreProfile);
     format->setSwapBehavior(QSurfaceFormat::DoubleBuffer);
