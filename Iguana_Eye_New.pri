@@ -49,6 +49,7 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditorViewMenu \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslPlainTextEdit \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslSrcEditor \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslTextEditLineNumArea \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWShaderComboBox \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWCollapsingHeader \
