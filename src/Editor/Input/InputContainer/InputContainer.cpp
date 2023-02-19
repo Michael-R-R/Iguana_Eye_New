@@ -47,7 +47,7 @@ bool InputContainer::updateValue(const QString& key, const int modVal, const int
     return true;
 }
 
-QString InputContainer::fetchKey(const int mod, const int key) const
+QString InputContainer::getKey(const int mod, const int key) const
 {
     auto temp = InputKey(mod, key);
 

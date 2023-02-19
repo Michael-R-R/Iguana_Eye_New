@@ -10,3 +10,14 @@ EWGlslSrcEditor::EWGlslSrcEditor(const QString& title, QWidget* parent) :
     vMainLayout->addWidget(titleLabel);
     vMainLayout->addWidget(textEdit);
 }
+
+void EWGlslSrcEditor::setTextContent(const QString& text)
+{
+    textEdit->clear();
+    textEdit->setPlainText(text);
+}
+
+QString EWGlslSrcEditor::getTextContent()
+{
+    return textEdit->toPlainText();
+}

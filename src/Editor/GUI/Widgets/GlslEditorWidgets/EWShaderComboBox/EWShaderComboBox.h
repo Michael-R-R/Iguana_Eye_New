@@ -23,6 +23,7 @@ public:
 
     void startup(const AppStartEvent& event);
     void selectShader(const unsigned long long key);
+    unsigned long long getSelectedId();
 
 private:
     bool indexBoundCheck(const int index);

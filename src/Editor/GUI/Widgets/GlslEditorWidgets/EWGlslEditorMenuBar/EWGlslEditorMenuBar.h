@@ -23,7 +23,7 @@ public:
 
 private:
     void setupFileMenu(const AppStartEvent& event);
-    void setupEditMenu(const AppStartEvent& event);
+    void setupEditMenu(const AppStartEvent& event, EWGlslEditor* editor);
     void setupViewMenu(const AppStartEvent& event, EWGlslEditor* editor);
 };
 

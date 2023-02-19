@@ -15,14 +15,14 @@ IEShader::IEShader(unsigned long long id) :
 
 }
 
-IEShader::IEShader(unsigned long long id, QString vSrc, QString fSrc) :
+IEShader::IEShader(unsigned long long id, const QString& vSrc, const QString& fSrc) :
     QOpenGLShaderProgram(), IEResource(id),
     vertexSource(vSrc), fragmentSource(fSrc)
 {
 
 }
 
-IEShader::IEShader(unsigned long long id, QString filePath) :
+IEShader::IEShader(unsigned long long id, const QString& filePath) :
     QOpenGLShaderProgram(), IEResource(id),
     vertexSource(), fragmentSource()
 {
@@ -46,13 +46,15 @@ void IEShader::build()
     if(this->shaders().size() > 0)
         this->removeAllShaders();
 
-    this->create();
+    if(this->programId() < 1)
+        this->create();
+
     this->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexSource);
     this->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentSource);
     this->link();
 }
 
-void IEShader::parseFile(QString filePath)
+void IEShader::parseFile(const QString& filePath)
 {
     QString content = "";
     if(!IEFile::read(filePath, &content))

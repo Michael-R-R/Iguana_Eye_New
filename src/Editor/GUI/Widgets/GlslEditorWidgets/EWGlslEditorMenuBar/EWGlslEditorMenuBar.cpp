@@ -15,7 +15,7 @@ EWGlslEditorMenuBar::EWGlslEditorMenuBar(QWidget* parent) :
 void EWGlslEditorMenuBar::startup(const AppStartEvent& event, EWGlslEditor* editor)
 {
     setupFileMenu(event);
-    setupEditMenu(event);
+    setupEditMenu(event, editor);
     setupViewMenu(event, editor);
 }
 
@@ -24,9 +24,9 @@ void EWGlslEditorMenuBar::setupFileMenu(const AppStartEvent& event)
     fileMenu->startup(event);
 }
 
-void EWGlslEditorMenuBar::setupEditMenu(const AppStartEvent& event)
+void EWGlslEditorMenuBar::setupEditMenu(const AppStartEvent& event, EWGlslEditor* editor)
 {
-    editMenu->startup(event);
+    editMenu->startup(event, editor);
 }
 
 void EWGlslEditorMenuBar::setupViewMenu(const AppStartEvent& event, EWGlslEditor* editor)

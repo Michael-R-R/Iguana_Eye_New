@@ -19,6 +19,16 @@ void EWGlslEditor::startup(const AppStartEvent& event)
 {
     menuBar->startup(event, this);
     shaderComboBox->startup(event);
+
+    connect(shaderComboBox, &EWShaderComboBox::vertexSrcSelected, vSrcEditor, &EWGlslSrcEditor::setTextContent);
+    connect(shaderComboBox, &EWShaderComboBox::fragmentSrcSelected, fSrcEditor, &EWGlslSrcEditor::setTextContent);
+    connect(shaderComboBox, &EWShaderComboBox::cleared, this, &EWGlslEditor::clearAll);
+}
+
+void EWGlslEditor::clearAll()
+{
+    vSrcEditor->setTextContent("");
+    fSrcEditor->setTextContent("");
 }
 
 void EWGlslEditor::changeView()

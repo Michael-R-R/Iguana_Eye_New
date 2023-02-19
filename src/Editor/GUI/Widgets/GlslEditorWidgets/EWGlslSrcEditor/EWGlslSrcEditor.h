@@ -17,5 +17,9 @@ class EWGlslSrcEditor : public QWidget
 public:
     EWGlslSrcEditor(const QString& title, QWidget* parent = nullptr);
     ~EWGlslSrcEditor() {}
+
+public slots:
+    void setTextContent(const QString& text);
+    QString getTextContent();
 };
 

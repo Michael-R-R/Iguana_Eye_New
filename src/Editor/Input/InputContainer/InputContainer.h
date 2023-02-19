@@ -20,7 +20,7 @@ public:
     bool addValue(const QString key, InputKey* value);
     bool removeValue(const QString& key);
     bool updateValue(const QString& key, const int modVal, const int keyVal);
-    QString fetchKey(const int mod, const int key) const;
+    QString getKey(const int mod, const int key) const;
     InputKey* getValue(const QString& key) const;
     bool doesExist(const QString& key) const;
     bool doesExist(const int mod, const int key) const;

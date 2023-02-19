@@ -28,7 +28,12 @@ public:
 
     void startup(const AppStartEvent& event);
 
+    EWShaderComboBox* getShaderComboBox() const { return shaderComboBox; }
+    EWGlslSrcEditor* getVertSrcEditor() const { return vSrcEditor; }
+    EWGlslSrcEditor* getFragSrcEditor() const { return fSrcEditor; }
+
 public slots:
+    void clearAll();
     void changeView();
 
 private:

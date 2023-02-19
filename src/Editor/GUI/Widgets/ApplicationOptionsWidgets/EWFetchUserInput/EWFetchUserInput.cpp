@@ -61,7 +61,7 @@ void EWFetchUserInput::processPressedInput(int mod, int key)
     {
         isValidKeySequence = false;
 
-        QString errorMsg = "Hotkey already bound to: " + inputContainer->fetchKey(mod, key);
+        QString errorMsg = "Hotkey already bound to: " + inputContainer->getKey(mod, key);
         errorMsgLabel->setText(errorMsg);
     }
     else

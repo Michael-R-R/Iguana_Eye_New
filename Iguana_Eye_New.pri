@@ -6,6 +6,7 @@ INCLUDEPATH += $$PWD/src/Application \
 INCLUDEPATH += $$PWD/src/Editor \
 
 INCLUDEPATH += $$PWD/src/Editor/Actions \
+    $$PWD/src/Editor/Actions/CompileShaderAction \
     $$PWD/src/Editor/Actions/ToggleWindowAction \
     $$PWD/src/Editor/Actions/OpenGameFileAction \
     $$PWD/src/Editor/Actions/MenuAction \

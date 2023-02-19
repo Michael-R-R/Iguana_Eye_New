@@ -45,9 +45,14 @@ void EWShaderComboBox::selectShader(const unsigned long long key)
     this->setCurrentIndex(index);
 }
 
+unsigned long long EWShaderComboBox::getSelectedId()
+{
+    return fullIdList[this->currentIndex()];
+}
+
 bool EWShaderComboBox::indexBoundCheck(const int index)
 {
-    return (index < 1 && index < fullIdList.size());
+    return (index > 0 && index < fullIdList.size());
 }
 
 bool EWShaderComboBox::doesExist(const unsigned long long key)
