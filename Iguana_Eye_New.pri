@@ -11,6 +11,7 @@ INCLUDEPATH += $$PWD/src/Editor/Actions \
     $$PWD/src/Editor/Actions/OpenGameFileAction \
     $$PWD/src/Editor/Actions/MenuAction \
     $$PWD/src/Editor/Actions/NewGameFileAction \
+    $$PWD/src/Editor/Actions/NewShaderAction \
     $$PWD/src/Editor/Actions/QuitAppAction \
     $$PWD/src/Editor/Actions/SaveAsGameFileAction \
     $$PWD/src/Editor/Actions/SaveGameFileAction \

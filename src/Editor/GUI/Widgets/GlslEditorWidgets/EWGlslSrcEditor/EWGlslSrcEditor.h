@@ -18,6 +18,8 @@ public:
     EWGlslSrcEditor(const QString& title, QWidget* parent = nullptr);
     ~EWGlslSrcEditor() {}
 
+    bool isModified();
+
 public slots:
     void setTextContent(const QString& text);
     QString getTextContent();

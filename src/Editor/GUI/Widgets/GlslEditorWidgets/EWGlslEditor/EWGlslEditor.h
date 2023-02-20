@@ -36,6 +36,9 @@ public slots:
     void clearAll();
     void changeView();
 
+private slots:
+
+
 private:
     void setup();
 };

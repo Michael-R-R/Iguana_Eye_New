@@ -43,10 +43,11 @@ void ESceneStartup::buildDefaultShaders(const AppStartEvent& event)
     auto nameManager = scene->getNameManager();
     auto shaderManager = scene->getShaderManager();
 
-    unsigned long long id = IEHash::Compute("grid_shader");
+    QString path = "./resources/shaders/editor/ERGrid.glsl";
+    unsigned long long id = IEHash::Compute(path);
 
-    nameManager->add(id, new QString("grid_shader"));
-    auto gridShader = new IEShader(id, "./resources/shaders/editor/ERGrid.glsl");
+    nameManager->add(id, new QString(path));
+    auto gridShader = new IEShader(id, path);
     gridShader->build();
     shaderManager->add(id, gridShader);
 }
@@ -56,11 +57,13 @@ void ESceneStartup::buildGridRenderable(const AppStartEvent& event)
     auto scene = event.getGame()->getIEScene();
     auto nameManager = scene->getNameManager();
     auto meshManager = scene->getMeshManager();
+    auto materialManager = scene->getMaterialManager();
     auto shaderManager = scene->getShaderManager();
     auto renderableManager = scene->getRenderableManager();
 
     auto gridMesh = meshManager->getValue(IEHash::Compute("grid_mesh"));
-    auto gridShader = shaderManager->getValue(IEHash::Compute("grid_shader"));
+    auto defaultMaterial = materialManager->getValue(IEHash::Compute("default_material"));
+    auto gridShader = shaderManager->getValue(IEHash::Compute("./resources/shaders/editor/ERGrid.glsl"));
 
     unsigned long long id = IEHash::Compute("grid_mesh+default_material+grid_shader");
 
@@ -68,9 +71,9 @@ void ESceneStartup::buildGridRenderable(const AppStartEvent& event)
     auto gridRenderable = new IERenderable(id);
     gridRenderable->setRenderType(IERenderable::RenderType::Vertex);
     gridRenderable->setDrawType(GL_LINES);
-    gridRenderable->setMeshId(IEHash::Compute("grid_mesh"));
-    gridRenderable->setMaterialId(IEHash::Compute("default_material"));
-    gridRenderable->setShaderId(IEHash::Compute("grid_shader"));
+    gridRenderable->setMeshId(gridMesh->getId());
+    gridRenderable->setMaterialId(defaultMaterial->getId());
+    gridRenderable->setShaderId(gridShader->getId());
     gridRenderable->addVec3Buffer("aPos", new IEVertexBuffer<QVector3D>(gridMesh->getPosVertices(), 3));
     gridRenderable->build(gridShader);
     renderableManager->add(id, gridRenderable);
