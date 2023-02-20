@@ -49,8 +49,8 @@ public:
     friend QDataStream& operator>>(QDataStream& in, IEShader& shader)
     {
         in >> shader.id
-            >> shader.vertexSource
-            >> shader.fragmentSource;
+           >> shader.vertexSource
+           >> shader.fragmentSource;
 
         return in;
     }

@@ -2,8 +2,8 @@
 #include "IEHash.h"
 #include "AppStartEvent.h"
 #include "IEGame.h"
-#include "EGridMesh.h"
 #include "EDefaultMaterial.h"
+#include "IEObjLoader.h"
 
 void ESceneStartup::startup(const AppStartEvent& event)
 {
@@ -19,10 +19,13 @@ void ESceneStartup::buildDefaultMeshes(const AppStartEvent& event)
     auto nameManager = scene->getNameManager();
     auto meshManager = scene->getMeshManager();
 
-    unsigned long long id = IEHash::Compute("grid_mesh");
+    QString name = "./resources/meshes/editor/EGrid.obj";
+    unsigned long long id = IEHash::Compute(name);
+    nameManager->add(id, new QString(name));
 
-    nameManager->add(id, new QString("grid_mesh"));
-    meshManager->add(id, new EGridMesh(id));
+    auto grid = IEObjLoader::loadMesh(name);
+    grid->setId(id);
+    meshManager->add(id, grid);
 }
 
 void ESceneStartup::buildDefaultMaterials(const AppStartEvent& event)
@@ -61,7 +64,7 @@ void ESceneStartup::buildGridRenderable(const AppStartEvent& event)
     auto shaderManager = scene->getShaderManager();
     auto renderableManager = scene->getRenderableManager();
 
-    auto gridMesh = meshManager->getValue(IEHash::Compute("grid_mesh"));
+    auto gridMesh = meshManager->getValue(IEHash::Compute("./resources/meshes/editor/EGrid.obj"));
     auto defaultMaterial = materialManager->getValue(IEHash::Compute("default_material"));
     auto gridShader = shaderManager->getValue(IEHash::Compute("./resources/shaders/editor/ERGrid.glsl"));
 
