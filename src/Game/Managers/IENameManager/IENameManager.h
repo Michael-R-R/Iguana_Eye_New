@@ -22,8 +22,6 @@ public:
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
 
-    std::tuple<unsigned long long, QString> hashString(const QString& value) const;
-
 signals:
     void added(const unsigned long long key);
     void removed(const unsigned long long key);

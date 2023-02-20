@@ -1,23 +1,23 @@
-#include "IEObjLoader.h"
+#include "IEObjImporter.h"
 #include "IEMesh.h"
 #include <QDebug>
 #include <QVector3D>
 #include <QVector2D>
 
-IEMesh* IEObjLoader::loadMesh(const QString& path)
+void IEObjImporter::importMesh(const QString& path, IEMesh* mesh)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcess_Triangulate | aiProcess_FlipUVs);
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         qDebug() << "ERROR::ASSIMP::" << importer.GetErrorString();
-        return nullptr;
+        return;
     }
 
-    return processNode(scene->mRootNode, scene, new IEMesh());
+    processNode(scene->mRootNode, scene, mesh);
 }
 
-IEMesh* IEObjLoader::processNode(aiNode* node, const aiScene* scene, IEMesh* ieMesh)
+void IEObjImporter::processNode(aiNode* node, const aiScene* scene, IEMesh* ieMesh)
 {
     for(unsigned i = 0; i < node->mNumMeshes; i++)
     {
@@ -29,11 +29,9 @@ IEMesh* IEObjLoader::processNode(aiNode* node, const aiScene* scene, IEMesh* ieM
     {
         processNode(node->mChildren[i], scene, ieMesh);
     }
-
-    return ieMesh;
 }
 
-IEMesh* IEObjLoader::processMesh(aiMesh* assimpMesh, const aiScene* scene, IEMesh* ieMesh)
+void IEObjImporter::processMesh(aiMesh* assimpMesh, const aiScene* scene, IEMesh* ieMesh)
 {
     for(unsigned i = 0; i < assimpMesh->mNumVertices; i++)
     {
@@ -90,6 +88,4 @@ IEMesh* IEObjLoader::processMesh(aiMesh* assimpMesh, const aiScene* scene, IEMes
             }
         }
     }
-
-    return ieMesh;
 }

@@ -1,0 +1,16 @@
+std::tuple<unsigned long long, QString> IENameManager::hashString(const QString& value) const
+{
+    QString temp = value;
+
+    int counter = 0;
+    unsigned long long hash = IEHash::Compute(temp);
+
+    while(resourceContainer->doesExist(hash))
+    {
+        temp = value + "_" + QString::number(counter);
+        counter++;
+        hash = IEHash::Compute(temp);
+    }
+
+    return std::make_tuple(hash, temp);
+}

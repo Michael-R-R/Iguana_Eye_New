@@ -10,7 +10,8 @@ IEShader::IEShader() :
 
 IEShader::IEShader(unsigned long long id) :
     QOpenGLShaderProgram(), IEResource(id),
-    vertexSource(), fragmentSource()
+    vertexSource("#version 430 core\n\nvoid main()\n{\n\t\n}\n"),
+    fragmentSource("#version 430 core\n\nvoid main()\n{\n\t\n}\n")
 {
 
 }
@@ -20,13 +21,6 @@ IEShader::IEShader(unsigned long long id, const QString& vSrc, const QString& fS
     vertexSource(vSrc), fragmentSource(fSrc)
 {
 
-}
-
-IEShader::IEShader(unsigned long long id, const QString& filePath) :
-    QOpenGLShaderProgram(), IEResource(id),
-    vertexSource(), fragmentSource()
-{
-    parseFile(filePath);
 }
 
 IEShader::IEShader(const IEShader& other) :
@@ -52,29 +46,4 @@ void IEShader::build()
     this->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexSource);
     this->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentSource);
     this->link();
-}
-
-void IEShader::parseFile(const QString& filePath)
-{
-    QString content = "";
-    if(!IEFile::read(filePath, &content))
-        return;
-
-    if(content.isEmpty())
-        return;
-
-    QString vDelimiter = "[VERTEX]";
-    QString fDelimiter = "[FRAGMENT]";
-
-    int vIndex = content.indexOf(vDelimiter);
-    int fIndex = content.indexOf(fDelimiter);
-    if(vIndex < 0 || fIndex < 0)
-        return;
-
-    int vStart = vIndex + vDelimiter.length() + 1;
-    int vEnd = fIndex - vStart;
-    vertexSource = content.mid(vStart, vEnd);
-
-    int fStart = fIndex + fDelimiter.length() + 1;
-    fragmentSource = content.mid(fStart);
 }

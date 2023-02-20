@@ -9,7 +9,5 @@ public:
     EDefaultMaterial(const unsigned long long id);
     ~EDefaultMaterial() {}
 
-private:
-    void setup();
 };
 
