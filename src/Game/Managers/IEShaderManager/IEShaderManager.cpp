@@ -25,10 +25,7 @@ void IEShaderManager::shutdown()
 bool IEShaderManager::add(const unsigned long long key, IEShader* value)
 {
     if(!IEManager::add(key, value))
-    {
-        delete value;
         return false;
-    }
 
     emit added(key);
 

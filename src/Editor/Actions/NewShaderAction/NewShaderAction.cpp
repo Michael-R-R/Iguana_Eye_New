@@ -24,7 +24,7 @@ NewShaderAction::NewShaderAction(IENameManager* nameManager, IEShaderManager* sh
         else
             nameManager->add(id, new QString(path));
 
-        auto shader = new IEShader(id);
+        auto shader = new IEShader(path, id);
         shader->build();
 
         shaderManager->add(id, shader);

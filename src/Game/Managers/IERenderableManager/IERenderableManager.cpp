@@ -26,10 +26,7 @@ void IERenderableManager::shutdown()
 bool IERenderableManager::add(const unsigned long long key, IERenderable* value)
 {
     if(!IEManager::add(key, value))
-    {
-        delete value;
         return false;
-    }
 
     emit added(key);
 

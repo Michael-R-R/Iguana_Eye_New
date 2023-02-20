@@ -2,29 +2,25 @@
 #include "IEFile.h"
 
 IEShader::IEShader() :
-    QOpenGLShaderProgram(), IEResource(0),
+    QOpenGLShaderProgram(),
+    IEResource("", 0),
     vertexSource(), fragmentSource()
 {
 
 }
 
-IEShader::IEShader(unsigned long long id) :
-    QOpenGLShaderProgram(), IEResource(id),
+IEShader::IEShader(const QString& path, unsigned long long id) :
+    QOpenGLShaderProgram(),
+    IEResource(path, id),
     vertexSource("#version 430 core\n\nvoid main()\n{\n\t\n}\n"),
     fragmentSource("#version 430 core\n\nvoid main()\n{\n\t\n}\n")
 {
 
 }
 
-IEShader::IEShader(unsigned long long id, const QString& vSrc, const QString& fSrc) :
-    QOpenGLShaderProgram(), IEResource(id),
-    vertexSource(vSrc), fragmentSource(fSrc)
-{
-
-}
-
 IEShader::IEShader(const IEShader& other) :
-    QOpenGLShaderProgram(), IEResource(0),
+    QOpenGLShaderProgram(),
+    IEResource(other.filePath, other.id),
     vertexSource(other.vertexSource), fragmentSource(other.fragmentSource)
 {
 

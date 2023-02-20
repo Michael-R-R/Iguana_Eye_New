@@ -2,7 +2,7 @@
 #include "IEShader.h"
 
 IEMaterial::IEMaterial() :
-    IEResource(0),
+    IEResource("", 0),
     uniformData(), objectColor(),
     atlasTexId(0), diffuseTexId(0),
     specularTexId(0), normalTexId(0),
@@ -11,8 +11,8 @@ IEMaterial::IEMaterial() :
 
 }
 
-IEMaterial::IEMaterial(const unsigned long long id) :
-    IEResource(id),
+IEMaterial::IEMaterial(const QString& path, const unsigned long long id) :
+    IEResource(path, id),
     uniformData(), objectColor(),
     atlasTexId(0), diffuseTexId(0),
     specularTexId(0), normalTexId(0),
@@ -22,7 +22,7 @@ IEMaterial::IEMaterial(const unsigned long long id) :
 }
 
 IEMaterial::IEMaterial(const IEMaterial& other) :
-    IEResource(0),
+    IEResource(other.filePath, other.id),
     uniformData(other.uniformData), objectColor(other.objectColor),
     atlasTexId(other.atlasTexId), diffuseTexId(other.diffuseTexId),
     specularTexId(other.specularTexId), normalTexId(other.normalTexId),

@@ -30,13 +30,15 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEMeshManager& manager)
     {
-        out << *manager.resourceContainer;
+
+
         return out;
     }
 
     friend QDataStream& operator>>(QDataStream& in, IEMeshManager& manager)
     {
-        in >> *manager.resourceContainer;
+
+
         return in;
     }
 };

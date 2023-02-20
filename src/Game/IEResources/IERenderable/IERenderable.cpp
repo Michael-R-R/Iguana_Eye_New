@@ -1,7 +1,8 @@
 #include "IERenderable.h"
 #include "IEShader.h"
 IERenderable::IERenderable() :
-    QOpenGLVertexArrayObject(), IEResource(0),
+    QOpenGLVertexArrayObject(),
+    IEResource("", 0),
     isRenderable(true),
     renderType(RenderType::None), drawMode(GL_TRIANGLES),
     meshId(0), materialId(0), shaderId(0),
@@ -15,8 +16,9 @@ IERenderable::IERenderable() :
 
 }
 
-IERenderable::IERenderable(const unsigned long long id) :
-    QOpenGLVertexArrayObject(), IEResource(id),
+IERenderable::IERenderable(const QString& path, const unsigned long long id) :
+    QOpenGLVertexArrayObject(),
+    IEResource(path, id),
     isRenderable(true),
     renderType(RenderType::None), drawMode(GL_TRIANGLES),
     meshId(0), materialId(0), shaderId(0),
@@ -31,7 +33,8 @@ IERenderable::IERenderable(const unsigned long long id) :
 }
 
 IERenderable::IERenderable(const IERenderable& other) :
-    QOpenGLVertexArrayObject(), IEResource(0),
+    QOpenGLVertexArrayObject(),
+    IEResource(other.filePath, other.id),
     isRenderable(other.isRenderable),
     renderType(other.renderType), drawMode(other.drawMode),
     meshId(other.meshId), materialId(other.materialId),

@@ -42,7 +42,7 @@ private:
 
 public:
     IERenderable();
-    IERenderable(const unsigned long long id);
+    IERenderable(const QString& path, const unsigned long long id);
     IERenderable(const IERenderable& other);
     ~IERenderable();
 
@@ -78,7 +78,8 @@ public:
 
     friend QDataStream& operator<<(QDataStream& out, const IERenderable& renderable)
     {
-        out << renderable.id
+        out << renderable.filePath
+            << renderable.id
             << renderable.renderType
             << renderable.drawMode
             << renderable.isRenderable
@@ -97,7 +98,8 @@ public:
 
     friend QDataStream& operator>>(QDataStream& in, IERenderable& renderable)
     {
-        in >> renderable.id
+        in >> renderable.filePath
+           >> renderable.id
            >> renderable.renderType
            >> renderable.drawMode
            >> renderable.isRenderable

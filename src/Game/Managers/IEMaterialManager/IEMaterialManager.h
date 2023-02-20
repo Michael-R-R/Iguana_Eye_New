@@ -30,13 +30,15 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEMaterialManager& manager)
     {
-        out << *manager.resourceContainer;
+
+
         return out;
     }
 
     friend QDataStream& operator>>(QDataStream& in, IEMaterialManager& manager)
     {
-        in >> *manager.resourceContainer;
+
+
         return in;
     }
 };

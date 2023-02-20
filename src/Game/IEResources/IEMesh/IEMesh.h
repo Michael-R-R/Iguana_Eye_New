@@ -19,7 +19,7 @@ protected:
 
 public:
     IEMesh();
-    IEMesh(const unsigned long long id);
+    IEMesh(const QString& path, const unsigned long long id);
     IEMesh(const IEMesh& other);
     ~IEMesh();
 
@@ -44,7 +44,8 @@ public:
 
     friend QDataStream& operator<<(QDataStream& out, const IEMesh& mesh)
     {
-        out << mesh.id
+        out << mesh.filePath
+            << mesh.id
             << mesh.positionVertices
             << mesh.normalVertices
             << mesh.textureVertices
@@ -57,7 +58,8 @@ public:
 
     friend QDataStream& operator>>(QDataStream& in, IEMesh& mesh)
     {
-        in >> mesh.id
+        in >> mesh.filePath
+           >> mesh.id
            >> mesh.positionVertices
            >> mesh.normalVertices
            >> mesh.textureVertices

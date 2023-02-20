@@ -33,13 +33,13 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEShaderManager& manager)
     {
-        out << *manager.resourceContainer;
+
         return out;
     }
 
     friend QDataStream& operator>>(QDataStream& in, IEShaderManager& manager)
     {
-        in >> *manager.resourceContainer;
+
         return in;
     }
 };

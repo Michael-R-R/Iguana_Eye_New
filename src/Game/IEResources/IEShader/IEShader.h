@@ -14,8 +14,7 @@ class IEShader : public QOpenGLShaderProgram, public IEResource
 
 public:
     IEShader();
-    IEShader(unsigned long long id);
-    IEShader(unsigned long long id, const QString& vSrc, const QString& fSrc);
+    IEShader(const QString& path, unsigned long long id);
     IEShader(const IEShader& other);
     ~IEShader();
 
@@ -35,7 +34,8 @@ public:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEShader& shader)
     {
-        out << shader.id
+        out << shader.filePath
+            << shader.id
             << shader.vertexSource
             << shader.fragmentSource;
 
@@ -44,7 +44,8 @@ public:
 
     friend QDataStream& operator>>(QDataStream& in, IEShader& shader)
     {
-        in >> shader.id
+        in >> shader.filePath
+           >> shader.id
            >> shader.vertexSource
            >> shader.fragmentSource;
 

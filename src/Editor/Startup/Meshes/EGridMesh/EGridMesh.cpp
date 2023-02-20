@@ -1,7 +1,7 @@
 #include "EGridMesh.h"
 
 EGridMesh::EGridMesh(const unsigned long long id) :
-    IEMesh(id)
+    IEMesh("", id)
 {
     setup();
 }

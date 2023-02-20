@@ -26,7 +26,10 @@ public:
     bool add(const unsigned long long key, T* resource)
     {
         if(doesExist(key))
+        {
+            delete resource;
             return false;
+        }
 
         resources[key] = resource;
 
@@ -97,39 +100,4 @@ public:
     }
 
     const QMap<unsigned long long, T*>& getResources() const { return resources; }
-
-    friend QDataStream& operator<<(QDataStream& out, const IEResourceContainer<T>& container)
-    {
-        out << (int)container.resources.size();
-
-        QMapIterator<unsigned long long, T*> it(container.resources);
-        while(it.hasNext())
-        {
-            it.next();
-            out << it.key() << *it.value();
-        }
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEResourceContainer<T>& container)
-    {
-        int size = 0;
-        in >> size;
-
-        unsigned long long key = 0;
-        T* value = nullptr;
-
-        container.clear();
-        for(int i = 0; i < size; i++)
-        {
-            value = new T();
-
-            in >> key >> *value;
-
-            container.resources[key] = value;
-        }
-
-        return in;
-    }
 };

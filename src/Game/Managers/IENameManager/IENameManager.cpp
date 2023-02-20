@@ -26,10 +26,7 @@ void IENameManager::shutdown()
 bool IENameManager::add(const unsigned long long key, QString* value)
 {
     if(!IEManager::add(key, value))
-    {
-        delete value;
         return false;
-    }
 
     emit added(key);
 

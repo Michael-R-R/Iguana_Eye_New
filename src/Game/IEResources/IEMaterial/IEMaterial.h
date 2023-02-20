@@ -20,7 +20,7 @@ protected:
 
 public:
     IEMaterial();
-    IEMaterial(const unsigned long long id);
+    IEMaterial(const QString& path, const unsigned long long id);
     IEMaterial(const IEMaterial& other);
     ~IEMaterial();
 
@@ -48,7 +48,8 @@ public:
 
     friend QDataStream& operator<<(QDataStream& out, const IEMaterial& material)
     {
-        out << material.id
+        out << material.filePath
+            << material.id
             << material.uniformData
             << material.objectColor
             << material.atlasTexId
@@ -62,14 +63,15 @@ public:
 
     friend QDataStream& operator>>(QDataStream& in, IEMaterial& material)
     {
-        in >> material.id
-            >> material.uniformData
-            >> material.objectColor
-            >> material.atlasTexId
-            >> material.diffuseTexId
-            >> material.specularTexId
-            >> material.normalTexId
-            >> material.heightTexId;
+        in >> material.filePath
+           >> material.id
+           >> material.uniformData
+           >> material.objectColor
+           >> material.atlasTexId
+           >> material.diffuseTexId
+           >> material.specularTexId
+           >> material.normalTexId
+           >> material.heightTexId;
 
         return in;
     }
