@@ -4,14 +4,15 @@
 
 enum class IEComponentType : unsigned long long
 {
-    Hierarchy = 1,           // implemented
-    Input = 2,               // implemented
-    Transform = 4,           // implemented
-    Physics = 8,             //
-    Camera = 16,             //
-    CameraController = 32,   //
-    Mesh = 64,               // implemented
-    Material = 128,          // implemented
-    Shader = 256,            // implemented
-    Renderable = 512,        // implemented
+    Name = 1,                //
+    Hierarchy = 2,           // implemented
+    Input = 4,               // implemented
+    Transform = 8,           // implemented
+    Physics = 16,            //
+    Camera = 32,             //
+    CameraController = 64,   //
+    Mesh = 128,              // implemented
+    Material = 256,          // implemented
+    Shader = 512,            // implemented
+    Renderable = 1024,       // implemented
 };
