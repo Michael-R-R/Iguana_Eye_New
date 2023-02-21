@@ -41,8 +41,11 @@ public:
 
         for(auto item : resources)
         {
-            if(item->getType() == IEResource::Type::Game)
+            if(item->getIsEdited() && item->getType() == IEResource::Type::Game)
+            {
+                item->setIsEdited(false);
                 IESerialize::write<IERenderable>(item->getFilePath(), item);
+            }
 
             out << item->getFilePath() << item->getType();
         }

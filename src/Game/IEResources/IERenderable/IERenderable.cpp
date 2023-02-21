@@ -11,7 +11,7 @@ IERenderable::IERenderable() :
     vec3BufferContainer(new IEVertexBufferContainer<QVector3D>()),
     vec4BufferContainer(new IEVertexBufferContainer<QVector4D>()),
     mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>()),
-    uniformData()
+    uniformData(), isEdited(false)
 {
 
 }
@@ -27,7 +27,7 @@ IERenderable::IERenderable(const QString& path, const unsigned long long id) :
     vec3BufferContainer(new IEVertexBufferContainer<QVector3D>()),
     vec4BufferContainer(new IEVertexBufferContainer<QVector4D>()),
     mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>()),
-    uniformData()
+    uniformData(), isEdited(true)
 {
 
 }
@@ -44,7 +44,7 @@ IERenderable::IERenderable(const IERenderable& other) :
     vec3BufferContainer(new IEVertexBufferContainer<QVector3D>(*other.vec3BufferContainer)),
     vec4BufferContainer(new IEVertexBufferContainer<QVector4D>(*other.vec4BufferContainer)),
     mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>(*other.mat4BufferContainer)),
-    uniformData(other.uniformData)
+    uniformData(other.uniformData), isEdited(other.isEdited)
 {
 
 }

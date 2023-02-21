@@ -40,6 +40,8 @@ protected:
 
     IEUniform uniformData;
 
+    bool isEdited;
+
 public:
     IERenderable();
     IERenderable(const QString& path, const unsigned long long id);
@@ -67,6 +69,7 @@ public:
     unsigned long long getMeshId() const { return meshId; }
     unsigned long long getMaterialId() const { return materialId; }
     unsigned long long getShaderId() const { return shaderId; }
+    bool getIsEdited() const { return isEdited; }
 
     void setRenderType(const RenderType val) { renderType = val; }
     void setDrawType(const GLenum val) { drawMode = val; }
@@ -75,6 +78,7 @@ public:
     void setMaterialId(const unsigned long long val) { materialId = val; }
     void setShaderId(const unsigned long long val) { shaderId = val; }
     void setUniformData(const IEUniform& val) { uniformData = val; }
+    void setIsEdited(const bool val) { isEdited = val; }
 
     friend QDataStream& operator<<(QDataStream& out, const IERenderable& renderable)
     {
@@ -92,7 +96,8 @@ public:
             << *renderable.vec3BufferContainer
             << *renderable.vec4BufferContainer
             << *renderable.mat4BufferContainer
-            << renderable.uniformData;
+            << renderable.uniformData
+            << renderable.isEdited;
 
         return out;
     }
@@ -113,7 +118,8 @@ public:
            >> *renderable.vec3BufferContainer
            >> *renderable.vec4BufferContainer
            >> *renderable.mat4BufferContainer
-           >> renderable.uniformData;
+           >> renderable.uniformData
+           >> renderable.isEdited;
 
         return in;
     }
