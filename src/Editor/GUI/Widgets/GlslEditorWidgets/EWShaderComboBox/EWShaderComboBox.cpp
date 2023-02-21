@@ -5,7 +5,7 @@
 
 EWShaderComboBox::EWShaderComboBox(QWidget* parent) :
     QComboBox(parent),
-    nameManager(nullptr), shaderManager(nullptr),
+    shaderManager(nullptr),
     fullIdList()
 {
     this->addItem("");
@@ -16,20 +16,14 @@ EWShaderComboBox::EWShaderComboBox(QWidget* parent) :
 
 EWShaderComboBox::~EWShaderComboBox()
 {
-    nameManager = nullptr;
     shaderManager = nullptr;
 }
 
 void EWShaderComboBox::startup(const AppStartEvent& event)
 {
-    nameManager = event.getGame()->getIEScene()->getNameManager();
     shaderManager = event.getGame()->getIEScene()->getShaderManager();
 
-    // Build combobox with initial values
-    for(auto item : shaderManager->getResourceContainer()->getResources())
-    {
-        this->addShader(item->getId());
-    }
+    this->initialBuild(shaderManager);
 
     connect(shaderManager, &IEShaderManager::added, this, &EWShaderComboBox::addShader);
     connect(shaderManager, &IEShaderManager::removed, this, &EWShaderComboBox::removeShader);
@@ -48,6 +42,18 @@ void EWShaderComboBox::selectShader(const unsigned long long key)
 unsigned long long EWShaderComboBox::getSelectedId()
 {
     return fullIdList[this->currentIndex()];
+}
+
+void EWShaderComboBox::initialBuild(const IEShaderManager* shaderManager)
+{
+    auto resources = shaderManager->getResourceContainer()->getResources();
+    for(auto item : resources)
+    {
+        if(item->getType() == IEResource::RsrcType::Editor)
+            continue;
+
+        this->addShader(item->getId(), item->getFilePath());
+    }
 }
 
 bool EWShaderComboBox::indexBoundCheck(const int index)
@@ -81,15 +87,14 @@ void EWShaderComboBox::currentShaderChanged(int index)
     emit fragmentSrcSelected(shader->getFragmentSrc());
 }
 
-void EWShaderComboBox::addShader(const unsigned long long key)
+void EWShaderComboBox::addShader(const unsigned long long key, const QString& path)
 {
     if(doesExist(key))
         return;
 
     fullIdList.append(key);
 
-    QString resourceName = *nameManager->getValue(key);
-    QString extractedName = IEFile::extractFileName(resourceName);
+    QString extractedName = IEFile::extractFileName(path);
 
     this->addItem(extractedName);
 }
@@ -118,8 +123,8 @@ void EWShaderComboBox::changeShaderKey(const unsigned long long oldKey, const un
 
     fullIdList[index] = newKey;
 
-    QString resourceName = *nameManager->getValue(newKey);
-    QString extractedName = IEFile::extractFileName(resourceName);
+    auto shader = shaderManager->getValue(newKey);
+    QString extractedName = IEFile::extractFileName(shader->getFilePath());
 
     this->setItemText(index, extractedName);
 }

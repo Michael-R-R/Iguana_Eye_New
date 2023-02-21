@@ -9,11 +9,11 @@ IEShader::IEShader() :
 
 }
 
-IEShader::IEShader(const QString& path, unsigned long long id) :
+IEShader::IEShader(const QString& path, const unsigned long long id) :
     QOpenGLShaderProgram(),
     IEResource(path, id),
-    vertexSource("#version 430 core\n\nvoid main()\n{\n\t\n}\n"),
-    fragmentSource("#version 430 core\n\nvoid main()\n{\n\t\n}\n")
+    vertexSource("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n"),
+    fragmentSource("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n")
 {
 
 }

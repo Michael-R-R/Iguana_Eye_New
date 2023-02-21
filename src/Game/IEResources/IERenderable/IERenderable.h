@@ -23,7 +23,7 @@ public:
         None, Vertex, Index, I_Vertex, I_Index
     };
 
-private:
+protected:
     RenderType renderType;
     GLenum drawMode;
     bool isRenderable;

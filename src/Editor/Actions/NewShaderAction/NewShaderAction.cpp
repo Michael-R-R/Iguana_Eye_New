@@ -1,34 +1,40 @@
 #include "NewShaderAction.h"
-#include "IENameManager.h"
 #include "IEShaderManager.h"
 #include "IEHash.h"
-#include "IESerialize.h"
+#include "IEFile.h"
 #include <QFileDialog>
 
-NewShaderAction::NewShaderAction(IENameManager* nameManager, IEShaderManager* shaderManager,
+NewShaderAction::NewShaderAction(IEShaderManager* shaderManager,
                                  InputKey* shortcut, QObject* parent) :
     MenuAction("New", shortcut, parent)
 {
-    connect(this, &NewShaderAction::triggered, this, [nameManager, shaderManager]()
+    connect(this, &NewShaderAction::triggered, this, [shaderManager]()
     {
         QString path = QFileDialog::getSaveFileName(nullptr,
                                                     "New Shader...",
                                                     "./resources",
-                                                    "Shader(*.ieshader)");
+                                                    "Shader(*.glsl)");
         if(path.isEmpty())
             return;
 
-        auto id = IEHash::Compute(path);
-        if(nameManager->doesExist(id))
-            shaderManager->remove(id);
+        unsigned long long id = IEHash::Compute(path);
+        IEShader* shader = nullptr;
+        if(shaderManager->doesExist(id))
+        {
+            shader = shaderManager->getValue(id);
+            shader->setVertexSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
+            shader->setFragmentSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
+            shader->build();
+        }
         else
-            nameManager->add(id, new QString(path));
+        {
+            shader = new IEShader(path, id);
+            shader->build();
+            shaderManager->add(id, shader);
+        }
 
-        auto shader = new IEShader(path, id);
-        shader->build();
-
-        shaderManager->add(id, shader);
-
-        IESerialize::write<IEShader>(path, shader);
+        QString vSrc = "[VERTEX]\n" + shader->getVertexSrc();
+        QString fSrc = "[FRAGMENT]\n" + shader->getFragmentSrc();
+        IEFile::write(path, vSrc + fSrc);
     });
 }

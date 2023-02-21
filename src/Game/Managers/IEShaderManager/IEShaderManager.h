@@ -3,8 +3,8 @@
 #include <QDataStream>
 
 #include "IEManager.h"
-#include "IESerialize.h"
 #include "IEShader.h"
+#include "IEGlslImporter.h"
 
 class GameStartEvent;
 
@@ -27,7 +27,7 @@ private:
     void buildAllShaders();
 
 signals:
-    void added(const unsigned long long key);
+    void added(const unsigned long long key, const QString& path);
     void removed(const unsigned long long key);
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 
@@ -40,7 +40,7 @@ public:
 
         for(auto item : resources)
         {
-            out << item->getFilePath();
+            out << item->getFilePath() << item->getId() << item->getType();
         }
 
         return out;
@@ -51,21 +51,26 @@ public:
         int size = 0;
         in >> size;
 
-        QString filePath = "";
+        QString path = "";
+        unsigned long long id = 0;
+        IEResource::RsrcType type;
         IEShader* shader = nullptr;
 
         for(int i = 0; i < size; i++)
         {
-            in >> filePath;
+            in >> path >> id >> type;
 
-            shader = new IEShader();
-            if(!IESerialize::read<IEShader>(filePath, shader))
+            if(type == IEResource::RsrcType::Editor)
+                continue;
+
+            shader = new IEShader(path, id);
+            if(!IEGlslImporter::importGlsl(path, shader))
             {
                 delete shader;
                 continue;
             }
 
-            manager.add(shader->getId(), shader);
+            manager.add(id, shader);
         }
 
         return in;

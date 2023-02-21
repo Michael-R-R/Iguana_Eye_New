@@ -3,7 +3,6 @@
 #include <QDataStream>
 
 #include "IEObject.h"
-#include "IENameManager.h"
 #include "IEMeshManager.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
@@ -16,7 +15,6 @@ class IEScene : public IEObject
 {
     Q_OBJECT
 
-    IENameManager* nameManager;
     IEMeshManager* meshManager;
     IEMaterialManager* materialManager;
     IEShaderManager* shaderManager;
@@ -32,7 +30,6 @@ public:
 
     void onUpdateFrame();
 
-    IENameManager* getNameManager() const { return nameManager; }
     IEMeshManager* getMeshManager() const { return meshManager; }
     IEMaterialManager* getMaterialManager() const { return materialManager; }
     IEShaderManager* getShaderManager() const { return shaderManager; }
@@ -41,8 +38,7 @@ public:
 
     friend QDataStream& operator<<(QDataStream& out, const IEScene& scene)
     {
-        out << *scene.nameManager
-            << *scene.meshManager
+        out << *scene.meshManager
             << *scene.materialManager
             << *scene.shaderManager
             << *scene.renderableManager
@@ -53,8 +49,7 @@ public:
 
     friend QDataStream& operator>>(QDataStream& in, IEScene& scene)
     {
-        in >> *scene.nameManager
-           >> *scene.meshManager
+        in >> *scene.meshManager
            >> *scene.materialManager
            >> *scene.shaderManager
            >> *scene.renderableManager

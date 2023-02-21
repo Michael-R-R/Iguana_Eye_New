@@ -28,7 +28,8 @@ bool IERenderableManager::add(const unsigned long long key, IERenderable* value)
     if(!IEManager::add(key, value))
         return false;
 
-    emit added(key);
+    if(value->getType() == IEResource::RsrcType::Game)
+        emit added(key, value->getFilePath());
 
     return true;
 }

@@ -2,20 +2,22 @@
 #include "IEShader.h"
 #include "IEFile.h"
 
-void IEGlslImporter::importGlsl(const QString& path, IEShader* shader)
+bool IEGlslImporter::importGlsl(const QString& path, IEShader* shader)
 {
     if(path.lastIndexOf(".glsl") < 0)
-        return;
+        return false;
 
     QString vSrc = "";
     QString fSrc = "";
 
     std::tie(vSrc, fSrc) = parseFile(path);
     if(vSrc.isEmpty() || fSrc.isEmpty())
-        return;
+        return false;
 
     shader->setVertexSrc(vSrc);
     shader->setFragmentSrc(fSrc);
+
+    return true;
 }
 
 std::tuple<QString, QString> IEGlslImporter::parseFile(const QString& filePath)

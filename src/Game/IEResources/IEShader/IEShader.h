@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QDataStream>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLShader>
 #include <QString>
@@ -9,12 +8,13 @@
 
 class IEShader : public QOpenGLShaderProgram, public IEResource
 {
+protected:
     QString vertexSource;
     QString fragmentSource;
 
 public:
     IEShader();
-    IEShader(const QString& path, unsigned long long id);
+    IEShader(const QString& path, const unsigned long long id);
     IEShader(const IEShader& other);
     ~IEShader();
 
@@ -30,25 +30,4 @@ public:
 
     void setVertexSrc(const QString& val) { vertexSource = val; }
     void setFragmentSrc(const QString& val) { fragmentSource = val; }
-
-public:
-    friend QDataStream& operator<<(QDataStream& out, const IEShader& shader)
-    {
-        out << shader.filePath
-            << shader.id
-            << shader.vertexSource
-            << shader.fragmentSource;
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEShader& shader)
-    {
-        in >> shader.filePath
-           >> shader.id
-           >> shader.vertexSource
-           >> shader.fragmentSource;
-
-        return in;
-    }
 };

@@ -3,7 +3,6 @@
 
 IEScene::IEScene(QObject* parent) :
     IEObject(parent),
-    nameManager(new IENameManager(this)),
     meshManager(new IEMeshManager(this)),
     materialManager(new IEMaterialManager(this)),
     shaderManager(new IEShaderManager(this)),
@@ -20,7 +19,6 @@ IEScene::~IEScene()
 
 void IEScene::startup(const GameStartEvent& event)
 {
-    nameManager->startup(event);
     meshManager->startup(event);
     materialManager->startup(event);
     shaderManager->startup(event);
@@ -35,7 +33,6 @@ void IEScene::shutdown()
     shaderManager->shutdown();
     materialManager->shutdown();
     meshManager->shutdown();
-    nameManager->shutdown();
 }
 
 void IEScene::onUpdateFrame()

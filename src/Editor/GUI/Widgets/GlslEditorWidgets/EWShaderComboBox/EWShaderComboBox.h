@@ -4,7 +4,6 @@
 #include <QVector>
 
 class AppStartEvent;
-class IENameManager;
 class IEShaderManager;
 
 class EWShaderComboBox : public QComboBox
@@ -12,7 +11,6 @@ class EWShaderComboBox : public QComboBox
     Q_OBJECT
 
     // Does not own these pointers
-    const IENameManager* nameManager;
     const IEShaderManager* shaderManager;
 
     QVector<unsigned long long> fullIdList;
@@ -26,12 +24,13 @@ public:
     unsigned long long getSelectedId();
 
 private:
+    void initialBuild(const IEShaderManager* shaderManager);
     bool indexBoundCheck(const int index);
     bool doesExist(const unsigned long long key);
 
 private slots:
     void currentShaderChanged(int index);
-    void addShader(const unsigned long long key);
+    void addShader(const unsigned long long key, const QString& path);
     void removeShader(const unsigned long long key);
     void changeShaderKey(const unsigned long long oldKey, const unsigned long long newKey);
 

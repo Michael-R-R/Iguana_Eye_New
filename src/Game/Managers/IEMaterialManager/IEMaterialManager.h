@@ -24,7 +24,7 @@ public:
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
 
 signals:
-    void added(const unsigned long long key);
+    void added(const unsigned long long key, const QString& value);
     void removed(const unsigned long long key);
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 
@@ -37,7 +37,7 @@ public:
 
         for(auto item : resources)
         {
-            out << item->getFilePath();
+            out << item->getFilePath() << item->getType();
         }
 
         return out;
@@ -49,11 +49,15 @@ public:
         in >> size;
 
         QString filePath = "";
+        IEResource::RsrcType type;
         IEMaterial* material = nullptr;
 
         for(int i = 0; i < size; i++)
         {
-            in >> filePath;
+            in >> filePath >> type;
+
+            if(type == IEResource::RsrcType::Editor)
+                continue;
 
             material = new IEMaterial();
             if(!IESerialize::read<IEMaterial>(filePath, material))

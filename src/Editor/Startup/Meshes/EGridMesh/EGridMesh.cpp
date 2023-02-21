@@ -3,11 +3,8 @@
 EGridMesh::EGridMesh(const unsigned long long id) :
     IEMesh("", id)
 {
-    setup();
-}
+    this->setType(RsrcType::Editor);
 
-void EGridMesh::setup()
-{
     for(int row = -10; row < 10; row++)
     {
         float rowVal = row * 0.1f;

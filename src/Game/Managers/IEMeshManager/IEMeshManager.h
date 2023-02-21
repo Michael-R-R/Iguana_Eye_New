@@ -3,8 +3,8 @@
 #include <QDataStream>
 
 #include "IEManager.h"
-#include "IESerialize.h"
 #include "IEMesh.h"
+#include "IEObjImporter.h"
 
 class GameStartEvent;
 
@@ -24,7 +24,7 @@ public:
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
 
 signals:
-    void added(const unsigned long long key);
+    void added(const unsigned long long key, const QString& value);
     void removed(const unsigned long long key);
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 
@@ -37,7 +37,7 @@ public:
 
         for(auto item : resources)
         {
-            out << item->getFilePath();
+            out << item->getFilePath() << item->getId() << item->getType();
         }
 
         return out;
@@ -48,19 +48,20 @@ public:
         int size = 0;
         in >> size;
 
-        QString filePath = "";
+        QString path = "";
+        unsigned long long id = 0;
+        IEResource::RsrcType type;
         IEMesh* mesh = nullptr;
 
         for(int i = 0; i < size; i++)
         {
-            in >> filePath;
+            in >> path >> id >> type;
 
-            mesh = new IEMesh();
-            if(!IESerialize::read<IEMesh>(filePath, mesh))
-            {
-                delete mesh;
+            if(type == IEResource::RsrcType::Editor)
                 continue;
-            }
+
+            mesh = new IEMesh(path, id);
+            IEObjImporter::importMesh(path, mesh);
 
             manager.add(mesh->getId(), mesh);
         }

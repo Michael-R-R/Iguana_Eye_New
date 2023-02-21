@@ -88,6 +88,12 @@ INCLUDEPATH += $$PWD/src/Editor/Startup/Materials \
 INCLUDEPATH += $$PWD/src/Editor/Startup/Meshes \
     $$PWD/src/Editor/Startup/Meshes/EGridMesh \
 
+INCLUDEPATH += $$PWD/src/Editor/Startup/Renderables \
+    $$PWD/src/Editor/Startup/Renderables/EGridRenderable \
+
+INCLUDEPATH += $$PWD/src/Editor/Startup/Shaders \
+    $$PWD/src/Editor/Startup/Shaders/EGridShader \
+
 INCLUDEPATH += $$PWD/src/Events \
     $$PWD/src/Events/AppStartEvent \
     $$PWD/src/Events/ECSOnUpdateEvent \
@@ -133,7 +139,6 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IEManager \
     $$PWD/src/Game/Managers/IEMaterialManager \
     $$PWD/src/Game/Managers/IEMeshManager \
-    $$PWD/src/Game/Managers/IENameManager \
     $$PWD/src/Game/Managers/IERenderableManager \
     $$PWD/src/Game/Managers/IEShaderManager \
 
