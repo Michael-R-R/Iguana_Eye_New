@@ -5,6 +5,7 @@
 #include "Editor.h"
 #include "NewShaderAction.h"
 #include "OpenShaderAction.h"
+#include "SaveShaderAction.h"
 #include "SaveAsShaderAction.h"
 
 EWGlslEditorFileMenu::EWGlslEditorFileMenu(QWidget* parent) :
@@ -20,5 +21,6 @@ void EWGlslEditorFileMenu::startup(const AppStartEvent& event, EWGlslEditor* edi
 
     appendAction("New Shader", new NewShaderAction(shaderManager, inputContainer->getValue(""), this));
     appendAction("Open Shader", new OpenShaderAction(shaderManager, inputContainer->getValue(""), this));
+    appendAction("Save Shader", new SaveShaderAction(editor, shaderManager, inputContainer->getValue(""), this));
     appendAction("Save As Shader", new SaveAsShaderAction(editor, shaderManager, inputContainer->getValue(""), this));
 }

@@ -28,6 +28,8 @@ void EWShaderComboBox::startup(const AppStartEvent& event)
     connect(shaderManager, &IEShaderManager::added, this, &EWShaderComboBox::addShader);
     connect(shaderManager, &IEShaderManager::removed, this, &EWShaderComboBox::removeShader);
     connect(shaderManager, &IEShaderManager::keyChanged, this, &EWShaderComboBox::changeShaderKey);
+
+    this->setCurrentIndex(0);
 }
 
 void EWShaderComboBox::selectShader(const unsigned long long key)
@@ -92,11 +94,14 @@ void EWShaderComboBox::addShader(const unsigned long long key, const QString& pa
     if(doesExist(key))
         return;
 
+    int index = fullIdList.size();
+
     fullIdList.append(key);
 
     QString extractedName = IEFile::extractFileName(path);
 
     this->addItem(extractedName);
+    this->setCurrentIndex(index);
 }
 
 void EWShaderComboBox::removeShader(const unsigned long long key)

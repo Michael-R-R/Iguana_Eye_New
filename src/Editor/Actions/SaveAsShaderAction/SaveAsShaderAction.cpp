@@ -36,7 +36,5 @@ SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager* sh
         shader->setFragmentSrc(fSrc);
         shader->build();
         shaderManager->add(id, shader);
-
-        editor->getShaderComboBox()->selectShader(id);
     });
 }

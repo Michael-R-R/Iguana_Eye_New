@@ -16,6 +16,7 @@ INCLUDEPATH += $$PWD/src/Editor/Actions \
     $$PWD/src/Editor/Actions/SaveAsGameFileAction \
     $$PWD/src/Editor/Actions/SaveAsShaderAction \
     $$PWD/src/Editor/Actions/SaveGameFileAction \
+    $$PWD/src/Editor/Actions/SaveShaderAction \
     $$PWD/src/Editor/Actions/ToggleEditorUiAction \
     $$PWD/src/Editor/Actions/ToggleGameRenderAction \
     $$PWD/src/Editor/Actions/ToggleGameUpdateAction \
