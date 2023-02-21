@@ -3,6 +3,7 @@
 #include <QDataStream>
 
 #include "IEManager.h"
+#include "IESerialize.h"
 #include "IEMesh.h"
 
 class GameStartEvent;
@@ -30,14 +31,39 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEMeshManager& manager)
     {
+        auto& resources = manager.getResourceContainer()->getResources();
 
+        out << (int)resources.size();
+
+        for(auto item : resources)
+        {
+            out << item->getFilePath();
+        }
 
         return out;
     }
 
     friend QDataStream& operator>>(QDataStream& in, IEMeshManager& manager)
     {
+        int size = 0;
+        in >> size;
 
+        QString filePath = "";
+        IEMesh* mesh = nullptr;
+
+        for(int i = 0; i < size; i++)
+        {
+            in >> filePath;
+
+            mesh = new IEMesh();
+            if(!IESerialize::read<IEMesh>(filePath, mesh))
+            {
+                delete mesh;
+                continue;
+            }
+
+            manager.add(mesh->getId(), mesh);
+        }
 
         return in;
     }

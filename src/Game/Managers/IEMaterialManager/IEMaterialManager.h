@@ -3,6 +3,7 @@
 #include <QDataStream>
 
 #include "IEManager.h"
+#include "IESerialize.h"
 #include "IEMaterial.h"
 
 class GameStartEvent;
@@ -30,14 +31,39 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEMaterialManager& manager)
     {
+        auto& resources = manager.getResourceContainer()->getResources();
 
+        out << (int)resources.size();
+
+        for(auto item : resources)
+        {
+            out << item->getFilePath();
+        }
 
         return out;
     }
 
     friend QDataStream& operator>>(QDataStream& in, IEMaterialManager& manager)
     {
+        int size = 0;
+        in >> size;
 
+        QString filePath = "";
+        IEMaterial* material = nullptr;
+
+        for(int i = 0; i < size; i++)
+        {
+            in >> filePath;
+
+            material = new IEMaterial();
+            if(!IESerialize::read<IEMaterial>(filePath, material))
+            {
+                delete material;
+                continue;
+            }
+
+            manager.add(material->getId(), material);
+        }
 
         return in;
     }

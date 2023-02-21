@@ -39,6 +39,7 @@ private slots:
 private:
     void setupGame();
     void setupEditor();
+    void clearActions();
 
 public slots:
     void newFile();

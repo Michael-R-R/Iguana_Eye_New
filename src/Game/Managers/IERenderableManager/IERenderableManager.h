@@ -3,6 +3,7 @@
 #include <QDataStream>
 
 #include "IEManager.h"
+#include "IESerialize.h"
 #include "IERenderable.h"
 
 class GameStartEvent;
@@ -34,14 +35,39 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IERenderableManager& manager)
     {
+        auto& resources = manager.getResourceContainer()->getResources();
 
+        out << (int)resources.size();
+
+        for(auto item : resources)
+        {
+            out << item->getFilePath();
+        }
 
         return out;
     }
 
     friend QDataStream& operator>>(QDataStream& in, IERenderableManager& manager)
     {
+        int size = 0;
+        in >> size;
 
+        QString filePath = "";
+        IERenderable* renderable = nullptr;
+
+        for(int i = 0; i < size; i++)
+        {
+            in >> filePath;
+
+            renderable = new IERenderable();
+            if(!IESerialize::read<IERenderable>(filePath, renderable))
+            {
+                delete renderable;
+                continue;
+            }
+
+            manager.add(renderable->getId(), renderable);
+        }
 
         return in;
     }

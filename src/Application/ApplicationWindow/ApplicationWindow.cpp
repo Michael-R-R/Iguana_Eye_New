@@ -88,6 +88,17 @@ void ApplicationWindow::setupEditor()
     #endif
 }
 
+void ApplicationWindow::clearActions()
+{
+    auto actionList = this->actions();
+    for(auto item : actionList)
+    {
+        delete item;
+        item = nullptr;
+    }
+    this->actions().clear();
+}
+
 void ApplicationWindow::newFile()
 {
     game->shutdown();
@@ -95,6 +106,7 @@ void ApplicationWindow::newFile()
     game->startup();
 
     #ifdef EDITOR_ENABLED
+    clearActions();
     AppStartEvent startEvent(this, editor, game);
     editor->shutdown();
     editor->init();
@@ -115,6 +127,7 @@ bool ApplicationWindow::openFromFile(const QString& path)
     game->startup();
 
     #ifdef EDITOR_ENABLED
+    clearActions();
     AppStartEvent startEvent(this, editor, game);
     editor->shutdown();
     editor->init();

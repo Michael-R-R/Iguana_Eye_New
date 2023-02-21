@@ -3,6 +3,7 @@
 #include <QDataStream>
 
 #include "IEManager.h"
+#include "IESerialize.h"
 #include "IEShader.h"
 
 class GameStartEvent;
@@ -33,12 +34,39 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEShaderManager& manager)
     {
+        auto& resources = manager.getResourceContainer()->getResources();
+
+        out << (int)resources.size();
+
+        for(auto item : resources)
+        {
+            out << item->getFilePath();
+        }
 
         return out;
     }
 
     friend QDataStream& operator>>(QDataStream& in, IEShaderManager& manager)
     {
+        int size = 0;
+        in >> size;
+
+        QString filePath = "";
+        IEShader* shader = nullptr;
+
+        for(int i = 0; i < size; i++)
+        {
+            in >> filePath;
+
+            shader = new IEShader();
+            if(!IESerialize::read<IEShader>(filePath, shader))
+            {
+                delete shader;
+                continue;
+            }
+
+            manager.add(shader->getId(), shader);
+        }
 
         return in;
     }

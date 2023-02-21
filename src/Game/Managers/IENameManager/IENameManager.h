@@ -30,14 +30,34 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IENameManager& manager)
     {
+        auto& resources = manager.getResourceContainer()->getResources();
 
+        out << (int)resources.size();
+
+        QMapIterator<unsigned long long, QString*> it(resources);
+        while(it.hasNext())
+        {
+            it.next();
+            out << it.key() << *it.value();
+        }
 
         return out;
     }
 
     friend QDataStream& operator>>(QDataStream& in, IENameManager& manager)
     {
+        int size = 0;
+        in >> size;
 
+        unsigned long long id = 0;
+        QString str = "";
+
+        for(int i = 0; i < size; i++)
+        {
+            in >> id >> str;
+
+            manager.add(id, new QString(str));
+        }
 
         return in;
     }

@@ -11,7 +11,9 @@ AppStartEvent::AppStartEvent(ApplicationWindow* appWindow, Editor* editor_, IEGa
 
 AppStartEvent::~AppStartEvent()
 {
-
+    appWindow = nullptr;
+    editor = nullptr;
+    game = nullptr;
 }
 
 ApplicationWindow* AppStartEvent::getAppWindow() const

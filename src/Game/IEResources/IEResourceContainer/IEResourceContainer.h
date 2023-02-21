@@ -25,6 +25,9 @@ public:
 
     bool add(const unsigned long long key, T* resource)
     {
+        if(!resource)
+            return false;
+
         if(doesExist(key))
         {
             delete resource;
