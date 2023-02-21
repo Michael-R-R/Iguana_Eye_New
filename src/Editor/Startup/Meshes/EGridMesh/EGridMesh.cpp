@@ -3,7 +3,7 @@
 EGridMesh::EGridMesh(const unsigned long long id) :
     IEMesh("", id)
 {
-    this->setType(RsrcType::Editor);
+    this->setType(Type::Editor);
 
     for(int row = -10; row < 10; row++)
     {

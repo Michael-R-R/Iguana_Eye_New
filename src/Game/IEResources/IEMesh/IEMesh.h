@@ -41,32 +41,4 @@ public:
     void setTanVertices(const QVector<QVector3D> val) { tangentVertices = val; }
     void setBiTanVertices(const QVector<QVector3D> val) { bitangentVertices = val; }
     void setIndices(const QVector<unsigned> val) { indices = val; }
-
-    friend QDataStream& operator<<(QDataStream& out, const IEMesh& mesh)
-    {
-        out << mesh.filePath
-            << mesh.id
-            << mesh.positionVertices
-            << mesh.normalVertices
-            << mesh.textureVertices
-            << mesh.tangentVertices
-            << mesh.bitangentVertices
-            << mesh.indices;
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEMesh& mesh)
-    {
-        in >> mesh.filePath
-           >> mesh.id
-           >> mesh.positionVertices
-           >> mesh.normalVertices
-           >> mesh.textureVertices
-           >> mesh.tangentVertices
-           >> mesh.bitangentVertices
-           >> mesh.indices;
-
-        return in;
-    }
 };

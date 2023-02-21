@@ -50,18 +50,22 @@ public:
 
         QString path = "";
         unsigned long long id = 0;
-        IEResource::RsrcType type;
+        IEResource::Type type;
         IEMesh* mesh = nullptr;
 
         for(int i = 0; i < size; i++)
         {
             in >> path >> id >> type;
 
-            if(type == IEResource::RsrcType::Editor)
+            if(type == IEResource::Type::Editor)
                 continue;
 
             mesh = new IEMesh(path, id);
-            IEObjImporter::importMesh(path, mesh);
+            if(!IEObjImporter::importMesh(path, mesh))
+            {
+                delete mesh;
+                continue;
+            }
 
             manager.add(mesh->getId(), mesh);
         }

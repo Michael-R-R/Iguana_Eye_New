@@ -3,7 +3,7 @@
 EGridShader::EGridShader(const unsigned long long id) :
     IEShader("", id)
 {
-    this->setType(RsrcType::Editor);
+    this->setType(Type::Editor);
 
     vertexSource = "#version 430 core\n\n"
                    "layout (location = 0) in vec3 aPos;\n\n"

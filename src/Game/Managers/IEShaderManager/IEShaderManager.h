@@ -53,14 +53,14 @@ public:
 
         QString path = "";
         unsigned long long id = 0;
-        IEResource::RsrcType type;
+        IEResource::Type type;
         IEShader* shader = nullptr;
 
         for(int i = 0; i < size; i++)
         {
             in >> path >> id >> type;
 
-            if(type == IEResource::RsrcType::Editor)
+            if(type == IEResource::Type::Editor)
                 continue;
 
             shader = new IEShader(path, id);

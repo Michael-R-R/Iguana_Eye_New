@@ -80,6 +80,7 @@ public:
     {
         out << renderable.filePath
             << renderable.id
+            << renderable.type
             << renderable.renderType
             << renderable.drawMode
             << renderable.isRenderable
@@ -100,6 +101,7 @@ public:
     {
         in >> renderable.filePath
            >> renderable.id
+           >> renderable.type
            >> renderable.renderType
            >> renderable.drawMode
            >> renderable.isRenderable

@@ -12,7 +12,7 @@ class IEObjImporter
 {
 
 public:
-    static void importMesh(const QString &path, IEMesh* mesh);
+    static bool importMesh(const QString &path, IEMesh* mesh);
 
 private:
     static void processNode(aiNode* node, const aiScene* scene, IEMesh* mesh);

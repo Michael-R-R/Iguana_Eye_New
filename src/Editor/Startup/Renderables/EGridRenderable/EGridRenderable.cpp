@@ -10,7 +10,7 @@
 EGridRenderable::EGridRenderable(const unsigned long long id) :
     IERenderable("", id)
 {
-    this->setType(RsrcType::Editor);
+    this->setType(Type::Editor);
     this->setRenderType(RenderType::Vertex);
     this->setDrawType(GL_LINES);
 }
@@ -25,7 +25,7 @@ void EGridRenderable::setup(IEMeshManager* meshManager,
 
     unsigned long long materialId = IEHash::Compute("EGridMaterial");
     auto material = new EDefaultMaterial(materialId);
-    material->setType(RsrcType::Editor);
+    material->setType(Type::Editor);
     materialManager->add(materialId, material);
 
     unsigned long long shaderId = IEHash::Compute("EGridShader");

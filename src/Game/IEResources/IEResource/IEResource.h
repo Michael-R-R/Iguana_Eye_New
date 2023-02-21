@@ -5,7 +5,7 @@
 class IEResource
 {
 public:
-    enum class RsrcType
+    enum class Type
     {
         Editor, Game
     };
@@ -13,7 +13,7 @@ public:
 protected:
     QString filePath;
     unsigned long long id;
-    RsrcType type;
+    Type type;
 
 public:
     IEResource(const QString& path, const unsigned long long resourceId);
@@ -26,10 +26,10 @@ public:
 
     const QString& getFilePath() const { return filePath; }
     unsigned long long getId() const { return id; }
-    RsrcType getType() const { return type; }
+    Type getType() const { return type; }
 
     void setFilePath(const QString& val) { filePath = val; }
     void setId(const unsigned long long val) { id = val; }
-    void setType(const RsrcType val) { type = val; }
+    void setType(const Type val) { type = val; }
 };
 

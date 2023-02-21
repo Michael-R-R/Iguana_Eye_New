@@ -49,14 +49,14 @@ public:
         in >> size;
 
         QString filePath = "";
-        IEResource::RsrcType type;
+        IEResource::Type type;
         IEMaterial* material = nullptr;
 
         for(int i = 0; i < size; i++)
         {
             in >> filePath >> type;
 
-            if(type == IEResource::RsrcType::Editor)
+            if(type == IEResource::Type::Editor)
                 continue;
 
             material = new IEMaterial();

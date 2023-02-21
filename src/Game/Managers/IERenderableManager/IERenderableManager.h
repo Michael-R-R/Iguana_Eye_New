@@ -41,6 +41,9 @@ public:
 
         for(auto item : resources)
         {
+            if(item->getType() == IEResource::Type::Game)
+                IESerialize::write<IERenderable>(item->getFilePath(), item);
+
             out << item->getFilePath() << item->getType();
         }
 
@@ -53,14 +56,14 @@ public:
         in >> size;
 
         QString filePath = "";
-        IEResource::RsrcType type;
+        IEResource::Type type;
         IERenderable* renderable = nullptr;
 
         for(int i = 0; i < size; i++)
         {
             in >> filePath >> type;
 
-            if(type == IEResource::RsrcType::Editor)
+            if(type == IEResource::Type::Editor)
                 continue;
 
             renderable = new IERenderable();

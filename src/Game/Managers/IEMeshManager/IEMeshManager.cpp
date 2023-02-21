@@ -27,7 +27,7 @@ bool IEMeshManager::add(const unsigned long long key, IEMesh* value)
     if(!IEManager::add(key, value))
         return false;
 
-    if(value->getType() == IEResource::RsrcType::Game)
+    if(value->getType() == IEResource::Type::Game)
         emit added(key, value->getFilePath());
 
     return true;

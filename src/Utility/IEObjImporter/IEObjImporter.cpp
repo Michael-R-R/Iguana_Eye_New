@@ -4,17 +4,19 @@
 #include <QVector3D>
 #include <QVector2D>
 
-void IEObjImporter::importMesh(const QString& path, IEMesh* mesh)
+bool IEObjImporter::importMesh(const QString& path, IEMesh* mesh)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcess_Triangulate | aiProcess_FlipUVs);
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         qDebug() << "ERROR::ASSIMP::" << importer.GetErrorString();
-        return;
+        return false;
     }
 
     processNode(scene->mRootNode, scene, mesh);
+
+    return true;
 }
 
 void IEObjImporter::processNode(aiNode* node, const aiScene* scene, IEMesh* ieMesh)

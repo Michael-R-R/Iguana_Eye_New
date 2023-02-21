@@ -50,6 +50,7 @@ public:
     {
         out << material.filePath
             << material.id
+            << material.type
             << material.uniformData
             << material.objectColor
             << material.atlasTexId
@@ -65,6 +66,7 @@ public:
     {
         in >> material.filePath
            >> material.id
+           >> material.type
            >> material.uniformData
            >> material.objectColor
            >> material.atlasTexId
