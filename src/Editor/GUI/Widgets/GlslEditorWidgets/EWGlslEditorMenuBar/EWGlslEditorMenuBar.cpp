@@ -14,14 +14,14 @@ EWGlslEditorMenuBar::EWGlslEditorMenuBar(QWidget* parent) :
 
 void EWGlslEditorMenuBar::startup(const AppStartEvent& event, EWGlslEditor* editor)
 {
-    setupFileMenu(event);
+    setupFileMenu(event, editor);
     setupEditMenu(event, editor);
     setupViewMenu(event, editor);
 }
 
-void EWGlslEditorMenuBar::setupFileMenu(const AppStartEvent& event)
+void EWGlslEditorMenuBar::setupFileMenu(const AppStartEvent& event, EWGlslEditor* editor)
 {
-    fileMenu->startup(event);
+    fileMenu->startup(event, editor);
 }
 
 void EWGlslEditorMenuBar::setupEditMenu(const AppStartEvent& event, EWGlslEditor* editor)

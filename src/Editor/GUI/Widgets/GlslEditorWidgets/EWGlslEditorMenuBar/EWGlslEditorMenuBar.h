@@ -22,7 +22,7 @@ public:
     void startup(const AppStartEvent& event, EWGlslEditor* editor);
 
 private:
-    void setupFileMenu(const AppStartEvent& event);
+    void setupFileMenu(const AppStartEvent& event, EWGlslEditor* editor);
     void setupEditMenu(const AppStartEvent& event, EWGlslEditor* editor);
     void setupViewMenu(const AppStartEvent& event, EWGlslEditor* editor);
 };
