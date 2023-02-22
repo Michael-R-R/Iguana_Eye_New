@@ -3,12 +3,15 @@
 #include "IEShaderManager.h"
 #include "IEHash.h"
 #include "IEFile.h"
+#include "IEGlslImporter.h"
 #include <QFileDialog>
 
 SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager* shaderManager,
                                        InputKey* shortcut, QObject* parent) :
     MenuAction("Save As", shortcut, parent)
 {
+    this->setEnabled(false);
+
     connect(this, &SaveAsShaderAction::triggered, this, [editor, shaderManager]()
     {
         unsigned long long id = editor->getShaderComboBox()->getSelectedId();
@@ -22,19 +25,25 @@ SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager* sh
         if(path.isEmpty())
             return;
 
-        QString vSrc = editor->getVertSrcEditor()->getTextContent();
-        QString fSrc = editor->getFragSrcEditor()->getTextContent();
-        QString content = "[VERTEX]\n" + vSrc + "[FRAGMENT]\n" + fSrc;
-        IEFile::write(path, content);
+        editor->saveContentToFile(path);
 
         id = IEHash::Compute(path);
         if(shaderManager->doesExist(id))
             return;
 
         auto shader = new IEShader(path, id);
-        shader->setVertexSrc(vSrc);
-        shader->setFragmentSrc(fSrc);
+        if(!IEGlslImporter::importGlsl(path, shader))
+        {
+            delete shader;
+            return;
+        }
+
         shader->build();
         shaderManager->add(id, shader);
+    });
+
+    connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)
+    {
+        this->setEnabled((index > 0));
     });
 }

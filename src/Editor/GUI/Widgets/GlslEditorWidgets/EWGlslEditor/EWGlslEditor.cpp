@@ -1,5 +1,6 @@
 #include "EWGlslEditor.h"
 #include "AppStartEvent.h"
+#include "IEFile.h"
 
 EWGlslEditor::EWGlslEditor(QWidget* parent) :
     QWidget(parent),
@@ -27,8 +28,8 @@ void EWGlslEditor::startup(const AppStartEvent& event)
 
 void EWGlslEditor::clearAll()
 {
-    vSrcEditor->setTextContent("");
-    fSrcEditor->setTextContent("");
+    vSrcEditor->clear();
+    fSrcEditor->clear();
 }
 
 void EWGlslEditor::changeView()
@@ -45,6 +46,17 @@ void EWGlslEditor::changeView()
     }
 
     isVerticalView = !isVerticalView;
+}
+
+void EWGlslEditor::saveContentToFile(const QString& path)
+{
+    QString vSrc = vSrcEditor->getTextContent();
+    QString fSrc = fSrcEditor->getTextContent();
+    QString content = "[VERTEX]\n" + vSrc + "[FRAGMENT]\n" + fSrc;
+    IEFile::write(path, content);
+
+    vSrcEditor->setModifiedStatus(false);
+    fSrcEditor->setModifiedStatus(false);
 }
 
 void EWGlslEditor::setup()

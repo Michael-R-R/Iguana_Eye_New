@@ -18,10 +18,17 @@ public:
     EWGlslSrcEditor(const QString& title, QWidget* parent = nullptr);
     ~EWGlslSrcEditor() {}
 
-    bool isModified();
+    void clear();
+    void setModifiedStatus(const bool val);
 
 public slots:
     void setTextContent(const QString& text);
     QString getTextContent();
+
+private slots:
+    void modificationUpdated(bool val);
+
+signals:
+    void modified(const bool val);
 };
 

@@ -13,8 +13,8 @@ ApplicationWindow::ApplicationWindow(QWidget *parent) :
     ui(new Ui::ApplicationWindow),
     game(nullptr),
     editor(nullptr),
-    applicationTitle("Iguana Eye"),
-    windowTitle(applicationTitle),
+    permenentTitle("Iguana Eye"),
+    tempTitle(permenentTitle),
     savePath("")
 {
     ui->setupUi(this);
@@ -28,28 +28,28 @@ ApplicationWindow::~ApplicationWindow()
     delete ui;
 }
 
-void ApplicationWindow::addTextToTitle(const QString text)
+void ApplicationWindow::modifyTitle(const QString& text)
 {
-    windowTitle = (text.isEmpty()) ? applicationTitle : applicationTitle + " - " + text;
-    this->setWindowTitle(windowTitle);
+    tempTitle = (text.isEmpty()) ? permenentTitle : permenentTitle + " - " + text;
+    this->setWindowTitle(tempTitle);
 }
 
-void ApplicationWindow::setModifiedStatus(const bool isModified)
+void ApplicationWindow::setModified(const bool isModified)
 {
-    auto lastIndex = windowTitle.length() - 1;
+    auto lastIndex = tempTitle.length() - 1;
 
     if(isModified)
     {
-        if(windowTitle[lastIndex] != '*')
-            windowTitle.append("*");
+        if(tempTitle[lastIndex] != '*')
+            tempTitle.append("*");
     }
     else
     {
-        if(windowTitle[lastIndex] == '*')
-            windowTitle = windowTitle.mid(0, lastIndex);
+        if(tempTitle[lastIndex] == '*')
+            tempTitle = tempTitle.mid(0, lastIndex);
     }
 
-    this->setWindowTitle(windowTitle);
+    this->setWindowTitle(tempTitle);
 }
 
 void ApplicationWindow::shutdown()

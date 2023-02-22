@@ -19,6 +19,6 @@ NewGameFileAction::NewGameFileAction(ApplicationWindow* window, InputKey* shortc
 
         window->newFile();
         window->setSavePath("");
-        window->addTextToTitle("");
+        window->modifyTitle("");
     });
 }

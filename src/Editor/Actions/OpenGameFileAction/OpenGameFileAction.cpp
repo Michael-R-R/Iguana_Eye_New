@@ -42,6 +42,6 @@ void OpenGameFileAction::tryOpenPath(const QString path, ApplicationWindow* wind
         return;
 
     window->setSavePath(path);
-    window->addTextToTitle(path);
-    window->setModifiedStatus(false);
+    window->modifyTitle(path);
+    window->setModified(false);
 }

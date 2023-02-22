@@ -5,9 +5,12 @@
 
 SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager* shaderManager,
                                    InputKey* shortcut, QObject* parent) :
-    MenuAction("Save", shortcut, parent)
+    MenuAction("Save", shortcut, parent),
+    isShaderActive(false)
 {
-    connect(this, &SaveShaderAction::triggered, this, [editor, shaderManager]()
+    this->setEnabled(false);
+
+    connect(this, &SaveShaderAction::triggered, this, [this, editor, shaderManager]()
     {
         unsigned long long id = editor->getShaderComboBox()->getSelectedId();
         if(id == 0)
@@ -18,14 +21,31 @@ SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager* shader
             return;
 
         QString path = shader->getFilePath();
+        editor->saveContentToFile(path);
+
         QString vSrc = editor->getVertSrcEditor()->getTextContent();
         QString fSrc = editor->getFragSrcEditor()->getTextContent();
-        QString content = "[VERTEX]\n" + vSrc + "[FRAGMENT]\n" + fSrc;
-
-        IEFile::write(path, content);
 
         shader->setVertexSrc(vSrc);
         shader->setFragmentSrc(fSrc);
-        shader->build();
+    });
+
+    connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)
+    {
+        isShaderActive = (index > 0) ? true : false;
+        if(!isShaderActive)
+            this->setEnabled(false);
+    });
+
+    connect(editor->getVertSrcEditor(), &EWGlslSrcEditor::modified, this, [this, editor](const bool val)
+    {
+        bool status = (isShaderActive) ? val : false;
+        this->setEnabled(status);
+    });
+
+    connect(editor->getFragSrcEditor(), &EWGlslSrcEditor::modified, this, [this, editor](const bool val)
+    {
+        bool status = (isShaderActive) ? val : false;
+        this->setEnabled(status);
     });
 }

@@ -6,6 +6,8 @@ CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, IEShaderManager* 
                                          InputKey* shortcut, QObject* parent) :
     MenuAction("Compile", shortcut, parent)
 {
+    this->setEnabled(false);
+
     connect(this, &CompileShaderAction::triggered, this, [editor, manager]()
     {
         unsigned long long id = editor->getShaderComboBox()->getSelectedId();
@@ -20,5 +22,10 @@ CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, IEShaderManager* 
         shader->setFragmentSrc(fSrc);
 
         shader->build();
+    });
+
+    connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)
+    {
+        this->setEnabled((index > 0));
     });
 }

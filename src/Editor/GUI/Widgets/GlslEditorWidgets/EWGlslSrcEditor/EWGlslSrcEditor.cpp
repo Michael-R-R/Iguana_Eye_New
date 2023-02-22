@@ -9,21 +9,33 @@ EWGlslSrcEditor::EWGlslSrcEditor(const QString& title, QWidget* parent) :
 {
     vMainLayout->addWidget(titleLabel);
     vMainLayout->addWidget(textEdit);
+
+    connect(textEdit, &EWGlslPlainTextEdit::modificationChanged, this, &EWGlslSrcEditor::modificationUpdated);
 }
 
-bool EWGlslSrcEditor::isModified()
+void EWGlslSrcEditor::clear()
 {
-    return textEdit->isWindowModified();
+    textEdit->clear();
+    emit modified(false);
+}
+
+void EWGlslSrcEditor::setModifiedStatus(const bool val)
+{
+    textEdit->document()->setModified(val);
 }
 
 void EWGlslSrcEditor::setTextContent(const QString& text)
 {
     textEdit->clear();
     textEdit->setPlainText(text);
-    textEdit->setWindowModified(false);
 }
 
 QString EWGlslSrcEditor::getTextContent()
 {
     return textEdit->toPlainText();
+}
+
+void EWGlslSrcEditor::modificationUpdated(bool val)
+{
+    emit modified(val);
 }

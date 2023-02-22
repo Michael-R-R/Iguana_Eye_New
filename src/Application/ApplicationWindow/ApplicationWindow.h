@@ -20,16 +20,16 @@ class ApplicationWindow : public QMainWindow
     IEGame* game;
     Editor* editor;
 
-    const QString applicationTitle;
-    QString windowTitle;
+    const QString permenentTitle;
+    QString tempTitle;
     QString savePath;
 
 public:
     ApplicationWindow(QWidget *parent = nullptr);
     ~ApplicationWindow();
 
-    void addTextToTitle(const QString text);
-    void setModifiedStatus(const bool isModified);
+    void modifyTitle(const QString& text);
+    void setModified(const bool isModified);
 
     void shutdown();
 

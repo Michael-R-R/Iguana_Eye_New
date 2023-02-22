@@ -35,9 +35,7 @@ public:
 public slots:
     void clearAll();
     void changeView();
-
-private slots:
-
+    void saveContentToFile(const QString& path);
 
 private:
     void setup();

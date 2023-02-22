@@ -3,6 +3,9 @@
 
 EWindow::EWindow(QString title, QWidget* parent) :
     QDockWidget(title, parent),
+    permenentTitle(title),
+    tempTitle(permenentTitle),
+    hasModifications(false),
     isActive(false)
 {
     this->setAttribute(Qt::WA_QuitOnClose, false);
@@ -13,6 +16,32 @@ EWindow::EWindow(QString title, QWidget* parent) :
 EWindow::~EWindow()
 {
 
+}
+
+void EWindow::modifyTitle(const QString& text)
+{
+    tempTitle = (text.isEmpty()) ? permenentTitle : permenentTitle + " - " + text;
+    this->setWindowTitle(tempTitle);
+}
+
+void EWindow::setModified(const bool isModified)
+{
+    hasModifications = isModified;
+
+    auto lastIndex = tempTitle.length() - 1;
+
+    if(isModified)
+    {
+        if(tempTitle[lastIndex] != '*')
+            tempTitle.append("*");
+    }
+    else
+    {
+        if(tempTitle[lastIndex] == '*')
+            tempTitle = tempTitle.mid(0, lastIndex);
+    }
+
+    this->setWindowTitle(tempTitle);
 }
 
 void EWindow::toggleVisibilty(bool status)
