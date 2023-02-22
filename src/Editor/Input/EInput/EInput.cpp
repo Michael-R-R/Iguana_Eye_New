@@ -23,5 +23,6 @@ void EInput::startup()
     inputContainer->addValue("Toggle Ui", new InputKey(0, Qt::Key_Tab));
     inputContainer->addValue("Toggle Rendering", new InputKey(Qt::ALT, Qt::Key_R));
     inputContainer->addValue("Toggle Updating", new InputKey(Qt::ALT, Qt::Key_U));
+    inputContainer->addValue("File Explorer", new InputKey(Qt::CTRL | Qt::ALT, Qt::Key_F));
     inputContainer->addValue("GLSL Editor", new InputKey(Qt::CTRL | Qt::ALT, Qt::Key_G));
 }

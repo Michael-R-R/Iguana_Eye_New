@@ -38,6 +38,7 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/SubMenus \
     $$PWD/src/Editor/GUI/SubMenus/WindowSubMenu \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets \
+    $$PWD/src/Editor/GUI/Widgets/EWCollapsingHeader
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets \
     $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets/EWEditorHotkeyTable \
@@ -45,6 +46,12 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets \
     $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets/EWGameHotkeyTable \
     $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets/EWHotkeyTable \
     $$PWD/src/Editor/GUI/Widgets/ApplicationOptionsWidgets/EWSelectApplicationOption \
+
+INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport \
+    $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportInput \
+    $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportTime \
+
+INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditor \
@@ -63,14 +70,9 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBeh
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour/GlslExpressionHighlight \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour/SyntaxHighlightBehaviour \
 
-INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWCollapsingHeader \
-
-INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport \
-    $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportInput \
-    $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportTime \
-
 INCLUDEPATH += $$PWD/src/Editor/GUI/Windows \
     $$PWD/src/Editor/GUI/Windows/EApplicationOptionsWindow \
+    $$PWD/src/Editor/GUI/Windows/EFileExplorerWindow \
     $$PWD/src/Editor/GUI/Windows/EWindowManager \
     $$PWD/src/Editor/GUI/Windows/EGlslEditorWindow \
     $$PWD/src/Editor/GUI/Windows/EWindow \

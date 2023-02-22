@@ -30,5 +30,6 @@ public:
 private:
     void setupOptionsWindow(const AppStartEvent& event);
     void setupGlslEditorWindow(const AppStartEvent& event);
+    void setupFileExplorerWindow(const AppStartEvent& event);
 };
 

@@ -3,6 +3,7 @@
 #include "ApplicationWindow.h"
 #include "EApplicationOptionsWindow.h"
 #include "EGlslEditorWindow.h"
+#include "EFileExplorerWindow.h"
 
 EWindowManager::EWindowManager(QObject* parent) :
     QObject(parent),
@@ -20,6 +21,7 @@ void EWindowManager::startup(const AppStartEvent& event)
 {
     setupOptionsWindow(event);
     setupGlslEditorWindow(event);
+    setupFileExplorerWindow(event);
 }
 
 void EWindowManager::showAll()
@@ -102,4 +104,16 @@ void EWindowManager::setupGlslEditorWindow(const AppStartEvent& event)
     this->appendWindow("GLSL Editor", glslEditorWindow);
 
     applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, glslEditorWindow);
+}
+
+void EWindowManager::setupFileExplorerWindow(const AppStartEvent& event)
+{
+    auto applicationWindow = event.getAppWindow();
+
+    auto fileExpWindow = new EFileExplorerWindow(applicationWindow);
+
+    this->appendWindow("File Explorer", fileExpWindow);
+
+    applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, fileExpWindow);
+
 }

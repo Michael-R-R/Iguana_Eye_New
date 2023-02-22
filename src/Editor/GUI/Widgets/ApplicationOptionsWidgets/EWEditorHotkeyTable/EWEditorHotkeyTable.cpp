@@ -29,6 +29,7 @@ void EWEditorHotkeyTable::setupTables(InputContainer* inputContainer)
 
     QMap<QString, InputKey*> windowKeys;
     windowKeys["Options"] = inputContainer->getValue("Options");
+    windowKeys["File Explorer"] = inputContainer->getValue("File Explorer");
     windowKeys["GLSL Editor"] = inputContainer->getValue("GLSL Editor");
     this->addTable("Window", this->createTable(inputContainer, windowKeys));
 }
