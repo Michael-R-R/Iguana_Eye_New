@@ -28,6 +28,7 @@ void EWGlslEditor::startup(const AppStartEvent& event)
 
 void EWGlslEditor::clearAll()
 {
+    shaderComboBox->setCurrentIndex(0);
     vSrcEditor->clear();
     fSrcEditor->clear();
 }

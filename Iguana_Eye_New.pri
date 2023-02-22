@@ -27,9 +27,9 @@ INCLUDEPATH += $$PWD/src/Editor/GUI \
     $$PWD/src/Editor/GUI/MainMenuBar \
     $$PWD/src/Editor/GUI/StatusBar \
 
-INCLUDEPATH += $$PWD/src/Editor/Menus \
-    $$PWD/src/Editor/Menus/FileSubMenu \
-    $$PWD/src/Editor/Menus/GameSubMenu \
+INCLUDEPATH += $$PWD/src/Editor/GUI/ContextMenus \
+    $$PWD/src/Editor/GUI/ContextMenus/ContextMenu \
+    $$PWD/src/Editor/GUI/ContextMenus/ShaderComboBoxContextMenu \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/SubMenus \
     $$PWD/src/Editor/GUI/SubMenus/FileSubMenu \

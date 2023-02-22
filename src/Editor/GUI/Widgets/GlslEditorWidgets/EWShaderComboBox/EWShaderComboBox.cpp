@@ -2,21 +2,35 @@
 #include "AppStartEvent.h"
 #include "IEGame.h"
 #include "IEFile.h"
+#include <QAbstractItemView>
 
 EWShaderComboBox::EWShaderComboBox(QWidget* parent) :
     QComboBox(parent),
     shaderManager(nullptr),
-    fullIdList()
+    fullIdList(),
+    contextMenu(new ShaderComboBoxContextMenu(this))
 {
+    this->view()->viewport()->installEventFilter(this);
+    this->view()->setContextMenuPolicy(Qt::CustomContextMenu);
     this->addItem("");
     fullIdList.append(0);
 
+    connect(this->view(), &QAbstractItemView::customContextMenuRequested, this, &EWShaderComboBox::showCustomContextMenu);
     connect(this, &EWShaderComboBox::currentIndexChanged, this, &EWShaderComboBox::currentShaderChanged);
 }
 
 EWShaderComboBox::~EWShaderComboBox()
 {
     shaderManager = nullptr;
+}
+
+bool EWShaderComboBox::eventFilter(QObject*, QEvent* event)
+{
+    if(event->type() == QEvent::MouseButtonRelease)
+        if(static_cast<QMouseEvent*>(event)->button() == Qt::RightButton)
+            return true;
+
+    return false;
 }
 
 void EWShaderComboBox::startup(const AppStartEvent& event)
@@ -30,6 +44,8 @@ void EWShaderComboBox::startup(const AppStartEvent& event)
     connect(shaderManager, &IEShaderManager::keyChanged, this, &EWShaderComboBox::changeShaderKey);
 
     this->setCurrentIndex(0);
+
+    contextMenu->startup(shaderManager);
 }
 
 void EWShaderComboBox::selectShader(const unsigned long long key)
@@ -132,4 +148,19 @@ void EWShaderComboBox::changeShaderKey(const unsigned long long oldKey, const un
     QString extractedName = IEFile::extractFileName(shader->getFilePath());
 
     this->setItemText(index, extractedName);
+}
+
+void EWShaderComboBox::showCustomContextMenu(const QPoint& pos)
+{
+    QModelIndex modelIndex = this->view()->indexAt(pos);
+    if(!modelIndex.isValid())
+        return;
+
+    int index = modelIndex.row();
+    if(!indexBoundCheck(index))
+        return;
+
+    unsigned long long id = fullIdList[index];
+    contextMenu->setSelectedId(id);
+    contextMenu->exec(this->view()->mapToGlobal(pos));
 }

@@ -3,6 +3,8 @@
 #include <QComboBox>
 #include <QVector>
 
+#include "ShaderComboBoxContextMenu.h"
+
 class AppStartEvent;
 class IEShaderManager;
 
@@ -10,15 +12,18 @@ class EWShaderComboBox : public QComboBox
 {
     Q_OBJECT
 
-    // Does not own these pointers
-    const IEShaderManager* shaderManager;
+    // Does not own this pointers
+    IEShaderManager* shaderManager;
 
     QVector<unsigned long long> fullIdList;
+
+    ShaderComboBoxContextMenu* contextMenu;
 
 public:
     EWShaderComboBox(QWidget* parent = nullptr);
     ~EWShaderComboBox();
 
+    bool eventFilter(QObject* watched, QEvent* event) override;
     void startup(const AppStartEvent& event);
     void selectShader(const unsigned long long key);
     unsigned long long getSelectedId();
@@ -33,6 +38,7 @@ private slots:
     void addShader(const unsigned long long key, const QString& path);
     void removeShader(const unsigned long long key);
     void changeShaderKey(const unsigned long long oldKey, const unsigned long long newKey);
+    void showCustomContextMenu(const QPoint& pos);
 
 signals:
     void cleared();
