@@ -2,21 +2,27 @@
 
 EWFileExplorer::EWFileExplorer(QWidget* parent) :
     QWidget(parent),
-    rootDirStr("./resources/root/Content"),
     vMainLayout(new QVBoxLayout(this)),
     hSplitter(new QSplitter(this)),
-    dirHistoryBar(new EWDirectoryHistoryBar(rootDirStr, this))
+    rootDir(QDir::currentPath() + "/resources/root"),
+    fileModel(new QFileSystemModel(this)),
+    treeView(new EWFileExplorerTreeView(fileModel, this)),
+    dirHistoryBar(new EWDirectoryHistoryBar(rootDir.filePath() + "/Content", this))
 {
     setup();
 }
 
 void EWFileExplorer::startup()
 {
-    dirHistoryBar->addDirectory(rootDirStr);
+    QModelIndex rootIndex = fileModel->setRootPath(rootDir.filePath());
+    treeView->startup(rootIndex);
+
+    dirHistoryBar->startup(treeView);
 }
 
 void EWFileExplorer::setup()
 {
     vMainLayout->addWidget(dirHistoryBar);
     vMainLayout->addWidget(hSplitter);
+    hSplitter->addWidget(treeView);
 }

@@ -3,7 +3,9 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QSplitter>
+#include <QFileSystemModel>
 
+#include "EWFileExplorerTreeView.h"
 #include "EWDirectoryHistoryBar.h"
 
 class EWFileExplorer : public QWidget
@@ -11,7 +13,9 @@ class EWFileExplorer : public QWidget
     QVBoxLayout* vMainLayout;
     QSplitter* hSplitter;
 
-    QString rootDirStr;
+    QFileInfo rootDir;
+    QFileSystemModel* fileModel;
+    EWFileExplorerTreeView* treeView;
     EWDirectoryHistoryBar* dirHistoryBar;
 
 public:
@@ -20,6 +24,7 @@ public:
 
     void startup();
 
+    EWFileExplorerTreeView* getTreeView() const { return treeView; }
     EWDirectoryHistoryBar* getDirHistoryBar() const  { return dirHistoryBar; }
 
 private:
