@@ -111,9 +111,10 @@ void EWindowManager::setupFileExplorerWindow(const AppStartEvent& event)
     auto applicationWindow = event.getAppWindow();
 
     auto fileExpWindow = new EFileExplorerWindow(applicationWindow);
+    fileExpWindow->startup();
 
     this->appendWindow("File Explorer", fileExpWindow);
 
-    applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, fileExpWindow);
+    applicationWindow->addDockWidget(Qt::BottomDockWidgetArea, fileExpWindow);
 
 }

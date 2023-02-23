@@ -52,6 +52,9 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportTime \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets \
+    $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWDirectoryButton \
+    $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWDirectoryHistoryBar \
+    $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWFileExplorer \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditor \

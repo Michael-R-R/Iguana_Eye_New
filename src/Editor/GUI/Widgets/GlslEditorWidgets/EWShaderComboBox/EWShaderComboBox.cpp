@@ -114,7 +114,7 @@ void EWShaderComboBox::addShader(const unsigned long long key, const QString& pa
 
     fullIdList.append(key);
 
-    QString extractedName = IEFile::extractFileName(path);
+    QString extractedName = IEFile::extractName(path);
 
     this->addItem(extractedName);
     this->setCurrentIndex(index);
@@ -145,7 +145,7 @@ void EWShaderComboBox::changeShaderKey(const unsigned long long oldKey, const un
     fullIdList[index] = newKey;
 
     auto shader = shaderManager->getValue(newKey);
-    QString extractedName = IEFile::extractFileName(shader->getFilePath());
+    QString extractedName = IEFile::extractName(shader->getFilePath());
 
     this->setItemText(index, extractedName);
 }

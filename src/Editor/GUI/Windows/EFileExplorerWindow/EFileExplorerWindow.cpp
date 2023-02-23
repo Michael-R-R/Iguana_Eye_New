@@ -1,7 +1,13 @@
 #include "EFileExplorerWindow.h"
 
 EFileExplorerWindow::EFileExplorerWindow(QWidget* parent) :
-    EWindow("File Explorer", parent)
+    EWindow("File Explorer", parent),
+    fileExplWidget(new EWFileExplorer(this))
 {
+    this->setWidget(fileExplWidget);
+}
 
+void EFileExplorerWindow::startup()
+{
+    fileExplWidget->startup();
 }

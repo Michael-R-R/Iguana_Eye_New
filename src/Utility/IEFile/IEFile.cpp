@@ -31,7 +31,7 @@ bool IEFile::read(const QString& path, QString* inData)
     return true;
 }
 
-QString IEFile::extractFileName(const QString& path)
+QString IEFile::extractName(const QString& path)
 {
     int index1 = path.lastIndexOf("/") + 1;
     int index2 = path.lastIndexOf("\\") + 1;

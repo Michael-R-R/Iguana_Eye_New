@@ -9,6 +9,6 @@ class IEFile
 public:
     static bool write(const QString& path, const QString& outData);
     static bool read(const QString& path, QString* inData);
-    static QString extractFileName(const QString& path);
+    static QString extractName(const QString& path);
 };
 
