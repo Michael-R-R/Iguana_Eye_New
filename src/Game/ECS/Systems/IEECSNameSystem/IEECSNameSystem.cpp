@@ -25,7 +25,6 @@ int IEECSNameSystem::attach(const IEEntity entity)
     nameMap[hash] = name;
 
     int index = entityMap.size();
-
     entityMap[entity] = index;
 
     data.entityList.append(entity);
@@ -44,7 +43,7 @@ bool IEECSNameSystem::detach(const IEEntity entity)
     const int indexToRemove = entityMap[entity];
 
     this->removeName(data.nameKeyList[indexToRemove]);
-    this->removeTagEntity(data.tagKeyList[indexToRemove], data.tagIndexList[indexToRemove]);
+    this->clearEntityTag(indexToRemove);
 
     const int lastIndex = entityMap.size() - 1;
     const IEEntity lastEntity = data.entityList[lastIndex];
@@ -70,7 +69,7 @@ void IEECSNameSystem::onUpdateFrame(ECSOnUpdateEvent*)
     // Not used
 }
 
-void IEECSNameSystem::addTagName(const QString& name)
+void IEECSNameSystem::addNameTag(const QString& name)
 {
     unsigned long long hash = IEHash::Compute(name);
     if(tagNameMap.contains(hash))
@@ -80,7 +79,7 @@ void IEECSNameSystem::addTagName(const QString& name)
     tagEntityMap[hash] = QVector<IEEntity>();
 }
 
-void IEECSNameSystem::removeTagName(const QString& name)
+void IEECSNameSystem::clearNameTag(const QString& name)
 {
     unsigned long long hash = IEHash::Compute(name);
     if(!tagNameMap.contains(hash))
@@ -104,13 +103,13 @@ void IEECSNameSystem::clearEntityTag(const int index)
 
     const unsigned long long key = data.tagKeyList[index];
     const int tagIndex = data.tagIndexList[index];
-    this->removeTagEntity(key, tagIndex);
+    this->removeEntityTag(key, tagIndex);
 
     data.tagKeyList[index] = 0;
     data.tagIndexList[index] = -1;
 }
 
-QVector<IEEntity> IEECSNameSystem::getTagEntityList(const QString& name) const
+QVector<IEEntity> IEECSNameSystem::getEntityTagList(const QString& name) const
 {
     const unsigned long long hash = IEHash::Compute(name);
     if(!tagEntityMap.contains(hash))
@@ -168,7 +167,7 @@ void IEECSNameSystem::setName(const int index, const QString& val)
     QString name = "";
     std::tie(hash, name) = this->hashString(val);
 
-    nameMap.remove(data.nameKeyList[index]);
+    this->removeName(data.nameKeyList[index]);
 
     data.nameKeyList[index] = hash;
     nameMap[hash] = name;
@@ -230,12 +229,12 @@ void IEECSNameSystem::removeName(const unsigned long long key)
     nameMap.remove(key);
 }
 
-void IEECSNameSystem::removeTagName(const unsigned long long key)
+void IEECSNameSystem::removeNameTag(const unsigned long long key)
 {
     tagNameMap.remove(key);
 }
 
-void IEECSNameSystem::removeTagEntity(const unsigned long long key, const int tagIndex)
+void IEECSNameSystem::removeEntityTag(const unsigned long long key, const int tagIndex)
 {
     if(key == 0)
         return;

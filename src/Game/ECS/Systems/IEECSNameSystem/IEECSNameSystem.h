@@ -44,10 +44,10 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
-    void addTagName(const QString& name);
-    void removeTagName(const QString& name);
+    void addNameTag(const QString& name);
+    void clearNameTag(const QString& name);
     void clearEntityTag(const int index);
-    QVector<IEEntity> getTagEntityList(const QString& name) const;
+    QVector<IEEntity> getEntityTagList(const QString& name) const;
 
     unsigned long long getNameKey(const int index) const;
     unsigned long long getTagKey(const int index) const;
@@ -61,8 +61,8 @@ public:
 private:
     std::tuple<unsigned long long, QString> hashString(const QString& value);
     void removeName(const unsigned long long key);
-    void removeTagName(const unsigned long long key);
-    void removeTagEntity(const unsigned long long key, const int indexToRemove);
+    void removeNameTag(const unsigned long long key);
+    void removeEntityTag(const unsigned long long key, const int indexToRemove);
 
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEECSNameSystem& system)
