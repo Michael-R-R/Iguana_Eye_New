@@ -9,6 +9,7 @@
 #include "EWDirectoryButton.h"
 
 class EWFileExplorerTreeView;
+class EWFileExplorerListView;
 
 class EWDirectoryHistoryBar : public QWidget
 {
@@ -26,12 +27,12 @@ public:
     EWDirectoryHistoryBar(const QString& root, QWidget* parent = nullptr);
     ~EWDirectoryHistoryBar() {}
 
-    void startup(EWFileExplorerTreeView* treeView);
+    void startup(EWFileExplorerTreeView* treeView, EWFileExplorerListView* listView);
     void addDirectory(const QString& path);
 
 private slots:
-    void updateHistoryBarFromIndex(const int index);
-    void updateHistoryBarFromPath(const QString& path);
+    void onHistoryButtonClicked(const int index);
+    void buildHistoryBarFromPath(const QString& path);
 
 private:
     void clearHistory();

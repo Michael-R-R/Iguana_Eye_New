@@ -9,6 +9,7 @@ EWFileExplorerTreeView::EWFileExplorerTreeView(QFileSystemModel* model, QWidget*
     this->setExpandsOnDoubleClick(false);
     this->setSelectionMode(QAbstractItemView::ExtendedSelection);
     this->setContextMenuPolicy(Qt::CustomContextMenu);
+    this->setUniformRowHeights(true);
     this->setModel(fileModel);
     this->setHeaderHidden(true);
     for(int i = 1; i < fileModel->columnCount(); i++)

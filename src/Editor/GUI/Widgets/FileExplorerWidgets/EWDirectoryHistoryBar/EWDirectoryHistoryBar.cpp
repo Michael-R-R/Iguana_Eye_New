@@ -1,5 +1,6 @@
 #include "EWDirectoryHistoryBar.h"
 #include "EWFileExplorerTreeView.h"
+#include "EWFileExplorerListView.h"
 #include "IEFile.h"
 
 EWDirectoryHistoryBar::EWDirectoryHistoryBar(const QString& root, QWidget* parent) :
@@ -25,28 +26,31 @@ EWDirectoryHistoryBar::EWDirectoryHistoryBar(const QString& root, QWidget* paren
     this->addDirectory(rootDir);
 }
 
-void EWDirectoryHistoryBar::startup(EWFileExplorerTreeView* treeView)
+void EWDirectoryHistoryBar::startup(EWFileExplorerTreeView* treeView, EWFileExplorerListView* listView)
 {
-    connect(treeView, &EWFileExplorerTreeView::folderDoubleClicked, this, &EWDirectoryHistoryBar::updateHistoryBarFromPath);
+    connect(treeView, &EWFileExplorerTreeView::folderDoubleClicked, this, &EWDirectoryHistoryBar::buildHistoryBarFromPath);
+    connect(listView, &EWFileExplorerListView::folderDoubleClicked, this, &EWDirectoryHistoryBar::addDirectory);
 }
 
 void EWDirectoryHistoryBar::addDirectory(const QString& path)
 {
     if(path.isEmpty())
         return;
+    if(doesPathExist(path))
+        return;
 
     QString name = IEFile::extractName(path);
     int index = historyList.size();
 
     auto button = new EWDirectoryButton(name, path, index, this);
-    connect(button, &EWDirectoryButton::historyButtonClicked, this, &EWDirectoryHistoryBar::updateHistoryBarFromIndex);
+    connect(button, &EWDirectoryButton::historyButtonClicked, this, &EWDirectoryHistoryBar::onHistoryButtonClicked);
 
     historyList.append(button);
 
     hLayout->insertWidget(historyList.size() - 1, button);
 }
 
-void EWDirectoryHistoryBar::updateHistoryBarFromIndex(const int index)
+void EWDirectoryHistoryBar::onHistoryButtonClicked(const int index)
 {
     for(int i = index + 1; i < historyList.size(); i++)
     {
@@ -60,7 +64,7 @@ void EWDirectoryHistoryBar::updateHistoryBarFromIndex(const int index)
     emit directoryUpdated(historyList[index]->getDirPath());
 }
 
-void EWDirectoryHistoryBar::updateHistoryBarFromPath(const QString& path)
+void EWDirectoryHistoryBar::buildHistoryBarFromPath(const QString& path)
 {
     if(doesPathExist(path))
         return;
