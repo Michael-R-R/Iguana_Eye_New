@@ -26,7 +26,7 @@ const Editor* AppStartEvent::getEditor() const
     return editor;
 }
 
-const IEGame* AppStartEvent::getGame() const
+IEGame* AppStartEvent::getGame() const
 {
     return game;
 }
