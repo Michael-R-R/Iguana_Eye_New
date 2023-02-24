@@ -2,4 +2,9 @@
     <qresource prefix="/ApplicationWindow">
         <file>ApplicationWindow/IguanaEye.png</file>
     </qresource>
+    <qresource prefix="/FileExplorer">
+        <file>FileExplorer/Document_default.png</file>
+        <file>FileExplorer/Document_glsl.png</file>
+        <file>FileExplorer/Folder.png</file>
+    </qresource>
 </RCC>

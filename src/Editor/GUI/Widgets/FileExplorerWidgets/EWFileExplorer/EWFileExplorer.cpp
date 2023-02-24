@@ -6,6 +6,7 @@ EWFileExplorer::EWFileExplorer(QWidget* parent) :
     hSplitter(new QSplitter(this)),
     rootDir(QDir::currentPath() + "/resources/root"),
     fileModel(new QFileSystemModel(this)),
+    fileIconProvider(new EWFileExplorerIconProvider()),
     treeView(new EWFileExplorerTreeView(fileModel, this)),
     listView(new EWFileExplorerListView(fileModel, this)),
     dirHistoryBar(new EWDirectoryHistoryBar(rootDir.filePath() + "/Content", this))
@@ -13,8 +14,14 @@ EWFileExplorer::EWFileExplorer(QWidget* parent) :
     setup();
 }
 
+EWFileExplorer::~EWFileExplorer()
+{
+    delete fileIconProvider;
+}
+
 void EWFileExplorer::startup()
 {
+    fileModel->setIconProvider(fileIconProvider);
     QModelIndex rootIndex = fileModel->setRootPath(rootDir.filePath());
 
     treeView->startup(rootIndex);

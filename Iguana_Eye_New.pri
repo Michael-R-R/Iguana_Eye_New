@@ -55,6 +55,7 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets \
     $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWDirectoryButton \
     $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWDirectoryHistoryBar \
     $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWFileExplorer \
+    $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWFileExplorerIconProvider \
     $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWFileExplorerListView \
     $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWFileExplorerTreeView \
     $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWFileExplorerView \

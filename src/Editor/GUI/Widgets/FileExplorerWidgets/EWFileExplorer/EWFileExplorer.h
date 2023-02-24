@@ -5,6 +5,7 @@
 #include <QSplitter>
 #include <QFileSystemModel>
 
+#include "EWFileExplorerIconProvider.h"
 #include "EWFileExplorerTreeView.h"
 #include "EWFileExplorerListView.h"
 #include "EWDirectoryHistoryBar.h"
@@ -16,13 +17,14 @@ class EWFileExplorer : public QWidget
 
     QFileInfo rootDir;
     QFileSystemModel* fileModel;
+    EWFileExplorerIconProvider* fileIconProvider;
     EWFileExplorerTreeView* treeView;
     EWFileExplorerListView* listView;
     EWDirectoryHistoryBar* dirHistoryBar;
 
 public:
     EWFileExplorer(QWidget* parent = nullptr);
-    ~EWFileExplorer() {}
+    ~EWFileExplorer();
 
     void startup();
 
