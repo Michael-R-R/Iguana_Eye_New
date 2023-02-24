@@ -19,7 +19,7 @@ IEECS::~IEECS()
 
 void IEECS::startup(const GameStartEvent&)
 {
-
+    onUpdateEvent = new ECSOnUpdateEvent(this);
 }
 
 void IEECS::shutdown()
@@ -39,6 +39,7 @@ IEEntity IEECS::create()
 {
     IEEntity entity = entityManager->create();
 
+    this->attachComponent(entity, IEComponentType::Name);
     this->attachComponent(entity, IEComponentType::Hierarchy);
     this->attachComponent(entity, IEComponentType::Transform);
 
@@ -120,6 +121,7 @@ void IEECS::clearSystems()
 
 void IEECS::initSystems()
 {
+    auto nameSystem = new IEECSNameSystem();
     auto hierarchySystem = new IEECSHierarchySystem();
     auto inputSystem = new IEECSInputSystem();
     auto transformSystem = new IEECSTransformSystem();
@@ -128,6 +130,7 @@ void IEECS::initSystems()
     auto shaderSystem = new IEECSShaderSystem();
     auto renderableSystem = new IEECSRenderableSystem();
 
+    systems[IEComponentType::Name] = nameSystem;
     systems[IEComponentType::Hierarchy] = hierarchySystem;
     systems[IEComponentType::Input] = inputSystem;
     systems[IEComponentType::Transform] = transformSystem;
@@ -135,8 +138,4 @@ void IEECS::initSystems()
     systems[IEComponentType::Material] = materialSystem;
     systems[IEComponentType::Shader] = shaderSystem;
     systems[IEComponentType::Renderable] = renderableSystem;
-
-    onUpdateEvent = new ECSOnUpdateEvent(hierarchySystem, inputSystem, transformSystem,
-                                         meshSystem, materialSystem, shaderSystem,
-                                         renderableSystem);
 }

@@ -1,4 +1,6 @@
 #include "ECSOnUpdateEvent.h"
+#include "IEECS.h"
+#include "IEECSNameSystem.h"
 #include "IEECSHierarchySystem.h"
 #include "IEECSInputSystem.h"
 #include "IEECSTransformSystem.h"
@@ -7,14 +9,19 @@
 #include "IEECSShaderSystem.h"
 #include "IEECSRenderableSystem.h"
 
-ECSOnUpdateEvent::ECSOnUpdateEvent(IEECSHierarchySystem* hierarchy_, IEECSInputSystem* input_,
-                                   IEECSTransformSystem* transform_, IEECSMeshSystem* mesh_,
-                                   IEECSMaterialSystem* material_, IEECSShaderSystem* shader_,
-                                   IEECSRenderableSystem* renderable_) :
-    hierarchy(hierarchy_), input(input_), transform(transform_), mesh(mesh_),
-    material(material_), shader(shader_), renderable(renderable_)
+ECSOnUpdateEvent::ECSOnUpdateEvent(IEECS* ecs) :
+    name(nullptr), hierarchy(nullptr), input(nullptr),
+    transform(nullptr), mesh(nullptr), material(nullptr),
+    shader(nullptr), renderable(nullptr)
 {
-
+    name = ecs->getComponent<IEECSNameSystem>(IEComponentType::Name);
+    hierarchy = ecs->getComponent<IEECSHierarchySystem>(IEComponentType::Hierarchy);
+    input = ecs->getComponent<IEECSInputSystem>(IEComponentType::Input);
+    transform = ecs->getComponent<IEECSTransformSystem>(IEComponentType::Transform);
+    mesh = ecs->getComponent<IEECSMeshSystem>(IEComponentType::Mesh);
+    material = ecs->getComponent<IEECSMaterialSystem>(IEComponentType::Material);
+    shader = ecs->getComponent<IEECSShaderSystem>(IEComponentType::Shader);
+    renderable = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
 }
 
 ECSOnUpdateEvent::~ECSOnUpdateEvent()
@@ -22,37 +29,42 @@ ECSOnUpdateEvent::~ECSOnUpdateEvent()
 
 }
 
-const IEECSHierarchySystem* ECSOnUpdateEvent::getHierarchy() const
+IEECSNameSystem* ECSOnUpdateEvent::getName() const
+{
+    return name;
+}
+
+IEECSHierarchySystem* ECSOnUpdateEvent::getHierarchy() const
 {
     return hierarchy;
 }
 
-const IEECSInputSystem* ECSOnUpdateEvent::getInput() const
+IEECSInputSystem* ECSOnUpdateEvent::getInput() const
 {
     return input;
 }
 
-const IEECSTransformSystem* ECSOnUpdateEvent::getTransform() const
+IEECSTransformSystem* ECSOnUpdateEvent::getTransform() const
 {
     return transform;
 }
 
-const IEECSMeshSystem* ECSOnUpdateEvent::getMesh() const
+IEECSMeshSystem* ECSOnUpdateEvent::getMesh() const
 {
     return mesh;
 }
 
-const IEECSMaterialSystem* ECSOnUpdateEvent::getMaterial() const
+IEECSMaterialSystem* ECSOnUpdateEvent::getMaterial() const
 {
     return material;
 }
 
-const IEECSShaderSystem* ECSOnUpdateEvent::getShader() const
+IEECSShaderSystem* ECSOnUpdateEvent::getShader() const
 {
     return shader;
 }
 
-const IEECSRenderableSystem* ECSOnUpdateEvent::getRenderable() const
+IEECSRenderableSystem* ECSOnUpdateEvent::getRenderable() const
 {
     return renderable;
 }

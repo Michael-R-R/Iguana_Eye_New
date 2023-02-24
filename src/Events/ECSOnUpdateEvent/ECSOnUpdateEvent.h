@@ -1,5 +1,7 @@
 #pragma once
 
+class IEECS;
+class IEECSNameSystem;
 class IEECSHierarchySystem;
 class IEECSInputSystem;
 class IEECSTransformSystem;
@@ -11,27 +13,26 @@ class IEECSRenderableSystem;
 class ECSOnUpdateEvent
 {
     // Does not own these pointers
-    const IEECSHierarchySystem* hierarchy;
-    const IEECSInputSystem* input;
-    const IEECSTransformSystem* transform;
-    const IEECSMeshSystem* mesh;
-    const IEECSMaterialSystem* material;
-    const IEECSShaderSystem* shader;
-    const IEECSRenderableSystem* renderable;
+    IEECSNameSystem* name;
+    IEECSHierarchySystem* hierarchy;
+    IEECSInputSystem* input;
+    IEECSTransformSystem* transform;
+    IEECSMeshSystem* mesh;
+    IEECSMaterialSystem* material;
+    IEECSShaderSystem* shader;
+    IEECSRenderableSystem* renderable;
 
 public:
-    ECSOnUpdateEvent(IEECSHierarchySystem* hierarchy_, IEECSInputSystem* input_,
-                     IEECSTransformSystem* transform_, IEECSMeshSystem* mesh_,
-                     IEECSMaterialSystem* material_, IEECSShaderSystem* shader_,
-                     IEECSRenderableSystem* renderable_);
+    ECSOnUpdateEvent(IEECS* ecs);
     ~ECSOnUpdateEvent();
 
-    const IEECSHierarchySystem* getHierarchy() const;
-    const IEECSInputSystem* getInput() const;
-    const IEECSTransformSystem* getTransform() const;
-    const IEECSMeshSystem* getMesh() const;
-    const IEECSMaterialSystem* getMaterial() const;
-    const IEECSShaderSystem* getShader() const;
-    const IEECSRenderableSystem* getRenderable() const;
+    IEECSNameSystem* getName() const;
+    IEECSHierarchySystem* getHierarchy() const;
+    IEECSInputSystem* getInput() const;
+    IEECSTransformSystem* getTransform() const;
+    IEECSMeshSystem* getMesh() const;
+    IEECSMaterialSystem* getMaterial() const;
+    IEECSShaderSystem* getShader() const;
+    IEECSRenderableSystem* getRenderable() const;
 };
 

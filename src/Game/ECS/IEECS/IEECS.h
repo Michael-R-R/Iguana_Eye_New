@@ -8,6 +8,7 @@
 #include "IEEntity.h"
 #include "IEEntityManager.h"
 #include "IEECSSystem.h"
+#include "IEECSNameSystem.h"
 #include "IEECSHierarchySystem.h"
 #include "IEECSInputSystem.h"
 #include "IEECSTransformSystem.h"
@@ -77,6 +78,7 @@ public:
 
             switch(it.key())
             {
+            case IEComponentType::Name: { out << *static_cast<IEECSNameSystem*>(it.value()); break; }
             case IEComponentType::Input: { out << *static_cast<IEECSInputSystem*>(it.value()); break; }
             case IEComponentType::Transform: { out << *static_cast<IEECSTransformSystem*>(it.value()); break; }
             case IEComponentType::Camera: { break; }
@@ -107,6 +109,7 @@ public:
 
             switch(type)
             {
+            case IEComponentType::Name: { in >> *static_cast<IEECSNameSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Input: { in >> *static_cast<IEECSInputSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Transform: { in >> *static_cast<IEECSTransformSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Camera: { break; }

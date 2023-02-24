@@ -18,12 +18,18 @@ int IEECSNameSystem::attach(const IEEntity entity)
     if(doesExist(entity))
         return -1;
 
+    // Hash a default name
+    unsigned long long hash = 0;
+    QString name = "";
+    std::tie(hash, name) = this->hashString("Default");
+    nameMap[hash] = name;
+
     int index = entityMap.size();
 
     entityMap[entity] = index;
 
     data.entityList.append(entity);
-    data.nameKeyList.append(0);
+    data.nameKeyList.append(hash);
     data.tagKeyList.append(0);
     data.tagIndexList.append(-1);
 
@@ -104,7 +110,7 @@ void IEECSNameSystem::clearEntityTag(const int index)
     data.tagIndexList[index] = -1;
 }
 
-QVector<IEEntity> IEECSNameSystem::getTagEntityList(const QString& name)
+QVector<IEEntity> IEECSNameSystem::getTagEntityList(const QString& name) const
 {
     const unsigned long long hash = IEHash::Compute(name);
     if(!tagEntityMap.contains(hash))
@@ -136,6 +142,7 @@ int IEECSNameSystem::getTagIndex(const int index) const
 
     return data.tagIndexList[index];
 }
+
 QString IEECSNameSystem::getName(const int index) const
 {
     if(!indexBoundCheck(index))
@@ -161,8 +168,9 @@ void IEECSNameSystem::setName(const int index, const QString& val)
     QString name = "";
     std::tie(hash, name) = this->hashString(val);
 
-    data.nameKeyList[index] = hash;
+    nameMap.remove(data.nameKeyList[index]);
 
+    data.nameKeyList[index] = hash;
     nameMap[hash] = name;
 }
 
@@ -177,8 +185,10 @@ void IEECSNameSystem::setTag(const int index, const QString& val)
         return;
     }
 
-    unsigned long long hash = IEHash::Compute(val);
+    // Clear existing tag
+    this->clearEntityTag(index);
 
+    unsigned long long hash = IEHash::Compute(val);
     if(tagNameMap.contains(hash))
     {
         // Add entity to existing tag map
