@@ -1,6 +1,5 @@
 #include "Editor.h"
 #include "AppStartEvent.h"
-#include "IEGame.h"
 #include "EActionStartup.h"
 #include "ESceneStartup.h"
 
@@ -30,7 +29,7 @@ void Editor::startup(const AppStartEvent& event)
     // *** DO NOT REORDER *** //
     input->startup();
     ui->startup(event);
-    glViewportDropZone->installEventFilterOnHost(event.getGame());
+    glViewportDropZone->startup(event);
 
     EActionStartup::startup(event);
     ESceneStartup::startup(event);

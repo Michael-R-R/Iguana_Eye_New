@@ -1,4 +1,6 @@
 #include "EWOpenGLViewportDropZone.h"
+#include "AppStartEvent.h"
+#include "IEGame.h"
 #include <QFileInfo>
 
 EWOpenGLViewportDropZone::EWOpenGLViewportDropZone(QWidget* parent) :
@@ -7,8 +9,9 @@ EWOpenGLViewportDropZone::EWOpenGLViewportDropZone(QWidget* parent) :
 
 }
 
-void EWOpenGLViewportDropZone::installEventFilterOnHost(QOpenGLWidget* host)
+void EWOpenGLViewportDropZone::startup(const AppStartEvent& event)
 {
+    auto host = event.getGame();
     host->setAcceptDrops(true);
     host->installEventFilter(this);
 }
@@ -38,12 +41,12 @@ void EWOpenGLViewportDropZone::dragEnterEvent(QDragEnterEvent* event)
 
 void EWOpenGLViewportDropZone::dragMoveEvent(QDragMoveEvent*)
 {
-    return;
+
 }
 
 void EWOpenGLViewportDropZone::dragLeaveEvent(QDragLeaveEvent*)
 {
-    return;
+
 }
 
 void EWOpenGLViewportDropZone::dropEvent(QDropEvent* event)
@@ -63,8 +66,8 @@ void EWOpenGLViewportDropZone::checkEvent(QEvent* event)
     switch(event->type())
     {
     case QEvent::DragEnter: { dragEnterEvent(static_cast<QDragEnterEvent*>(event)); break; }
-    case QEvent::DragMove: { dragMoveEvent(static_cast<QDragMoveEvent*>(event)); break; }
-    case QEvent::DragLeave: { dragLeaveEvent(static_cast<QDragLeaveEvent*>(event)); break; }
+    //case QEvent::DragMove: { dragMoveEvent(static_cast<QDragMoveEvent*>(event)); break; }
+    //case QEvent::DragLeave: { dragLeaveEvent(static_cast<QDragLeaveEvent*>(event)); break; }
     case QEvent::Drop: { dropEvent(static_cast<QDropEvent*>(event)); break; }
     default: { break; }
     }

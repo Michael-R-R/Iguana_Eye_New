@@ -8,6 +8,8 @@
 #include <QMimeData>
 #include <QOpenGLWidget>
 
+class AppStartEvent;
+
 class EWOpenGLViewportDropZone : public QWidget
 {
     Q_OBJECT
@@ -16,7 +18,7 @@ public:
     EWOpenGLViewportDropZone(QWidget* parent = nullptr);
     ~EWOpenGLViewportDropZone() {}
 
-    void installEventFilterOnHost(QOpenGLWidget* host);
+    void startup(const AppStartEvent& event);
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
