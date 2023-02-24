@@ -39,16 +39,6 @@ void EWOpenGLViewportDropZone::dragEnterEvent(QDragEnterEvent* event)
     event->acceptProposedAction();
 }
 
-void EWOpenGLViewportDropZone::dragMoveEvent(QDragMoveEvent*)
-{
-
-}
-
-void EWOpenGLViewportDropZone::dragLeaveEvent(QDragLeaveEvent*)
-{
-
-}
-
 void EWOpenGLViewportDropZone::dropEvent(QDropEvent* event)
 {
     const QMimeData* data = event->mimeData();
@@ -58,6 +48,7 @@ void EWOpenGLViewportDropZone::dropEvent(QDropEvent* event)
     foreach(auto url, data->urls())
     {
         qDebug() << url.toLocalFile();
+        // TODO implement drop zone
     }
 }
 
@@ -66,8 +57,6 @@ void EWOpenGLViewportDropZone::checkEvent(QEvent* event)
     switch(event->type())
     {
     case QEvent::DragEnter: { dragEnterEvent(static_cast<QDragEnterEvent*>(event)); break; }
-    //case QEvent::DragMove: { dragMoveEvent(static_cast<QDragMoveEvent*>(event)); break; }
-    //case QEvent::DragLeave: { dragLeaveEvent(static_cast<QDragLeaveEvent*>(event)); break; }
     case QEvent::Drop: { dropEvent(static_cast<QDropEvent*>(event)); break; }
     default: { break; }
     }

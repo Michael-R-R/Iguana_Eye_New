@@ -14,7 +14,7 @@ class Editor : public QObject
 
     EInput* input;
     EGUI* ui;
-    EWOpenGLViewportDropZone* glViewportDropZone;
+    EWOpenGLViewportDropZone* gameFileDropZone;
 
 public:
     Editor(QObject* parent = nullptr);

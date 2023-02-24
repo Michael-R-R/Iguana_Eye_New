@@ -7,7 +7,7 @@ Editor::Editor(QObject* parent) :
     QObject(parent),
     input(nullptr),
     ui(nullptr),
-    glViewportDropZone(nullptr)
+    gameFileDropZone(nullptr)
 {
 
 }
@@ -21,7 +21,7 @@ void Editor::init()
 {
     input = new EInput(this);
     ui = new EGUI(this);
-    glViewportDropZone = new EWOpenGLViewportDropZone();
+    gameFileDropZone = new EWOpenGLViewportDropZone();
 }
 
 void Editor::startup(const AppStartEvent& event)
@@ -29,7 +29,7 @@ void Editor::startup(const AppStartEvent& event)
     // *** DO NOT REORDER *** //
     input->startup();
     ui->startup(event);
-    glViewportDropZone->startup(event);
+    gameFileDropZone->startup(event);
 
     EActionStartup::startup(event);
     ESceneStartup::startup(event);
@@ -37,7 +37,7 @@ void Editor::startup(const AppStartEvent& event)
 
 void Editor::shutdown()
 {
-    delete glViewportDropZone;
+    delete gameFileDropZone;
     delete ui;
     delete input;
 }
