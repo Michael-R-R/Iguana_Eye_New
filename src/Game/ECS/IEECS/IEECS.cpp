@@ -94,12 +94,12 @@ bool IEECS::detachComponent(const IEEntity entity, const IEComponentType type)
     return systems[type]->detach(entity);
 }
 
-bool IEECS::hasComponent(const IEEntity entity, const IEComponentType type)
+bool IEECS::hasComponent(const IEEntity entity, const IEComponentType type) const
 {
     return entityManager->hasComponent(entity, (unsigned long long)type);
 }
 
-bool IEECS::doesSystemExist(const IEComponentType type)
+bool IEECS::doesSystemExist(const IEComponentType type) const
 {
     return systems.contains(type);
 }

@@ -6,11 +6,17 @@
 
 #include "EWOpenGLViewportTime.h"
 #include "EWOpenGLViewportInput.h"
-#include "IERenderEngine.h"
-#include "IEMeshManager.h"
-#include "IEMaterialManager.h"
-#include "IEShaderManager.h"
-#include "IERenderableManager.h"
+
+class IEMeshManager;
+class IEMaterialManager;
+class IEShaderManager;
+class IERenderableManager;
+class IEECS;
+class IEMesh;
+class IEMaterial;
+class IEShader;
+class IERenderable;
+class IERenderEngine;
 
 class EWOpenGLViewport : public QOpenGLWidget
 {
@@ -29,6 +35,7 @@ class EWOpenGLViewport : public QOpenGLWidget
     IEMaterialManager* materialManager;
     IEShaderManager* shaderManager;
     IERenderableManager* renderableManager;
+    IEECS* ecs;
 
 public:
     EWOpenGLViewport(const QString title, QWidget* parent = nullptr);

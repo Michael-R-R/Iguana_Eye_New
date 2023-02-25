@@ -42,8 +42,8 @@ public:
     void remove(const IEEntity entity);
     int attachComponent(const IEEntity entity, const IEComponentType type);
     bool detachComponent(const IEEntity entity, const IEComponentType type);
-    bool hasComponent(const IEEntity entity, const IEComponentType type);
-    bool doesSystemExist(const IEComponentType type);
+    bool hasComponent(const IEEntity entity, const IEComponentType type) const;
+    bool doesSystemExist(const IEComponentType type) const;
     void clearSystems();
 
 private:
@@ -57,7 +57,7 @@ signals:
 
 public:
     template <class T>
-    T* getComponent(const IEComponentType type)
+    T* getComponent(const IEComponentType type) const
     {
         if(!doesSystemExist(type))
             return nullptr;

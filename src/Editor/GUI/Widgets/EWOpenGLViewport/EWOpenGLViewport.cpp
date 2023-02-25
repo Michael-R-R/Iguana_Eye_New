@@ -1,5 +1,11 @@
 #include "EWOpenGLViewport.h"
 #include "RenderEngineStartEvent.h"
+#include "IERenderEngine.h"
+#include "IEMeshManager.h"
+#include "IEMaterialManager.h"
+#include "IEShaderManager.h"
+#include "IERenderableManager.h"
+#include "IEECS.h"
 
 EWOpenGLViewport::EWOpenGLViewport(const QString title, QWidget* parent) :
     QOpenGLWidget(parent),
@@ -9,7 +15,8 @@ EWOpenGLViewport::EWOpenGLViewport(const QString title, QWidget* parent) :
     input(new EWOpenGLViewportInput(this, this)),
     renderEngine(new IERenderEngine(this)),
     meshManager(new IEMeshManager(this)), materialManager(new IEMaterialManager(this)),
-    shaderManager(new IEShaderManager(this)), renderableManager(new IERenderableManager(this))
+    shaderManager(new IEShaderManager(this)), renderableManager(new IERenderableManager(this)),
+    ecs(new IEECS(this))
 {
     this->setWindowTitle(title);
     format->setVersion(4, 3);
@@ -28,8 +35,11 @@ EWOpenGLViewport::~EWOpenGLViewport()
 void EWOpenGLViewport::startup()
 {
     RenderEngineStartEvent renderStartEvent(meshManager, materialManager,
-                                            shaderManager, renderableManager);
+                                            shaderManager, renderableManager,
+                                            ecs);
 
+    // TODO solve setting up ecs for gl viewports
+    // ecs->startup();
     renderEngine->startup(renderStartEvent);
     time->startup(this);
 }

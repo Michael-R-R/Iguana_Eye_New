@@ -44,6 +44,7 @@ public:
     {
         if(!this->isCreated())
             this->create();
+
         this->setUsagePattern(QOpenGLBuffer::StaticDraw);
         this->bind();
         this->allocate(this->bufferData.data(), (int)(this->bufferData.size() * sizeof(T)));
@@ -64,6 +65,26 @@ public:
                 extraFunc->glVertexBindingDivisor(attribLoc + i, 1);
             }
         }
+    }
+
+    void reallocate()
+    {
+        if(!this->isCreated())
+            return;
+
+        this->bind();
+        this->allocate(this->bufferData.data(), (int)(this->bufferData.size() * sizeof(T)));
+        this->release();
+    }
+
+    void subAllocate(const int offset, const void* subData)
+    {
+        if(!this->isCreated())
+            return;
+
+        this->bind();
+        this->write((int)(offset * sizeof(T)), subData, sizeof(T));
+        this->release();
     }
 
     friend QDataStream& operator<<(QDataStream& out, const IEVertexBuffer<T>& buffer)

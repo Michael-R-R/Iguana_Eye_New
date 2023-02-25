@@ -59,9 +59,21 @@ public:
     void addVec4Buffer(const QString& key, IEVertexBuffer<QVector4D>* value);
     void addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>* value);
 
+    int appendVec2InstanceValue(const QString& key, const QVector2D& value);
+    int appendVec3InstanceValue(const QString& key, const QVector3D& value);
+    int appendVec4InstanceValue(const QString& key, const QVector4D& value);
+    int appendMat4InstanceValue(const QString& key, const QMatrix4x4& value);
+    void removeVec2InstanceValue(const QString& key, const int index);
+    void removeVec3InstanceValue(const QString& key, const int index);
+    void removeVec4InstanceValue(const QString& key, const int index);
+    void removeMat4InstanceValue(const QString& key, const int index);
+    void setVec2InstanceValue(const QString& key, const int index, const QVector2D& value);
+    void setVec3InstanceValue(const QString& key, const int index, const QVector3D& value);
+    void setVec4InstanceValue(const QString& key, const int index, const QVector4D& value);
+    void setMat4InstanceValue(const QString& key, const int index, const QMatrix4x4& value);
+
     void build(IEShader* shader);
     void bindUniformData(IEShader* shader);
-    int instanceCount() const;
 
     RenderType getRenderType() const { return renderType; }
     GLenum getDrawMode() const { return drawMode; }

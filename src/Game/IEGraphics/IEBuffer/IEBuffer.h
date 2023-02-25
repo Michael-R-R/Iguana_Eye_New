@@ -39,13 +39,32 @@ public:
 
     virtual void build(const int attribLoc = -1) = 0;
 
-    void subAllocate(const int offset, const void* subData)
+    int appendBufferValue(const T& val)
     {
-        if(!this->isCreated())
+        int index = bufferData.size();
+
+        bufferData.append(val);
+
+        return index;
+    }
+
+    void removeBufferValue(const int indexToRemove)
+    {
+        if(indexToRemove < 0 || indexToRemove > bufferData.size())
             return;
 
-        this->bind();
-        this->write((int)(offset * sizeof(T)), subData, sizeof(T));
-        this->release();
+        const int lastIndex = bufferData.size() - 1;
+
+        bufferData[indexToRemove] = bufferData[lastIndex];
+
+        bufferData.removeLast();
+    }
+
+    void setBufferValue(const int index, const T& val)
+    {
+        if(index < 0 || index > bufferData.size())
+            return;
+
+        bufferData[index] = val;
     }
 };

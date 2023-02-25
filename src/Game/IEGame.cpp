@@ -38,7 +38,8 @@ void IEGame::startup()
 
     GameStartEvent gameStartEvent(time, input, scene);
     RenderEngineStartEvent renderStartEvent(scene->getMeshManager(), scene->getMaterialManager(),
-                                            scene->getShaderManager(), scene->getRenderableManager());
+                                            scene->getShaderManager(), scene->getRenderableManager(),
+                                            scene->getECS());
 
     scene->startup(gameStartEvent);
     renderEngine->startup(renderStartEvent);

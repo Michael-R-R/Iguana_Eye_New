@@ -88,6 +88,118 @@ void IERenderable::addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>*
     mat4BufferContainer->add(key, value);
 }
 
+int IERenderable::appendVec2InstanceValue(const QString& key, const QVector2D& value)
+{
+    auto buffer = vec2BufferContainer->getValue(key);
+    if(!buffer)
+        return -1;
+
+    return buffer->appendBufferValue(value);
+}
+
+int IERenderable::appendVec3InstanceValue(const QString& key, const QVector3D& value)
+{
+    auto buffer = vec3BufferContainer->getValue(key);
+    if(!buffer)
+        return -1;
+
+    return buffer->appendBufferValue(value);
+}
+
+int IERenderable::appendVec4InstanceValue(const QString& key, const QVector4D& value)
+{
+    auto buffer = vec4BufferContainer->getValue(key);
+    if(!buffer)
+        return -1;
+
+    return buffer->appendBufferValue(value);
+}
+
+int IERenderable::appendMat4InstanceValue(const QString& key, const QMatrix4x4& value)
+{
+    auto buffer = mat4BufferContainer->getValue(key);
+    if(!buffer)
+        return -1;
+
+    return buffer->appendBufferValue(value);
+}
+
+void IERenderable::removeVec2InstanceValue(const QString& key, const int index)
+{
+    auto buffer = vec2BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->removeBufferValue(index);
+}
+
+void IERenderable::removeVec3InstanceValue(const QString& key, const int index)
+{
+    auto buffer = vec3BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->removeBufferValue(index);
+}
+
+void IERenderable::removeVec4InstanceValue(const QString& key, const int index)
+{
+    auto buffer = vec4BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->removeBufferValue(index);
+}
+
+void IERenderable::removeMat4InstanceValue(const QString& key, const int index)
+{
+    auto buffer = mat4BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->removeBufferValue(index);
+}
+
+void IERenderable::setVec2InstanceValue(const QString& key, const int index, const QVector2D& value)
+{
+    auto buffer = vec2BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->setBufferValue(index, value);
+    buffer->subAllocate(index, &value);
+}
+
+void IERenderable::setVec3InstanceValue(const QString& key, const int index, const QVector3D& value)
+{
+    auto buffer = vec3BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->setBufferValue(index, value);
+    buffer->subAllocate(index, &value);
+}
+
+void IERenderable::setVec4InstanceValue(const QString& key, const int index, const QVector4D& value)
+{
+    auto buffer = vec4BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->setBufferValue(index, value);
+    buffer->subAllocate(index, &value);
+}
+
+void IERenderable::setMat4InstanceValue(const QString& key, const int index, const QMatrix4x4& value)
+{
+    auto buffer = mat4BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->setBufferValue(index, value);
+    buffer->subAllocate(index, &value);
+}
+
 void IERenderable::build(IEShader* shader)
 {
     shader->bind();
@@ -122,10 +234,4 @@ void IERenderable::build(IEShader* shader)
 void IERenderable::bindUniformData(IEShader* shader)
 {
     uniformData.bind(shader);
-}
-
-int IERenderable::instanceCount() const
-{
-    // TODO implement
-    return 1;
 }
