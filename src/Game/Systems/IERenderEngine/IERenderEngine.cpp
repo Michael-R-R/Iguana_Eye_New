@@ -44,6 +44,8 @@ void IERenderEngine::onRenderFrame()
         if(!renderable->getIsRenderable())
             continue;
 
+        renderable->checkForDirtyBuffers();
+
         auto mesh = meshManager->getValue(renderable->getMeshId());
         auto material = materialManager->getValue(renderable->getMaterialId());
         auto shader = shaderManager->getValue(renderable->getShaderId());

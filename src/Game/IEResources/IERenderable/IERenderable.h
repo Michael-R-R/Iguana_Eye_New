@@ -2,6 +2,7 @@
 
 #include <QDataStream>
 #include <QOpenGLVertexArrayObject>
+#include <QVector>
 #include <QVector2D>
 #include <QVector3D>
 #include <QVector4D>
@@ -40,6 +41,11 @@ protected:
 
     IEUniform uniformData;
 
+    QVector<QString> dirtyVec2Buffers;
+    QVector<QString> dirtyVec3Buffers;
+    QVector<QString> dirtyVec4Buffers;
+    QVector<QString> dirtyMat4Buffers;
+
     bool isEdited;
 
 public:
@@ -74,6 +80,7 @@ public:
 
     void build(IEShader* shader);
     void bindUniformData(IEShader* shader);
+    void checkForDirtyBuffers();
 
     RenderType getRenderType() const { return renderType; }
     GLenum getDrawMode() const { return drawMode; }

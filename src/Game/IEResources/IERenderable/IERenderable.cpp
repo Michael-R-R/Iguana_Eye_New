@@ -1,5 +1,6 @@
 #include "IERenderable.h"
 #include "IEShader.h"
+
 IERenderable::IERenderable() :
     QOpenGLVertexArrayObject(),
     IEResource("", 0),
@@ -11,7 +12,10 @@ IERenderable::IERenderable() :
     vec3BufferContainer(new IEVertexBufferContainer<QVector3D>()),
     vec4BufferContainer(new IEVertexBufferContainer<QVector4D>()),
     mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>()),
-    uniformData(), isEdited(false)
+    uniformData(),
+    dirtyVec2Buffers(), dirtyVec3Buffers(),
+    dirtyVec4Buffers(), dirtyMat4Buffers(),
+    isEdited(false)
 {
 
 }
@@ -27,7 +31,10 @@ IERenderable::IERenderable(const QString& path, const unsigned long long id) :
     vec3BufferContainer(new IEVertexBufferContainer<QVector3D>()),
     vec4BufferContainer(new IEVertexBufferContainer<QVector4D>()),
     mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>()),
-    uniformData(), isEdited(true)
+    uniformData(),
+    dirtyVec2Buffers(), dirtyVec3Buffers(),
+    dirtyVec4Buffers(), dirtyMat4Buffers(),
+    isEdited(true)
 {
 
 }
@@ -44,7 +51,10 @@ IERenderable::IERenderable(const IERenderable& other) :
     vec3BufferContainer(new IEVertexBufferContainer<QVector3D>(*other.vec3BufferContainer)),
     vec4BufferContainer(new IEVertexBufferContainer<QVector4D>(*other.vec4BufferContainer)),
     mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>(*other.mat4BufferContainer)),
-    uniformData(other.uniformData), isEdited(other.isEdited)
+    uniformData(other.uniformData),
+    dirtyVec2Buffers(other.dirtyVec2Buffers), dirtyVec3Buffers(other.dirtyVec3Buffers),
+    dirtyVec4Buffers(other.dirtyVec4Buffers), dirtyMat4Buffers(other.dirtyMat4Buffers),
+    isEdited(other.isEdited)
 {
 
 }
@@ -71,21 +81,25 @@ void IERenderable::addIndexBuffer(IEIndexBuffer* buffer)
 void IERenderable::addVec2Buffer(const QString& key, IEVertexBuffer<QVector2D>* value)
 {
     vec2BufferContainer->add(key, value);
+    dirtyVec2Buffers.append(key);
 }
 
 void IERenderable::addVec3Buffer(const QString& key, IEVertexBuffer<QVector3D>* value)
 {
     vec3BufferContainer->add(key, value);
+    dirtyVec3Buffers.append(key);
 }
 
 void IERenderable::addVec4Buffer(const QString& key, IEVertexBuffer<QVector4D>* value)
 {
     vec4BufferContainer->add(key, value);
+    dirtyVec4Buffers.append(key);
 }
 
 void IERenderable::addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>* value)
 {
     mat4BufferContainer->add(key, value);
+    dirtyMat4Buffers.append(key);
 }
 
 int IERenderable::appendVec2InstanceValue(const QString& key, const QVector2D& value)
@@ -93,6 +107,8 @@ int IERenderable::appendVec2InstanceValue(const QString& key, const QVector2D& v
     auto buffer = vec2BufferContainer->getValue(key);
     if(!buffer)
         return -1;
+
+    dirtyVec2Buffers.append(key);
 
     return buffer->appendBufferValue(value);
 }
@@ -103,6 +119,8 @@ int IERenderable::appendVec3InstanceValue(const QString& key, const QVector3D& v
     if(!buffer)
         return -1;
 
+    dirtyVec3Buffers.append(key);
+
     return buffer->appendBufferValue(value);
 }
 
@@ -111,6 +129,8 @@ int IERenderable::appendVec4InstanceValue(const QString& key, const QVector4D& v
     auto buffer = vec4BufferContainer->getValue(key);
     if(!buffer)
         return -1;
+
+    dirtyVec4Buffers.append(key);
 
     return buffer->appendBufferValue(value);
 }
@@ -121,6 +141,8 @@ int IERenderable::appendMat4InstanceValue(const QString& key, const QMatrix4x4& 
     if(!buffer)
         return -1;
 
+    dirtyMat4Buffers.append(key);
+
     return buffer->appendBufferValue(value);
 }
 
@@ -129,6 +151,8 @@ void IERenderable::removeVec2InstanceValue(const QString& key, const int index)
     auto buffer = vec2BufferContainer->getValue(key);
     if(!buffer)
         return;
+
+    dirtyVec2Buffers.append(key);
 
     buffer->removeBufferValue(index);
 }
@@ -139,6 +163,8 @@ void IERenderable::removeVec3InstanceValue(const QString& key, const int index)
     if(!buffer)
         return;
 
+    dirtyVec3Buffers.append(key);
+
     buffer->removeBufferValue(index);
 }
 
@@ -148,6 +174,8 @@ void IERenderable::removeVec4InstanceValue(const QString& key, const int index)
     if(!buffer)
         return;
 
+    dirtyVec4Buffers.append(key);
+
     buffer->removeBufferValue(index);
 }
 
@@ -156,6 +184,8 @@ void IERenderable::removeMat4InstanceValue(const QString& key, const int index)
     auto buffer = mat4BufferContainer->getValue(key);
     if(!buffer)
         return;
+
+    dirtyMat4Buffers.append(key);
 
     buffer->removeBufferValue(index);
 }
@@ -234,4 +264,23 @@ void IERenderable::build(IEShader* shader)
 void IERenderable::bindUniformData(IEShader* shader)
 {
     uniformData.bind(shader);
+}
+
+void IERenderable::checkForDirtyBuffers()
+{
+    foreach(auto& key, dirtyVec2Buffers)
+        vec2BufferContainer->getValue(key)->reallocate();
+    dirtyVec2Buffers.clear();
+
+    foreach(auto& key, dirtyVec3Buffers)
+        vec3BufferContainer->getValue(key)->reallocate();
+    dirtyVec3Buffers.clear();
+
+    foreach(auto& key, dirtyVec4Buffers)
+        vec4BufferContainer->getValue(key)->reallocate();
+    dirtyVec4Buffers.clear();
+
+    foreach(auto& key, dirtyMat4Buffers)
+        mat4BufferContainer->getValue(key)->reallocate();
+    dirtyMat4Buffers.clear();
 }
