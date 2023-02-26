@@ -138,6 +138,7 @@ INCLUDEPATH += $$PWD/src/Game/IEGraphics \
     $$PWD/src/Game/IEGraphics/IEBuffer \
     $$PWD/src/Game/IEGraphics/IEVertexBufferContainer \
     $$PWD/src/Game/IEGraphics/IEIndexBuffer \
+    $$PWD/src/Game/IEGraphics/IEInstanceData \
     $$PWD/src/Game/IEGraphics/IEUniform \
     $$PWD/src/Game/IEGraphics/IEVertexBuffer \
 

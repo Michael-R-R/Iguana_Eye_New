@@ -15,9 +15,9 @@ void IETRemoveInstancedRenderable::setup(const GameStartEvent& event)
     auto renderableSystem = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
     auto renderable = scene->getRenderableManager()->getValue(IEHash::Compute("./resources/renderables/tests/instanced_renderable.ierend"));
 
-    for(int i = -10; i < 11; i++)
+    for(int i = -5; i < 6; i++)
     {
-        for(int j = -10; j < 11; j++)
+        for(int j = -5; j < 6; j++)
         {
 
         }

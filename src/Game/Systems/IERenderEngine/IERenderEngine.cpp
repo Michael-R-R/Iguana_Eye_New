@@ -3,7 +3,6 @@
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLContext>
 #include "RenderEngineStartEvent.h"
-#include "IEECS.h"
 #include "IEMeshManager.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
@@ -12,8 +11,7 @@
 IERenderEngine::IERenderEngine(QObject* parent) :
     IEObject(parent),
     meshManager(nullptr), materialManager(nullptr),
-    shaderManager(nullptr), renderableManager(nullptr),
-    renderableSystem(nullptr)
+    shaderManager(nullptr), renderableManager(nullptr)
 {
 
 }
@@ -24,7 +22,6 @@ void IERenderEngine::startup(const RenderEngineStartEvent& event)
     materialManager = event.getMaterialManager();
     shaderManager = event.getShaderManager();
     renderableManager = event.getRenderableManager();
-    renderableSystem = event.getECS()->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
 }
 
 void IERenderEngine::shutdown()
@@ -33,7 +30,6 @@ void IERenderEngine::shutdown()
     materialManager = nullptr;
     shaderManager = nullptr;
     renderableManager = nullptr;
-    renderableSystem = nullptr;
 }
 
 void IERenderEngine::onRenderFrame()
@@ -111,7 +107,7 @@ void IERenderEngine::draw(IERenderable* renderable, IEMesh* mesh)
     {
         GLenum mode = renderable->getDrawMode();
         int count = mesh->getPosVertices().size();
-        int instanceCount = renderableSystem->shownInstanceCount(renderable->getId());
+        int instanceCount = 0; // TODO get count
         glFunc->glDrawArraysInstanced(mode, 0, count, instanceCount);
         break;
     }
@@ -119,7 +115,7 @@ void IERenderEngine::draw(IERenderable* renderable, IEMesh* mesh)
     {
         GLenum mode = renderable->getDrawMode();
         int count = mesh->getIndices().size();
-        int instanceCount = renderableSystem->shownInstanceCount(renderable->getId());
+        int instanceCount = 0; // TODO get count
         glFunc->glDrawElementsInstanced(mode, count, GL_UNSIGNED_INT, 0, instanceCount);
         break;
     }

@@ -4,6 +4,7 @@
 
 // TODO test
 #include "IETCreateInstancedRenderable.h"
+#include "IETRemoveInstancedRenderable.h"
 
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
@@ -49,7 +50,8 @@ void IEGame::startup()
     time->startup(this);
 
     // TODO test
-    IETCreateInstancedRenderable test(gameStartEvent);
+    IETCreateInstancedRenderable testCreate(gameStartEvent);
+    IETRemoveInstancedRenderable testRemove(gameStartEvent);
 
     this->setFocus();
 }

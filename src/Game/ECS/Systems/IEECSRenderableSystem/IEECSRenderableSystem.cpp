@@ -4,9 +4,7 @@
 
 IEECSRenderableSystem::IEECSRenderableSystem() :
     IEECSSystem(),
-    data(),
-    shownRenderableList(),
-    hiddenRenderableList()
+    data()
 {
     IEECSRenderableSystem::attach(IEEntity(-1));
 }
@@ -32,9 +30,7 @@ int IEECSRenderableSystem::attach(const IEEntity entity)
 
     data.entityList.append(entity);
     data.renderableIdList.append(0);
-    data.shownInstanceIndexList.append(-1);
-    data.hiddenInstanceIndexList.append(-1);
-    data.isRenderableList.append(false);
+    data.instanceIndexList.append(-1);
 
     return index;
 }
@@ -51,15 +47,11 @@ bool IEECSRenderableSystem::detach(const IEEntity entity)
 
     data.entityList[indexToRemove] = data.entityList[lastIndex];
     data.renderableIdList[indexToRemove] = data.renderableIdList[lastIndex];
-    data.shownInstanceIndexList[indexToRemove] = data.shownInstanceIndexList[lastIndex];
-    data.hiddenInstanceIndexList[indexToRemove] = data.hiddenInstanceIndexList[lastIndex];
-    data.isRenderableList[indexToRemove] = data.isRenderableList[lastIndex];
+    data.instanceIndexList[indexToRemove] = data.instanceIndexList[lastIndex];
 
     data.entityList.removeLast();
     data.renderableIdList.removeLast();
-    data.shownInstanceIndexList.removeLast();
-    data.hiddenInstanceIndexList.removeLast();
-    data.isRenderableList.removeLast();
+    data.instanceIndexList.removeLast();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);
@@ -70,37 +62,6 @@ bool IEECSRenderableSystem::detach(const IEEntity entity)
 void IEECSRenderableSystem::onUpdateFrame(ECSOnUpdateEvent*)
 {
     // Not used
-}
-
-int IEECSRenderableSystem::addInstance(const int index)
-{
-    if(!indexBoundCheck(index))
-        return -1;
-
-    unsigned long long id = data.renderableIdList[index];
-    if(id < 1)
-        return -1;
-
-    int instanceIndex = shownRenderableList[id].size();
-    shownRenderableList[id].append(data.entityList[index]);
-
-    return instanceIndex;
-}
-
-int IEECSRenderableSystem::shownInstanceCount(const unsigned long long id) const
-{
-    if(!shownRenderableList.contains(id))
-        return -1;
-
-    return shownRenderableList[id].size();
-}
-
-int IEECSRenderableSystem::hiddenInstanceCount(const unsigned long long id) const
-{
-    if(!hiddenRenderableList.contains(id))
-        return -1;
-
-    return hiddenRenderableList[id].size();
 }
 
 QVector<unsigned long long> IEECSRenderableSystem::massReplaceRenderableId(const unsigned long long oldId, const unsigned long long newId)
@@ -143,28 +104,12 @@ unsigned long long IEECSRenderableSystem::getRenderableId(const int index) const
     return data.renderableIdList[index];
 }
 
-int IEECSRenderableSystem::getShownInstanceIndex(const int index) const
+int IEECSRenderableSystem::getInstanceIndex(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.shownInstanceIndexList[0];
+        return data.instanceIndexList[0];
 
-    return data.shownInstanceIndexList[index];
-}
-
-int IEECSRenderableSystem::getHiddenInstanceIndex(const int index) const
-{
-    if(!indexBoundCheck(index))
-        return data.hiddenInstanceIndexList[0];
-
-    return data.hiddenInstanceIndexList[index];
-}
-
-bool IEECSRenderableSystem::getIsRenderable(const int index) const
-{
-    if(!indexBoundCheck(index))
-        return data.isRenderableList[0];
-
-    return data.isRenderableList[index];
+    return data.instanceIndexList[index];
 }
 
 void IEECSRenderableSystem::setRenderableId(const int index, const unsigned long long val)
@@ -175,26 +120,10 @@ void IEECSRenderableSystem::setRenderableId(const int index, const unsigned long
     data.renderableIdList[index] = val;
 }
 
-void IEECSRenderableSystem::setShownInstanceIndex(const int index, const int val)
+void IEECSRenderableSystem::setInstanceIndex(const int index, const int val)
 {
     if(!indexBoundCheck(index))
         return;
 
-    data.shownInstanceIndexList[index] = val;
-}
-
-void IEECSRenderableSystem::setHiddenInstanceIndex(const int index, const int val)
-{
-    if(!indexBoundCheck(index))
-        return;
-
-    data.hiddenInstanceIndexList[index] = val;
-}
-
-void IEECSRenderableSystem::setIsRenderable(const int index, const bool val)
-{
-    if(!indexBoundCheck(index))
-        return;
-
-    data.isRenderableList[index] = val;
+    data.instanceIndexList[index] = val;
 }

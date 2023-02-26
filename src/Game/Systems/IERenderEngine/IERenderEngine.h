@@ -9,7 +9,6 @@ class IEMeshManager;
 class IEMaterialManager;
 class IEShaderManager;
 class IERenderableManager;
-class IEECSRenderableSystem;
 class IEMesh;
 class IEMaterial;
 class IEShader;
@@ -22,7 +21,6 @@ class IERenderEngine : public IEObject
     const IEMaterialManager* materialManager;
     const IEShaderManager* shaderManager;
     const IERenderableManager* renderableManager;
-    const IEECSRenderableSystem* renderableSystem;
 
 public:
     IERenderEngine(QObject* parent = nullptr);

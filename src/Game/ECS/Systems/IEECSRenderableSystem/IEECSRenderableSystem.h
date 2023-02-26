@@ -16,31 +16,22 @@ class IEECSRenderableSystem : public IEECSSystem
     {
         QVector<IEEntity> entityList;
         QVector<unsigned long long> renderableIdList;
-        QVector<int> shownInstanceIndexList;
-        QVector<int> hiddenInstanceIndexList;
-        QVector<bool> isRenderableList;
+        QVector<int> instanceIndexList;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entityList << data.renderableIdList
-                << data.shownInstanceIndexList << data.hiddenInstanceIndexList
-                << data.isRenderableList;
+            out << data.entityList << data.renderableIdList << data.instanceIndexList;
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entityList >> data.renderableIdList
-               >> data.shownInstanceIndexList >> data.hiddenInstanceIndexList
-               >> data.isRenderableList;
+            in >> data.entityList >> data.renderableIdList >> data.instanceIndexList;
             return in;
         }
     };
 
     Data data;
-
-    QMap<unsigned long long, QVector<IEEntity>> shownRenderableList; // Gives a list of all entities attached and shown to a given renderable
-    QMap<unsigned long long, QVector<IEEntity>> hiddenRenderableList; // Gives a list of all entities attached and hidden to a given renderable
 
 public:
     IEECSRenderableSystem();
@@ -51,34 +42,24 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
-    int addInstance(const int index);
-
-    int shownInstanceCount(const unsigned long long id) const;
-    int hiddenInstanceCount(const unsigned long long id) const;
     QVector<unsigned long long> massReplaceRenderableId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeRenderableId(const unsigned long long idToPurge);
 
     unsigned long long getRenderableId(const int index) const;
-    int getShownInstanceIndex(const int index) const;
-    int getHiddenInstanceIndex(const int index) const;
-    bool getIsRenderable(const int index) const;
+    int getInstanceIndex(const int index) const;
 
     void setRenderableId(const int index, const unsigned long long val);
-    void setShownInstanceIndex(const int index, const int val);
-    void setHiddenInstanceIndex(const int index, const int val);
-    void setIsRenderable(const int index, const bool val);
+    void setInstanceIndex(const int index, const int val);
 
     friend QDataStream& operator<<(QDataStream& out, const IEECSRenderableSystem& system)
     {
-        out << system.entityMap << system.data
-            << system.shownRenderableList << system.hiddenRenderableList;
+        out << system.entityMap << system.data;
         return out;
     }
 
     friend QDataStream& operator>>(QDataStream& in, IEECSRenderableSystem& system)
     {
-        in >> system.entityMap >> system.data
-           >> system.shownRenderableList >> system.hiddenRenderableList;
+        in >> system.entityMap >> system.data;
         return in;
     }
 };

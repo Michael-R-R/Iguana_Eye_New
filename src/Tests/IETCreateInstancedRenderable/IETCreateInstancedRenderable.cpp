@@ -70,8 +70,8 @@ void IETCreateInstancedRenderable::setup(const GameStartEvent& event)
 
             int index = ecs->attachComponent(entity, IEComponentType::Renderable);
             renderableSystem->setRenderableId(index, renderable->getId());
-            int instanceIndex = renderableSystem->addInstance(index);
-            renderableSystem->setShownInstanceIndex(index, instanceIndex);
+
+            // TODO create a instance renderable
         }
     }
 }
