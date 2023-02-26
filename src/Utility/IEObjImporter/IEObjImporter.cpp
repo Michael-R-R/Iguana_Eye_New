@@ -7,7 +7,11 @@
 bool IEObjImporter::importMesh(const QString& path, IEMesh* mesh)
 {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene* scene = importer.ReadFile(path.toStdString(),
+                                             aiProcess_Triangulate |
+                                             aiProcess_GenSmoothNormals |
+                                             aiProcess_FlipUVs |
+                                             aiProcess_CalcTangentSpace);
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         qDebug() << "ERROR::ASSIMP::" << importer.GetErrorString();
@@ -74,20 +78,19 @@ void IEObjImporter::processMesh(aiMesh* assimpMesh, const aiScene* scene, IEMesh
         }
         else
         {
-
             ieMesh->getTanVertices().append(QVector3D());
             ieMesh->getBiTanVertices().append(QVector3D());
         }
+    }
 
-        // Face indices
-        for(unsigned i = 0; i < assimpMesh->mNumFaces; i++)
+    // Face indices
+    for(unsigned i = 0; i < assimpMesh->mNumFaces; i++)
+    {
+        auto face = assimpMesh->mFaces[i];
+
+        for(unsigned j = 0; j < face.mNumIndices; j++)
         {
-            auto face = assimpMesh->mFaces[i];
-
-            for(unsigned j = 0; j < face.mNumIndices; j++)
-            {
-                ieMesh->getIndices().append(face.mIndices[j]);
-            }
+            ieMesh->getIndices().append(face.mIndices[j]);
         }
     }
 }

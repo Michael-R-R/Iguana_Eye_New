@@ -165,6 +165,7 @@ INCLUDEPATH += $$PWD/src/Game/Systems/IETime \
 
 INCLUDEPATH += $$PWD/src/Tests \
     $$PWD/src/Tests/IETCreateInstancedRenderable \
+    $$PWD/src/Tests/IETRemoveInstancedRenderable \
 
 INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \

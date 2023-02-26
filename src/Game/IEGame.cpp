@@ -79,7 +79,7 @@ void IEGame::onRenderFrame()
 
     renderEngine->onRenderFrame();
 
-    qDebug() << time->processDeltaTime();
+    time->processDeltaTime();
 }
 
 void IEGame::initializeGL()

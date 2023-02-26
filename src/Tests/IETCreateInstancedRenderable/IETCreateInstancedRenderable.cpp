@@ -17,7 +17,7 @@ void IETCreateInstancedRenderable::setup(const GameStartEvent& event)
     auto nameSystem = ecs->getComponent<IEECSNameSystem>(IEComponentType::Name);
     auto renderableSystem = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
 
-    QString path = "./resources/meshes/editor/triangle.obj";
+    QString path = "./resources/meshes/tests/triangle.obj";
     unsigned long long id = IEHash::Compute(path);
     auto mesh = new IEMesh(path, id);
     IEObjImporter::importMesh(path, mesh);
@@ -57,21 +57,22 @@ void IETCreateInstancedRenderable::setup(const GameStartEvent& event)
     renderable->build(shader);
     scene->getRenderableManager()->add(id, renderable);
 
-    int count = 0;
-    for(int i = 0; i < 1000; i+=2)
+    for(int i = -10; i < 11; i++)
     {
-        QVector2D offset(i * 0.01, i * 0.01);
-        renderable->appendVec2InstanceValue("aOffset", offset);
+        for(int j = -10; j < 11; j++)
+        {
+            QVector2D offset(i * 0.1f, j * 0.1f);
+            renderable->appendVec2InstanceValue("aOffset", offset);
 
-        IEEntity entity = ecs->create();
-        int nameIndex = nameSystem->lookUpIndex(entity);
-        nameSystem->setName(nameIndex, "Test_" + QString::number(i));
-        int index = ecs->attachComponent(entity, IEComponentType::Renderable);
-        renderableSystem->setRenderableId(index, renderable->getId());
-        int instanceIndex = renderableSystem->addInstance(index);
-        renderableSystem->setShownInstanceIndex(index, instanceIndex);
+            IEEntity entity = ecs->create();
+            int nameIndex = nameSystem->lookUpIndex(entity);
+            nameSystem->setName(nameIndex, "Test_" + QString::number(i + j));
 
-        qDebug() << ++count;
+            int index = ecs->attachComponent(entity, IEComponentType::Renderable);
+            renderableSystem->setRenderableId(index, renderable->getId());
+            int instanceIndex = renderableSystem->addInstance(index);
+            renderableSystem->setShownInstanceIndex(index, instanceIndex);
+        }
     }
 }
 
