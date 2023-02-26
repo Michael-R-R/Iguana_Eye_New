@@ -1,4 +1,5 @@
 #include "IEECSTransformSystem.h"
+#include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 #include "IEECSHierarchySystem.h"
 
@@ -13,6 +14,11 @@ IEECSTransformSystem::IEECSTransformSystem() :
 IEECSTransformSystem::~IEECSTransformSystem()
 {
 
+}
+
+void IEECSTransformSystem::startup(const GameStartEvent&)
+{
+    // Not used
 }
 
 int IEECSTransformSystem::attach(const IEEntity entity)

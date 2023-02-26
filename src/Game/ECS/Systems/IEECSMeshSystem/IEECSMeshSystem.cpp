@@ -1,4 +1,5 @@
 #include "IEECSMeshSystem.h"
+#include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 
 IEECSMeshSystem::IEECSMeshSystem() :
@@ -11,6 +12,11 @@ IEECSMeshSystem::IEECSMeshSystem() :
 IEECSMeshSystem::~IEECSMeshSystem()
 {
 
+}
+
+void IEECSMeshSystem::startup(const GameStartEvent&)
+{
+    // Not used
 }
 
 int IEECSMeshSystem::attach(const IEEntity entity)

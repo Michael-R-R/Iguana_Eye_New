@@ -1,4 +1,5 @@
 #include "IEECSRenderableSystem.h"
+#include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 
 IEECSRenderableSystem::IEECSRenderableSystem() :
@@ -8,6 +9,16 @@ IEECSRenderableSystem::IEECSRenderableSystem() :
     hiddenRenderableList()
 {
     IEECSRenderableSystem::attach(IEEntity(-1));
+}
+
+IEECSRenderableSystem::~IEECSRenderableSystem()
+{
+
+}
+
+void IEECSRenderableSystem::startup(const GameStartEvent&)
+{
+
 }
 
 int IEECSRenderableSystem::attach(const IEEntity entity)
@@ -59,6 +70,21 @@ bool IEECSRenderableSystem::detach(const IEEntity entity)
 void IEECSRenderableSystem::onUpdateFrame(ECSOnUpdateEvent*)
 {
     // Not used
+}
+
+int IEECSRenderableSystem::addInstance(const int index)
+{
+    if(!indexBoundCheck(index))
+        return -1;
+
+    unsigned long long id = data.renderableIdList[index];
+    if(id < 1)
+        return -1;
+
+    int instanceIndex = shownRenderableList[id].size();
+    shownRenderableList[id].append(data.entityList[index]);
+
+    return instanceIndex;
 }
 
 int IEECSRenderableSystem::shownInstanceCount(const unsigned long long id) const

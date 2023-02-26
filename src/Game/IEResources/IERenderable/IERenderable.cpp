@@ -81,25 +81,25 @@ void IERenderable::addIndexBuffer(IEIndexBuffer* buffer)
 void IERenderable::addVec2Buffer(const QString& key, IEVertexBuffer<QVector2D>* value)
 {
     vec2BufferContainer->add(key, value);
-    dirtyVec2Buffers.append(key);
+    dirtyVec2Buffers.insert(key);
 }
 
 void IERenderable::addVec3Buffer(const QString& key, IEVertexBuffer<QVector3D>* value)
 {
     vec3BufferContainer->add(key, value);
-    dirtyVec3Buffers.append(key);
+    dirtyVec3Buffers.insert(key);
 }
 
 void IERenderable::addVec4Buffer(const QString& key, IEVertexBuffer<QVector4D>* value)
 {
     vec4BufferContainer->add(key, value);
-    dirtyVec4Buffers.append(key);
+    dirtyVec4Buffers.insert(key);
 }
 
 void IERenderable::addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>* value)
 {
     mat4BufferContainer->add(key, value);
-    dirtyMat4Buffers.append(key);
+    dirtyMat4Buffers.insert(key);
 }
 
 int IERenderable::appendVec2InstanceValue(const QString& key, const QVector2D& value)
@@ -108,7 +108,7 @@ int IERenderable::appendVec2InstanceValue(const QString& key, const QVector2D& v
     if(!buffer)
         return -1;
 
-    dirtyVec2Buffers.append(key);
+    dirtyVec2Buffers.insert(key);
 
     return buffer->appendBufferValue(value);
 }
@@ -119,7 +119,7 @@ int IERenderable::appendVec3InstanceValue(const QString& key, const QVector3D& v
     if(!buffer)
         return -1;
 
-    dirtyVec3Buffers.append(key);
+    dirtyVec3Buffers.insert(key);
 
     return buffer->appendBufferValue(value);
 }
@@ -130,7 +130,7 @@ int IERenderable::appendVec4InstanceValue(const QString& key, const QVector4D& v
     if(!buffer)
         return -1;
 
-    dirtyVec4Buffers.append(key);
+    dirtyVec4Buffers.insert(key);
 
     return buffer->appendBufferValue(value);
 }
@@ -141,7 +141,7 @@ int IERenderable::appendMat4InstanceValue(const QString& key, const QMatrix4x4& 
     if(!buffer)
         return -1;
 
-    dirtyMat4Buffers.append(key);
+    dirtyMat4Buffers.insert(key);
 
     return buffer->appendBufferValue(value);
 }
@@ -152,7 +152,7 @@ void IERenderable::removeVec2InstanceValue(const QString& key, const int index)
     if(!buffer)
         return;
 
-    dirtyVec2Buffers.append(key);
+    dirtyVec2Buffers.insert(key);
 
     buffer->removeBufferValue(index);
 }
@@ -163,7 +163,7 @@ void IERenderable::removeVec3InstanceValue(const QString& key, const int index)
     if(!buffer)
         return;
 
-    dirtyVec3Buffers.append(key);
+    dirtyVec3Buffers.insert(key);
 
     buffer->removeBufferValue(index);
 }
@@ -174,7 +174,7 @@ void IERenderable::removeVec4InstanceValue(const QString& key, const int index)
     if(!buffer)
         return;
 
-    dirtyVec4Buffers.append(key);
+    dirtyVec4Buffers.insert(key);
 
     buffer->removeBufferValue(index);
 }
@@ -185,7 +185,7 @@ void IERenderable::removeMat4InstanceValue(const QString& key, const int index)
     if(!buffer)
         return;
 
-    dirtyMat4Buffers.append(key);
+    dirtyMat4Buffers.insert(key);
 
     buffer->removeBufferValue(index);
 }

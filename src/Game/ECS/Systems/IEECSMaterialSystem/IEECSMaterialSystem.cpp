@@ -1,4 +1,5 @@
 #include "IEECSMaterialSystem.h"
+#include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 
 IEECSMaterialSystem::IEECSMaterialSystem() :
@@ -6,6 +7,11 @@ IEECSMaterialSystem::IEECSMaterialSystem() :
     data()
 {
     IEECSMaterialSystem::attach(IEEntity(-1));
+}
+
+void IEECSMaterialSystem::startup(const GameStartEvent&)
+{
+    // Not used
 }
 
 int IEECSMaterialSystem::attach(const IEEntity entity)

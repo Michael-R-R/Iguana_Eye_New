@@ -1,4 +1,6 @@
 #include "IEECSNameSystem.h"
+#include "GameStartEvent.h"
+#include "ECSOnUpdateEvent.h"
 #include "IEHash.h"
 
 IEECSNameSystem::IEECSNameSystem() :
@@ -11,6 +13,11 @@ IEECSNameSystem::IEECSNameSystem() :
     tagNameMap[0] = "Invalid";
     tagEntityMap[0] = QVector<IEEntity>();
     IEECSNameSystem::attach(IEEntity(-1));
+}
+
+void IEECSNameSystem::startup(const GameStartEvent&)
+{
+    // Not used
 }
 
 int IEECSNameSystem::attach(const IEEntity entity)

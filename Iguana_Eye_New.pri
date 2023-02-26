@@ -163,6 +163,9 @@ INCLUDEPATH += $$PWD/src/Game/Systems \
 INCLUDEPATH += $$PWD/src/Game/Systems/IETime \
     $$PWD/src/Game/Systems/IETime/DeltaTime
 
+INCLUDEPATH += $$PWD/src/Tests \
+    $$PWD/src/Tests/IETCreateInstancedRenderable \
+
 INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \
     $$PWD/src/Utility/IEGlslImporter \

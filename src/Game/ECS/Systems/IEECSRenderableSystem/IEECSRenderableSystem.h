@@ -6,7 +6,9 @@
 
 #include "IEECSSystem.h"
 
+class GameStartEvent;
 class ECSOnUpdateEvent;
+class IERenderableManager;
 
 class IEECSRenderableSystem : public IEECSSystem
 {
@@ -44,9 +46,12 @@ public:
     IEECSRenderableSystem();
     ~IEECSRenderableSystem();
 
+    void startup(const GameStartEvent& event) override;
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
+
+    int addInstance(const int index);
 
     int shownInstanceCount(const unsigned long long id) const;
     int hiddenInstanceCount(const unsigned long long id) const;

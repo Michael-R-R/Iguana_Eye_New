@@ -5,6 +5,7 @@
 
 #include "IEECSSystem.h"
 
+class GameStartEvent;
 class ECSOnUpdateEvent;
 
 class IEECSInputSystem : public IEECSSystem
@@ -33,6 +34,7 @@ public:
     IEECSInputSystem();
     ~IEECSInputSystem();
 
+    void startup(const GameStartEvent& event) override;
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;

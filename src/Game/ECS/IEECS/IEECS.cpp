@@ -17,8 +17,13 @@ IEECS::~IEECS()
     clearSystems();
 }
 
-void IEECS::startup(const GameStartEvent&)
+void IEECS::startup(const GameStartEvent& event)
 {
+    for(auto* system : qAsConst(systems))
+    {
+        system->startup(event);
+    }
+
     onUpdateEvent = new ECSOnUpdateEvent(this);
 }
 

@@ -2,7 +2,7 @@
 
 #include <QDataStream>
 #include <QOpenGLVertexArrayObject>
-#include <QVector>
+#include <QSet>
 #include <QVector2D>
 #include <QVector3D>
 #include <QVector4D>
@@ -41,10 +41,10 @@ protected:
 
     IEUniform uniformData;
 
-    QVector<QString> dirtyVec2Buffers;
-    QVector<QString> dirtyVec3Buffers;
-    QVector<QString> dirtyVec4Buffers;
-    QVector<QString> dirtyMat4Buffers;
+    QSet<QString> dirtyVec2Buffers;
+    QSet<QString> dirtyVec3Buffers;
+    QSet<QString> dirtyVec4Buffers;
+    QSet<QString> dirtyMat4Buffers;
 
     bool isEdited;
 

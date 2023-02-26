@@ -1,4 +1,5 @@
 #include "IEECSShaderSystem.h"
+#include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 
 IEECSShaderSystem::IEECSShaderSystem() :
@@ -6,6 +7,11 @@ IEECSShaderSystem::IEECSShaderSystem() :
     data()
 {
     IEECSShaderSystem::attach(IEEntity(-1));
+}
+
+void IEECSShaderSystem::startup(const GameStartEvent&)
+{
+    // Not used
 }
 
 int IEECSShaderSystem::attach(const IEEntity entity)
