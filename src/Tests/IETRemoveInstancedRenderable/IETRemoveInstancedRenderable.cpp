@@ -15,11 +15,19 @@ void IETRemoveInstancedRenderable::setup(const GameStartEvent& event)
     auto renderableSystem = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
     auto renderable = scene->getRenderableManager()->getValue(IEHash::Compute("./resources/renderables/tests/instanced_renderable.ierend"));
 
-    for(int i = -5; i < 6; i++)
+    int counter = 0;
+    for(int i = 0; i < 11; i++)
     {
-        for(int j = -5; j < 6; j++)
+        for(int j = 0; j < 20; j++)
         {
+            IEEntity entity;
+            int instanceIndex;
+            std::tie(entity, instanceIndex) = renderable->removeInstance(IEEntity(++counter));
+            renderable->purgeInstanceValues(instanceIndex);
 
+            int index = renderableSystem->lookUpIndex(entity);
+            renderableSystem->setRenderableId(index, 0);
+            renderableSystem->setInstanceIndex(index, -1);
         }
     }
 }

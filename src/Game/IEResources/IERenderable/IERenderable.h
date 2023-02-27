@@ -12,6 +12,7 @@
 #include "IEResource.h"
 #include "IEIndexBuffer.h"
 #include "IEVertexBufferContainer.h"
+#include "IEInstanceData.h"
 #include "IEUniform.h"
 
 class IEShader;
@@ -38,6 +39,7 @@ protected:
     IEVertexBufferContainer<QVector3D>* vec3BufferContainer;
     IEVertexBufferContainer<QVector4D>* vec4BufferContainer;
     IEVertexBufferContainer<QMatrix4x4>* mat4BufferContainer;
+    IEInstanceData instanceData;
 
     IEUniform uniformData;
 
@@ -64,6 +66,12 @@ public:
     void addVec3Buffer(const QString& key, IEVertexBuffer<QVector3D>* value);
     void addVec4Buffer(const QString& key, IEVertexBuffer<QVector4D>* value);
     void addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>* value);
+
+    int addInstance(const IEEntity entity);
+    std::tuple<IEEntity, int> removeInstance(const IEEntity entity);
+    int instanceCount() const;
+    int lookUpInstanceIndex(const IEEntity& entity);
+    void purgeInstanceValues(const int index);
 
     int appendVec2InstanceValue(const QString& key, const QVector2D& value);
     int appendVec3InstanceValue(const QString& key, const QVector3D& value);
@@ -115,6 +123,7 @@ public:
             << *renderable.vec3BufferContainer
             << *renderable.vec4BufferContainer
             << *renderable.mat4BufferContainer
+            << renderable.instanceData
             << renderable.uniformData
             << renderable.isEdited;
 
@@ -137,6 +146,7 @@ public:
            >> *renderable.vec3BufferContainer
            >> *renderable.vec4BufferContainer
            >> *renderable.mat4BufferContainer
+           >> renderable.instanceData
            >> renderable.uniformData
            >> renderable.isEdited;
 

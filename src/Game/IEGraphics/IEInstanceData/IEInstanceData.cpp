@@ -7,7 +7,14 @@ IEInstanceData::IEInstanceData() :
 
 }
 
-int IEInstanceData::add(const IEEntity entity)
+IEInstanceData::IEInstanceData(const IEInstanceData& other) :
+    entityMap(other.entityMap),
+    entityList(other.entityList)
+{
+
+}
+
+int IEInstanceData::add(const IEEntity& entity)
 {
     if(doesExist(entity))
         return -1;
@@ -48,5 +55,13 @@ int IEInstanceData::count() const
 
 bool IEInstanceData::doesExist(const IEEntity& entity) const
 {
+    return entityMap.contains(entity);
+}
+
+int IEInstanceData::lookUpIndex(const IEEntity& entity) const
+{
+    if(!doesExist(entity))
+        return -1;
+
     return entityMap[entity];
 }

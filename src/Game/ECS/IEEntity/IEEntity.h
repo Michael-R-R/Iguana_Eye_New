@@ -7,14 +7,12 @@ class IEEntity
     int id;
 
 public:
-    IEEntity() :
-        id(-1) {}
-
-    IEEntity(const int id_) :
-        id(id_) {}
-
+    IEEntity();
+    IEEntity(const int id_);
+    IEEntity(const IEEntity& other);
     ~IEEntity() {}
 
+    IEEntity& operator=(const IEEntity& other) { this->id = other.id; return *this; }
     bool operator==(const IEEntity& other) { return this->id == other.id; }
     bool operator!=(const IEEntity& other) { return this->id != other.id; }
     bool operator<(const IEEntity& other) const { return this->id < other.id; }

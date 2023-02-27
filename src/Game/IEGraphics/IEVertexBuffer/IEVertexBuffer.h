@@ -14,11 +14,12 @@ class IEVertexBuffer : public IEBuffer<T>
     int tuple;
     int stride;
     int divisor;
+    bool isInstanced;
 
 public:
     IEVertexBuffer() :
         IEBuffer<T>(QOpenGLBuffer::VertexBuffer),
-        tuple(0), stride(0), divisor(0)
+        tuple(0), stride(0), divisor(0), isInstanced(false)
     {
 
     }
@@ -26,14 +27,16 @@ public:
     IEVertexBuffer(const QVector<T>& data_, const int tuple_,
                    const int stride_ = 0, const int divisor_ = 0) :
         IEBuffer<T>(QOpenGLBuffer::VertexBuffer, data_),
-        tuple(tuple_), stride(stride_), divisor(divisor_)
+        tuple(tuple_), stride(stride_), divisor(divisor_),
+        isInstanced((divisor > 0))
     {
 
     }
 
     IEVertexBuffer(const IEVertexBuffer& other) :
         IEBuffer<T>(QOpenGLBuffer::VertexBuffer, other.bufferData),
-        tuple(other.tuple), stride(other.stride), divisor(other.divisor)
+        tuple(other.tuple), stride(other.stride), divisor(other.divisor),
+        isInstanced(other.isInstanced)
     {
 
     }
@@ -87,12 +90,15 @@ public:
         this->release();
     }
 
+    bool getIsInstanced() const { return isInstanced; }
+
     friend QDataStream& operator<<(QDataStream& out, const IEVertexBuffer<T>& buffer)
     {
         out << buffer.bufferData
             << buffer.tuple
             << buffer.stride
-            << buffer.divisor;
+            << buffer.divisor
+            << buffer.isInstanced;
 
         return out;
     }
@@ -102,7 +108,8 @@ public:
         in >> buffer.bufferData
            >> buffer.tuple
            >> buffer.stride
-           >> buffer.divisor;
+           >> buffer.divisor
+           >> buffer.isInstanced;
 
         return in;
     }

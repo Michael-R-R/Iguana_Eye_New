@@ -48,16 +48,18 @@ public:
         return index;
     }
 
-    void removeBufferValue(const int indexToRemove)
+    bool removeBufferValue(const int indexToRemove)
     {
         if(indexToRemove < 0 || indexToRemove > bufferData.size())
-            return;
+            return false;
 
         const int lastIndex = bufferData.size() - 1;
 
         bufferData[indexToRemove] = bufferData[lastIndex];
 
         bufferData.removeLast();
+
+        return true;
     }
 
     void setBufferValue(const int index, const T& val)

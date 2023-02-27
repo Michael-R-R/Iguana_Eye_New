@@ -107,7 +107,7 @@ void IERenderEngine::draw(IERenderable* renderable, IEMesh* mesh)
     {
         GLenum mode = renderable->getDrawMode();
         int count = mesh->getPosVertices().size();
-        int instanceCount = 0; // TODO get count
+        int instanceCount = renderable->instanceCount();
         glFunc->glDrawArraysInstanced(mode, 0, count, instanceCount);
         break;
     }
@@ -115,7 +115,7 @@ void IERenderEngine::draw(IERenderable* renderable, IEMesh* mesh)
     {
         GLenum mode = renderable->getDrawMode();
         int count = mesh->getIndices().size();
-        int instanceCount = 0; // TODO get count
+        int instanceCount = renderable->instanceCount();
         glFunc->glDrawElementsInstanced(mode, count, GL_UNSIGNED_INT, 0, instanceCount);
         break;
     }

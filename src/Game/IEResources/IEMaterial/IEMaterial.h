@@ -17,6 +17,7 @@ protected:
     unsigned long long specularTexId;
     unsigned long long normalTexId;
     unsigned long long heightTexId;
+    bool isEdited;
 
 public:
     IEMaterial();
@@ -37,6 +38,7 @@ public:
     unsigned long long getSpecularTexId() const { return specularTexId; }
     unsigned long long getNormalTexId() const { return normalTexId; }
     unsigned long long getHeightTexId() const { return heightTexId; }
+    bool getIsEdited() const { return isEdited; }
 
     void setUniformData(const IEUniform& val) { uniformData = val; }
     void setObjectColor(const QColor val) { objectColor = val; }
@@ -45,6 +47,7 @@ public:
     void setSpecularTexId(const unsigned long long val) { specularTexId = val; }
     void setNormalTexId(const unsigned long long val) { normalTexId = val; }
     void setHeightTexId(const unsigned long long val) { heightTexId = val; }
+    void setIsEdited(const bool val) { isEdited = val; }
 
     friend QDataStream& operator<<(QDataStream& out, const IEMaterial& material)
     {
@@ -57,7 +60,8 @@ public:
             << material.diffuseTexId
             << material.specularTexId
             << material.normalTexId
-            << material.heightTexId;
+            << material.heightTexId
+            << material.isEdited;
 
         return out;
     }
@@ -73,7 +77,8 @@ public:
            >> material.diffuseTexId
            >> material.specularTexId
            >> material.normalTexId
-           >> material.heightTexId;
+           >> material.heightTexId
+           >> material.isEdited;
 
         return in;
     }

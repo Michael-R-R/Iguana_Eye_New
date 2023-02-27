@@ -61,17 +61,17 @@ void IETCreateInstancedRenderable::setup(const GameStartEvent& event)
     {
         for(int j = -10; j < 11; j++)
         {
-            QVector2D offset(i * 0.1f, j * 0.1f);
-            renderable->appendVec2InstanceValue("aOffset", offset);
-
             IEEntity entity = ecs->create();
             int nameIndex = nameSystem->lookUpIndex(entity);
             nameSystem->setName(nameIndex, "Test_" + QString::number(i + j));
 
+            QVector2D offset(i * 0.1f, j * 0.1f);
+            int instanceIndex = renderable->addInstance(entity);
+            renderable->appendVec2InstanceValue("aOffset", offset);
+
             int index = ecs->attachComponent(entity, IEComponentType::Renderable);
             renderableSystem->setRenderableId(index, renderable->getId());
-
-            // TODO create a instance renderable
+            renderableSystem->setInstanceIndex(index, instanceIndex);
         }
     }
 }

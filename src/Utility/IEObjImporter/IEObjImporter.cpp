@@ -7,11 +7,7 @@
 bool IEObjImporter::importMesh(const QString& path, IEMesh* mesh)
 {
     Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path.toStdString(),
-                                             aiProcess_Triangulate |
-                                             aiProcess_GenSmoothNormals |
-                                             aiProcess_FlipUVs |
-                                             aiProcess_CalcTangentSpace);
+    const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcessPreset_TargetRealtime_MaxQuality);
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
         qDebug() << "ERROR::ASSIMP::" << importer.GetErrorString();
