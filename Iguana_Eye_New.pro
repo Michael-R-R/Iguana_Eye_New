@@ -13,8 +13,14 @@ RESOURCES += $$files(resources/*.qrc, true)
 FORMS += $$files(forms/*.ui, true)
 UI_DIR += $$PWD/forms/headers
 
-LIBS += -L$$PWD/required/libs/Assimp/ -lassimp-vc142-mtd
-LIBS += -L$$PWD/required/libs/Assimp/ -lassimp-vc142-mt
+CONFIG(debug, debug|release)
+{
+    LIBS += -L$$PWD/required/libs/Assimp/ -lassimp-vc142-mtd
+}
+CONFIG(release, debug|release)
+{
+    LIBS += -L$$PWD/required/libs/Assimp/ -lassimp-vc142-mt
+}
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
