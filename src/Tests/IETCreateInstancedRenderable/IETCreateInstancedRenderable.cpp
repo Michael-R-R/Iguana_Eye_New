@@ -65,12 +65,15 @@ void IETCreateInstancedRenderable::setup(const GameStartEvent& event)
             nameSystem->setName(nameIndex, "Test_" + QString::number(i + j));
 
             QVector2D offset(i * 0.1f, j * 0.1f);
-            int instanceIndex = renderable->addInstance(entity);
+            int instanceIndex = renderable->addShownInstance(entity);
             renderable->appendVec2InstanceValue("aOffset", offset);
+
+            offset *= 1.5f;
+            renderable->setVec2InstanceValue("aOffset", instanceIndex, offset);
 
             int index = ecs->attachComponent(entity, IEComponentType::Renderable);
             renderableSystem->setRenderableId(index, renderable->getId());
-            renderableSystem->setInstanceIndex(index, instanceIndex);
+            renderableSystem->setShownInstanceIndex(index, instanceIndex);
         }
     }
 }

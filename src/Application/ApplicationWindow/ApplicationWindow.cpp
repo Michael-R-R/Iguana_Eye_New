@@ -96,7 +96,8 @@ void ApplicationWindow::clearActions()
         delete item;
         item = nullptr;
     }
-    this->actions().clear();
+    actionList.clear();
+    this->addActions(actionList);
 }
 
 void ApplicationWindow::newFile()

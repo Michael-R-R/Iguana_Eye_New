@@ -16,22 +16,34 @@ class IEECSRenderableSystem : public IEECSSystem
     {
         QVector<IEEntity> entityList;
         QVector<unsigned long long> renderableIdList;
-        QVector<int> instanceIndexList;
+        QVector<int> shownInstanceIndexList;
+        QVector<int> hiddenInstanceIndexList;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entityList << data.renderableIdList << data.instanceIndexList;
+            out << data.entityList
+                << data.renderableIdList
+                << data.shownInstanceIndexList
+                << data.hiddenInstanceIndexList;
+
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entityList >> data.renderableIdList >> data.instanceIndexList;
+            in >> data.entityList
+               >> data.renderableIdList
+               >> data.shownInstanceIndexList
+               >> data.hiddenInstanceIndexList;
+
             return in;
         }
     };
 
     Data data;
+
+    // DOES NOT OWN THIS POINTER
+    IERenderableManager* renderableManager;
 
 public:
     IEECSRenderableSystem();
@@ -46,11 +58,17 @@ public:
     QVector<unsigned long long> massPurgeRenderableId(const unsigned long long idToPurge);
 
     unsigned long long getRenderableId(const int index) const;
-    int getInstanceIndex(const int index) const;
+    int getShownInstanceIndex(const int index) const;
+    int getHiddenInstanceIndex(const int index) const;
 
     void setRenderableId(const int index, const unsigned long long val);
-    void setInstanceIndex(const int index, const int val);
+    void setShownInstanceIndex(const int index, const int val);
+    void setHiddenInstanceIndex(const int index, const int val);
 
+private:
+    void removeInstanceFromRenderable(const unsigned long long id, const IEEntity& entity);
+
+public:
     friend QDataStream& operator<<(QDataStream& out, const IEECSRenderableSystem& system)
     {
         out << system.entityMap << system.data;

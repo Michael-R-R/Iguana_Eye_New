@@ -71,16 +71,17 @@ public:
     void setVec4BufferData(const QString& key, const QVector<QVector4D>& data);
     void setMat4BufferData(const QString& key, const QVector<QMatrix4x4>& data);
 
-    int addInstance(const IEEntity entity);
-    std::tuple<IEEntity, int> removeInstance(const IEEntity entity);
-    int instanceCount() const;
-    int lookUpInstanceIndex(const IEEntity& entity);
-    void purgeInstanceValues(const int index);
+    int addShownInstance(const IEEntity entity);
+    int addHiddenInstance(const IEEntity entity);
+    std::tuple<IEEntity, int> removeShownInstance(const IEEntity& entity);
+    std::tuple<IEEntity, int> removeHiddenInstance(const IEEntity& entity);
+    int shownInstanceCount() const;
+    int hiddenInstanceCount() const;
 
-    int appendVec2InstanceValue(const QString& key, const QVector2D& value);
-    int appendVec3InstanceValue(const QString& key, const QVector3D& value);
-    int appendVec4InstanceValue(const QString& key, const QVector4D& value);
-    int appendMat4InstanceValue(const QString& key, const QMatrix4x4& value);
+    void appendVec2InstanceValue(const QString& key, const QVector2D& value);
+    void appendVec3InstanceValue(const QString& key, const QVector3D& value);
+    void appendVec4InstanceValue(const QString& key, const QVector4D& value);
+    void appendMat4InstanceValue(const QString& key, const QMatrix4x4& value);
     void removeVec2InstanceValue(const QString& key, const int index);
     void removeVec3InstanceValue(const QString& key, const int index);
     void removeVec4InstanceValue(const QString& key, const int index);
@@ -113,6 +114,9 @@ public:
     void setShaderId(const unsigned long long val) { shaderId = val; }
     void setUniformData(const IEUniform& val) { uniformData = val; }
     void setIsEdited(const bool val) { isEdited = val; }
+
+private:
+    void purgeInstanceValues(const int index);
 
 public:
     friend QDataStream& operator<<(QDataStream& out, const IERenderable& renderable)

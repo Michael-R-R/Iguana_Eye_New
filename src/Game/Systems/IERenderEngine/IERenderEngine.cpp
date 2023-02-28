@@ -40,8 +40,6 @@ void IERenderEngine::onRenderFrame()
         if(!renderable->getIsRenderable())
             continue;
 
-        renderable->checkForDirtyBuffers();
-
         auto mesh = meshManager->getValue(renderable->getMeshId());
         auto material = materialManager->getValue(renderable->getMaterialId());
         auto shader = shaderManager->getValue(renderable->getShaderId());
@@ -80,6 +78,7 @@ void IERenderEngine::prepareUniformData(IEShader* shader, IERenderable* renderab
 
 void IERenderEngine::prepareRenderable(IERenderable* renderable)
 {
+    renderable->checkForDirtyBuffers();
     renderable->bind();
 }
 
@@ -107,7 +106,7 @@ void IERenderEngine::draw(IERenderable* renderable, IEMesh* mesh)
     {
         GLenum mode = renderable->getDrawMode();
         int count = mesh->getPosVertices().size();
-        int instanceCount = renderable->instanceCount();
+        int instanceCount = renderable->shownInstanceCount();
         glFunc->glDrawArraysInstanced(mode, 0, count, instanceCount);
         break;
     }
@@ -115,7 +114,7 @@ void IERenderEngine::draw(IERenderable* renderable, IEMesh* mesh)
     {
         GLenum mode = renderable->getDrawMode();
         int count = mesh->getIndices().size();
-        int instanceCount = renderable->instanceCount();
+        int instanceCount = renderable->shownInstanceCount();
         glFunc->glDrawElementsInstanced(mode, count, GL_UNSIGNED_INT, 0, instanceCount);
         break;
     }

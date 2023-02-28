@@ -10,6 +10,7 @@ IEInput::IEInput(QWidget* hostWidget, QObject* parent) :
 
 IEInput::~IEInput()
 {
+    delete inputContainer;
     delete inputCapture;
 }
 

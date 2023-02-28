@@ -43,4 +43,6 @@ void GlslCollectionHighlight::openSyntaxFile(const QString& filePath)
 
         textSet << line.trimmed();
     }
+
+    inFile.close();
 }
