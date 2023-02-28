@@ -183,6 +183,18 @@ int IERenderable::hiddenInstanceCount() const
     return instanceData.hiddenCount();
 }
 
+void IERenderable::fetchBufferDataAtIndex(const int index, QMap<QString, QVector2D>& vec2Data)
+{
+    QMapIterator<QString, IEVertexBuffer<QVector2D>*> it1(vec2BufferContainer->getBuffers());
+    while(it1.hasNext())
+    {
+        it1.next();
+        if(!it1.value()->indexBoundsCheck(index))
+            continue;
+        vec2Data[it1.key()] = it1.value()->getBufferValue(index);
+    }
+}
+
 void IERenderable::appendVec2InstanceValue(const QString& key, const QVector2D& value)
 {
     auto buffer = vec2BufferContainer->getValue(key);

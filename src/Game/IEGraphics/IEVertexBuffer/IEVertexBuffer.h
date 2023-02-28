@@ -82,6 +82,9 @@ public:
 
     void subAllocate(const int offset, const void* subData)
     {
+        if(!this->indexBoundsCheck(offset))
+            return;
+
         if(!this->isCreated())
             return;
 

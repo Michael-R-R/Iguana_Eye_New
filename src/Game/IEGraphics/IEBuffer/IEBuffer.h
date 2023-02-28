@@ -65,6 +65,24 @@ public:
         return true;
     }
 
+    bool indexBoundsCheck(const int index) const
+    {
+        return (index > -1 && index < bufferData.size());
+    }
+
+    const QVector<T>& getBufferData() const
+    {
+        return bufferData;
+    }
+
+    T getBufferValue(const int index) const
+    {
+        if(!indexBoundsCheck(index))
+            return T();
+
+        return bufferData[index];
+    }
+
     void setBufferData(const QVector<T>& data)
     {
         bufferData.clear();
@@ -73,10 +91,7 @@ public:
 
     void setBufferValue(const int index, const T& val)
     {
-        if(bufferData.size() == 0)
-            return;
-
-        if(index < 0 || index > bufferData.size())
+        if(!indexBoundsCheck(index))
             return;
 
         bufferData[index] = val;

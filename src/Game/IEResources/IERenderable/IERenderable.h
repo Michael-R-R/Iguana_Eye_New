@@ -77,6 +77,7 @@ public:
     std::tuple<IEEntity, int> removeHiddenInstance(const IEEntity& entity);
     int shownInstanceCount() const;
     int hiddenInstanceCount() const;
+    void fetchBufferDataAtIndex(const int index, QMap<QString, QVector2D>& vec2Data);
 
     void appendVec2InstanceValue(const QString& key, const QVector2D& value);
     void appendVec3InstanceValue(const QString& key, const QVector3D& value);

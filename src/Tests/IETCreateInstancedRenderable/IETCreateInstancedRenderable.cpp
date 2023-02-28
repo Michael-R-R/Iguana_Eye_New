@@ -68,9 +68,6 @@ void IETCreateInstancedRenderable::setup(const GameStartEvent& event)
             int instanceIndex = renderable->addShownInstance(entity);
             renderable->appendVec2InstanceValue("aOffset", offset);
 
-            offset *= 1.1f;
-            renderable->setVec2InstanceValue("aOffset", instanceIndex, offset);
-
             int index = ecs->attachComponent(entity, IEComponentType::Renderable);
             renderableSystem->setRenderableId(index, renderable->getId());
             renderableSystem->setShownInstanceIndex(index, instanceIndex);

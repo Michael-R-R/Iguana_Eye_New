@@ -3,6 +3,10 @@
 #include <QDataStream>
 #include <QVector>
 #include <QMap>
+#include <QVector2D>
+#include <QVector3D>
+#include <QVector4D>
+#include <QMatrix4x4>
 
 #include "IEECSSystem.h"
 
@@ -18,6 +22,7 @@ class IEECSRenderableSystem : public IEECSSystem
         QVector<unsigned long long> renderableIdList;
         QVector<int> shownInstanceIndexList;
         QVector<int> hiddenInstanceIndexList;
+        QVector<QMap<QString, QVector2D>> tempVec2Data;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
@@ -60,10 +65,12 @@ public:
     unsigned long long getRenderableId(const int index) const;
     int getShownInstanceIndex(const int index) const;
     int getHiddenInstanceIndex(const int index) const;
+    QMap<QString, QVector2D> getTempVec2Data(const int index) const;
 
     void setRenderableId(const int index, const unsigned long long val);
     void setShownInstanceIndex(const int index, const int val);
     void setHiddenInstanceIndex(const int index, const int val);
+    void setTempVec2Data(const int index, const QMap<QString, QVector2D>& val);
 
 private:
     void removeInstanceFromRenderable(const unsigned long long id, const IEEntity& entity);
