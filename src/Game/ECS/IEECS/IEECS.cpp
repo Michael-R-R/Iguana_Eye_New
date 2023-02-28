@@ -109,6 +109,11 @@ bool IEECS::doesSystemExist(const IEComponentType type) const
     return systems.contains(type);
 }
 
+int IEECS::entityCount() const
+{
+    return entityManager->count();
+}
+
 void IEECS::clearSystems()
 {
     QMapIterator<IEComponentType, IEECSSystem*> it(systems);

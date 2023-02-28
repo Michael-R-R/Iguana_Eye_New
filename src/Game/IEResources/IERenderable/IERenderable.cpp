@@ -12,7 +12,7 @@ IERenderable::IERenderable() :
     vec3BufferContainer(new IEVertexBufferContainer<QVector3D>()),
     vec4BufferContainer(new IEVertexBufferContainer<QVector4D>()),
     mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>()),
-    instanceData(),
+    shownCount(0), hiddenCount(0),
     uniformData(),
     dirtyVec2Buffers(), dirtyVec3Buffers(),
     dirtyVec4Buffers(), dirtyMat4Buffers(),
@@ -32,7 +32,7 @@ IERenderable::IERenderable(const QString& path, const unsigned long long id) :
     vec3BufferContainer(new IEVertexBufferContainer<QVector3D>()),
     vec4BufferContainer(new IEVertexBufferContainer<QVector4D>()),
     mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>()),
-    instanceData(),
+    shownCount(0), hiddenCount(0),
     uniformData(),
     dirtyVec2Buffers(), dirtyVec3Buffers(),
     dirtyVec4Buffers(), dirtyMat4Buffers(),
@@ -53,7 +53,7 @@ IERenderable::IERenderable(const IERenderable& other) :
     vec3BufferContainer(new IEVertexBufferContainer<QVector3D>(*other.vec3BufferContainer)),
     vec4BufferContainer(new IEVertexBufferContainer<QVector4D>(*other.vec4BufferContainer)),
     mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>(*other.mat4BufferContainer)),
-    instanceData(other.instanceData),
+    shownCount(other.shownCount), hiddenCount(other.hiddenCount),
     uniformData(other.uniformData),
     dirtyVec2Buffers(other.dirtyVec2Buffers), dirtyVec3Buffers(other.dirtyVec3Buffers),
     dirtyVec4Buffers(other.dirtyVec4Buffers), dirtyMat4Buffers(other.dirtyMat4Buffers),
@@ -145,45 +145,43 @@ void IERenderable::setMat4BufferData(const QString& key, const QVector<QMatrix4x
     dirtyMat4Buffers.insert(key);
 }
 
-int IERenderable::addShownInstance(const IEEntity entity)
+int IERenderable::addShownInstance()
 {
-    return instanceData.addShown(entity);
+    return shownCount++;
 }
 
-int IERenderable::addHiddenInstance(const IEEntity entity)
+int IERenderable::addHiddenInstance()
 {
-    return instanceData.addHidden(entity);
+    return hiddenCount++;
 }
 
-std::tuple<IEEntity, int> IERenderable::removeShownInstance(const IEEntity& entity)
+void IERenderable::removeShownInstance(const int index)
 {
-    IEEntity movedEntity;
-    int index = -1;
-    std::tie(movedEntity, index) = instanceData.removeShown(entity);
-    if(index < 0)
-        return std::make_tuple(entity, index);
+    shownCount--;
 
     this->purgeInstanceValues(index);
-
-    return std::make_tuple(movedEntity, index);
 }
 
-std::tuple<IEEntity, int> IERenderable::removeHiddenInstance(const IEEntity& entity)
+void IERenderable::removeHiddenInstance()
 {
-    return instanceData.removeHidden(entity);
+    hiddenCount--;
 }
 
 int IERenderable::shownInstanceCount() const
 {
-    return instanceData.shownCount();
+    return shownCount;
 }
 
 int IERenderable::hiddenInstanceCount() const
 {
-    return instanceData.hiddenCount();
+    return hiddenCount;
 }
 
-void IERenderable::fetchBufferDataAtIndex(const int index, QMap<QString, QVector2D>& vec2Data)
+void IERenderable::fetchBufferDataAtIndex(const int index,
+                                          QMap<QString, QVector2D>& vec2Data,
+                                          QMap<QString, QVector3D>& vec3Data,
+                                          QMap<QString, QVector4D>& vec4Data,
+                                          QMap<QString, QMatrix4x4>& mat4Data)
 {
     QMapIterator<QString, IEVertexBuffer<QVector2D>*> it1(vec2BufferContainer->getBuffers());
     while(it1.hasNext())
@@ -192,6 +190,33 @@ void IERenderable::fetchBufferDataAtIndex(const int index, QMap<QString, QVector
         if(!it1.value()->indexBoundsCheck(index))
             continue;
         vec2Data[it1.key()] = it1.value()->getBufferValue(index);
+    }
+
+    QMapIterator<QString, IEVertexBuffer<QVector3D>*> it2(vec3BufferContainer->getBuffers());
+    while(it2.hasNext())
+    {
+        it2.next();
+        if(!it2.value()->indexBoundsCheck(index))
+            continue;
+        vec3Data[it2.key()] = it2.value()->getBufferValue(index);
+    }
+
+    QMapIterator<QString, IEVertexBuffer<QVector4D>*> it3(vec4BufferContainer->getBuffers());
+    while(it3.hasNext())
+    {
+        it3.next();
+        if(!it3.value()->indexBoundsCheck(index))
+            continue;
+        vec4Data[it3.key()] = it3.value()->getBufferValue(index);
+    }
+
+    QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it4(mat4BufferContainer->getBuffers());
+    while(it4.hasNext())
+    {
+        it4.next();
+        if(!it4.value()->indexBoundsCheck(index))
+            continue;
+        mat4Data[it4.key()] = it4.value()->getBufferValue(index);
     }
 }
 

@@ -1,15 +1,16 @@
 #pragma once
 
-class GameStartEvent;
+class IEGame;
 
 class IETRemoveInstancedRenderable
 {
+    int row;
 
 public:
-    IETRemoveInstancedRenderable(const GameStartEvent& event);
+    IETRemoveInstancedRenderable();
     ~IETRemoveInstancedRenderable() {}
 
-private:
-    void setup(const GameStartEvent& event);
+    void run(IEGame* game);
+    void oneShot(IEGame* game);
 };
 

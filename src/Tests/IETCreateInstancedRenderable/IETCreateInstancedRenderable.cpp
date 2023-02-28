@@ -1,21 +1,14 @@
 #include "IETCreateInstancedRenderable.h"
-#include "GameStartEvent.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEObjImporter.h"
 #include "IEGlslImporter.h"
 #include "IEHash.h"
 
-IETCreateInstancedRenderable::IETCreateInstancedRenderable(const GameStartEvent& event)
+IETCreateInstancedRenderable::IETCreateInstancedRenderable(IEGame* game) :
+    row(0)
 {
-    setup(event);
-}
-
-void IETCreateInstancedRenderable::setup(const GameStartEvent& event)
-{
-    auto scene = event.getScene();
-    auto ecs = event.getScene()->getECS();
-    auto nameSystem = ecs->getComponent<IEECSNameSystem>(IEComponentType::Name);
-    auto renderableSystem = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
+    auto scene = game->getIEScene();
 
     QString path = "./resources/meshes/tests/triangle.obj";
     unsigned long long id = IEHash::Compute(path);
@@ -55,6 +48,47 @@ void IETCreateInstancedRenderable::setup(const GameStartEvent& event)
     renderable->addVec2Buffer("aOffset", offsetBuffer);
     renderable->build(shader);
     scene->getRenderableManager()->add(id, renderable);
+}
+
+void IETCreateInstancedRenderable::run(IEGame* game)
+{
+    auto scene = game->getIEScene();
+    auto ecs = scene->getECS();
+    auto nameSystem = ecs->getComponent<IEECSNameSystem>(IEComponentType::Name);
+    auto renderableSystem = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
+
+    auto renderable = scene->getRenderableManager()->getValue(IEHash::Compute("./resources/renderables/tests/instanced_renderable.ierend"));
+
+    int end = row + 10;
+    for(; row < end; row++)
+    {
+        for(int col = 0; col < 101; col++)
+        {
+            IEEntity entity = ecs->create();
+            int nameIndex = nameSystem->lookUpIndex(entity);
+            nameSystem->setName(nameIndex, "Test_" + QString::number(row + col));
+
+            int index = ecs->attachComponent(entity, IEComponentType::Renderable);
+            renderableSystem->setRenderableId(index, renderable->getId());
+            renderableSystem->addShown(index);
+
+            QVector2D offset(row * 0.1f, col * 0.1f);
+            renderable->addShownInstance();
+            renderable->appendVec2InstanceValue("aOffset", offset);
+        }
+    }
+
+    row = (row > 101) ? 0 : row;
+}
+
+void IETCreateInstancedRenderable::oneShot(IEGame* game)
+{
+    auto scene = game->getIEScene();
+    auto ecs = scene->getECS();
+    auto nameSystem = ecs->getComponent<IEECSNameSystem>(IEComponentType::Name);
+    auto renderableSystem = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
+
+    auto renderable = scene->getRenderableManager()->getValue(IEHash::Compute("./resources/renderables/tests/instanced_renderable.ierend"));
 
     for(int i = -10; i < 11; i++)
     {
@@ -64,13 +98,12 @@ void IETCreateInstancedRenderable::setup(const GameStartEvent& event)
             int nameIndex = nameSystem->lookUpIndex(entity);
             nameSystem->setName(nameIndex, "Test_" + QString::number(i + j));
 
-            QVector2D offset(i * 0.1f, j * 0.1f);
-            int instanceIndex = renderable->addShownInstance(entity);
-            renderable->appendVec2InstanceValue("aOffset", offset);
-
             int index = ecs->attachComponent(entity, IEComponentType::Renderable);
             renderableSystem->setRenderableId(index, renderable->getId());
-            renderableSystem->setShownInstanceIndex(index, instanceIndex);
+            renderableSystem->addShown(index);
+
+            QVector2D offset(i * 0.1f, j * 0.1f);
+            renderable->appendVec2InstanceValue("aOffset", offset);
         }
     }
 }

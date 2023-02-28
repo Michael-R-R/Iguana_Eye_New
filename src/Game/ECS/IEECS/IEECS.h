@@ -44,6 +44,7 @@ public:
     bool detachComponent(const IEEntity entity, const IEComponentType type);
     bool hasComponent(const IEEntity entity, const IEComponentType type) const;
     bool doesSystemExist(const IEComponentType type) const;
+    int entityCount() const;
     void clearSystems();
 
 private:

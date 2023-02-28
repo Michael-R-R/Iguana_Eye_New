@@ -23,6 +23,7 @@ public:
     bool doesExist(const IEEntity& key) const;
     bool hasComponent(const IEEntity& key, const unsigned long long component) const;
     unsigned long long getAttachComponents(const IEEntity& key) const;
+    int count() const;
 
     friend QDataStream& operator<<(QDataStream& out, const IEEntityManager& manager)
     {

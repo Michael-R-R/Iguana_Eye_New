@@ -86,3 +86,8 @@ unsigned long long IEEntityManager::getAttachComponents(const IEEntity& key) con
 
     return entityMap[key];
 }
+
+int IEEntityManager::count() const
+{
+    return entityMap.size();
+}

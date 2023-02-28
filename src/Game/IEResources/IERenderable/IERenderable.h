@@ -12,7 +12,6 @@
 #include "IEResource.h"
 #include "IEIndexBuffer.h"
 #include "IEVertexBufferContainer.h"
-#include "IEInstanceData.h"
 #include "IEUniform.h"
 
 class IEShader;
@@ -39,7 +38,8 @@ protected:
     IEVertexBufferContainer<QVector3D>* vec3BufferContainer;
     IEVertexBufferContainer<QVector4D>* vec4BufferContainer;
     IEVertexBufferContainer<QMatrix4x4>* mat4BufferContainer;
-    IEInstanceData instanceData;
+    int shownCount;
+    int hiddenCount;
 
     IEUniform uniformData;
 
@@ -71,13 +71,17 @@ public:
     void setVec4BufferData(const QString& key, const QVector<QVector4D>& data);
     void setMat4BufferData(const QString& key, const QVector<QMatrix4x4>& data);
 
-    int addShownInstance(const IEEntity entity);
-    int addHiddenInstance(const IEEntity entity);
-    std::tuple<IEEntity, int> removeShownInstance(const IEEntity& entity);
-    std::tuple<IEEntity, int> removeHiddenInstance(const IEEntity& entity);
+    int addShownInstance();
+    int addHiddenInstance();
+    void removeShownInstance(const int index);
+    void removeHiddenInstance();
     int shownInstanceCount() const;
     int hiddenInstanceCount() const;
-    void fetchBufferDataAtIndex(const int index, QMap<QString, QVector2D>& vec2Data);
+    void fetchBufferDataAtIndex(const int index,
+                                QMap<QString, QVector2D>& vec2Data,
+                                QMap<QString, QVector3D>& vec3Data,
+                                QMap<QString, QVector4D>& vec4Data,
+                                QMap<QString, QMatrix4x4>& mat4Data);
 
     void appendVec2InstanceValue(const QString& key, const QVector2D& value);
     void appendVec3InstanceValue(const QString& key, const QVector3D& value);
@@ -136,7 +140,8 @@ public:
             << *renderable.vec3BufferContainer
             << *renderable.vec4BufferContainer
             << *renderable.mat4BufferContainer
-            << renderable.instanceData
+            << renderable.shownCount
+            << renderable.hiddenCount
             << renderable.uniformData
             << renderable.isEdited;
 
@@ -159,7 +164,8 @@ public:
            >> *renderable.vec3BufferContainer
            >> *renderable.vec4BufferContainer
            >> *renderable.mat4BufferContainer
-           >> renderable.instanceData
+           >> renderable.shownCount
+           >> renderable.hiddenCount
            >> renderable.uniformData
            >> renderable.isEdited;
 

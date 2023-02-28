@@ -1,21 +1,38 @@
 #include "IETRemoveInstancedRenderable.h"
-#include "GameStartEvent.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEHash.h"
 
-IETRemoveInstancedRenderable::IETRemoveInstancedRenderable(const GameStartEvent& event)
+IETRemoveInstancedRenderable::IETRemoveInstancedRenderable() :
+    row(0)
 {
-    setup(event);
+
 }
 
-void IETRemoveInstancedRenderable::setup(const GameStartEvent& event)
+void IETRemoveInstancedRenderable::run(IEGame* game)
 {
-    auto ecs = event.getScene()->getECS();
+    auto scene = game->getIEScene();
+    auto ecs = scene->getECS();
 
     int counter = 0;
-    for(int i = 0; i < 11; i++)
+    int end = row + 2;
+    for(; row < end; row++)
     {
-        for(int j = 0; j < 20; j++)
+        ecs->remove(IEEntity(++counter));
+    }
+
+    row = (row > 101) ? 0 : row;
+}
+
+void IETRemoveInstancedRenderable::oneShot(IEGame* game)
+{
+    auto scene = game->getIEScene();
+    auto ecs = scene->getECS();
+
+    int counter = 0;
+    for(int i = -10; i < 11; i++)
+    {
+        for(int j = -10; j < 11; j++)
         {
             ecs->remove(IEEntity(++counter));
         }

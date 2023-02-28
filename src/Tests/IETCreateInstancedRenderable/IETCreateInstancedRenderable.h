@@ -1,15 +1,16 @@
 #pragma once
 
-class GameStartEvent;
+class IEGame;
 
 class IETCreateInstancedRenderable
 {
+    int row;
 
 public:
-    IETCreateInstancedRenderable(const GameStartEvent& event);
+    IETCreateInstancedRenderable(IEGame* game);
     ~IETCreateInstancedRenderable() {}
 
-private:
-    void setup(const GameStartEvent& event);
+    void run(IEGame* game);
+    void oneShot(IEGame* game);
 };
 

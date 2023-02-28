@@ -2,11 +2,6 @@
 #include "GameStartEvent.h"
 #include "RenderEngineStartEvent.h"
 
-// TODO test
-#include "IETCreateInstancedRenderable.h"
-#include "IETHideInstancedRenderable.h"
-#include "IETRemoveInstancedRenderable.h"
-
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(new QSurfaceFormat()),
@@ -50,11 +45,6 @@ void IEGame::startup()
     renderEngine->startup(renderStartEvent);
     time->startup(this);
 
-    // TODO test
-    IETCreateInstancedRenderable testCreate(gameStartEvent);
-    IETHideInstancedRenderable testHide(gameStartEvent);
-    IETRemoveInstancedRenderable testRemove(gameStartEvent);
-
     this->setFocus();
 }
 
@@ -83,7 +73,7 @@ void IEGame::onRenderFrame()
 
     renderEngine->onRenderFrame();
 
-    time->processDeltaTime();
+    qDebug() << time->processDeltaTime();
 }
 
 void IEGame::initializeGL()
