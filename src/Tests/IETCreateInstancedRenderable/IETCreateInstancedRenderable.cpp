@@ -39,7 +39,6 @@ void IETCreateInstancedRenderable::setup(const GameStartEvent& event)
     id = IEHash::Compute(path);
     auto renderable = new IERenderable(path, id);
     renderable->setRenderType(IERenderable::RenderType::I_Index);
-    renderable->setDrawType(GL_TRIANGLES);
     renderable->setMeshId(mesh->getId());
     renderable->setMaterialId(material->getId());
     renderable->setShaderId(shader->getId());

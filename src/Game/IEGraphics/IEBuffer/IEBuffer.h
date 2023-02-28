@@ -50,6 +50,9 @@ public:
 
     bool removeBufferValue(const int indexToRemove)
     {
+        if(bufferData.size() == 0)
+            return false;
+
         if(indexToRemove < 0 || indexToRemove > bufferData.size())
             return false;
 
@@ -62,8 +65,17 @@ public:
         return true;
     }
 
+    void setBufferData(const QVector<T>& data)
+    {
+        bufferData.clear();
+        bufferData = data;
+    }
+
     void setBufferValue(const int index, const T& val)
     {
+        if(bufferData.size() == 0)
+            return;
+
         if(index < 0 || index > bufferData.size())
             return;
 

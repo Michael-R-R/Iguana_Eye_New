@@ -32,6 +32,7 @@ public:
     {
         if(!this->isCreated())
             this->create();
+
         this->setUsagePattern(QOpenGLBuffer::StaticDraw);
         this->bind();
         this->allocate(bufferData.data(), (int)(bufferData.size() * sizeof(unsigned)));

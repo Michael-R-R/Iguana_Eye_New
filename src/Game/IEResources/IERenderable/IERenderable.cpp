@@ -105,6 +105,46 @@ void IERenderable::addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>*
     dirtyMat4Buffers.insert(key);
 }
 
+void IERenderable::setVec2BufferData(const QString& key, const QVector<QVector2D>& data)
+{
+    auto buffer = vec2BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->setBufferData(data);
+    dirtyVec2Buffers.insert(key);
+}
+
+void IERenderable::setVec3BufferData(const QString& key, const QVector<QVector3D>& data)
+{
+    auto buffer = vec3BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->setBufferData(data);
+    dirtyVec3Buffers.insert(key);
+}
+
+void IERenderable::setVec4BufferData(const QString& key, const QVector<QVector4D>& data)
+{
+    auto buffer = vec4BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->setBufferData(data);
+    dirtyVec4Buffers.insert(key);
+}
+
+void IERenderable::setMat4BufferData(const QString& key, const QVector<QMatrix4x4>& data)
+{
+    auto buffer = mat4BufferContainer->getValue(key);
+    if(!buffer)
+        return;
+
+    buffer->setBufferData(data);
+    dirtyMat4Buffers.insert(key);
+}
+
 int IERenderable::addInstance(const IEEntity entity)
 {
     return instanceData.add(entity);
@@ -128,32 +168,16 @@ int IERenderable::lookUpInstanceIndex(const IEEntity& entity)
 void IERenderable::purgeInstanceValues(const int index)
 {
     QMapIterator<QString, IEVertexBuffer<QVector2D>*> it1(vec2BufferContainer->getBuffers());
-    while(it1.hasNext())
-    {
-        it1.next();
-        this->removeVec2InstanceValue(it1.key(), index);
-    }
+    while(it1.hasNext()) { it1.next(); removeVec2InstanceValue(it1.key(), index); }
 
     QMapIterator<QString, IEVertexBuffer<QVector3D>*> it2(vec3BufferContainer->getBuffers());
-    while(it2.hasNext())
-    {
-        it2.next();
-        this->removeVec3InstanceValue(it2.key(), index);
-    }
+    while(it2.hasNext()) { it2.next(); removeVec3InstanceValue(it2.key(), index); }
 
     QMapIterator<QString, IEVertexBuffer<QVector4D>*> it3(vec4BufferContainer->getBuffers());
-    while(it3.hasNext())
-    {
-        it3.next();
-        this->removeVec4InstanceValue(it3.key(), index);
-    }
+    while(it3.hasNext()) { it3.next(); removeVec4InstanceValue(it3.key(), index); }
 
     QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it4(mat4BufferContainer->getBuffers());
-    while(it4.hasNext())
-    {
-        it4.next();
-        this->removeMat4InstanceValue(it4.key(), index);
-    }
+    while(it4.hasNext()) { it4.next(); removeMat4InstanceValue(it4.key(), index); }
 }
 
 int IERenderable::appendVec2InstanceValue(const QString& key, const QVector2D& value)
@@ -338,3 +362,13 @@ void IERenderable::checkForDirtyBuffers()
         mat4BufferContainer->getValue(key)->reallocate();
     dirtyMat4Buffers.clear();
 }
+
+bool IERenderable::equals(const unsigned long long meshId,
+                          const unsigned long long materialId,
+                          const unsigned long long shaderId)
+{
+    return (this->meshId == meshId &&
+            this->materialId == materialId &&
+            this->shaderId == shaderId);
+}
+

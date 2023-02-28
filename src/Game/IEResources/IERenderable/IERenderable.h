@@ -66,6 +66,10 @@ public:
     void addVec3Buffer(const QString& key, IEVertexBuffer<QVector3D>* value);
     void addVec4Buffer(const QString& key, IEVertexBuffer<QVector4D>* value);
     void addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>* value);
+    void setVec2BufferData(const QString& key, const QVector<QVector2D>& data);
+    void setVec3BufferData(const QString& key, const QVector<QVector3D>& data);
+    void setVec4BufferData(const QString& key, const QVector<QVector4D>& data);
+    void setMat4BufferData(const QString& key, const QVector<QMatrix4x4>& data);
 
     int addInstance(const IEEntity entity);
     std::tuple<IEEntity, int> removeInstance(const IEEntity entity);
@@ -89,6 +93,9 @@ public:
     void build(IEShader* shader);
     void bindUniformData(IEShader* shader);
     void checkForDirtyBuffers();
+    bool equals(const unsigned long long meshId,
+                const unsigned long long materialId,
+                const unsigned long long shaderId);
 
     RenderType getRenderType() const { return renderType; }
     GLenum getDrawMode() const { return drawMode; }
@@ -107,6 +114,7 @@ public:
     void setUniformData(const IEUniform& val) { uniformData = val; }
     void setIsEdited(const bool val) { isEdited = val; }
 
+public:
     friend QDataStream& operator<<(QDataStream& out, const IERenderable& renderable)
     {
         out << renderable.filePath
