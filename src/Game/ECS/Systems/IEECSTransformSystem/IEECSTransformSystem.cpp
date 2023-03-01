@@ -1,24 +1,27 @@
 #include "IEECSTransformSystem.h"
 #include "GameStartEvent.h"
+#include "IEScene.h"
 #include "ECSOnUpdateEvent.h"
 #include "IEECSHierarchySystem.h"
 
 IEECSTransformSystem::IEECSTransformSystem() :
     IEECSSystem(),
     data(),
-    dirtyParents()
+    dirtyParents(),
+    renderableManager(nullptr)
 {
     IEECSTransformSystem::attach(IEEntity(-1));
 }
 
 IEECSTransformSystem::~IEECSTransformSystem()
 {
-
+    renderableManager = nullptr;
 }
 
-void IEECSTransformSystem::startup(const GameStartEvent&)
+void IEECSTransformSystem::startup(const GameStartEvent& event)
 {
-    // Not used
+    auto scene = event.getScene();
+    renderableManager = scene->getRenderableManager();
 }
 
 int IEECSTransformSystem::attach(const IEEntity entity)
@@ -72,23 +75,42 @@ bool IEECSTransformSystem::detach(const IEEntity entity)
 
 void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
 {
+    auto hierarchySystem = event->getHierarchy();
+    auto renderableSystem = event->getRenderable();
+
     QMapIterator<IEEntity, int> itParent(dirtyParents);
     while(itParent.hasNext())
     {
         itParent.next();
 
         QMap<IEEntity, int> dirtyChildren;
-        updateTransform(itParent.value(), dirtyChildren, event->getHierarchy());
+        updateTransform(itParent.value(), dirtyChildren, hierarchySystem);
 
         QMapIterator<IEEntity, int> itChild(dirtyChildren);
         while(itChild.hasNext())
         {
             itChild.next();
 
-            // TODO update child renderable instance
+            const int childIndex = renderableSystem->lookUpIndex(itChild.key());
+            const unsigned long long renderableId = renderableSystem->getRenderableId(childIndex);
+            const int childInstanceIndex = renderableSystem->getShownInstanceIndex(childIndex);
+            auto renderable = renderableManager->getValue(renderableId);
+            if(!renderable)
+                continue;
+
+            QMatrix4x4& transform = data.transformList[itChild.value()];
+            renderable->setMat4InstanceValue("aModel", childInstanceIndex, transform);
         }
 
-        // TODO update parent renderable instance
+        const int parentIndex = renderableSystem->lookUpIndex(itParent.key());
+        const unsigned long long renderableId = renderableSystem->getRenderableId(parentIndex);
+        const int parentInstanceIndex = renderableSystem->getShownInstanceIndex(parentIndex);
+        auto renderable = renderableManager->getValue(renderableId);
+        if(!renderable)
+            continue;
+
+        QMatrix4x4& transform = data.transformList[itParent.value()];
+        renderable->setMat4InstanceValue("aModel", parentInstanceIndex, transform);
     }
 
     dirtyParents.clear();
@@ -177,17 +199,17 @@ void IEECSTransformSystem::updateTransform(const int index,
 
     int hierarchyIndex = hierarchySystem->lookUpIndex(entity);
     IEEntity parentEntity = hierarchySystem->getParent(hierarchyIndex);
-
     int parentTransformIndex = this->lookUpIndex(parentEntity);
+
     if(parentTransformIndex > 0)
     {
-        // Update child entity
+        // Update child relative to parent
         data.transformList[index] = data.transformList[parentTransformIndex] * calcModelMatrix(index);
         dirtyChildren[entity] = index;
     }
     else
     {
-        // Update parent entity
+        // Update parent
         data.transformList[index] = calcModelMatrix(index);
     }
 

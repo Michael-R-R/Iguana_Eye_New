@@ -11,6 +11,7 @@
 class GameStartEvent;
 class ECSOnUpdateEvent;
 class IEECSHierarchySystem;
+class IERenderableManager;
 
 class IEECSTransformSystem : public IEECSSystem
 {
@@ -39,7 +40,10 @@ class IEECSTransformSystem : public IEECSSystem
 
     Data data;
 
-    QMap<IEEntity, int> dirtyParents;
+    QMap<IEEntity, int> dirtyParents; // Entity, index of data
+
+    // DOES NOT OWN THESE POINTERS
+    IERenderableManager* renderableManager;
 
 public:
     IEECSTransformSystem();

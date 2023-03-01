@@ -4,7 +4,7 @@
 
 enum class IEComponentType : unsigned long long
 {
-    Name = 1,                //
+    Name = 1,                // implemented
     Hierarchy = 2,           // implemented
     Input = 4,               // implemented
     Transform = 8,           // implemented
