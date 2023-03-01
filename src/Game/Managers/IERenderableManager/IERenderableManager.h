@@ -43,8 +43,12 @@ public:
         {
             if(item->getIsEdited() && item->getType() == IEResource::Type::Game)
             {
-                item->setIsEdited(false);
+                const QString& filePath = item->getFilePath();
+                if(!IEFile::doesPathExist(filePath))
+                    IEFile::makePath(filePath);
+
                 IESerialize::write<IERenderable>(item->getFilePath(), item);
+                item->setIsEdited(false);
             }
 
             out << item->getFilePath() << item->getType();

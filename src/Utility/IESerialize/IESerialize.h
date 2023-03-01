@@ -20,15 +20,7 @@ public:
 
         QFile outFile(path);
         if(!outFile.open(QIODevice::WriteOnly))
-        {
-            // Try making path
-            if(!IEFile::makePath(path))
-                return false;
-
-            // Try opening file again
-            if(!outFile.open(QIODevice::WriteOnly))
-                return false;
-        }
+            return false;
 
         QDataStream outStream(&outFile);
 
