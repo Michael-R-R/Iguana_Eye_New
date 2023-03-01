@@ -39,7 +39,6 @@ void IETHideInstancedRenderable::run(IEGame* game)
             int hiddenIndex = system->lookUpIndex(hiddenEntity);
             system->addShown(hiddenIndex);
             system->removeHidden(hiddenIndex);
-            system->transferTempData(hiddenIndex);
         }
     }
 

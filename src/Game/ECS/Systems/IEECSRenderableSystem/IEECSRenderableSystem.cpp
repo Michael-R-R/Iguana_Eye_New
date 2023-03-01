@@ -32,10 +32,10 @@ int IEECSRenderableSystem::attach(const IEEntity entity)
 
     entityMap[entity] = index;
 
-    data.entityList.append(entity);
-    data.renderableIdList.append(0);
-    data.shownInstanceIndexList.append(-1);
-    data.hiddenInstanceIndexList.append(-1);
+    data.entity.append(entity);
+    data.renderableId.append(0);
+    data.shownInstanceIndex.append(-1);
+    data.hiddenInstanceIndex.append(-1);
     data.tempVec2Data.append(QMap<QString, QVector2D>());
     data.tempVec3Data.append(QMap<QString, QVector3D>());
     data.tempVec4Data.append(QMap<QString, QVector4D>());
@@ -54,21 +54,21 @@ bool IEECSRenderableSystem::detach(const IEEntity entity)
     this->removeInstanceFromRenderable(indexToRemove);
 
     const int lastIndex = entityMap.size() - 1;
-    const IEEntity lastEntity = data.entityList[lastIndex];
+    const IEEntity lastEntity = data.entity[lastIndex];
 
-    data.entityList[indexToRemove] = data.entityList[lastIndex];
-    data.renderableIdList[indexToRemove] = data.renderableIdList[lastIndex];
-    data.shownInstanceIndexList[indexToRemove] = data.shownInstanceIndexList[lastIndex];
-    data.hiddenInstanceIndexList[indexToRemove] = data.hiddenInstanceIndexList[lastIndex];
+    data.entity[indexToRemove] = data.entity[lastIndex];
+    data.renderableId[indexToRemove] = data.renderableId[lastIndex];
+    data.shownInstanceIndex[indexToRemove] = data.shownInstanceIndex[lastIndex];
+    data.hiddenInstanceIndex[indexToRemove] = data.hiddenInstanceIndex[lastIndex];
     data.tempVec2Data[indexToRemove] = data.tempVec2Data[lastIndex];
     data.tempVec3Data[indexToRemove] = data.tempVec3Data[lastIndex];
     data.tempVec4Data[indexToRemove] = data.tempVec4Data[lastIndex];
     data.tempMat4Data[indexToRemove] = data.tempMat4Data[lastIndex];
 
-    data.entityList.removeLast();
-    data.renderableIdList.removeLast();
-    data.shownInstanceIndexList.removeLast();
-    data.hiddenInstanceIndexList.removeLast();
+    data.entity.removeLast();
+    data.renderableId.removeLast();
+    data.shownInstanceIndex.removeLast();
+    data.hiddenInstanceIndex.removeLast();
     data.tempVec2Data.removeLast();
     data.tempVec3Data.removeLast();
     data.tempVec4Data.removeLast();
@@ -93,15 +93,15 @@ void IEECSRenderableSystem::addShown(const int index)
     if(doesExistShown(index))
         return;
 
-    unsigned long long id = data.renderableIdList[index];
+    unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager->getValue(id);
     if(!renderable)
         return;
 
     const int instanceIndex = renderable->addShownInstance();
-    data.shownInstanceIndexList[index] = instanceIndex;
+    data.shownInstanceIndex[index] = instanceIndex;
 
-    IEEntity entity = data.entityList[index];
+    IEEntity entity = data.entity[index];
     add(entity, shownEntityMap[id], shownEntityList[id]);
 }
 
@@ -113,15 +113,15 @@ void IEECSRenderableSystem::addHidden(const int index)
     if(doesExistHidden(index))
         return;
 
-    unsigned long long id = data.renderableIdList[index];
+    unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager->getValue(id);
     if(!renderable)
         return;
 
     const int instanceIndex = renderable->addHiddenInstance();
-    data.hiddenInstanceIndexList[index] = instanceIndex;
+    data.hiddenInstanceIndex[index] = instanceIndex;
 
-    IEEntity entity = data.entityList[index];
+    IEEntity entity = data.entity[index];
     add(entity, hiddenEntityMap[id], hiddenEntityList[id]);
 
     cacheTempData(index);
@@ -135,25 +135,25 @@ void IEECSRenderableSystem::removeShown(const int index)
     if(!doesExistShown(index))
         return;
 
-    unsigned long long id = data.renderableIdList[index];
+    unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager->getValue(id);
     if(!renderable)
         return;
 
-    int instanceIndex = data.shownInstanceIndexList[index];
+    int instanceIndex = data.shownInstanceIndex[index];
     renderable->removeShownInstance(instanceIndex);
 
-    IEEntity entityToRemove = data.entityList[index];
+    IEEntity entityToRemove = data.entity[index];
     IEEntity movedEntity;
     int indexAt = -1;
     std::tie(movedEntity, indexAt) = this->remove(entityToRemove, shownEntityMap[id], shownEntityList[id]);
     if(indexAt > -1)
     {
         int movedEntityIndex = this->lookUpIndex(movedEntity);
-        data.shownInstanceIndexList[movedEntityIndex] = indexAt;
+        data.shownInstanceIndex[movedEntityIndex] = indexAt;
     }
 
-    data.shownInstanceIndexList[index] = -1;
+    data.shownInstanceIndex[index] = -1;
 }
 
 void IEECSRenderableSystem::removeHidden(const int index)
@@ -164,24 +164,26 @@ void IEECSRenderableSystem::removeHidden(const int index)
     if(!doesExistHidden(index))
         return;
 
-    unsigned long long id = data.renderableIdList[index];
+    unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager->getValue(id);
     if(!renderable)
         return;
 
     renderable->removeHiddenInstance();
 
-    IEEntity entityToRemove = data.entityList[index];
+    IEEntity entityToRemove = data.entity[index];
     IEEntity movedEntity;
     int indexAt = -1;
     std::tie(movedEntity, indexAt) = this->remove(entityToRemove, hiddenEntityMap[id], hiddenEntityList[id]);
     if(indexAt > -1)
     {
         int movedEntityIndex = this->lookUpIndex(movedEntity);
-        data.hiddenInstanceIndexList[movedEntityIndex] = indexAt;
+        data.hiddenInstanceIndex[movedEntityIndex] = indexAt;
     }
 
-    data.hiddenInstanceIndexList[index] = -1;
+    data.hiddenInstanceIndex[index] = -1;
+
+    transferTempData(index);
 }
 
 bool IEECSRenderableSystem::doesExistShown(const int index) const
@@ -189,11 +191,11 @@ bool IEECSRenderableSystem::doesExistShown(const int index) const
     if(!indexBoundCheck(index))
         return false;
 
-    unsigned long long id = data.renderableIdList[index];
+    unsigned long long id = data.renderableId[index];
     if(!shownEntityMap.contains(id))
         return false;
 
-    IEEntity entity = data.entityList[index];
+    IEEntity entity = data.entity[index];
     return shownEntityMap[id].contains(entity);
 }
 
@@ -202,11 +204,11 @@ bool IEECSRenderableSystem::doesExistHidden(const int index) const
     if(!indexBoundCheck(index))
         return false;
 
-    unsigned long long id = data.renderableIdList[index];
+    unsigned long long id = data.renderableId[index];
     if(!hiddenEntityMap.contains(id))
         return false;
 
-    IEEntity entity = data.entityList[index];
+    IEEntity entity = data.entity[index];
     return hiddenEntityMap[id].contains(entity);
 }
 
@@ -215,7 +217,7 @@ void IEECSRenderableSystem::transferTempData(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    unsigned long long id = data.renderableIdList[index];
+    unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager->getValue(id);
     if(!renderable)
         return;
@@ -239,9 +241,9 @@ QVector<unsigned long long> IEECSRenderableSystem::massReplaceRenderableId(const
 {
     QVector<unsigned long long> result;
 
-    for(int i = 1; i < data.renderableIdList.size(); i++)
+    for(int i = 1; i < data.renderableId.size(); i++)
     {
-        if(data.renderableIdList[i] == oldId)
+        if(data.renderableId[i] == oldId)
         {
             this->setRenderableId(i, newId);
             result.append(i);
@@ -255,13 +257,12 @@ QVector<unsigned long long> IEECSRenderableSystem::massPurgeRenderableId(const u
 {
     QVector<unsigned long long> result;
 
-    for(int i = 1; i < data.renderableIdList.size(); i++)
+    for(int i = 1; i < data.renderableId.size(); i++)
     {
-        if(data.renderableIdList[i] == idToPurge)
+        if(data.renderableId[i] == idToPurge)
         {
+            this->removeInstanceFromRenderable(i);
             this->setRenderableId(i, 0);
-            this->setShownInstanceIndex(i, -1);
-            this->setHiddenInstanceIndex(i, -1);
             result.append(i);
         }
     }
@@ -272,57 +273,25 @@ QVector<unsigned long long> IEECSRenderableSystem::massPurgeRenderableId(const u
 unsigned long long IEECSRenderableSystem::getRenderableId(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.renderableIdList[0];
+        return data.renderableId[0];
 
-    return data.renderableIdList[index];
+    return data.renderableId[index];
 }
 
 int IEECSRenderableSystem::getShownInstanceIndex(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.shownInstanceIndexList[0];
+        return data.shownInstanceIndex[0];
 
-    return data.shownInstanceIndexList[index];
+    return data.shownInstanceIndex[index];
 }
 
 int IEECSRenderableSystem::getHiddenInstanceIndex(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.hiddenInstanceIndexList[0];
+        return data.hiddenInstanceIndex[0];
 
-    return data.hiddenInstanceIndexList[index];
-}
-
-const QMap<QString, QVector2D>& IEECSRenderableSystem::getTempVec2Data(const int index) const
-{
-    if(!indexBoundCheck(index))
-        return data.tempVec2Data[0];
-
-    return data.tempVec2Data[index];
-}
-
-const QMap<QString, QVector3D>& IEECSRenderableSystem::getTempVec3Data(const int index) const
-{
-    if(!indexBoundCheck(index))
-        return data.tempVec3Data[0];
-
-    return data.tempVec3Data[index];
-}
-
-const QMap<QString, QVector4D>& IEECSRenderableSystem::getTempVec4Data(const int index) const
-{
-    if(!indexBoundCheck(index))
-        return data.tempVec4Data[0];
-
-    return data.tempVec4Data[index];
-}
-
-const QMap<QString, QMatrix4x4>& IEECSRenderableSystem::getTempMat4Data(const int index) const
-{
-    if(!indexBoundCheck(index))
-        return data.tempMat4Data[0];
-
-    return data.tempMat4Data[index];
+    return data.hiddenInstanceIndex[index];
 }
 
 void IEECSRenderableSystem::setRenderableId(const int index, const unsigned long long val)
@@ -330,7 +299,7 @@ void IEECSRenderableSystem::setRenderableId(const int index, const unsigned long
     if(!indexBoundCheck(index))
         return;
 
-    data.renderableIdList[index] = val;
+    data.renderableId[index] = val;
 }
 
 void IEECSRenderableSystem::setShownInstanceIndex(const int index, const int val)
@@ -338,7 +307,7 @@ void IEECSRenderableSystem::setShownInstanceIndex(const int index, const int val
     if(!indexBoundCheck(index))
         return;
 
-    data.shownInstanceIndexList[index] = val;
+    data.shownInstanceIndex[index] = val;
 }
 
 void IEECSRenderableSystem::setHiddenInstanceIndex(const int index, const int val)
@@ -346,39 +315,7 @@ void IEECSRenderableSystem::setHiddenInstanceIndex(const int index, const int va
     if(!indexBoundCheck(index))
         return;
 
-    data.hiddenInstanceIndexList[index] = val;
-}
-
-void IEECSRenderableSystem::setTempVec2Data(const int index, const QMap<QString, QVector2D>& val)
-{
-    if(!indexBoundCheck(index))
-        return;
-
-    data.tempVec2Data[index] = val;
-}
-
-void IEECSRenderableSystem::setTempVec3Data(const int index, const QMap<QString, QVector3D>& val)
-{
-    if(!indexBoundCheck(index))
-        return;
-
-    data.tempVec3Data[index] = val;
-}
-
-void IEECSRenderableSystem::setTempVec4Data(const int index, const QMap<QString, QVector4D>& val)
-{
-    if(!indexBoundCheck(index))
-        return;
-
-    data.tempVec4Data[index] = val;
-}
-
-void IEECSRenderableSystem::setTempMat4Data(const int index, const QMap<QString, QMatrix4x4>& val)
-{
-    if(!indexBoundCheck(index))
-        return;
-
-    data.tempMat4Data[index] = val;
+    data.hiddenInstanceIndex[index] = val;
 }
 
 int IEECSRenderableSystem::add(const IEEntity& entity, QMap<IEEntity, int>& map, QVector<IEEntity>& list)
@@ -415,17 +352,8 @@ void IEECSRenderableSystem::removeInstanceFromRenderable(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    const unsigned long long id = data.renderableIdList[index];
-    auto renderable = renderableManager->getValue(id);
-    if(!renderable)
-        return;
-
-    // Remove shown instance
     this->removeShown(index);
-
-    // Remove hidden instance
     this->removeHidden(index);
-
     this->clearTempData(index);
 }
 
@@ -434,11 +362,11 @@ void IEECSRenderableSystem::cacheTempData(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    int instanceIndex = data.shownInstanceIndexList[index];
+    int instanceIndex = data.shownInstanceIndex[index];
     if(instanceIndex < 0)
         return;
 
-    const unsigned long long id = data.renderableIdList[index];
+    const unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager->getValue(id);
     if(!renderable)
         return;

@@ -21,10 +21,7 @@ IEGame::IEGame(QWidget* parent) :
 
 IEGame::~IEGame()
 {
-    // TODO test
-    delete testCreate;
-    delete testHide;
-    delete testRemove;
+
 }
 
 void IEGame::init()
@@ -48,11 +45,6 @@ void IEGame::startup()
     renderEngine->startup(renderStartEvent);
     time->startup(this);
 
-    // TODO test
-    testCreate = new IETCreateInstancedRenderable(this);
-    testHide = new IETHideInstancedRenderable();
-    testRemove = new IETRemoveInstancedRenderable();
-
     this->setFocus();
 }
 
@@ -72,11 +64,6 @@ void IEGame::shutdown()
 
 void IEGame::onUpdateFrame()
 {
-    // TODO test
-    testCreate->run(this);
-    testHide->run(this);
-    testRemove->run(this);
-
     scene->onUpdateFrame();
 }
 
@@ -86,7 +73,7 @@ void IEGame::onRenderFrame()
 
     renderEngine->onRenderFrame();
 
-    qDebug() << time->processDeltaTime();
+    time->processDeltaTime();
 }
 
 void IEGame::initializeGL()
