@@ -28,8 +28,8 @@ int IEECSInputSystem::attach(const IEEntity entity)
 
     entityMap[entity] = index;
 
-    data.entityList.append(entity);
-    data.hasInputList.append(true);
+    data.entity.append(entity);
+    data.hasInput.append(true);
 
     return index;
 }
@@ -42,13 +42,13 @@ bool IEECSInputSystem::detach(const IEEntity entity)
     int indexToRemove = entityMap[entity];
 
     int lastIndex = entityMap.size() - 1;
-    IEEntity lastEntity = data.entityList[lastIndex];
+    IEEntity lastEntity = data.entity[lastIndex];
 
-    data.entityList[indexToRemove] = data.entityList[lastIndex];
-    data.hasInputList[indexToRemove] = data.hasInputList[lastIndex];
+    data.entity[indexToRemove] = data.entity[lastIndex];
+    data.hasInput[indexToRemove] = data.hasInput[lastIndex];
 
-    data.entityList.removeLast();
-    data.hasInputList.removeLast();
+    data.entity.removeLast();
+    data.hasInput.removeLast();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);
@@ -64,9 +64,9 @@ void IEECSInputSystem::onUpdateFrame(ECSOnUpdateEvent*)
 bool IEECSInputSystem::getHasInput(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.hasInputList[0];
+        return data.hasInput[0];
 
-    return data.hasInputList[index];
+    return data.hasInput[index];
 }
 
 void IEECSInputSystem::setHasInput(const int index, const bool val)
@@ -74,5 +74,5 @@ void IEECSInputSystem::setHasInput(const int index, const bool val)
     if(!indexBoundCheck(index))
         return;
 
-    data.hasInputList[index] = val;
+    data.hasInput[index] = val;
 }

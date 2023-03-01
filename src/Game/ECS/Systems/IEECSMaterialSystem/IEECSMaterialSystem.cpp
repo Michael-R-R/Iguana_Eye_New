@@ -1,17 +1,24 @@
 #include "IEECSMaterialSystem.h"
 #include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
+#include "IEScene.h"
 
 IEECSMaterialSystem::IEECSMaterialSystem() :
     IEECSSystem(),
-    data()
+    data(),
+    materialManager(nullptr)
 {
     IEECSMaterialSystem::attach(IEEntity(-1));
 }
 
-void IEECSMaterialSystem::startup(const GameStartEvent&)
+IEECSMaterialSystem::~IEECSMaterialSystem()
 {
-    // Not used
+    materialManager = nullptr;
+}
+
+void IEECSMaterialSystem::startup(const GameStartEvent& event)
+{
+    materialManager = event.getScene()->getMaterialManager();
 }
 
 int IEECSMaterialSystem::attach(const IEEntity entity)
@@ -23,8 +30,8 @@ int IEECSMaterialSystem::attach(const IEEntity entity)
 
     entityMap[entity] = index;
 
-    data.entityList.append(entity);
-    data.materialIdList.append(0);
+    data.entity.append(entity);
+    data.materialId.append(0);
 
     return index;
 }
@@ -37,13 +44,13 @@ bool IEECSMaterialSystem::detach(const IEEntity entity)
     const int indexToRemove = entityMap[entity];
 
     const int lastIndex = entityMap.size() - 1;
-    const IEEntity lastEntity = data.entityList[lastIndex];
+    const IEEntity lastEntity = data.entity[lastIndex];
 
-    data.entityList[indexToRemove] = data.entityList[lastIndex];
-    data.materialIdList[indexToRemove] = data.materialIdList[lastIndex];
+    data.entity[indexToRemove] = data.entity[lastIndex];
+    data.materialId[indexToRemove] = data.materialId[lastIndex];
 
-    data.entityList.removeLast();
-    data.materialIdList.removeLast();
+    data.entity.removeLast();
+    data.materialId.removeLast();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);
@@ -60,9 +67,9 @@ QVector<unsigned long long> IEECSMaterialSystem::massReplaceMaterialId(const uns
 {
     QVector<unsigned long long> result;
 
-    for(int i = 1; i < data.materialIdList.size(); i++)
+    for(int i = 1; i < data.materialId.size(); i++)
     {
-        if(data.materialIdList[i] == oldId)
+        if(data.materialId[i] == oldId)
         {
             this->setMaterialId(i, newId);
             result.append(i);
@@ -76,9 +83,9 @@ QVector<unsigned long long> IEECSMaterialSystem::massPurgeMaterialId(const unsig
 {
     QVector<unsigned long long> result;
 
-    for(int i = 1; i < data.materialIdList.size(); i++)
+    for(int i = 1; i < data.materialId.size(); i++)
     {
-        if(data.materialIdList[i] == idToPurge)
+        if(data.materialId[i] == idToPurge)
         {
             this->setMaterialId(i, 0);
             result.append(i);
@@ -88,12 +95,20 @@ QVector<unsigned long long> IEECSMaterialSystem::massPurgeMaterialId(const unsig
     return result;
 }
 
+IEMaterial* IEECSMaterialSystem::getAttachedMaterial(const int index)
+{
+    if(!indexBoundCheck(index))
+        return nullptr;
+
+    return materialManager->getValue(data.materialId[index]);
+}
+
 unsigned long long IEECSMaterialSystem::getMaterialId(const int index)
 {
     if(!indexBoundCheck(index))
-        return data.materialIdList[0];
+        return data.materialId[0];
 
-    return data.materialIdList[index];
+    return data.materialId[index];
 }
 
 void IEECSMaterialSystem::setMaterialId(const int index, const unsigned long long val)
@@ -101,5 +116,5 @@ void IEECSMaterialSystem::setMaterialId(const int index, const unsigned long lon
     if(!indexBoundCheck(index))
         return;
 
-    data.materialIdList[index] = val;
+    data.materialId[index] = val;
 }

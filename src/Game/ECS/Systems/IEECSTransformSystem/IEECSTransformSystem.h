@@ -17,30 +17,30 @@ class IEECSTransformSystem : public IEECSSystem
 {
     struct Data
     {
-        QVector<IEEntity> entityList;
-        QVector<QVector3D> positionList;
-        QVector<QVector3D> rotationList;
-        QVector<QVector3D> scaleList;
-        QVector<QMatrix4x4> transformList;
+        QVector<IEEntity> entity;
+        QVector<QVector3D> position;
+        QVector<QVector3D> rotation;
+        QVector<QVector3D> scale;
+        QVector<QMatrix4x4> transform;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entityList << data.positionList << data.rotationList
-                << data.scaleList << data.transformList;
+            out << data.entity << data.position << data.rotation
+                << data.scale << data.transform;
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entityList >> data.positionList >> data.rotationList
-               >> data.scaleList >> data.transformList;
+            in >> data.entity >> data.position >> data.rotation
+               >> data.scale >> data.transform;
             return in;
         }
     };
 
     Data data;
 
-    QMap<IEEntity, int> dirtyParents; // Entity, index of data
+    QMap<IEEntity, int> dirtyParents; // Dirty entity, index of data
 
     // DOES NOT OWN THESE POINTERS
     IERenderableManager* renderableManager;

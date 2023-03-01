@@ -13,22 +13,22 @@ class IEECSNameSystem : public IEECSSystem
 {
     struct Data
     {
-        QVector<IEEntity> entityList;
-        QVector<unsigned long long> nameKeyList;
-        QVector<unsigned long long> tagKeyList;
-        QVector<int> tagIndexList;
+        QVector<IEEntity> entity;
+        QVector<unsigned long long> nameKey;
+        QVector<unsigned long long> tagKey;
+        QVector<int> tagIndex;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entityList << data.nameKeyList
-                << data.tagKeyList << data.tagIndexList;
+            out << data.entity << data.nameKey
+                << data.tagKey << data.tagIndex;
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entityList >> data.nameKeyList
-               >> data.tagKeyList >> data.tagIndexList;
+            in >> data.entity >> data.nameKey
+               >> data.tagKey >> data.tagIndex;
             return in;
         }
     };

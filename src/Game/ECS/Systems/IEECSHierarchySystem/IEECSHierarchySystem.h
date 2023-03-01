@@ -12,19 +12,19 @@ class IEECSHierarchySystem : public IEECSSystem
 {
     struct Data
     {
-        QVector<IEEntity> entityList;
-        QVector<IEEntity> parentList;
-        QVector<QVector<IEEntity>> childrenList;
+        QVector<IEEntity> entity;
+        QVector<IEEntity> parent;
+        QVector<QVector<IEEntity>> children;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entityList << data.parentList << data.childrenList;
+            out << data.entity << data.parent << data.children;
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entityList >> data.parentList >> data.childrenList;
+            in >> data.entity >> data.parent >> data.children;
             return in;
         }
     };

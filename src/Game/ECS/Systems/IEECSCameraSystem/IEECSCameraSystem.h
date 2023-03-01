@@ -2,28 +2,29 @@
 
 #include <QDataStream>
 #include <QVector>
+#include <QMap>
 
 #include "IEECSSystem.h"
 
 class GameStartEvent;
 class ECSOnUpdateEvent;
 
-class IEECSInputSystem : public IEECSSystem
+class IEECSCameraSystem : public IEECSSystem
 {
     struct Data
     {
         QVector<IEEntity> entity;
-        QVector<bool> hasInput;
+        QVector<unsigned long long> cameraId;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entity << data.hasInput;
+            out << data.entity << data.cameraId;
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entity >> data.hasInput;
+            in >> data.entity >> data.cameraId;
             return in;
         }
     };
@@ -31,26 +32,24 @@ class IEECSInputSystem : public IEECSSystem
     Data data;
 
 public:
-    IEECSInputSystem();
-    ~IEECSInputSystem();
+    IEECSCameraSystem();
+    ~IEECSCameraSystem();
 
     void startup(const GameStartEvent& event) override;
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
-    bool getHasInput(const int index) const;
-    void setHasInput(const int index, const bool val);
-
-    friend QDataStream& operator<<(QDataStream& out, const IEECSInputSystem& system)
+    friend QDataStream& operator<<(QDataStream& out, const IEECSCameraSystem& system)
     {
         out << system.entityMap << system.data;
         return out;
     }
 
-    friend QDataStream& operator>>(QDataStream& in, IEECSInputSystem& system)
+    friend QDataStream& operator>>(QDataStream& in, IEECSCameraSystem& system)
     {
         in >> system.entityMap >> system.data;
         return in;
     }
 };
+

@@ -7,28 +7,33 @@
 
 class GameStartEvent;
 class ECSOnUpdateEvent;
+class IEShaderManager;
+class IEShader;
 
 class IEECSShaderSystem : public IEECSSystem
 {
     struct Data
     {
-        QVector<IEEntity> entityList;
-        QVector<unsigned long long> shaderIdList;
+        QVector<IEEntity> entity;
+        QVector<unsigned long long> shaderId;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entityList << data.shaderIdList;
+            out << data.entity << data.shaderId;
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entityList >> data.shaderIdList;
+            in >> data.entity >> data.shaderId;
             return in;
         }
     };
 
     Data data;
+
+    // DOES NOT OWN THIS POINTER
+    IEShaderManager* shaderManager;
 
 public:
     IEECSShaderSystem();
@@ -41,6 +46,7 @@ public:
 
     QVector<unsigned long long> massReplaceShaderId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeShaderId(const unsigned long long idToPurge);
+    IEShader* getAttachedShader(const int index);
 
     unsigned long long getShaderId(const int index);
     void setShaderId(const int index, const unsigned long long val);

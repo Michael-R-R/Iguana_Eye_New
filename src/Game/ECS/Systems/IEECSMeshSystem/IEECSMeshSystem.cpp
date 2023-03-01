@@ -1,22 +1,24 @@
 #include "IEECSMeshSystem.h"
 #include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
+#include "IEScene.h"
 
 IEECSMeshSystem::IEECSMeshSystem() :
     IEECSSystem(),
-    data()
+    data(),
+    meshManager(nullptr)
 {
     IEECSMeshSystem::attach(IEEntity(-1));
 }
 
 IEECSMeshSystem::~IEECSMeshSystem()
 {
-
+    meshManager = nullptr;
 }
 
-void IEECSMeshSystem::startup(const GameStartEvent&)
+void IEECSMeshSystem::startup(const GameStartEvent& event)
 {
-    // Not used
+    meshManager = event.getScene()->getMeshManager();
 }
 
 int IEECSMeshSystem::attach(const IEEntity entity)
@@ -28,8 +30,8 @@ int IEECSMeshSystem::attach(const IEEntity entity)
 
     entityMap[entity] = index;
 
-    data.entityList.append(entity);
-    data.meshIdList.append(0);
+    data.entity.append(entity);
+    data.meshId.append(0);
 
     return index;
 }
@@ -42,13 +44,13 @@ bool IEECSMeshSystem::detach(const IEEntity entity)
     const int indexToRemove = entityMap[entity];
 
     const int lastIndex = entityMap.size() - 1;
-    const IEEntity lastEntity = data.entityList[lastIndex];
+    const IEEntity lastEntity = data.entity[lastIndex];
 
-    data.entityList[indexToRemove] = data.entityList[lastIndex];
-    data.meshIdList[indexToRemove] = data.meshIdList[lastIndex];
+    data.entity[indexToRemove] = data.entity[lastIndex];
+    data.meshId[indexToRemove] = data.meshId[lastIndex];
 
-    data.entityList.removeLast();
-    data.meshIdList.removeLast();
+    data.entity.removeLast();
+    data.meshId.removeLast();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);
@@ -65,9 +67,9 @@ QVector<unsigned long long> IEECSMeshSystem::massReplaceMeshId(const unsigned lo
 {
     QVector<unsigned long long> result;
 
-    for(int i = 1; i < data.meshIdList.size(); i++)
+    for(int i = 1; i < data.meshId.size(); i++)
     {
-        if(data.meshIdList[i] == oldId)
+        if(data.meshId[i] == oldId)
         {
             this->setMeshId(i, newId);
             result.append(i);
@@ -81,9 +83,9 @@ QVector<unsigned long long> IEECSMeshSystem::massPurgeMeshId(const unsigned long
 {
     QVector<unsigned long long> result;
 
-    for(int i = 1; i < data.meshIdList.size(); i++)
+    for(int i = 1; i < data.meshId.size(); i++)
     {
-        if(data.meshIdList[i] == idToPurge)
+        if(data.meshId[i] == idToPurge)
         {
             this->setMeshId(i, 0);
             result.append(i);
@@ -93,12 +95,20 @@ QVector<unsigned long long> IEECSMeshSystem::massPurgeMeshId(const unsigned long
     return result;
 }
 
+IEMesh* IEECSMeshSystem::getAttachedMesh(const int index)
+{
+    if(!indexBoundCheck(index))
+        return nullptr;
+
+    return meshManager->getValue(data.meshId[index]);
+}
+
 unsigned long long IEECSMeshSystem::getMeshId(const int index)
 {
     if(!indexBoundCheck(index))
-        return data.meshIdList[0];
+        return data.meshId[0];
 
-    return data.meshIdList[index];
+    return data.meshId[index];
 }
 
 void IEECSMeshSystem::setMeshId(const int index, const unsigned long long val)
@@ -106,5 +116,5 @@ void IEECSMeshSystem::setMeshId(const int index, const unsigned long long val)
     if(!indexBoundCheck(index))
         return;
 
-    data.meshIdList[index] = val;
+    data.meshId[index] = val;
 }

@@ -1,17 +1,24 @@
 #include "IEECSShaderSystem.h"
 #include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
+#include "IEScene.h"
 
 IEECSShaderSystem::IEECSShaderSystem() :
     IEECSSystem(),
-    data()
+    data(),
+    shaderManager(nullptr)
 {
     IEECSShaderSystem::attach(IEEntity(-1));
 }
 
-void IEECSShaderSystem::startup(const GameStartEvent&)
+IEECSShaderSystem::~IEECSShaderSystem()
 {
-    // Not used
+    shaderManager = nullptr;
+}
+
+void IEECSShaderSystem::startup(const GameStartEvent& event)
+{
+    shaderManager = event.getScene()->getShaderManager();
 }
 
 int IEECSShaderSystem::attach(const IEEntity entity)
@@ -23,8 +30,8 @@ int IEECSShaderSystem::attach(const IEEntity entity)
 
     entityMap[entity] = index;
 
-    data.entityList.append(entity);
-    data.shaderIdList.append(0);
+    data.entity.append(entity);
+    data.shaderId.append(0);
 
     return index;
 }
@@ -37,13 +44,13 @@ bool IEECSShaderSystem::detach(const IEEntity entity)
     const int indexToRemove = entityMap[entity];
 
     const int lastIndex = entityMap.size() - 1;
-    const IEEntity lastEntity = data.entityList[lastIndex];
+    const IEEntity lastEntity = data.entity[lastIndex];
 
-    data.entityList[indexToRemove] = data.entityList[lastIndex];
-    data.shaderIdList[indexToRemove] = data.shaderIdList[lastIndex];
+    data.entity[indexToRemove] = data.entity[lastIndex];
+    data.shaderId[indexToRemove] = data.shaderId[lastIndex];
 
-    data.entityList.removeLast();
-    data.entityList.removeLast();
+    data.entity.removeLast();
+    data.entity.removeLast();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);
@@ -60,9 +67,9 @@ QVector<unsigned long long> IEECSShaderSystem::massReplaceShaderId(const unsigne
 {
     QVector<unsigned long long> result;
 
-    for(int i = 1; i < data.shaderIdList.size(); i++)
+    for(int i = 1; i < data.shaderId.size(); i++)
     {
-        if(data.shaderIdList[i] == oldId)
+        if(data.shaderId[i] == oldId)
         {
             this->setShaderId(i, newId);
             result.append(i);
@@ -76,9 +83,9 @@ QVector<unsigned long long> IEECSShaderSystem::massPurgeShaderId(const unsigned 
 {
     QVector<unsigned long long> result;
 
-    for(int i = 1; i < data.shaderIdList.size(); i++)
+    for(int i = 1; i < data.shaderId.size(); i++)
     {
-        if(data.shaderIdList[i] == idToPurge)
+        if(data.shaderId[i] == idToPurge)
         {
             this->setShaderId(i, 0);
             result.append(i);
@@ -88,12 +95,20 @@ QVector<unsigned long long> IEECSShaderSystem::massPurgeShaderId(const unsigned 
     return result;
 }
 
+IEShader* IEECSShaderSystem::getAttachedShader(const int index)
+{
+    if(!indexBoundCheck(index))
+        return nullptr;
+
+    return shaderManager->getValue(data.shaderId[index]);
+}
+
 unsigned long long IEECSShaderSystem::getShaderId(const int index)
 {
     if(!indexBoundCheck(index))
-        return data.shaderIdList[0];
+        return data.shaderId[0];
 
-    return data.shaderIdList[index];
+    return data.shaderId[index];
 }
 
 void IEECSShaderSystem::setShaderId(const int index, const unsigned long long val)
@@ -101,5 +116,5 @@ void IEECSShaderSystem::setShaderId(const int index, const unsigned long long va
     if(!indexBoundCheck(index))
         return;
 
-    data.shaderIdList[index] = val;
+    data.shaderId[index] = val;
 }

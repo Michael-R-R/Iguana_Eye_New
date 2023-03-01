@@ -7,28 +7,33 @@
 
 class GameStartEvent;
 class ECSOnUpdateEvent;
+class IEMeshManager;
+class IEMesh;
 
 class IEECSMeshSystem : public IEECSSystem
 {
     struct Data
     {
-        QVector<IEEntity> entityList;
-        QVector<unsigned long long> meshIdList;
+        QVector<IEEntity> entity;
+        QVector<unsigned long long> meshId;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entityList << data.meshIdList;
+            out << data.entity << data.meshId;
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entityList >> data.meshIdList;
+            in >> data.entity >> data.meshId;
             return in;
         }
     };
 
     Data data;
+
+    // DOES NOT OWN THIS POINTER
+    IEMeshManager* meshManager;
 
 public:
     IEECSMeshSystem();
@@ -41,6 +46,7 @@ public:
 
     QVector<unsigned long long> massReplaceMeshId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeMeshId(const unsigned long long idToPurge);
+    IEMesh* getAttachedMesh(const int index);
 
     unsigned long long getMeshId(const int index);
     void setMeshId(const int index, const unsigned long long val);

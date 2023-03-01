@@ -34,10 +34,10 @@ int IEECSNameSystem::attach(const IEEntity entity)
     int index = entityMap.size();
     entityMap[entity] = index;
 
-    data.entityList.append(entity);
-    data.nameKeyList.append(hash);
-    data.tagKeyList.append(0);
-    data.tagIndexList.append(-1);
+    data.entity.append(entity);
+    data.nameKey.append(hash);
+    data.tagKey.append(0);
+    data.tagIndex.append(-1);
 
     return index;
 }
@@ -49,21 +49,21 @@ bool IEECSNameSystem::detach(const IEEntity entity)
 
     const int indexToRemove = entityMap[entity];
 
-    this->removeName(data.nameKeyList[indexToRemove]);
+    this->removeName(data.nameKey[indexToRemove]);
     this->clearEntityTag(indexToRemove);
 
     const int lastIndex = entityMap.size() - 1;
-    const IEEntity lastEntity = data.entityList[lastIndex];
+    const IEEntity lastEntity = data.entity[lastIndex];
 
-    data.entityList[indexToRemove] = data.entityList[lastIndex];
-    data.nameKeyList[indexToRemove] = data.nameKeyList[lastIndex];
-    data.tagKeyList[indexToRemove] = data.tagKeyList[lastIndex];
-    data.tagIndexList[indexToRemove] = data.tagIndexList[lastIndex];
+    data.entity[indexToRemove] = data.entity[lastIndex];
+    data.nameKey[indexToRemove] = data.nameKey[lastIndex];
+    data.tagKey[indexToRemove] = data.tagKey[lastIndex];
+    data.tagIndex[indexToRemove] = data.tagIndex[lastIndex];
 
-    data.entityList.removeLast();
-    data.nameKeyList.removeLast();
-    data.tagKeyList.removeLast();
-    data.tagIndexList.removeLast();
+    data.entity.removeLast();
+    data.nameKey.removeLast();
+    data.tagKey.removeLast();
+    data.tagIndex.removeLast();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);
@@ -95,8 +95,8 @@ void IEECSNameSystem::clearNameTag(const QString& name)
     foreach(auto entity, tagEntityMap[hash])
     {
         const int index = this->lookUpIndex(entity);
-        data.tagKeyList[index] = 0;
-        data.tagIndexList[index] = -1;
+        data.tagKey[index] = 0;
+        data.tagIndex[index] = -1;
     }
 
     tagNameMap.remove(hash);
@@ -108,12 +108,12 @@ void IEECSNameSystem::clearEntityTag(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    const unsigned long long key = data.tagKeyList[index];
-    const int tagIndex = data.tagIndexList[index];
+    const unsigned long long key = data.tagKey[index];
+    const int tagIndex = data.tagIndex[index];
     this->removeEntityTag(key, tagIndex);
 
-    data.tagKeyList[index] = 0;
-    data.tagIndexList[index] = -1;
+    data.tagKey[index] = 0;
+    data.tagIndex[index] = -1;
 }
 
 QVector<IEEntity> IEECSNameSystem::getEntityTagList(const QString& name) const
@@ -128,25 +128,25 @@ QVector<IEEntity> IEECSNameSystem::getEntityTagList(const QString& name) const
 unsigned long long IEECSNameSystem::getNameKey(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.nameKeyList[0];
+        return data.nameKey[0];
 
-    return data.nameKeyList[index];
+    return data.nameKey[index];
 }
 
 unsigned long long IEECSNameSystem::getTagKey(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.tagKeyList[0];
+        return data.tagKey[0];
 
-    return data.tagKeyList[index];
+    return data.tagKey[index];
 }
 
 int IEECSNameSystem::getTagIndex(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.tagIndexList[0];
+        return data.tagIndex[0];
 
-    return data.tagIndexList[index];
+    return data.tagIndex[index];
 }
 
 QString IEECSNameSystem::getName(const int index) const
@@ -154,7 +154,7 @@ QString IEECSNameSystem::getName(const int index) const
     if(!indexBoundCheck(index))
         return nameMap[0];
 
-    return nameMap[data.nameKeyList[index]];
+    return nameMap[data.nameKey[index]];
 }
 
 QString IEECSNameSystem::getTagName(const int index) const
@@ -162,7 +162,7 @@ QString IEECSNameSystem::getTagName(const int index) const
     if(!indexBoundCheck(index))
         return tagNameMap[0];
 
-    return tagNameMap[data.tagKeyList[index]];
+    return tagNameMap[data.tagKey[index]];
 }
 
 void IEECSNameSystem::setName(const int index, const QString& val)
@@ -174,9 +174,9 @@ void IEECSNameSystem::setName(const int index, const QString& val)
     QString name = "";
     std::tie(hash, name) = this->hashString(val);
 
-    this->removeName(data.nameKeyList[index]);
+    this->removeName(data.nameKey[index]);
 
-    data.nameKeyList[index] = hash;
+    data.nameKey[index] = hash;
     nameMap[hash] = name;
 }
 
@@ -198,9 +198,9 @@ void IEECSNameSystem::setTag(const int index, const QString& val)
     if(tagNameMap.contains(hash))
     {
         // Add entity to existing tag map
-        data.tagKeyList[index] = hash;
-        data.tagIndexList[index] = tagEntityMap[hash].size();
-        tagEntityMap[hash].append(data.entityList[index]);
+        data.tagKey[index] = hash;
+        data.tagIndex[index] = tagEntityMap[hash].size();
+        tagEntityMap[hash].append(data.entity[index]);
     }
     else
     {
@@ -208,9 +208,9 @@ void IEECSNameSystem::setTag(const int index, const QString& val)
         tagNameMap[hash] = val;
         tagEntityMap[hash] = QVector<IEEntity>();
 
-        data.tagKeyList[index] = hash;
-        data.tagIndexList[index] = tagEntityMap[hash].size();
-        tagEntityMap[hash].append(data.entityList[index]);
+        data.tagKey[index] = hash;
+        data.tagIndex[index] = tagEntityMap[hash].size();
+        tagEntityMap[hash].append(data.entity[index]);
     }
 }
 
@@ -253,7 +253,7 @@ void IEECSNameSystem::removeEntityTag(const unsigned long long key, const int ta
     tagEntityMap[key][tagIndex] = tagEntityMap[key][lastIndex];
 
     const int entityIndex = this->lookUpIndex(tagEntityMap[key][tagIndex]);
-    data.tagIndexList[entityIndex] = tagIndex;
+    data.tagIndex[entityIndex] = tagIndex;
 
     tagEntityMap[key].removeLast();
 }

@@ -34,11 +34,11 @@ int IEECSTransformSystem::attach(const IEEntity entity)
     entityMap[entity] = index;
     dirtyParents[entity] = index;
 
-    data.entityList.append(entity);
-    data.positionList.append(QVector3D(0.0f, 0.0f, 0.0f));
-    data.rotationList.append(QVector3D(0.0f, 0.0f, 0.0f));
-    data.scaleList.append(QVector3D(1.0f, 1.0f, 1.0f));
-    data.transformList.append(QMatrix4x4());
+    data.entity.append(entity);
+    data.position.append(QVector3D(0.0f, 0.0f, 0.0f));
+    data.rotation.append(QVector3D(0.0f, 0.0f, 0.0f));
+    data.scale.append(QVector3D(1.0f, 1.0f, 1.0f));
+    data.transform.append(QMatrix4x4());
 
     return index;
 }
@@ -51,19 +51,19 @@ bool IEECSTransformSystem::detach(const IEEntity entity)
     int indexToRemove = entityMap[entity];
 
     int lastIndex = entityMap.size() - 1;
-    IEEntity lastEntity = data.entityList[lastIndex];
+    IEEntity lastEntity = data.entity[lastIndex];
 
-    data.entityList[indexToRemove] = data.entityList[lastIndex];
-    data.positionList[indexToRemove] = data.positionList[lastIndex];
-    data.rotationList[indexToRemove] = data.rotationList[lastIndex];
-    data.scaleList[indexToRemove] = data.scaleList[lastIndex];
-    data.transformList[indexToRemove] = data.transformList[lastIndex];
+    data.entity[indexToRemove] = data.entity[lastIndex];
+    data.position[indexToRemove] = data.position[lastIndex];
+    data.rotation[indexToRemove] = data.rotation[lastIndex];
+    data.scale[indexToRemove] = data.scale[lastIndex];
+    data.transform[indexToRemove] = data.transform[lastIndex];
 
-    data.entityList.removeLast();
-    data.positionList.removeLast();
-    data.rotationList.removeLast();
-    data.scaleList.removeLast();
-    data.transformList.removeLast();
+    data.entity.removeLast();
+    data.position.removeLast();
+    data.rotation.removeLast();
+    data.scale.removeLast();
+    data.transform.removeLast();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);
@@ -98,7 +98,7 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
             if(!renderable)
                 continue;
 
-            QMatrix4x4& transform = data.transformList[itChild.value()];
+            QMatrix4x4& transform = data.transform[itChild.value()];
             renderable->setMat4InstanceValue("aModel", childInstanceIndex, transform);
         }
 
@@ -109,7 +109,7 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
         if(!renderable)
             continue;
 
-        QMatrix4x4& transform = data.transformList[itParent.value()];
+        QMatrix4x4& transform = data.transform[itParent.value()];
         renderable->setMat4InstanceValue("aModel", parentInstanceIndex, transform);
     }
 
@@ -119,33 +119,33 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
 const QVector3D& IEECSTransformSystem::getPosition(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.positionList[0];
+        return data.position[0];
 
-    return data.positionList[index];
+    return data.position[index];
 }
 
 const QVector3D& IEECSTransformSystem::getRotation(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.rotationList[0];
+        return data.rotation[0];
 
-    return data.rotationList[index];
+    return data.rotation[index];
 }
 
 const QVector3D& IEECSTransformSystem::getScale(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.scaleList[0];
+        return data.scale[0];
 
-    return data.scaleList[index];
+    return data.scale[index];
 }
 
 const QMatrix4x4& IEECSTransformSystem::getTransform(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.transformList[0];
+        return data.transform[0];
 
-    return data.transformList[index];
+    return data.transform[index];
 }
 
 void IEECSTransformSystem::setPosition(const int index, const QVector3D& val)
@@ -153,9 +153,9 @@ void IEECSTransformSystem::setPosition(const int index, const QVector3D& val)
     if(!indexBoundCheck(index))
         return;
 
-    data.positionList[index] = val;
+    data.position[index] = val;
 
-    dirtyParents[data.entityList[index]] = index;
+    dirtyParents[data.entity[index]] = index;
 }
 
 void IEECSTransformSystem::setRotation(const int index, const QVector3D& val)
@@ -163,9 +163,9 @@ void IEECSTransformSystem::setRotation(const int index, const QVector3D& val)
     if(!indexBoundCheck(index))
         return;
 
-    data.rotationList[index] = val;
+    data.rotation[index] = val;
 
-    dirtyParents[data.entityList[index]] = index;
+    dirtyParents[data.entity[index]] = index;
 }
 
 void IEECSTransformSystem::setScale(const int index, const QVector3D& val)
@@ -173,9 +173,9 @@ void IEECSTransformSystem::setScale(const int index, const QVector3D& val)
     if(!indexBoundCheck(index))
         return;
 
-    data.scaleList[index] = val;
+    data.scale[index] = val;
 
-    dirtyParents[data.entityList[index]] = index;
+    dirtyParents[data.entity[index]] = index;
 }
 
 void IEECSTransformSystem::setTransform(const int index, const QMatrix4x4& val)
@@ -183,9 +183,9 @@ void IEECSTransformSystem::setTransform(const int index, const QMatrix4x4& val)
     if(!indexBoundCheck(index))
         return;
 
-    data.transformList[index] = val;
+    data.transform[index] = val;
 
-    dirtyParents[data.entityList[index]] = index;
+    dirtyParents[data.entity[index]] = index;
 }
 
 void IEECSTransformSystem::updateTransform(const int index,
@@ -195,7 +195,7 @@ void IEECSTransformSystem::updateTransform(const int index,
     if(!indexBoundCheck(index))
         return;
 
-    IEEntity entity = data.entityList[index];
+    IEEntity entity = data.entity[index];
 
     int hierarchyIndex = hierarchySystem->lookUpIndex(entity);
     IEEntity parentEntity = hierarchySystem->getParent(hierarchyIndex);
@@ -204,13 +204,13 @@ void IEECSTransformSystem::updateTransform(const int index,
     if(parentTransformIndex > 0)
     {
         // Update child relative to parent
-        data.transformList[index] = data.transformList[parentTransformIndex] * calcModelMatrix(index);
+        data.transform[index] = data.transform[parentTransformIndex] * calcModelMatrix(index);
         dirtyChildren[entity] = index;
     }
     else
     {
         // Update parent
-        data.transformList[index] = calcModelMatrix(index);
+        data.transform[index] = calcModelMatrix(index);
     }
 
     for(auto& childEntity : hierarchySystem->getChildrenList(hierarchyIndex))
@@ -225,9 +225,9 @@ QMatrix4x4 IEECSTransformSystem::calcModelMatrix(const int index)
     if(!indexBoundCheck(index))
         return QMatrix4x4();
 
-    auto& pos = data.positionList[index];
-    auto& rot = data.rotationList[index];
-    auto& scl = data.scaleList[index];
+    auto& pos = data.position[index];
+    auto& rot = data.rotation[index];
+    auto& scl = data.scale[index];
 
     QMatrix4x4 transform;
     transform.translate(pos);

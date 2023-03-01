@@ -7,28 +7,33 @@
 
 class GameStartEvent;
 class ECSOnUpdateEvent;
+class IEMaterialManager;
+class IEMaterial;
 
 class IEECSMaterialSystem : public IEECSSystem
 {
     struct Data
     {
-        QVector<IEEntity> entityList;
-        QVector<unsigned long long> materialIdList;
+        QVector<IEEntity> entity;
+        QVector<unsigned long long> materialId;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entityList << data.materialIdList;
+            out << data.entity << data.materialId;
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entityList >> data.materialIdList;
+            in >> data.entity >> data.materialId;
             return in;
         }
     };
 
     Data data;
+
+    // DOES NOT OWN THIS POINTER
+    IEMaterialManager* materialManager;
 
 public:
     IEECSMaterialSystem();
@@ -41,6 +46,7 @@ public:
 
     QVector<unsigned long long> massReplaceMaterialId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeMaterialId(const unsigned long long idToPurge);
+    IEMaterial* getAttachedMaterial(const int index);
 
     unsigned long long getMaterialId(const int index);
     void setMaterialId(const int index, const unsigned long long val);
