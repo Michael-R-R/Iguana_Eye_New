@@ -1,8 +1,10 @@
 #pragma once
 
-#include <QFile>
 #include <QDataStream>
+#include <QFile>
 #include <QString>
+
+#include "IEFile.h"
 
 class IESerialize
 {
@@ -18,7 +20,15 @@ public:
 
         QFile outFile(path);
         if(!outFile.open(QIODevice::WriteOnly))
-            return false;
+        {
+            // Try making path
+            if(!IEFile::makePath(path))
+                return false;
+
+            // Try opening file again
+            if(!outFile.open(QIODevice::WriteOnly))
+                return false;
+        }
 
         QDataStream outStream(&outFile);
 

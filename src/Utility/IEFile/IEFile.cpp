@@ -31,6 +31,39 @@ bool IEFile::read(const QString& path, QString* inData)
     return true;
 }
 
+bool IEFile::makePath(const QString& path)
+{
+    QString tempPath = removeFileName(path);
+
+    QDir dir("");
+    return dir.mkpath(tempPath);
+}
+
+bool IEFile::removePath(const QString& path)
+{
+    QString tempPath = removeFileName(path);
+
+    // Remove all files in directory
+    QDir removeDirFiles(tempPath);
+    removeDirFiles.setNameFilters(QStringList() << "*.*");
+    removeDirFiles.setFilter(QDir::Files);
+    foreach(QString file, removeDirFiles.entryList())
+    {
+        removeDirFiles.remove(file);
+    }
+
+    QDir dir("");
+    return dir.rmpath(tempPath);
+}
+
+bool IEFile::doesPathExist(const QString& path)
+{
+    QString tempPath = removeFileName(path);
+
+    QDir dir(tempPath);
+    return dir.exists();
+}
+
 QString IEFile::extractName(const QString& path)
 {
     int index1 = path.lastIndexOf("/") + 1;
@@ -38,4 +71,15 @@ QString IEFile::extractName(const QString& path)
     int index = qMax(index1, index2);
 
     return path.mid(index);
+}
+
+QString IEFile::removeFileName(const QString& path)
+{
+    if(path.lastIndexOf(".") > 0)
+    {
+        const int index = path.lastIndexOf("/");
+        return path.mid(0, index);
+    }
+
+    return path;
 }

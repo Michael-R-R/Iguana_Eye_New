@@ -6,6 +6,7 @@ class IETCreateInstancedRenderable
 {
     int row;
     int col;
+    unsigned long long renderableId;
 
 public:
     IETCreateInstancedRenderable(IEGame* game);

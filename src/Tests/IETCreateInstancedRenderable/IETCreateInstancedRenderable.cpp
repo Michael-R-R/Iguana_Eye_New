@@ -6,7 +6,8 @@
 #include "IEHash.h"
 
 IETCreateInstancedRenderable::IETCreateInstancedRenderable(IEGame* game) :
-    row(-10), col(-10)
+    row(-10), col(-10),
+    renderableId(0)
 {
     auto scene = game->getIEScene();
 
@@ -28,8 +29,12 @@ IETCreateInstancedRenderable::IETCreateInstancedRenderable(IEGame* game) :
     shader->build();
     scene->getShaderManager()->add(id, shader);
 
-    path = "./resources/renderables/tests/instanced_renderable.ierend";
+    path = QString("./resources/renderables/tests/%1/%2/%3/renderable.ierend")
+            .arg(QString::number(mesh->getId()),
+                 QString::number(material->getId()),
+                 QString::number(shader->getId()));
     id = IEHash::Compute(path);
+    renderableId = id;
     auto renderable = new IERenderable(path, id, mesh->getId(), material->getId(), shader->getId());
     renderable->setRenderType(IERenderable::RenderType::I_Index);
 
@@ -54,7 +59,7 @@ void IETCreateInstancedRenderable::run(IEGame* game)
     auto nameSystem = ecs->getComponent<IEECSNameSystem>(IEComponentType::Name);
     auto renderableSystem = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
 
-    auto renderable = scene->getRenderableManager()->getValue(IEHash::Compute("./resources/renderables/tests/instanced_renderable.ierend"));
+    auto renderable = scene->getRenderableManager()->getValue(renderableId);
 
     IEEntity entity = ecs->create();
     qDebug() << "Entity id:" << entity.getId();
@@ -80,7 +85,7 @@ void IETCreateInstancedRenderable::oneShot(IEGame* game)
     auto nameSystem = ecs->getComponent<IEECSNameSystem>(IEComponentType::Name);
     auto renderableSystem = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
 
-    auto renderable = scene->getRenderableManager()->getValue(IEHash::Compute("./resources/renderables/tests/instanced_renderable.ierend"));
+    auto renderable = scene->getRenderableManager()->getValue(renderableId);
 
     IEEntity entity = ecs->create();
     int nameIndex = nameSystem->lookUpIndex(entity);
