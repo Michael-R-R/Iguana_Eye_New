@@ -4,24 +4,19 @@
 #include "IEHash.h"
 
 IETRemoveInstancedRenderable::IETRemoveInstancedRenderable() :
-    row(0)
+    row(-11), col(-11), switchId(1)
 {
 
 }
 
 void IETRemoveInstancedRenderable::run(IEGame* game)
 {
+    switchId = (switchId == 1) ? 2 : 1;
+    qDebug() << "Switch id:" << switchId;
     auto scene = game->getIEScene();
     auto ecs = scene->getECS();
 
-    int counter = 0;
-    int end = row + 2;
-    for(; row < end; row++)
-    {
-        ecs->remove(IEEntity(++counter));
-    }
-
-    row = (row > 101) ? 0 : row;
+    ecs->remove(IEEntity(switchId));
 }
 
 void IETRemoveInstancedRenderable::oneShot(IEGame* game)

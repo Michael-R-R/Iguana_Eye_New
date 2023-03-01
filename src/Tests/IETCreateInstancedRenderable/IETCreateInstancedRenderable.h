@@ -5,6 +5,7 @@ class IEGame;
 class IETCreateInstancedRenderable
 {
     int row;
+    int col;
 
 public:
     IETCreateInstancedRenderable(IEGame* game);

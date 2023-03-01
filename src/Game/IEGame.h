@@ -12,6 +12,11 @@
 
 class ApplicationWindow;
 
+// TODO test
+#include "IETCreateInstancedRenderable.h"
+#include "IETHideInstancedRenderable.h"
+#include "IETRemoveInstancedRenderable.h"
+
 class IEGame : public QOpenGLWidget
 {
     Q_OBJECT
@@ -24,6 +29,11 @@ class IEGame : public QOpenGLWidget
     IEInput* input;
     IERenderEngine* renderEngine;
     IEScene* scene;
+
+    // TODO test
+    IETCreateInstancedRenderable* testCreate;
+    IETHideInstancedRenderable* testHide;
+    IETRemoveInstancedRenderable* testRemove;
 
 public:
     IEGame(QWidget* parent = nullptr);

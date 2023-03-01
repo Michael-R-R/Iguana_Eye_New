@@ -21,12 +21,16 @@ IERenderable::IERenderable() :
 
 }
 
-IERenderable::IERenderable(const QString& path, const unsigned long long id) :
+IERenderable::IERenderable(const QString& path,
+                           const unsigned long long id,
+                           const unsigned long long meshId_,
+                           const unsigned long long materialId_,
+                           const unsigned long long shaderId_) :
     QOpenGLVertexArrayObject(),
     IEResource(path, id),
     isRenderable(true),
     renderType(RenderType::None), drawMode(GL_TRIANGLES),
-    meshId(0), materialId(0), shaderId(0),
+    meshId(meshId_), materialId(materialId_), shaderId(shaderId_),
     indexBuffer(new IEIndexBuffer()),
     vec2BufferContainer(new IEVertexBufferContainer<QVector2D>()),
     vec3BufferContainer(new IEVertexBufferContainer<QVector3D>()),

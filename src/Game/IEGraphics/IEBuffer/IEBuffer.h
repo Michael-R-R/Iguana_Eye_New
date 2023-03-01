@@ -53,7 +53,7 @@ public:
         if(bufferData.size() == 0)
             return false;
 
-        if(indexToRemove < 0 || indexToRemove > bufferData.size())
+        if(!indexBoundsCheck(indexToRemove))
             return false;
 
         const int lastIndex = bufferData.size() - 1;

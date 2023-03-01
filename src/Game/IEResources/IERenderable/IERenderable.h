@@ -21,7 +21,7 @@ class IERenderable : public QOpenGLVertexArrayObject, public IEResource
 public:
     enum class RenderType
     {
-        None, Vertex, Index, I_Vertex, I_Index
+        None, Vertex, I_Vertex, Index, I_Index
     };
 
 protected:
@@ -52,7 +52,11 @@ protected:
 
 public:
     IERenderable();
-    IERenderable(const QString& path, const unsigned long long id);
+    IERenderable(const QString& path,
+                 const unsigned long long id,
+                 const unsigned long long meshId_,
+                 const unsigned long long materialId_,
+                 const unsigned long long shaderId_);
     IERenderable(const IERenderable& other);
     ~IERenderable();
 

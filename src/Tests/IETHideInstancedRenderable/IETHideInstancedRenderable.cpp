@@ -3,9 +3,57 @@
 #include "IEScene.h"
 #include "IEHash.h"
 
-IETHideInstancedRenderable::IETHideInstancedRenderable()
+IETHideInstancedRenderable::IETHideInstancedRenderable() :
+    switchId(1), hideId(1)
 {
 
+}
+
+void IETHideInstancedRenderable::run(IEGame* game)
+{
+    auto scene = game->getIEScene();
+    auto ecs = scene->getECS();
+    auto system = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
+
+    // Hide previous previous shown
+    IEEntity shownEntity(hideId - 2);
+    int shownIndex = system->lookUpIndex(shownEntity);
+    system->addHidden(shownIndex);
+    system->removeShown(shownIndex);
+
+    // Show previous hidden
+    IEEntity hiddenEntity(hideId - 1);
+    int hiddenIndex = system->lookUpIndex(hiddenEntity);
+    system->addShown(hiddenIndex);
+    system->removeHidden(hiddenIndex);
+    system->transferTempData(hiddenIndex);
+
+    hideId++;
+
+    // Show all 500
+    if(hideId == 500)
+    {
+        for(int i = 0; i < 500; i++)
+        {
+            IEEntity hiddenEntity(i);
+            int hiddenIndex = system->lookUpIndex(hiddenEntity);
+            system->addShown(hiddenIndex);
+            system->removeHidden(hiddenIndex);
+            system->transferTempData(hiddenIndex);
+        }
+    }
+
+    // Hide all 1000
+    if(hideId == 1000)
+    {
+        for(int i = 0; i < 1000; i++)
+        {
+            IEEntity shownEntity(i);
+            int shownIndex = system->lookUpIndex(shownEntity);
+            system->addHidden(shownIndex);
+            system->removeShown(shownIndex);
+        }
+    }
 }
 
 void IETHideInstancedRenderable::oneShot(IEGame* game)

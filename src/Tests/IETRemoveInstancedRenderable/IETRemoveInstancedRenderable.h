@@ -5,6 +5,8 @@ class IEGame;
 class IETRemoveInstancedRenderable
 {
     int row;
+    int col;
+    int switchId;
 
 public:
     IETRemoveInstancedRenderable();

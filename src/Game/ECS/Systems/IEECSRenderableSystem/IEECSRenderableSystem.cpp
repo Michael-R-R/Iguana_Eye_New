@@ -421,12 +421,9 @@ void IEECSRenderableSystem::removeInstanceFromRenderable(const int index)
         return;
 
     // Remove shown instance
-    const int shownInstanceIndex = data.shownInstanceIndexList[index];
-    renderable->removeShownInstance(shownInstanceIndex);
-    this->removeShown(shownInstanceIndex);
+    this->removeShown(index);
 
     // Remove hidden instance
-    renderable->removeHiddenInstance();
     this->removeHidden(index);
 
     this->clearTempData(index);

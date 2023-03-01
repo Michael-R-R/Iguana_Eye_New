@@ -8,7 +8,7 @@
 #include "EGridShader.h"
 
 EGridRenderable::EGridRenderable(const unsigned long long id) :
-    IERenderable("", id)
+    IERenderable("", id, 0, 0, 0)
 {
     this->setType(Type::Editor);
     this->setRenderType(RenderType::Vertex);
