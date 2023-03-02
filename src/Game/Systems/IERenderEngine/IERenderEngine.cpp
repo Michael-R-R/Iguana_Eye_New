@@ -3,25 +3,25 @@
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLContext>
 #include "RenderEngineStartEvent.h"
-#include "IEMeshManager.h"
-#include "IEMaterialManager.h"
-#include "IEShaderManager.h"
-#include "IERenderableManager.h"
+#include "IEScene.h"
 
 IERenderEngine::IERenderEngine(QObject* parent) :
     IEObject(parent),
     meshManager(nullptr), materialManager(nullptr),
-    shaderManager(nullptr), renderableManager(nullptr)
+    shaderManager(nullptr), renderableManager(nullptr),
+    cameraManager(nullptr)
 {
 
 }
 
 void IERenderEngine::startup(const RenderEngineStartEvent& event)
 {
-    meshManager = event.getMeshManager();
-    materialManager = event.getMaterialManager();
-    shaderManager = event.getShaderManager();
-    renderableManager = event.getRenderableManager();
+    auto scene = event.getScene();
+    meshManager = scene->getMeshManager();
+    materialManager = scene->getMaterialManager();
+    shaderManager = scene->getShaderManager();
+    renderableManager = scene->getRenderableManager();
+    cameraManager = scene->getCameraManager();
 }
 
 void IERenderEngine::shutdown()
@@ -30,6 +30,7 @@ void IERenderEngine::shutdown()
     materialManager = nullptr;
     shaderManager = nullptr;
     renderableManager = nullptr;
+    cameraManager = nullptr;
 }
 
 void IERenderEngine::onRenderFrame()
@@ -61,9 +62,9 @@ void IERenderEngine::prepareShader(IEShader* shader)
     shader->bind();
 }
 
-void IERenderEngine::prepareViewProjection(IEShader* shader, const QMatrix4x4& matrix)
+void IERenderEngine::prepareViewProjection(IEShader* shader, IECamera* camera)
 {
-    shader->setUniformValue("uViewProjection", matrix);
+    shader->setUniformValue("uViewProjection", camera->getViewProjection());
 }
 
 void IERenderEngine::prepareUniformData(IEShader* shader, IEMaterial* material)

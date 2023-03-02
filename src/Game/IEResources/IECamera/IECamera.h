@@ -31,6 +31,7 @@ public:
 
     void updateView(const QVector3D& position, const QVector3D& rotation);
 
+    QMatrix4x4 getViewProjection() const { return (view * projection); }
     const QMatrix4x4& getProjection() const { return projection; }
     const QMatrix4x4& getView() const { return view; }
     const QVector3D& getUp() const { return up; }
@@ -40,7 +41,7 @@ public:
     float getSpeed() { return speed; }
     float getSensitivity() { return sensitivity; }
 
-    void setProject(const QMatrix4x4& val) { projection = val; }
+    void setProjection(const QMatrix4x4& val) { projection = val; }
     void setNear(const float val) { nearPlane = val; }
     void setFar(const float val) { farPlane = val; }
     void setFOV(const float val) { fov = val; }

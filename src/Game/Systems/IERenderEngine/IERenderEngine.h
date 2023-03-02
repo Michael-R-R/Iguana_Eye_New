@@ -9,10 +9,12 @@ class IEMeshManager;
 class IEMaterialManager;
 class IEShaderManager;
 class IERenderableManager;
+class IECameraManager;
 class IEMesh;
 class IEMaterial;
 class IEShader;
 class IERenderable;
+class IECamera;
 
 class IERenderEngine : public IEObject
 {
@@ -21,6 +23,7 @@ class IERenderEngine : public IEObject
     const IEMaterialManager* materialManager;
     const IEShaderManager* shaderManager;
     const IERenderableManager* renderableManager;
+    const IECameraManager* cameraManager;
 
 public:
     IERenderEngine(QObject* parent = nullptr);
@@ -33,7 +36,7 @@ public:
 
 private:
     void prepareShader(IEShader* shader);
-    void prepareViewProjection(IEShader* shader, const QMatrix4x4& matrix);
+    void prepareViewProjection(IEShader* shader, IECamera* camera);
     void prepareUniformData(IEShader* shader, IEMaterial* material);
     void prepareUniformData(IEShader* shader, IERenderable* renderable);
     void prepareRenderable(IERenderable* renderable);
