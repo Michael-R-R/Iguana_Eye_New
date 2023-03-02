@@ -135,6 +135,7 @@ void IEECS::initSystems()
     auto hierarchySystem = new IEECSHierarchySystem();
     auto inputSystem = new IEECSInputSystem();
     auto transformSystem = new IEECSTransformSystem();
+    auto cameraSystem = new IEECSCameraSystem();
     auto meshSystem = new IEECSMeshSystem();
     auto materialSystem = new IEECSMaterialSystem();
     auto shaderSystem = new IEECSShaderSystem();
@@ -144,6 +145,7 @@ void IEECS::initSystems()
     systems[IEComponentType::Hierarchy] = hierarchySystem;
     systems[IEComponentType::Input] = inputSystem;
     systems[IEComponentType::Transform] = transformSystem;
+    systems[IEComponentType::Camera] = cameraSystem;
     systems[IEComponentType::Mesh] = meshSystem;
     systems[IEComponentType::Material] = materialSystem;
     systems[IEComponentType::Shader] = shaderSystem;

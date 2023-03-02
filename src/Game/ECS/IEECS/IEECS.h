@@ -12,6 +12,7 @@
 #include "IEECSHierarchySystem.h"
 #include "IEECSInputSystem.h"
 #include "IEECSTransformSystem.h"
+#include "IEECSCameraSystem.h"
 #include "IEECSMeshSystem.h"
 #include "IEECSMaterialSystem.h"
 #include "IEECSShaderSystem.h"
@@ -82,7 +83,7 @@ public:
             case IEComponentType::Name: { out << *static_cast<IEECSNameSystem*>(it.value()); break; }
             case IEComponentType::Input: { out << *static_cast<IEECSInputSystem*>(it.value()); break; }
             case IEComponentType::Transform: { out << *static_cast<IEECSTransformSystem*>(it.value()); break; }
-            case IEComponentType::Camera: { break; }
+            case IEComponentType::Camera: { out << *static_cast<IEECSCameraSystem*>(it.value()); break; }
             case IEComponentType::CameraController: { break; }
             case IEComponentType::Material: { out << *static_cast<IEECSMaterialSystem*>(it.value()); break; }
             case IEComponentType::Mesh: { out << *static_cast<IEECSMeshSystem*>(it.value()); break; }
@@ -113,7 +114,7 @@ public:
             case IEComponentType::Name: { in >> *static_cast<IEECSNameSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Input: { in >> *static_cast<IEECSInputSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Transform: { in >> *static_cast<IEECSTransformSystem*>(ecs.systems[type]); break; }
-            case IEComponentType::Camera: { break; }
+            case IEComponentType::Camera: { in >> *static_cast<IEECSCameraSystem*>(ecs.systems[type]); break; }
             case IEComponentType::CameraController: { break; }
             case IEComponentType::Material: { in >> *static_cast<IEECSMaterialSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Mesh: { in >> *static_cast<IEECSMeshSystem*>(ecs.systems[type]); break; }

@@ -7,6 +7,7 @@ IEScene::IEScene(QObject* parent) :
     materialManager(new IEMaterialManager(this)),
     shaderManager(new IEShaderManager(this)),
     renderableManager(new IERenderableManager(this)),
+    cameraManager(new IECameraManager(this)),
     ecs(new IEECS(this))
 {
 
@@ -23,12 +24,14 @@ void IEScene::startup(const GameStartEvent& event)
     materialManager->startup(event);
     shaderManager->startup(event);
     renderableManager->startup(event);
+    cameraManager->startup(event);
     ecs->startup(event);
 }
 
 void IEScene::shutdown()
 {
     ecs->shutdown();
+    cameraManager->shutdown();
     renderableManager->shutdown();
     shaderManager->shutdown();
     materialManager->shutdown();

@@ -7,6 +7,7 @@
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
+#include "IECameraManager.h"
 #include "IEECS.h"
 
 class GameStartEvent;
@@ -19,6 +20,7 @@ class IEScene : public IEObject
     IEMaterialManager* materialManager;
     IEShaderManager* shaderManager;
     IERenderableManager* renderableManager;
+    IECameraManager* cameraManager;
     IEECS* ecs;
 
 public:
@@ -34,6 +36,7 @@ public:
     IEMaterialManager* getMaterialManager() const { return materialManager; }
     IEShaderManager* getShaderManager() const { return shaderManager; }
     IERenderableManager* getRenderableManager() const { return renderableManager; }
+    IECameraManager* getCameraManager() const { return cameraManager; }
     IEECS* getECS() const { return ecs; }
 
     friend QDataStream& operator<<(QDataStream& out, const IEScene& scene)
@@ -42,6 +45,7 @@ public:
             << *scene.materialManager
             << *scene.shaderManager
             << *scene.renderableManager
+            << *scene.cameraManager
             << *scene.ecs;
 
         return out;
@@ -53,6 +57,7 @@ public:
            >> *scene.materialManager
            >> *scene.shaderManager
            >> *scene.renderableManager
+           >> *scene.cameraManager
            >> *scene.ecs;
 
         return in;
