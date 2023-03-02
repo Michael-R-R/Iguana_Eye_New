@@ -270,6 +270,14 @@ QVector<unsigned long long> IEECSRenderableSystem::massPurgeRenderableId(const u
     return result;
 }
 
+IERenderable* IEECSRenderableSystem::getAttachedRenderable(const int index)
+{
+    if(!indexBoundCheck(index))
+        return nullptr;
+
+    return renderableManager->getValue(data.renderableId[index]);
+}
+
 unsigned long long IEECSRenderableSystem::getRenderableId(const int index) const
 {
     if(!indexBoundCheck(index))

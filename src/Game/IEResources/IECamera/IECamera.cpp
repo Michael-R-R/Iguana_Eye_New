@@ -32,5 +32,6 @@ IECamera::IECamera(const IECamera& other) :
 
 void IECamera::updateView(const QVector3D& position, const QVector3D& rotation)
 {
+    view.setToIdentity();
     view.lookAt(position, position + rotation, up);
 }

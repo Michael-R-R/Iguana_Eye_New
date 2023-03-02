@@ -11,7 +11,7 @@ IETCreateInstancedRenderable::IETCreateInstancedRenderable(IEGame* game) :
 {
     auto scene = game->getIEScene();
 
-    QString path = "./resources/meshes/tests/triangle.obj";
+    QString path = "./resources/meshes/tests/cube.obj";
     unsigned long long id = IEHash::Compute(path);
     auto mesh = new IEMesh(path, id);
     IEObjImporter::importMesh(path, mesh);
@@ -38,16 +38,12 @@ IETCreateInstancedRenderable::IETCreateInstancedRenderable(IEGame* game) :
     auto renderable = new IERenderable(path, id, mesh->getId(), material->getId(), shader->getId());
     renderable->setRenderType(IERenderable::RenderType::I_Index);
 
-    auto uniformData = IEUniform();
-    uniformData.add("uScale", QVector2D(0.1f, 0.1f));
-    renderable->setUniformData(uniformData);
-
     auto indexBuffer = new IEIndexBuffer(mesh->getIndices());
-    auto posBuffer = new IEVertexBuffer<QVector3D>(mesh->getPosVertices(), 3);
-    auto offsetBuffer = new IEVertexBuffer<QVector2D>(QVector<QVector2D>(), 2, 0, 1);
+    auto posBuffer = new IEVertexBuffer<QVector3D>(mesh->getPosVertices(), 12, 3);
+    auto modelBuffer = new IEVertexBuffer<QMatrix4x4>(QVector<QMatrix4x4>(), 64, 4, 64, 4);
     renderable->addIndexBuffer(indexBuffer);
     renderable->addVec3Buffer("aPos", posBuffer);
-    renderable->addVec2Buffer("aOffset", offsetBuffer);
+    renderable->addMat4Buffer("aModel", modelBuffer);
     renderable->build(shader);
     scene->getRenderableManager()->add(id, renderable);
 }
@@ -84,6 +80,7 @@ void IETCreateInstancedRenderable::oneShot(IEGame* game)
     auto ecs = scene->getECS();
     auto nameSystem = ecs->getComponent<IEECSNameSystem>(IEComponentType::Name);
     auto renderableSystem = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
+    auto transformSystem = ecs->getComponent<IEECSTransformSystem>(IEComponentType::Transform);
 
     auto renderable = scene->getRenderableManager()->getValue(renderableId);
 
@@ -95,8 +92,11 @@ void IETCreateInstancedRenderable::oneShot(IEGame* game)
     renderableSystem->setRenderableId(index, renderable->getId());
     renderableSystem->addShown(index);
 
-    QVector2D offset(-10 * 0.1f, -10 * 0.1f);
-    renderable->appendVec2InstanceValue("aOffset", offset);
+    int indexTransform = transformSystem->lookUpIndex(entity);
+    transformSystem->setPosition(indexTransform, QVector3D(0.0f, 0.0f, 0.0f));
+
+    QMatrix4x4 transform;
+    renderable->appendMat4InstanceValue("aModel", transform);
 }
 
 
