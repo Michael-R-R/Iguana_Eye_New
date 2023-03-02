@@ -20,6 +20,9 @@ IETCreateInstancedRenderable::IETCreateInstancedRenderable(IEGame* game) :
     path = "./resources/materials/tests/default.iemat";
     id = IEHash::Compute(path);
     auto material = new IEMaterial(path, id);
+    IEUniform uniform;
+    uniform.add("uColor", QColor(0, 0, 255, 255));
+    material->setUniformData(uniform);
     scene->getMaterialManager()->add(id, material);
 
     path = "./resources/shaders/tests/instanced_renderable.glsl";
@@ -95,7 +98,7 @@ void IETCreateInstancedRenderable::oneShot(IEGame* game)
         renderableSystem->addShown(index);
 
         int indexTransform = transformSystem->lookUpIndex(entity);
-        transformSystem->setPosition(indexTransform, QVector3D((float)i * 3.0f, 0.0f, 0.0f));
+        transformSystem->setPosition(indexTransform, QVector3D((float)i * 2.0f, 0.0f, 0.0f));
         transformSystem->setRotation(indexTransform, QVector3D(0.0f, 0.0f, 0.0f));
         transformSystem->setScale(indexTransform, QVector3D(1.0f, 1.0f, 1.0f));
 

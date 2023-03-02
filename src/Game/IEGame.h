@@ -12,6 +12,9 @@
 
 class ApplicationWindow;
 
+// TODO test
+#include "IETIslandGenerator.h"
+
 class IEGame : public QOpenGLWidget
 {
     Q_OBJECT
@@ -27,6 +30,9 @@ class IEGame : public QOpenGLWidget
 
     int viewportWidth;
     int viewportHeight;
+
+    // TODO test
+    IETIslandGenerator* testIsland = nullptr;
 
 public:
     IEGame(QWidget* parent = nullptr);

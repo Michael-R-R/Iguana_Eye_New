@@ -2,9 +2,6 @@
 #include "GameStartEvent.h"
 #include "RenderEngineStartEvent.h"
 
-// TODO test
-#include "IETCreateInstancedRenderable.h"
-
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(new QSurfaceFormat()),
@@ -25,7 +22,7 @@ IEGame::IEGame(QWidget* parent) :
 
 IEGame::~IEGame()
 {
-
+    delete testIsland;
 }
 
 void IEGame::init()
@@ -48,8 +45,7 @@ void IEGame::startup()
     time->startup(this);
 
     // TODO test
-    IETCreateInstancedRenderable testCreate(this);
-    testCreate.oneShot(this);
+    testIsland = new IETIslandGenerator(this);
 
     this->setFocus();
 }

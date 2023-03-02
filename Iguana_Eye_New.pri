@@ -169,6 +169,7 @@ INCLUDEPATH += $$PWD/src/Game/Systems/IETime \
 INCLUDEPATH += $$PWD/src/Tests \
     $$PWD/src/Tests/IETCreateInstancedRenderable \
     $$PWD/src/Tests/IETHideInstancedRenderable \
+    $$PWD/src/Tests/IETIslandGenerator \
     $$PWD/src/Tests/IETRemoveInstancedRenderable \
 
 INCLUDEPATH += $$PWD/src/Utility \
@@ -177,4 +178,5 @@ INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEHash \
     $$PWD/src/Utility/IEObjExporter \
     $$PWD/src/Utility/IEObjImporter \
+    $$PWD/src/Utility/IERandomNumber \
     $$PWD/src/Utility/IESerialize \
