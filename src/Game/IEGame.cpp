@@ -7,7 +7,8 @@ IEGame::IEGame(QWidget* parent) :
     format(new QSurfaceFormat()),
     glFunc(nullptr), glExtraFunc(nullptr),
     time(nullptr), input(nullptr),
-    renderEngine(nullptr), scene(nullptr)
+    renderEngine(nullptr), scene(nullptr),
+    viewportWidth(0), viewportHeight(0)
 {
     this->setFocusPolicy(Qt::StrongFocus);
 
@@ -99,5 +100,8 @@ void IEGame::paintGL()
 
 void IEGame::resizeGL(int w, int h)
 {
+    viewportWidth = w;
+    viewportHeight = h;
+
     glFunc->glViewport(0, 0, w, h);
 }

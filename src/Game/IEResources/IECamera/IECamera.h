@@ -29,8 +29,7 @@ public:
     bool operator<(const IECamera& other) { return IEResource::operator<(other); }
     bool operator>(const IECamera& other) { return IEResource::operator>(other); }
 
-    virtual void updateProjection(int w, int h);
-    virtual void updateView(const QVector3D& position, const QVector3D& rotation);
+    void updateView(const QVector3D& position, const QVector3D& rotation);
 
     const QMatrix4x4& getProjection() const { return projection; }
     const QMatrix4x4& getView() const { return view; }
@@ -41,6 +40,7 @@ public:
     float getSpeed() { return speed; }
     float getSensitivity() { return sensitivity; }
 
+    void setProject(const QMatrix4x4& val) { projection = val; }
     void setNear(const float val) { nearPlane = val; }
     void setFar(const float val) { farPlane = val; }
     void setFOV(const float val) { fov = val; }

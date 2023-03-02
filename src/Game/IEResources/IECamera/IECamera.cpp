@@ -30,11 +30,6 @@ IECamera::IECamera(const IECamera& other) :
 
 }
 
-void IECamera::updateProjection(int, int)
-{
-
-}
-
 void IECamera::updateView(const QVector3D& position, const QVector3D& rotation)
 {
     view.lookAt(position, position + rotation, up);

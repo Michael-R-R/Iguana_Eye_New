@@ -25,6 +25,9 @@ class IEGame : public QOpenGLWidget
     IERenderEngine* renderEngine;
     IEScene* scene;
 
+    int viewportWidth;
+    int viewportHeight;
+
 public:
     IEGame(QWidget* parent = nullptr);
     ~IEGame();
@@ -37,6 +40,9 @@ public:
     void init();
     void startup();
     void shutdown();
+
+    int getViewportWidth() const { return viewportWidth; }
+    int getViewportHeight() const { return viewportHeight; }
 
 public slots:
     void onUpdateFrame();
