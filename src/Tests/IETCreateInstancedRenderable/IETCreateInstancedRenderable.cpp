@@ -39,8 +39,8 @@ IETCreateInstancedRenderable::IETCreateInstancedRenderable(IEGame* game) :
     renderable->setRenderType(IERenderable::RenderType::I_Index);
 
     auto indexBuffer = new IEIndexBuffer(mesh->getIndices());
-    auto posBuffer = new IEVertexBuffer<QVector3D>(mesh->getPosVertices(), 12, 3);
-    auto modelBuffer = new IEVertexBuffer<QMatrix4x4>(QVector<QMatrix4x4>(), 64, 4, 64, 4);
+    auto posBuffer = new IEVertexBuffer<QVector3D>(mesh->getPosVertices(), 12, 3, 0, 0, 0);
+    auto modelBuffer = new IEVertexBuffer<QMatrix4x4>(QVector<QMatrix4x4>(), 64, 4, 64, 4, 16);
     renderable->addIndexBuffer(indexBuffer);
     renderable->addVec3Buffer("aPos", posBuffer);
     renderable->addMat4Buffer("aModel", modelBuffer);
@@ -94,6 +94,8 @@ void IETCreateInstancedRenderable::oneShot(IEGame* game)
 
     int indexTransform = transformSystem->lookUpIndex(entity);
     transformSystem->setPosition(indexTransform, QVector3D(0.0f, 0.0f, 0.0f));
+    transformSystem->setRotation(indexTransform, QVector3D(0.0f, 0.0f, 0.0f));
+    transformSystem->setScale(indexTransform, QVector3D(1.0f, 1.0f, 1.0f));
 
     QMatrix4x4 transform;
     renderable->appendMat4InstanceValue("aModel", transform);

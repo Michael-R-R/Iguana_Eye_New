@@ -25,9 +25,9 @@ void ESceneStartup::addDefaultCamera(const AppStartEvent& event)
     auto camera = new IECamera(path, id);
     if(!IESerialize::read<IECamera>(path, camera))
         IESerialize::write<IECamera>(path, camera);
-    camera->updateView(QVector3D(0.0f, 10.0f, -100.0f), QVector3D(0.0f, 0.0f, 0.0f));
+    camera->updateView(QVector3D(0.0f, 5.0f, -5.0f), QVector3D(0.0f, 0.0f, -1.0f));
     QMatrix4x4 projection;
-    projection.perspective(camera->getFOV(), aspectRatio, camera->getNear(), camera->getFar());
+    projection.perspective(camera->getFOV(), aspectRatio, camera->getNearPlane(), camera->getFarPlane());
     camera->setProjection(projection);
     scene->getCameraManager()->add(id, camera);
 }

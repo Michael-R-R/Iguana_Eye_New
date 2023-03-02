@@ -31,12 +31,12 @@ public:
 
     void updateView(const QVector3D& position, const QVector3D& rotation);
 
-    QMatrix4x4 getViewProjection() const { return (view * projection); }
+    QMatrix4x4 getViewProjection() const { return (projection * view); }
     const QMatrix4x4& getProjection() const { return projection; }
     const QMatrix4x4& getView() const { return view; }
     const QVector3D& getUp() const { return up; }
-    float getNear() { return nearPlane; }
-    float getFar() { return farPlane; }
+    float getNearPlane() { return nearPlane; }
+    float getFarPlane() { return farPlane; }
     float getFOV() { return fov; }
     float getSpeed() { return speed; }
     float getSensitivity() { return sensitivity; }

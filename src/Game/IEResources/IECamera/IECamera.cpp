@@ -14,7 +14,7 @@ IECamera::IECamera(const QString& path, const unsigned long long resourceId) :
     IEResource(path, resourceId),
     projection(), view(),
     up(0.0f, 1.0f, 0.0f),
-    nearPlane(0.1f), farPlane(4000.0f), fov(75.0f),
+    nearPlane(0.0f), farPlane(4000.0f), fov(75.0f),
     speed(15.0f), sensitivity(25.0f)
 {
 
@@ -33,5 +33,5 @@ IECamera::IECamera(const IECamera& other) :
 void IECamera::updateView(const QVector3D& position, const QVector3D& rotation)
 {
     view.setToIdentity();
-    view.lookAt(position, position + rotation, up);
+    view.lookAt(position, rotation, up);
 }

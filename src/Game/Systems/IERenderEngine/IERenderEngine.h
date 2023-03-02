@@ -36,10 +36,10 @@ public:
 
 private:
     void prepareShader(IEShader* shader);
+    void prepareRenderable(IERenderable* renderable);
     void prepareViewProjection(IEShader* shader, IECamera* camera);
     void prepareUniformData(IEShader* shader, IEMaterial* material);
     void prepareUniformData(IEShader* shader, IERenderable* renderable);
-    void prepareRenderable(IERenderable* renderable);
     void draw(IERenderable* renderable, IEMesh* mesh);
     void cleanup(IEShader* shader, IERenderable* renderable);
 };

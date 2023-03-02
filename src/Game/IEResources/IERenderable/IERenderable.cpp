@@ -319,7 +319,7 @@ void IERenderable::setVec2InstanceValue(const QString& key, const int index, con
         return;
 
     buffer->setBufferValue(index, value);
-    buffer->subAllocate(index, &value);
+    buffer->subAllocate(index);
 }
 
 void IERenderable::setVec3InstanceValue(const QString& key, const int index, const QVector3D& value)
@@ -329,7 +329,7 @@ void IERenderable::setVec3InstanceValue(const QString& key, const int index, con
         return;
 
     buffer->setBufferValue(index, value);
-    buffer->subAllocate(index, &value);
+    buffer->subAllocate(index);
 }
 
 void IERenderable::setVec4InstanceValue(const QString& key, const int index, const QVector4D& value)
@@ -339,7 +339,7 @@ void IERenderable::setVec4InstanceValue(const QString& key, const int index, con
         return;
 
     buffer->setBufferValue(index, value);
-    buffer->subAllocate(index, &value);
+    buffer->subAllocate(index);
 }
 
 void IERenderable::setMat4InstanceValue(const QString& key, const int index, const QMatrix4x4& value)
@@ -349,7 +349,7 @@ void IERenderable::setMat4InstanceValue(const QString& key, const int index, con
         return;
 
     buffer->setBufferValue(index, value);
-    buffer->subAllocate(index, &value);
+    buffer->subAllocate(index);
 }
 
 void IERenderable::build(IEShader* shader)

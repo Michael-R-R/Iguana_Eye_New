@@ -36,6 +36,6 @@ void EGridRenderable::setup(IEMeshManager* meshManager,
     this->setMeshId(meshId);
     this->setMaterialId(materialId);
     this->setShaderId(shaderId);
-    this->addVec3Buffer("aPos", new IEVertexBuffer<QVector3D>(mesh->getPosVertices(), 12, 3));
+    this->addVec3Buffer("aPos", new IEVertexBuffer<QVector3D>(mesh->getPosVertices(), 12, 3, 0, 0, 0));
     this->build(shader);
 }

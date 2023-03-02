@@ -54,10 +54,10 @@ void IERenderEngine::onRenderFrame()
             continue;
 
         prepareShader(shader);
+        prepareRenderable(renderable);
         prepareViewProjection(shader, camera);
         prepareUniformData(shader, material);
         prepareUniformData(shader, renderable);
-        prepareRenderable(renderable);
         draw(renderable, mesh);
         cleanup(shader, renderable);
     }
@@ -66,6 +66,12 @@ void IERenderEngine::onRenderFrame()
 void IERenderEngine::prepareShader(IEShader* shader)
 {
     shader->bind();
+}
+
+void IERenderEngine::prepareRenderable(IERenderable* renderable)
+{
+    renderable->checkForDirtyBuffers();
+    renderable->bind();
 }
 
 void IERenderEngine::prepareViewProjection(IEShader* shader, IECamera* camera)
@@ -81,12 +87,6 @@ void IERenderEngine::prepareUniformData(IEShader* shader, IEMaterial* material)
 void IERenderEngine::prepareUniformData(IEShader* shader, IERenderable* renderable)
 {
     renderable->bindUniformData(shader);
-}
-
-void IERenderEngine::prepareRenderable(IERenderable* renderable)
-{
-    renderable->checkForDirtyBuffers();
-    renderable->bind();
 }
 
 void IERenderEngine::draw(IERenderable* renderable, IEMesh* mesh)
