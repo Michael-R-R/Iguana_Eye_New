@@ -54,6 +54,8 @@ class IETIslandGenerator
     World world;
     DropZone dropZone;
     Particle particle;
+    int buildRow = 0;
+    int buildCol = 0;
 
 public:
     IETIslandGenerator(IEGame* game);
@@ -72,5 +74,21 @@ private:
     void setupParameters();
     void setupWorld();
     void calcDropZone(int w, int h);
+    void generateWorld();
+    QPair<int, int> getParticleLoc(const Particle& particle);
+    void checkIfValidMove(QVector<QPair<int, int>>& validMoves, int xLoc, int yLoc, int currIndexVal);
+    void normalizeValues();
+    int findMaxValue();
+    void translateWorld(IEGame* game);
+    void printWorld();
+
+    void createDeepWaterEntity(const int row, const int col, IEGame* game);
+    void createShallowWaterEntity(const int row, const int col, IEGame* game);
+    void createSandEntity(const int row, const int col, IEGame* game);
+    void createGrassEntity(const int row, const int col, IEGame* game);
+    void createForestEntity(const int row, const int col, IEGame* game);
+    void createMountainEntity(const int row, const int col, IEGame* game);
+    void createEntity(const int row, const int col, const int value,
+                      const unsigned long long id, IEGame* game);
 };
 

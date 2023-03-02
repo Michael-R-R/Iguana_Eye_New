@@ -22,7 +22,7 @@ IEGame::IEGame(QWidget* parent) :
 
 IEGame::~IEGame()
 {
-    delete testIsland;
+
 }
 
 void IEGame::init()
@@ -43,9 +43,6 @@ void IEGame::startup()
     scene->startup(gameStartEvent);
     renderEngine->startup(renderStartEvent);
     time->startup(this);
-
-    // TODO test
-    testIsland = new IETIslandGenerator(this);
 
     this->setFocus();
 }

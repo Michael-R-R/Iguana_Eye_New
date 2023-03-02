@@ -5,9 +5,6 @@
 #include "RenderEngineStartEvent.h"
 #include "IEScene.h"
 
-// TODO test
-#include "IEHash.h"
-
 IERenderEngine::IERenderEngine(QObject* parent) :
     IEObject(parent),
     meshManager(nullptr), materialManager(nullptr),
@@ -38,9 +35,6 @@ void IERenderEngine::shutdown()
 
 void IERenderEngine::onRenderFrame()
 {
-    // TODO test
-    auto camera = cameraManager->getValue(IEHash::Compute("./resources/cameras/game/default.iecam"));
-
     auto renderables = renderableManager->getResourceContainer()->getResources();
     for(auto* renderable : renderables)
     {
@@ -55,7 +49,7 @@ void IERenderEngine::onRenderFrame()
 
         prepareShader(shader);
         prepareRenderable(renderable);
-        prepareViewProjection(shader, camera);
+        //prepareViewProjection(shader, camera);
         prepareUniformData(shader, material);
         prepareUniformData(shader, renderable);
         draw(renderable, mesh);
