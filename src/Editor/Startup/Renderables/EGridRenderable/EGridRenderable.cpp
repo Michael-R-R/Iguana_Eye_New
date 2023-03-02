@@ -12,7 +12,7 @@ EGridRenderable::EGridRenderable(const unsigned long long id) :
 {
     this->setType(Type::Editor);
     this->setRenderType(RenderType::Vertex);
-    this->setDrawType(GL_LINES);
+    this->setDrawType(GL_TRIANGLES);
 }
 
 void EGridRenderable::setup(IEMeshManager* meshManager,

@@ -90,8 +90,11 @@ void IEGame::initializeGL()
     glFunc->initializeOpenGLFunctions();
     glExtraFunc->initializeOpenGLFunctions();
 
-    glExtraFunc->glEnable(GL_MULTISAMPLE);
     glExtraFunc->glEnable(GL_DEPTH_TEST);
+    glExtraFunc->glEnable(GL_MULTISAMPLE);
+    glExtraFunc->glEnable(GL_BLEND);
+
+    glExtraFunc->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glExtraFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 

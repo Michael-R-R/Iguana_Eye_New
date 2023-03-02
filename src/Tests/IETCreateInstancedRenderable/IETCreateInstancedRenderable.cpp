@@ -84,21 +84,24 @@ void IETCreateInstancedRenderable::oneShot(IEGame* game)
 
     auto renderable = scene->getRenderableManager()->getValue(renderableId);
 
-    IEEntity entity = ecs->create();
-    int nameIndex = nameSystem->lookUpIndex(entity);
-    nameSystem->setName(nameIndex, "Test_" + QString::number(0));
+    for(int i = 0; i < 3; i++)
+    {
+        IEEntity entity = ecs->create();
+        int nameIndex = nameSystem->lookUpIndex(entity);
+        nameSystem->setName(nameIndex, "Test_" + QString::number(0));
 
-    int index = ecs->attachComponent(entity, IEComponentType::Renderable);
-    renderableSystem->setRenderableId(index, renderable->getId());
-    renderableSystem->addShown(index);
+        int index = ecs->attachComponent(entity, IEComponentType::Renderable);
+        renderableSystem->setRenderableId(index, renderable->getId());
+        renderableSystem->addShown(index);
 
-    int indexTransform = transformSystem->lookUpIndex(entity);
-    transformSystem->setPosition(indexTransform, QVector3D(0.0f, 0.0f, 0.0f));
-    transformSystem->setRotation(indexTransform, QVector3D(0.0f, 0.0f, 0.0f));
-    transformSystem->setScale(indexTransform, QVector3D(1.0f, 1.0f, 1.0f));
+        int indexTransform = transformSystem->lookUpIndex(entity);
+        transformSystem->setPosition(indexTransform, QVector3D((float)i * 3.0f, 0.0f, 0.0f));
+        transformSystem->setRotation(indexTransform, QVector3D(0.0f, 0.0f, 0.0f));
+        transformSystem->setScale(indexTransform, QVector3D(1.0f, 1.0f, 1.0f));
 
-    QMatrix4x4 transform;
-    renderable->appendMat4InstanceValue("aModel", transform);
+        QMatrix4x4 transform;
+        renderable->appendMat4InstanceValue("aModel", transform);
+    }
 }
 
 
