@@ -43,6 +43,9 @@ bool IEECSCameraSystem::detach(const IEEntity entity)
 
     const int indexToRemove = entityMap[entity];
 
+    if(indexToRemove == activeIndex)
+        activeIndex = -1;
+
     const int lastIndex = entityMap.size() - 1;
     const IEEntity lastEntity = data.entity[lastIndex];
 
@@ -63,14 +66,16 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     if(!indexBoundCheck(activeIndex))
         return;
 
-    // Get active camera
-    //IECamera* activeCamera = cameraManager->getValue(data.cameraId[activeIndex]);
+    auto& activeEntity = data.entity[activeIndex];
+    auto& activeId = data.cameraId[activeIndex];
 
-    // Get transform component
-    //auto transformSystem = event->getTransform();
-    //auto pos = transformSystem->getPosition();
+    auto transformSystem = event->getTransform();
+    int transformIndex = transformSystem->lookUpIndex(activeEntity);
+    auto& pos = transformSystem->getPosition(transformIndex);
+    auto& rot = transformSystem->getRotation(transformIndex);
 
-    // Update camera view
+    IECamera* activeCamera = cameraManager->getValue(activeId);
+    activeCamera->updateView(pos, rot);
 }
 
 IECamera* IEECSCameraSystem::getActiveCamera() const
@@ -86,6 +91,11 @@ IECamera* IEECSCameraSystem::getAttachedCamera(const int index) const
         return nullptr;
 
     return cameraManager->getValue(data.cameraId[index]);
+}
+
+void IEECSCameraSystem::setActiveIndex(const int val)
+{
+    activeIndex = val;
 }
 
 unsigned long long IEECSCameraSystem::getCameraId(const int index) const

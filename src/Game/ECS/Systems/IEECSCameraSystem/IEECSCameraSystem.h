@@ -49,19 +49,20 @@ public:
 
     IECamera* getActiveCamera() const;
     IECamera* getAttachedCamera(const int index) const;
+    void setActiveIndex(const int val);
 
     unsigned long long getCameraId(const int index) const;
     void setCameraId(const int index, const unsigned long long val);
 
     friend QDataStream& operator<<(QDataStream& out, const IEECSCameraSystem& system)
     {
-        out << system.entityMap << system.data;
+        out << system.entityMap << system.data << system.activeIndex;
         return out;
     }
 
     friend QDataStream& operator>>(QDataStream& in, IEECSCameraSystem& system)
     {
-        in >> system.entityMap >> system.data;
+        in >> system.entityMap >> system.data >> system.activeIndex;
         return in;
     }
 };
