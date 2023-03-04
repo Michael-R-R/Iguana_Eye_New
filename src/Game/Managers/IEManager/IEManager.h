@@ -10,11 +10,13 @@ class IEManager : public IEObject
 {
 protected:
     IEResourceContainer<T>* resourceContainer;
+    unsigned long long defaultResourceId;
 
 public:
     IEManager(QObject* parent = nullptr) :
         IEObject(parent),
-        resourceContainer(new IEResourceContainer<T>(this))
+        resourceContainer(new IEResourceContainer<T>(this)),
+        defaultResourceId(0)
     {
 
     }
@@ -60,5 +62,15 @@ public:
     IEResourceContainer<T>* getResourceContainer() const
     {
         return resourceContainer;
+    }
+
+    unsigned long long getDefaultResourceId() const
+    {
+        return defaultResourceId;
+    }
+
+    void setDefaultResourceId(const unsigned long long val)
+    {
+        defaultResourceId = val;
     }
 };

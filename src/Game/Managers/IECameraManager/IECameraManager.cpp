@@ -2,8 +2,7 @@
 #include "GameStartEvent.h"
 
 IECameraManager::IECameraManager(QObject* parent) :
-    IEManager(parent),
-    activeCameraId(0)
+    IEManager(parent)
 {
 
 }

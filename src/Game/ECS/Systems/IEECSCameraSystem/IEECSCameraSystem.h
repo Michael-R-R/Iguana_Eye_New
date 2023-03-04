@@ -8,6 +8,8 @@
 
 class GameStartEvent;
 class ECSOnUpdateEvent;
+class IECameraManager;
+class IECamera;
 
 class IEECSCameraSystem : public IEECSSystem
 {
@@ -31,6 +33,11 @@ class IEECSCameraSystem : public IEECSSystem
 
     Data data;
 
+    int activeIndex;
+
+    // DOES NOT OWN THIS POINTER
+    IECameraManager* cameraManager;
+
 public:
     IEECSCameraSystem();
     ~IEECSCameraSystem();
@@ -39,6 +46,12 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
+
+    IECamera* getActiveCamera() const;
+    IECamera* getAttachedCamera(const int index) const;
+
+    unsigned long long getCameraId(const int index) const;
+    void setCameraId(const int index, const unsigned long long val);
 
     friend QDataStream& operator<<(QDataStream& out, const IEECSCameraSystem& system)
     {

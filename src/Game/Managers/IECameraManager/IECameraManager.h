@@ -10,8 +10,6 @@ class IECameraManager : public IEManager<IECamera>
 {
     Q_OBJECT
 
-    unsigned long long activeCameraId;
-
 public:
     IECameraManager(QObject* parent = nullptr);
     ~IECameraManager();
@@ -21,9 +19,6 @@ public:
     bool add(const unsigned long long key, IECamera* value) override;
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
-
-    IECamera* getActiveCamera() const { return resourceContainer->getValue(activeCameraId); }
-    void setActiveCameraId(const unsigned long long val) { activeCameraId = val; }
 
 signals:
     void added(const unsigned long long key, const QString& value);

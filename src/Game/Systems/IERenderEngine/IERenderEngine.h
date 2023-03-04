@@ -8,6 +8,7 @@ class IEMaterialManager;
 class IEShaderManager;
 class IERenderableManager;
 class IECameraManager;
+class IEECSCameraSystem;
 class IEMesh;
 class IEMaterial;
 class IEShader;
@@ -23,9 +24,11 @@ class IERenderEngine : public IEObject
     const IERenderableManager* renderableManager;
     const IECameraManager* cameraManager;
 
+    const IEECSCameraSystem* cameraSystem;
+
 public:
     IERenderEngine(QObject* parent = nullptr);
-    ~IERenderEngine() {}
+    ~IERenderEngine();
 
     void startup(const RenderEngineStartEvent& event);
     void shutdown();

@@ -10,9 +10,19 @@ IERenderEngine::IERenderEngine(QObject* parent) :
     IEObject(parent),
     meshManager(nullptr), materialManager(nullptr),
     shaderManager(nullptr), renderableManager(nullptr),
-    cameraManager(nullptr)
+    cameraManager(nullptr), cameraSystem(nullptr)
 {
 
+}
+
+IERenderEngine::~IERenderEngine()
+{
+    meshManager = nullptr;
+    materialManager = nullptr;
+    shaderManager = nullptr;
+    renderableManager = nullptr;
+    cameraManager = nullptr;
+    cameraSystem = nullptr;
 }
 
 void IERenderEngine::startup(const RenderEngineStartEvent& event)
@@ -23,6 +33,9 @@ void IERenderEngine::startup(const RenderEngineStartEvent& event)
     shaderManager = scene->getShaderManager();
     renderableManager = scene->getRenderableManager();
     cameraManager = scene->getCameraManager();
+
+    auto ecs = scene->getECS();
+    cameraSystem = ecs->getComponent<IEECSCameraSystem>(IEComponentType::Camera);
 }
 
 void IERenderEngine::shutdown()
@@ -36,7 +49,7 @@ void IERenderEngine::shutdown()
 
 void IERenderEngine::onRenderFrame()
 {
-    auto camera = cameraManager->getActiveCamera();
+    auto camera = cameraSystem->getActiveCamera();
 
     auto renderables = renderableManager->getResourceContainer()->getResources();
     for(auto* renderable : renderables)
