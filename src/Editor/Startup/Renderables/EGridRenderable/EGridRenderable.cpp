@@ -24,7 +24,7 @@ void EGridRenderable::setup(IEMeshManager* meshManager,
     meshManager->add(meshId, mesh);
 
     unsigned long long materialId = IEHash::Compute("EGridMaterial");
-    auto material = new EDefaultMaterial(materialId);
+    auto material = new EDefaultMaterial("", materialId);
     material->setType(Type::Editor);
     materialManager->add(materialId, material);
 

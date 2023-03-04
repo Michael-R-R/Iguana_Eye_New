@@ -4,7 +4,6 @@
 IERenderable::IERenderable() :
     QOpenGLVertexArrayObject(),
     IEResource("", 0),
-    isRenderable(true),
     renderType(RenderType::None), drawMode(GL_TRIANGLES),
     meshId(0), materialId(0), shaderId(0),
     indexBuffer(new IEIndexBuffer()),
@@ -28,7 +27,6 @@ IERenderable::IERenderable(const QString& path,
                            const unsigned long long shaderId_) :
     QOpenGLVertexArrayObject(),
     IEResource(path, id),
-    isRenderable(true),
     renderType(RenderType::None), drawMode(GL_TRIANGLES),
     meshId(meshId_), materialId(materialId_), shaderId(shaderId_),
     indexBuffer(new IEIndexBuffer()),
@@ -48,7 +46,6 @@ IERenderable::IERenderable(const QString& path,
 IERenderable::IERenderable(const IERenderable& other) :
     QOpenGLVertexArrayObject(),
     IEResource(other.filePath, other.id),
-    isRenderable(other.isRenderable),
     renderType(other.renderType), drawMode(other.drawMode),
     meshId(other.meshId), materialId(other.materialId),
     shaderId(other.shaderId),

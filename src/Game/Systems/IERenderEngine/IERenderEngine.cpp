@@ -2,6 +2,7 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLContext>
+#include <QMatrix4x4>
 #include "RenderEngineStartEvent.h"
 #include "IEScene.h"
 
@@ -35,12 +36,11 @@ void IERenderEngine::shutdown()
 
 void IERenderEngine::onRenderFrame()
 {
+    auto camera = cameraManager->getActiveCamera();
+
     auto renderables = renderableManager->getResourceContainer()->getResources();
     for(auto* renderable : renderables)
     {
-        if(!renderable->getIsRenderable())
-            continue;
-
         auto mesh = meshManager->getValue(renderable->getMeshId());
         auto material = materialManager->getValue(renderable->getMaterialId());
         auto shader = shaderManager->getValue(renderable->getShaderId());
@@ -49,7 +49,7 @@ void IERenderEngine::onRenderFrame()
 
         prepareShader(shader);
         prepareRenderable(renderable);
-        //prepareViewProjection(shader, camera);
+        prepareViewProjection(shader, camera);
         prepareUniformData(shader, material);
         prepareUniformData(shader, renderable);
         draw(renderable, mesh);
@@ -70,7 +70,9 @@ void IERenderEngine::prepareRenderable(IERenderable* renderable)
 
 void IERenderEngine::prepareViewProjection(IEShader* shader, IECamera* camera)
 {
-    shader->setUniformValue("uViewProjection", camera->getViewProjection());
+    QMatrix4x4 viewProj = (camera) ? camera->getViewProjection() : QMatrix4x4();
+
+    shader->setUniformValue("uViewProjection", viewProj);
 }
 
 void IERenderEngine::prepareUniformData(IEShader* shader, IEMaterial* material)

@@ -95,8 +95,11 @@ INCLUDEPATH += $$PWD/src/Editor/Startup \
     $$PWD/src/Editor/Startup/EActionStartup \
     $$PWD/src/Editor/Startup/ESceneStartup \
 
+INCLUDEPATH += $$PWD/src/Editor/Startup/Cameras \
+    $$PWD/src/Editor/Startup/Cameras/EDefaultCamera \
+
 INCLUDEPATH += $$PWD/src/Editor/Startup/Materials \
-    $$PWD/src/Editor/Startup/Materials/EDefaultMaterial
+    $$PWD/src/Editor/Startup/Materials/EDefaultMaterial \
 
 INCLUDEPATH += $$PWD/src/Editor/Startup/Meshes \
     $$PWD/src/Editor/Startup/Meshes/EGridMesh \

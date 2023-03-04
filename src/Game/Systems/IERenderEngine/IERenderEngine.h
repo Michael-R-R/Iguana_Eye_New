@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QMatrix4x4>
-
 #include "IEObject.h"
 
 class RenderEngineStartEvent;
