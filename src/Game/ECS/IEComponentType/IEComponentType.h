@@ -9,7 +9,7 @@ enum class IEComponentType : unsigned long long
     Input = 4,               // implemented
     Transform = 8,           // implemented
     Physics = 16,            //
-    Camera = 32,             //
+    Camera = 32,             // implemented
     CameraController = 64,   //
     Mesh = 128,              // implemented
     Material = 256,          // implemented

@@ -152,6 +152,7 @@ INCLUDEPATH += $$PWD/src/Game/IEResources \
     $$PWD/src/Game/IEResources/IERenderable \
     $$PWD/src/Game/IEResources/IEResource \
     $$PWD/src/Game/IEResources/IEResourceContainer \
+    $$PWD/src/Game/IEResources/IEScript \
     $$PWD/src/Game/IEResources/IEShader \
 
 INCLUDEPATH += $$PWD/src/Game/Managers \

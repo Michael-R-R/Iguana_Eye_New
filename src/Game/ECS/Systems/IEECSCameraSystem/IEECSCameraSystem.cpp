@@ -78,6 +78,19 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     activeCamera->updateView(pos, rot);
 }
 
+int IEECSCameraSystem::getActiveIndex() const
+{
+    return activeIndex;
+}
+
+IEEntity IEECSCameraSystem::getActiveEntity() const
+{
+    if(!indexBoundCheck(activeIndex))
+        return IEEntity(-1);
+
+    return data.entity[activeIndex];
+}
+
 IECamera* IEECSCameraSystem::getActiveCamera() const
 {
     auto id = (indexBoundCheck(activeIndex)) ? data.cameraId[activeIndex] : cameraManager->getDefaultResourceId();

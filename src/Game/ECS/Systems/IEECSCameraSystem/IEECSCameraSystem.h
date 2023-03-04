@@ -47,6 +47,8 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
+    int getActiveIndex() const;
+    IEEntity getActiveEntity() const;
     IECamera* getActiveCamera() const;
     IECamera* getAttachedCamera(const int index) const;
     void setActiveIndex(const int val);
