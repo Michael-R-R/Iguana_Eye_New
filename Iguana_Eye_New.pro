@@ -4,6 +4,7 @@ QT += core gui
 QT += opengl
 QT += widgets
 QT += openglwidgets
+QT += qml
 
 include(Iguana_Eye_New.pri)
 

@@ -7,7 +7,8 @@ IEGame::IEGame(QWidget* parent) :
     format(new QSurfaceFormat()),
     glFunc(nullptr), glExtraFunc(nullptr),
     time(nullptr), input(nullptr),
-    renderEngine(nullptr), scene(nullptr),
+    scriptEngine(nullptr), renderEngine(nullptr),
+    scene(nullptr),
     viewportWidth(0), viewportHeight(0)
 {
     this->setFocusPolicy(Qt::StrongFocus);
@@ -29,6 +30,7 @@ void IEGame::init()
 {
     time = new IETime(8, 16, this);
     input = new IEInput(this, this);
+    scriptEngine = new IEScriptEngine(this);
     renderEngine = new IERenderEngine(this);
     scene = new IEScene(this);
 }
@@ -41,6 +43,7 @@ void IEGame::startup()
     RenderEngineStartEvent renderStartEvent(scene);
 
     scene->startup(gameStartEvent);
+    scriptEngine->startup(gameStartEvent);
     renderEngine->startup(renderStartEvent);
     time->startup(this);
 
@@ -53,16 +56,19 @@ void IEGame::shutdown()
 
     time->shutdown();
     renderEngine->shutdown();
+    scriptEngine->shutdown();
     scene->shutdown();
 
     delete time;
     delete input;
+    delete scriptEngine;
     delete renderEngine;
     delete scene;
 }
 
 void IEGame::onUpdateFrame()
 {
+    scriptEngine->onUpdateFrame();
     scene->onUpdateFrame();
 }
 

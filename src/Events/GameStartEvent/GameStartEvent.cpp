@@ -11,20 +11,22 @@ GameStartEvent::GameStartEvent(IETime* time_, IEInput* input_, IEScene* scene_) 
 
 GameStartEvent::~GameStartEvent()
 {
-
+    time = nullptr;
+    input = nullptr;
+    scene = nullptr;
 }
 
-const IETime* GameStartEvent::getTime() const
+IETime* GameStartEvent::getTime() const
 {
     return time;
 }
 
-const IEInput* GameStartEvent::getInput() const
+IEInput* GameStartEvent::getInput() const
 {
     return input;
 }
 
-const IEScene* GameStartEvent::getScene() const
+IEScene* GameStartEvent::getScene() const
 {
     return scene;
 }

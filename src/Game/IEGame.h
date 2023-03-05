@@ -1,12 +1,13 @@
 #pragma once
 
+#include <QDataStream>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
-#include <QDataStream>
 
 #include "IETime.h"
 #include "IEInput.h"
+#include "IEScriptEngine.h"
 #include "IERenderEngine.h"
 #include "IEScene.h"
 
@@ -22,6 +23,7 @@ class IEGame : public QOpenGLWidget
 
     IETime* time;
     IEInput* input;
+    IEScriptEngine* scriptEngine;
     IERenderEngine* renderEngine;
     IEScene* scene;
 
@@ -34,6 +36,7 @@ public:
 
     IETime* getIETime() const { return time; }
     IEInput* getIEInput() const { return input; }
+    IEScriptEngine* getIEScriptEngine() const { return scriptEngine; }
     IERenderEngine* getIERenderEngine() const { return renderEngine; }
     IEScene* getIEScene() const { return scene; }
 

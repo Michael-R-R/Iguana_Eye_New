@@ -163,9 +163,13 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IERenderableManager \
     $$PWD/src/Game/Managers/IEShaderManager \
 
+INCLUDEPATH += $$PWD/src/Game/Scripting \
+    $$PWD/src/Game/Scripting/IEGlobalTimeScript \
+
 INCLUDEPATH += $$PWD/src/Game/Systems \
     $$PWD/src/Game/Systems/IEInput \
     $$PWD/src/Game/Systems/IERenderEngine \
+    $$PWD/src/Game/Systems/IEScriptEngine \
 
 INCLUDEPATH += $$PWD/src/Game/Systems/IETime \
     $$PWD/src/Game/Systems/IETime/DeltaTime
