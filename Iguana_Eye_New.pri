@@ -152,7 +152,6 @@ INCLUDEPATH += $$PWD/src/Game/IEResources \
     $$PWD/src/Game/IEResources/IERenderable \
     $$PWD/src/Game/IEResources/IEResource \
     $$PWD/src/Game/IEResources/IEResourceContainer \
-    $$PWD/src/Game/IEResources/IEScript \
     $$PWD/src/Game/IEResources/IEShader \
 
 INCLUDEPATH += $$PWD/src/Game/Managers \
@@ -164,7 +163,14 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IEShaderManager \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting \
-    $$PWD/src/Game/Scripting/IEGlobalTimeScript \
+    $$PWD/src/Game/Scripting/IEScript \
+
+INCLUDEPATH += $$PWD/src/Game/Scripting/Global \
+    $$PWD/src/Game/Scripting/Global/IEGlobalInputScript \
+    $$PWD/src/Game/Scripting/Global/IEGlobalTimeScript \
+
+INCLUDEPATH += $$PWD/src/Game/Scripting/Local \
+    $$PWD/src/Game/Scripting/Local/IELocalEntityScript \
 
 INCLUDEPATH += $$PWD/src/Game/Systems \
     $$PWD/src/Game/Systems/IEInput \

@@ -28,7 +28,7 @@ IEGame::~IEGame()
 
 void IEGame::init()
 {
-    time = new IETime(8, 16, this);
+    time = new IETime(16, 16, this);
     input = new IEInput(this, this);
     scriptEngine = new IEScriptEngine(this);
     renderEngine = new IERenderEngine(this);
@@ -68,7 +68,6 @@ void IEGame::shutdown()
 
 void IEGame::onUpdateFrame()
 {
-    scriptEngine->onUpdateFrame();
     scene->onUpdateFrame();
 }
 

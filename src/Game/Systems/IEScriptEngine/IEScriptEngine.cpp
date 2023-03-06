@@ -1,10 +1,13 @@
 #include "IEScriptEngine.h"
+#include "GameStartEvent.h"
 #include "IEGlobalTimeScript.h"
+#include "IEGlobalInputScript.h"
+#include "IELocalEntityScript.h"
 
 IEScriptEngine::IEScriptEngine(QObject* parent) :
     IEObject(parent),
     engine(new QJSEngine(this)),
-    globalTime(nullptr)
+    globalTime(nullptr), globalInput(nullptr)
 {
 
 }
@@ -16,36 +19,36 @@ IEScriptEngine::~IEScriptEngine()
 
 void IEScriptEngine::startup(const GameStartEvent& event)
 {
-    globalTime = new IEGlobalTimeScript(event, this);
-    engine->globalObject().setProperty("IETime", engine->newQObject(globalTime));
-
-    engine->installExtensions(QJSEngine::ConsoleExtension);
-
-    // TODO test
-    script = IEScript("./resources/scripts/test.js", 0);
+    setupGlobals(event);
+    setupLocals();
+    setupExtensions();
 }
 
 void IEScriptEngine::shutdown()
 {
-
+    delete engine;
 }
 
-void IEScriptEngine::onUpdateFrame()
+void IEScriptEngine::importScripts()
 {
-    // TODO get all scripts and call update()
+    // TODO fetch scripts and import them
+}
 
-    // TODO test
-    for(int i = 0; i < 100; i++)
-    {
-        QJSValue val = script.call(engine);
-        if(val.isError())
-        {
-            QString error = QString("Exception at line %1:\nMessage: %2\nStack: %3\n")
-                    .arg(val.property("lineNumber").toString(),
-                         val.toString(),
-                         val.property("stack").toString());
+void IEScriptEngine::setupGlobals(const GameStartEvent& event)
+{
+    globalTime = new IEGlobalTimeScript(event.getTime(), engine);
+    globalInput = new IEGlobalInputScript(event.getInput(), engine);
 
-            qDebug() << error;
-        }
-    }
+    engine->globalObject().setProperty("IETime", engine->newQObject(globalTime));
+    engine->globalObject().setProperty("IEInput", engine->newQObject(globalInput));
+}
+
+void IEScriptEngine::setupLocals()
+{
+    engine->globalObject().setProperty("Entity", engine->newQMetaObject(&IELocalEntityScript::staticMetaObject));
+}
+
+void IEScriptEngine::setupExtensions()
+{
+    engine->installExtensions(QJSEngine::ConsoleExtension);
 }

@@ -2,17 +2,17 @@
 
 #include <QObject>
 
-class GameStartEvent;
 class IETime;
 
 class IEGlobalTimeScript : public QObject
 {
     Q_OBJECT
 
+    // DOES NOT OWN THIS POINTER
     IETime* time;
 
 public:
-    IEGlobalTimeScript(const GameStartEvent& event, QObject* parent = nullptr);
+    IEGlobalTimeScript(IETime* val, QObject* parent = nullptr);
     ~IEGlobalTimeScript();
 
 public slots:

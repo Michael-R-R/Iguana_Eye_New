@@ -19,7 +19,7 @@ bool IEInput::isPressed(const InputKey& key)
     return inputCapture->checkStatus(key);
 }
 
-bool IEInput::isPressed(const char* keyName)
+bool IEInput::isPressed(const QString& keyName)
 {
     const InputKey* key = inputContainer->getValue(keyName);
     return inputCapture->checkStatus(*key);

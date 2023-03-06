@@ -1,12 +1,11 @@
 #include "IEGlobalTimeScript.h"
-#include "GameStartEvent.h"
 #include "IETime.h"
 
-IEGlobalTimeScript::IEGlobalTimeScript(const GameStartEvent& event, QObject* parent) :
+IEGlobalTimeScript::IEGlobalTimeScript(IETime* val, QObject* parent) :
     QObject(parent),
-    time(nullptr)
+    time(val)
 {
-    time = event.getTime();
+
 }
 
 IEGlobalTimeScript::~IEGlobalTimeScript()
