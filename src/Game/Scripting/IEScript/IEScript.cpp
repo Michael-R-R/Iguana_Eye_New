@@ -23,6 +23,11 @@ IEScript::IEScript(const IEScript& other) :
 
 }
 
+IEScript::~IEScript()
+{
+
+}
+
 void IEScript::import(QJSEngine* engine)
 {
     QJSValue module = engine->importModule(filePath);

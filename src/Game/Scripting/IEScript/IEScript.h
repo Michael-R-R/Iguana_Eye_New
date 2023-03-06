@@ -19,7 +19,7 @@ public:
     IEScript();
     IEScript(const QString& path, const unsigned long long id);
     IEScript(const IEScript& other);
-    ~IEScript() {}
+    ~IEScript();
 
     bool operator==(const IEScript& other) { return IEResource::operator==(other); }
     bool operator!=(const IEScript& other) { return IEResource::operator!=(other); }

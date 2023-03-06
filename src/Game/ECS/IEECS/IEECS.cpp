@@ -1,6 +1,9 @@
 #include "IEECS.h"
 #include "GameStartEvent.h"
 
+// TODO test
+#include "IEHash.h"
+
 IEECS::IEECS(QObject* parent) :
     IEObject(parent),
     onUpdateEvent(nullptr),
@@ -8,6 +11,19 @@ IEECS::IEECS(QObject* parent) :
     systems()
 {
     initSystems();
+
+    // TODO test
+    auto system = this->getComponent<IEECSScriptSystem>(IEComponentType::Script);
+    QString path = "./resources/scripts/test/test1.mjs";
+    unsigned long long id = IEHash::Compute(path);
+
+    for(int i = 0; i < 10; i++)
+    {
+        IEEntity entity = this->create();
+
+        int index = this->attachComponent(entity, IEComponentType::Script);
+        system->addScript(index, new IEScript(path, id));
+    }
 }
 
 IEECS::~IEECS()

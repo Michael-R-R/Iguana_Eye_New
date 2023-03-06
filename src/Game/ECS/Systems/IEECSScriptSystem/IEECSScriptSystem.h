@@ -10,28 +10,27 @@
 
 class GameStartEvent;
 class ECSOnUpdateEvent;
+class QJSEngine;
 
 class IEECSScriptSystem : public IEECSSystem
 {
     struct Data
     {
         QVector<IEEntity> entity;
-        QVector<QMap<unsigned long long, IEScript>> scriptCollection;
+        QVector<QMap<unsigned long long, IEScript*>> scriptCollection;
         QVector<QSet<unsigned long long>> disabledScripts;
         QVector<QSet<unsigned long long>> activeScripts;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entity << data.scriptCollection
-                << data.disabledScripts << data.activeScripts;
+            out << data.entity << data.disabledScripts << data.activeScripts;
 
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entity >> data.scriptCollection
-               >> data.disabledScripts >> data.activeScripts;
+            in >> data.entity >> data.disabledScripts >> data.activeScripts;
 
             return in;
         }
@@ -48,11 +47,15 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
-    void addScript(const int index, const IEScript& script);
-    void removeScript(const int index, const unsigned long long id);
+    void importAllScripts(QJSEngine* engine);
+    void enableAllScripts();
+    void disableAllScripts();
 
     void enableScript(const int index, const unsigned long long id);
     void disableScript(const int index, const unsigned long long id);
+
+    void addScript(const int index, IEScript* script);
+    void removeScript(const int index, const unsigned long long id);
     bool isScriptAttached(const int index, const unsigned long long id);
 
 public:

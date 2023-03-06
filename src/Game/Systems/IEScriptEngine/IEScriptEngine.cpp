@@ -36,7 +36,17 @@ void IEScriptEngine::shutdown()
 
 void IEScriptEngine::importScripts()
 {
-    // TODO fetch scripts and import them
+    scriptSystem->importAllScripts(engine);
+}
+
+void IEScriptEngine::enableScripts()
+{
+    scriptSystem->enableAllScripts();
+}
+
+void IEScriptEngine::disableScripts()
+{
+    scriptSystem->disableAllScripts();
 }
 
 void IEScriptEngine::setupGlobals(const GameStartEvent& event)

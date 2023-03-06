@@ -47,6 +47,10 @@ void IEGame::startup()
     renderEngine->startup(renderStartEvent);
     time->startup(this);
 
+    // TODO test
+    scriptEngine->importScripts();
+    scriptEngine->enableScripts();
+
     this->setFocus();
 }
 

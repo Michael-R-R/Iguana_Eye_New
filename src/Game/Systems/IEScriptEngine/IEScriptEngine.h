@@ -27,6 +27,8 @@ public:
     void shutdown();
 
     void importScripts();
+    void enableScripts();
+    void disableScripts();
 
 private:
     void setupGlobals(const GameStartEvent& event);
