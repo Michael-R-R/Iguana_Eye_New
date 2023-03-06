@@ -134,6 +134,7 @@ void IEECS::initSystems()
     auto nameSystem = new IEECSNameSystem();
     auto hierarchySystem = new IEECSHierarchySystem();
     auto inputSystem = new IEECSInputSystem();
+    auto scriptSystem = new IEECSScriptSystem();
     auto transformSystem = new IEECSTransformSystem();
     auto cameraSystem = new IEECSCameraSystem();
     auto meshSystem = new IEECSMeshSystem();
@@ -144,6 +145,7 @@ void IEECS::initSystems()
     systems[IEComponentType::Name] = nameSystem;
     systems[IEComponentType::Hierarchy] = hierarchySystem;
     systems[IEComponentType::Input] = inputSystem;
+    systems[IEComponentType::Script] = scriptSystem;
     systems[IEComponentType::Transform] = transformSystem;
     systems[IEComponentType::Camera] = cameraSystem;
     systems[IEComponentType::Mesh] = meshSystem;

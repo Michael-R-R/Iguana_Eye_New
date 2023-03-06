@@ -11,6 +11,7 @@
 #include "IEECSNameSystem.h"
 #include "IEECSHierarchySystem.h"
 #include "IEECSInputSystem.h"
+#include "IEECSScriptSystem.h"
 #include "IEECSTransformSystem.h"
 #include "IEECSCameraSystem.h"
 #include "IEECSMeshSystem.h"
@@ -81,16 +82,16 @@ public:
             switch(it.key())
             {
             case IEComponentType::Name: { out << *static_cast<IEECSNameSystem*>(it.value()); break; }
+            case IEComponentType::Hierarchy: { out << *static_cast<IEECSHierarchySystem*>(it.value()); break; }
             case IEComponentType::Input: { out << *static_cast<IEECSInputSystem*>(it.value()); break; }
+            case IEComponentType::Script: { out << *static_cast<IEECSScriptSystem*>(it.value()); break; }
+            case IEComponentType::Physics: { break; }
             case IEComponentType::Transform: { out << *static_cast<IEECSTransformSystem*>(it.value()); break; }
             case IEComponentType::Camera: { out << *static_cast<IEECSCameraSystem*>(it.value()); break; }
-            case IEComponentType::CameraController: { break; }
             case IEComponentType::Material: { out << *static_cast<IEECSMaterialSystem*>(it.value()); break; }
             case IEComponentType::Mesh: { out << *static_cast<IEECSMeshSystem*>(it.value()); break; }
             case IEComponentType::Shader: { out << *static_cast<IEECSShaderSystem*>(it.value()); break; }
             case IEComponentType::Renderable: { out << *static_cast<IEECSRenderableSystem*>(it.value()); break; }
-            case IEComponentType::Physics: { break; }
-            case IEComponentType::Hierarchy: { out << *static_cast<IEECSHierarchySystem*>(it.value()); break; }
             default: { break; }
             }
         }
@@ -112,16 +113,16 @@ public:
             switch(type)
             {
             case IEComponentType::Name: { in >> *static_cast<IEECSNameSystem*>(ecs.systems[type]); break; }
+            case IEComponentType::Hierarchy: { in >> *static_cast<IEECSHierarchySystem*>(ecs.systems[type]); break; }
             case IEComponentType::Input: { in >> *static_cast<IEECSInputSystem*>(ecs.systems[type]); break; }
+            case IEComponentType::Script: { in >> *static_cast<IEECSScriptSystem*>(ecs.systems[type]); break; }
+            case IEComponentType::Physics: { break; }
             case IEComponentType::Transform: { in >> *static_cast<IEECSTransformSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Camera: { in >> *static_cast<IEECSCameraSystem*>(ecs.systems[type]); break; }
-            case IEComponentType::CameraController: { break; }
             case IEComponentType::Material: { in >> *static_cast<IEECSMaterialSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Mesh: { in >> *static_cast<IEECSMeshSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Shader: { in >> *static_cast<IEECSShaderSystem*>(ecs.systems[type]); break; }
             case IEComponentType::Renderable: { in >> *static_cast<IEECSRenderableSystem*>(ecs.systems[type]); break; }
-            case IEComponentType::Physics: { break; }
-            case IEComponentType::Hierarchy: { in >> *static_cast<IEECSHierarchySystem*>(ecs.systems[type]); break; }
             default: { break; }
             }
         }
