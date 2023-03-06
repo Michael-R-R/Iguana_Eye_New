@@ -3,21 +3,21 @@
 #include "IEEntity.h"
 
 IEScript::IEScript() :
-    filePath(""),
+    IEResource("", 0),
     jsAttachEntityFunc(), jsStartFunc(), jsUpdateFunc()
 {
 
 }
 
-IEScript::IEScript(const QString& path) :
-    filePath(path),
+IEScript::IEScript(const QString& path, const unsigned long long id) :
+    IEResource(path, id),
     jsAttachEntityFunc(), jsStartFunc(), jsUpdateFunc()
 {
 
 }
 
 IEScript::IEScript(const IEScript& other) :
-    filePath(other.filePath),
+    IEResource(other.filePath, other.id),
     jsAttachEntityFunc(), jsStartFunc(), jsUpdateFunc()
 {
 

@@ -7,9 +7,7 @@
 class GameStartEvent;
 class IEGlobalTimeScript;
 class IEGlobalInputScript;
-
-// TODO test
-#include "IEScript.h"
+class IEECSScriptSystem;
 
 class IEScriptEngine : public IEObject
 {
@@ -18,9 +16,8 @@ class IEScriptEngine : public IEObject
     IEGlobalTimeScript* globalTime;
     IEGlobalInputScript* globalInput;
 
-    // TODO test
-    IEScript script1;
-    IEScript script2;
+    // DOES NOT OWN THIS POINTER
+    IEECSScriptSystem* scriptSystem;
 
 public:
     IEScriptEngine(QObject* parent = nullptr);

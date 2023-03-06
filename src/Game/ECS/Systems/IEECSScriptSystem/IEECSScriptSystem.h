@@ -2,6 +2,8 @@
 
 #include <QDataStream>
 #include <QVector>
+#include <QMap>
+#include <QSet>
 
 #include "IEECSSystem.h"
 #include "IEScript.h"
@@ -14,18 +16,22 @@ class IEECSScriptSystem : public IEECSSystem
     struct Data
     {
         QVector<IEEntity> entity;
-        QVector<QVector<IEScript>> scripts;
+        QVector<QMap<unsigned long long, IEScript>> scriptCollection;
+        QVector<QSet<unsigned long long>> disabledScripts;
+        QVector<QSet<unsigned long long>> activeScripts;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entity << data.scripts;
+            out << data.entity << data.scriptCollection
+                << data.disabledScripts << data.activeScripts;
 
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entity >> data.scripts;
+            in >> data.entity >> data.scriptCollection
+               >> data.disabledScripts >> data.activeScripts;
 
             return in;
         }
@@ -42,6 +48,14 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
+    void addScript(const int index, const IEScript& script);
+    void removeScript(const int index, const unsigned long long id);
+
+    void enableScript(const int index, const unsigned long long id);
+    void disableScript(const int index, const unsigned long long id);
+    bool isScriptAttached(const int index, const unsigned long long id);
+
+public:
     friend QDataStream& operator<<(QDataStream& out, const IEECSScriptSystem& system)
     {
         out << system.entityMap << system.data;

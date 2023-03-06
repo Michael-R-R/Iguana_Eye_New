@@ -1,5 +1,6 @@
 #include "IEScriptEngine.h"
 #include "GameStartEvent.h"
+#include "IEScene.h"
 #include "IEGlobalTimeScript.h"
 #include "IEGlobalInputScript.h"
 #include "IELocalEntityScript.h"
@@ -7,14 +8,15 @@
 IEScriptEngine::IEScriptEngine(QObject* parent) :
     IEObject(parent),
     engine(new QJSEngine(this)),
-    globalTime(nullptr), globalInput(nullptr)
+    globalTime(nullptr), globalInput(nullptr),
+    scriptSystem(nullptr)
 {
 
 }
 
 IEScriptEngine::~IEScriptEngine()
 {
-
+    scriptSystem = nullptr;
 }
 
 void IEScriptEngine::startup(const GameStartEvent& event)
@@ -22,6 +24,9 @@ void IEScriptEngine::startup(const GameStartEvent& event)
     setupGlobals(event);
     setupLocals();
     setupExtensions();
+
+    auto ecs = event.getScene()->getECS();
+    scriptSystem = ecs->getComponent<IEECSScriptSystem>(IEComponentType::Script);
 }
 
 void IEScriptEngine::shutdown()
