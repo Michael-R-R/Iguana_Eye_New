@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QJSEngine>
-
 #include "IEObject.h"
 
 class GameStartEvent;
@@ -11,8 +9,6 @@ class IEECSScriptSystem;
 
 class IEScriptEngine : public IEObject
 {
-    QJSEngine* engine;
-
     IEGlobalTimeScript* globalTime;
     IEGlobalInputScript* globalInput;
 
@@ -30,9 +26,7 @@ public:
     void enableScripts();
     void disableScripts();
 
-private:
-    void setupGlobals(const GameStartEvent& event);
-    void setupLocals();
-    void setupExtensions();
+    IEGlobalTimeScript* getGlobalTime() const { return globalTime; }
+    IEGlobalInputScript* getGlobalInput() const { return globalInput; }
 };
 

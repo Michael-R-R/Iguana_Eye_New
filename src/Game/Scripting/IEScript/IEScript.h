@@ -1,19 +1,13 @@
 #pragma once
 
 #include <QDataStream>
-#include <QString>
-#include <QJSValue>
 
 #include "IEResource.h"
 
-class QJSEngine;
 class IEEntity;
 
 class IEScript : public IEResource
 {
-    QJSValue jsAttachEntityFunc;
-    QJSValue jsStartFunc;
-    QJSValue jsUpdateFunc;
 
 public:
     IEScript();
@@ -26,10 +20,9 @@ public:
     bool operator<(const IEScript& other) { return IEResource::operator<(other); }
     bool operator>(const IEScript& other) { return IEResource::operator>(other); }
 
-    void import(QJSEngine* engine);
-    QJSValue attachEntity(const IEEntity entity);
-    QJSValue start();
-    QJSValue update();
+    void attachEntity(const IEEntity entity);
+    void start();
+    void update();
 
     friend QDataStream& operator<<(QDataStream& out, const IEScript& script)
     {

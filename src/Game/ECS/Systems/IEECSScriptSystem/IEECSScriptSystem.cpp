@@ -1,7 +1,6 @@
 #include "IEECSScriptSystem.h"
 #include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
-#include <QJSEngine>
 
 IEECSScriptSystem::IEECSScriptSystem() :
     IEECSSystem(),
@@ -69,7 +68,7 @@ void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent*)
     }
 }
 
-void IEECSScriptSystem::importAllScripts(QJSEngine* engine)
+void IEECSScriptSystem::importAllScripts()
 {
     for(int i = 1; i < entityMap.size(); i++)
     {
@@ -77,8 +76,7 @@ void IEECSScriptSystem::importAllScripts(QJSEngine* engine)
 
         foreach(auto script, data.scriptCollection[i])
         {
-            script->import(engine);
-            script->attachEntity(entity);
+            // TODO implement
         }
     }
 }

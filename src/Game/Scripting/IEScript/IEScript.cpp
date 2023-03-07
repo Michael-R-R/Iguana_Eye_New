@@ -1,24 +1,20 @@
 #include "IEScript.h"
-#include <QJSEngine>
 #include "IEEntity.h"
 
 IEScript::IEScript() :
-    IEResource("", 0),
-    jsAttachEntityFunc(), jsStartFunc(), jsUpdateFunc()
+    IEResource("", 0)
 {
 
 }
 
 IEScript::IEScript(const QString& path, const unsigned long long id) :
-    IEResource(path, id),
-    jsAttachEntityFunc(), jsStartFunc(), jsUpdateFunc()
+    IEResource(path, id)
 {
 
 }
 
 IEScript::IEScript(const IEScript& other) :
-    IEResource(other.filePath, other.id),
-    jsAttachEntityFunc(), jsStartFunc(), jsUpdateFunc()
+    IEResource(other.filePath, other.id)
 {
 
 }
@@ -28,28 +24,14 @@ IEScript::~IEScript()
 
 }
 
-void IEScript::import(QJSEngine* engine)
+void IEScript::attachEntity(const IEEntity)
 {
-    QJSValue module = engine->importModule(filePath);
-    jsAttachEntityFunc = module.property("attachEntity");
-    jsStartFunc = module.property("start");
-    jsUpdateFunc = module.property("update");
 }
 
-QJSValue IEScript::attachEntity(const IEEntity entity)
+void IEScript::start()
 {
-    QJSValueList args;
-    args << entity.getId();
-
-    return jsAttachEntityFunc.call(args);
 }
 
-QJSValue IEScript::start()
+void IEScript::update()
 {
-    return jsStartFunc.call();
-}
-
-QJSValue IEScript::update()
-{
-    return jsUpdateFunc.call();
 }

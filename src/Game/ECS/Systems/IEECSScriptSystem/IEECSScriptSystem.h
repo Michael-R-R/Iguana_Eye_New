@@ -10,7 +10,6 @@
 
 class GameStartEvent;
 class ECSOnUpdateEvent;
-class QJSEngine;
 
 class IEECSScriptSystem : public IEECSSystem
 {
@@ -47,7 +46,7 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
-    void importAllScripts(QJSEngine* engine);
+    void importAllScripts();
     void enableAllScripts();
     void disableAllScripts();
 
