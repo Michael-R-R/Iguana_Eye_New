@@ -1,11 +1,21 @@
 #include "IEGlobalTimeScript.h"
 #include "IETime.h"
 
-IEGlobalTimeScript::IEGlobalTimeScript(IETime* val, QObject* parent) :
+IEGlobalTimeScript::IEGlobalTimeScript() :
+    QObject(),
+    time(nullptr)
+{
+
+}
+
+IEGlobalTimeScript::IEGlobalTimeScript(IETime* val, sol::table& globalTable,  QObject* parent) :
     QObject(parent),
     time(val)
 {
-
+    globalTable["IETime"] = this;
+    globalTable.new_usertype<IEGlobalTimeScript>("IEGlobalTimeScript", sol::constructors<>(),
+                                                 "fps", &IEGlobalTimeScript::fps,
+                                                 "deltaTime", &IEGlobalTimeScript::deltaTime);
 }
 
 IEGlobalTimeScript::~IEGlobalTimeScript()

@@ -1,4 +1,5 @@
-INCLUDEPATH += $$PWD/required/include
+INCLUDEPATH += $$PWD/required/include \
+INCLUDEPATH += $$PWD/required/include/lua \
 
 INCLUDEPATH += $$PWD/src/Application \
     $$PWD/src/Application/ApplicationWindow \

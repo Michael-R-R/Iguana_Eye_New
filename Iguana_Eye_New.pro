@@ -16,10 +16,12 @@ UI_DIR += $$PWD/forms/headers
 CONFIG(debug, debug|release)
 {
     LIBS += -L$$PWD/required/libs/Assimp/ -lassimp-vc142-mtd
+    LIBS += -L$$PWD/required/libs/Lua/ -llua-5.4.4
 }
 CONFIG(release, debug|release)
 {
     LIBS += -L$$PWD/required/libs/Assimp/ -lassimp-vc142-mt
+    LIBS += -L$$PWD/required/libs/Lua/ -llua-5.4.4
 }
 
 # Default rules for deployment.

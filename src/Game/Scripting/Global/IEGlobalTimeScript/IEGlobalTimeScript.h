@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <sol/sol.hpp>
 
 class IETime;
 
@@ -12,7 +13,8 @@ class IEGlobalTimeScript : public QObject
     IETime* time;
 
 public:
-    IEGlobalTimeScript(IETime* val, QObject* parent = nullptr);
+    IEGlobalTimeScript();
+    IEGlobalTimeScript(IETime* val, sol::table& globalTable, QObject* parent = nullptr);
     ~IEGlobalTimeScript();
 
 public slots:

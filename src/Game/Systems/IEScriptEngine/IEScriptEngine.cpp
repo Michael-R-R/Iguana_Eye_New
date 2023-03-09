@@ -6,24 +6,31 @@
 
 IEScriptEngine::IEScriptEngine(QObject* parent) :
     IEObject(parent),
-    globalTime(nullptr), globalInput(nullptr),
-    scriptSystem(nullptr)
+    lua(),
+    globalTime(nullptr), globalInput(nullptr)
 {
 
 }
 
 IEScriptEngine::~IEScriptEngine()
 {
-    scriptSystem = nullptr;
+
 }
 
 void IEScriptEngine::startup(const GameStartEvent& event)
 {
-    globalTime = new IEGlobalTimeScript(event.getTime(), this);
+    lua.open_libraries(sol::lib::base, sol::lib::package);
+
+    // Make Lua namespaces
+    auto globalTable = lua["global"].get_or_create<sol::table>();
+
+    globalTime = new IEGlobalTimeScript(event.getTime(), globalTable, this);
     globalInput = new IEGlobalInputScript(event.getInput(), this);
 
-    auto ecs = event.getScene()->getECS();
-    scriptSystem = ecs->getComponent<IEECSScriptSystem>(IEComponentType::Script);
+    // TODO test
+    lua.script_file("./resources/scripts/test/test1.lua");
+    lua["add"]();
+    lua["printNum"]();
 }
 
 void IEScriptEngine::shutdown()
@@ -31,17 +38,4 @@ void IEScriptEngine::shutdown()
 
 }
 
-void IEScriptEngine::importScripts()
-{
-    scriptSystem->importAllScripts();
-}
 
-void IEScriptEngine::enableScripts()
-{
-    scriptSystem->enableAllScripts();
-}
-
-void IEScriptEngine::disableScripts()
-{
-    scriptSystem->disableAllScripts();
-}
