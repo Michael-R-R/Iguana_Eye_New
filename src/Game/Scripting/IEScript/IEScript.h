@@ -1,13 +1,20 @@
 #pragma once
 
 #include <QDataStream>
+#include <sol/sol.hpp>
 
 #include "IEResource.h"
-
-class IEEntity;
+#include "IEScriptData.h"
 
 class IEScript : public IEResource
 {
+    sol::environment env;
+
+    sol::function startFunc;
+    sol::function updateFunc;
+    sol::function sleepFunc;
+
+    IEScriptData scriptData;
 
 public:
     IEScript();
@@ -20,20 +27,31 @@ public:
     bool operator<(const IEScript& other) { return IEResource::operator<(other); }
     bool operator>(const IEScript& other) { return IEResource::operator>(other); }
 
-    void attachEntity(const IEEntity entity);
-    void start();
-    void update();
+    void create(sol::state& lua);
+    void start(const int id);
+    void update(const int id);
+    void sleep(const int id);
+
+    sol::object value(const char* name);
+    sol::object func(const char* name, sol::variadic_args args);
+
+    void dataFromScript() { scriptData.fromScript(env); }
+    void dataToScript() { scriptData.toScript(env); }
+
+    const sol::environment& getEnviroment() const { return env; }
 
     friend QDataStream& operator<<(QDataStream& out, const IEScript& script)
     {
-        out << script.filePath << script.id << script.type;
+        const_cast<IEScript&>(script).dataFromScript();
+
+        out << script.filePath << script.id << script.type << script.scriptData;
 
         return out;
     }
 
     friend QDataStream& operator>>(QDataStream& in, IEScript& script)
     {
-        in >> script.filePath << script.id << script.type;
+        in >> script.filePath >> script.id >> script.type >> script.scriptData;
 
         return in;
     }

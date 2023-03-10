@@ -166,6 +166,7 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting \
     $$PWD/src/Game/Scripting/IEScript \
+    $$PWD/src/Game/Scripting/IEScriptData \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/Global \
     $$PWD/src/Game/Scripting/Global/IEGlobalInputScript \

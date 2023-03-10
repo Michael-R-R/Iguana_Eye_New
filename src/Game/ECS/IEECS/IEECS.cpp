@@ -25,6 +25,22 @@ void IEECS::startup(const GameStartEvent& event)
     }
 
     onUpdateEvent = new ECSOnUpdateEvent(this);
+
+    // TODO test
+//    auto* nameSystem = this->getComponent<IEECSNameSystem>(IEComponentType::Name);
+//    auto* scriptSystem = this->getComponent<IEECSScriptSystem>(IEComponentType::Script);
+//    for(int i = 0; i < 1; i++)
+//    {
+//        IEEntity entity = this->create();
+
+//        int nameIndex = nameSystem->lookUpIndex(entity);
+//        nameSystem->setName(nameIndex, QString::number(i));
+
+//        int index = this->attachComponent(entity, IEComponentType::Script);
+//        scriptSystem->addScript(index, new IEScript("./resources/scripts/test/test1.lua", 1));
+//    }
+//    scriptSystem->createAllScripts();
+//    scriptSystem->enableAllScripts();
 }
 
 void IEECS::shutdown()

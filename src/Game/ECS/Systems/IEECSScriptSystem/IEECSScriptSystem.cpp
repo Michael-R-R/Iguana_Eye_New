@@ -1,17 +1,26 @@
 #include "IEECSScriptSystem.h"
 #include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
+#include "IEScriptEngine.h"
 
 IEECSScriptSystem::IEECSScriptSystem() :
     IEECSSystem(),
-    data()
+    data(), scriptEngine(nullptr)
 {
     IEECSScriptSystem::attach(IEEntity(-1));
 }
 
-void IEECSScriptSystem::startup(const GameStartEvent&)
+IEECSScriptSystem::~IEECSScriptSystem()
 {
+    clearAll();
+    scriptEngine = nullptr;
+}
 
+void IEECSScriptSystem::startup(const GameStartEvent& event)
+{
+    scriptEngine = event.getScriptEngine();
+
+    createAllScripts();
 }
 
 int IEECSScriptSystem::attach(const IEEntity entity)
@@ -38,6 +47,8 @@ bool IEECSScriptSystem::detach(const IEEntity entity)
 
     const int indexToRemove = entityMap[entity];
 
+    clearAtIndex(indexToRemove);
+
     const int lastIndex = entityMap.size() - 1;
     const IEEntity lastEntity = data.entity[lastIndex];
 
@@ -63,20 +74,22 @@ void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent*)
     {
         foreach(auto& id, data.activeScripts[i])
         {
-            data.scriptCollection[i][id]->update();
+            const int entityId = data.entity[i].getId();
+            data.scriptCollection[i][id]->update(entityId);
         }
     }
 }
 
-void IEECSScriptSystem::importAllScripts()
+void IEECSScriptSystem::createAllScripts()
 {
+    auto& lua = scriptEngine->getLua();
+
     for(int i = 1; i < entityMap.size(); i++)
     {
-        IEEntity& entity = data.entity[i];
-
         foreach(auto script, data.scriptCollection[i])
         {
-            // TODO implement
+            script->create(lua);
+            script->dataToScript();
         }
     }
 }
@@ -111,7 +124,9 @@ void IEECSScriptSystem::enableScript(const int index, const unsigned long long i
     data.disabledScripts[index].remove(id);
     data.activeScripts[index].insert(id);
 
-    data.scriptCollection[index][id]->start();
+    const int entityId = data.entity[index].getId();
+    auto* script = data.scriptCollection[index][id];
+    script->start(entityId);
 }
 
 void IEECSScriptSystem::disableScript(const int index, const unsigned long long id)
@@ -121,6 +136,10 @@ void IEECSScriptSystem::disableScript(const int index, const unsigned long long 
 
     data.activeScripts[index].remove(id);
     data.disabledScripts[index].insert(id);
+
+    const int entityId = data.entity[index].getId();
+    auto* script = data.scriptCollection[index][id];
+    script->sleep(entityId);
 }
 
 void IEECSScriptSystem::addScript(const int index, IEScript* script)
@@ -163,4 +182,36 @@ bool IEECSScriptSystem::isScriptAttached(const int index, const unsigned long lo
         return false;
 
     return data.scriptCollection[index].contains(id);
+}
+
+void IEECSScriptSystem::clearAll()
+{
+    for(int i = 1; i < entityMap.size(); i++)
+    {
+        QMapIterator<unsigned long long, IEScript*> it(data.scriptCollection[i]);
+        while(it.hasNext())
+        {
+            it.next();
+
+            auto* temp = it.value();
+            data.scriptCollection[i][it.key()] = nullptr;
+            delete temp;
+        }
+    }
+}
+
+void IEECSScriptSystem::clearAtIndex(const int index)
+{
+    if(!indexBoundCheck(index))
+        return;
+
+    QMapIterator<unsigned long long, IEScript*> it(data.scriptCollection[index]);
+    while(it.hasNext())
+    {
+        it.next();
+
+        auto* temp = it.value();
+        data.scriptCollection[index][it.key()] = nullptr;
+        delete temp;
+    }
 }

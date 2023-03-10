@@ -1,32 +1,38 @@
 #include "GameStartEvent.h"
-#include "IETime.h"
-#include "IEInput.h"
-#include "IEScene.h"
+#include "IEGame.h"
 
-GameStartEvent::GameStartEvent(IETime* time_, IEInput* input_, IEScene* scene_) :
-    time(time_), input(input_), scene(scene_)
+GameStartEvent::GameStartEvent(IEGame* game_) :
+    game(game_)
 {
 
 }
 
 GameStartEvent::~GameStartEvent()
 {
-    time = nullptr;
-    input = nullptr;
-    scene = nullptr;
+    game = nullptr;
 }
 
 IETime* GameStartEvent::getTime() const
 {
-    return time;
+    return game->getIETime();
 }
 
 IEInput* GameStartEvent::getInput() const
 {
-    return input;
+    return game->getIEInput();
+}
+
+IEScriptEngine* GameStartEvent::getScriptEngine() const
+{
+    return game->getIEScriptEngine();
+}
+
+IERenderEngine* GameStartEvent::getRenderEngine() const
+{
+    return game->getIERenderEngine();
 }
 
 IEScene* GameStartEvent::getScene() const
 {
-    return scene;
+    return game->getIEScene();
 }

@@ -19,18 +19,13 @@ IEScriptEngine::~IEScriptEngine()
 
 void IEScriptEngine::startup(const GameStartEvent& event)
 {
-    lua.open_libraries(sol::lib::base, sol::lib::package);
+    lua.open_libraries(sol::lib::base);
 
     // Make Lua namespaces
     auto globalTable = lua["global"].get_or_create<sol::table>();
 
     globalTime = new IEGlobalTimeScript(event.getTime(), globalTable, this);
-    globalInput = new IEGlobalInputScript(event.getInput(), this);
-
-    // TODO test
-    lua.script_file("./resources/scripts/test/test1.lua");
-    lua["add"]();
-    lua["printNum"]();
+    globalInput = new IEGlobalInputScript(event.getInput(), globalTable, this);
 }
 
 void IEScriptEngine::shutdown()

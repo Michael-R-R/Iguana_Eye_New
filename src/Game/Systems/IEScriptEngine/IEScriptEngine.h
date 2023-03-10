@@ -22,6 +22,7 @@ public:
     void startup(const GameStartEvent& event);
     void shutdown();
 
+    sol::state& getLua() { return lua; }
     IEGlobalTimeScript* getGlobalTime() const { return globalTime; }
     IEGlobalInputScript* getGlobalInput() const { return globalInput; }
 };

@@ -1,11 +1,13 @@
 #include "IEGlobalInputScript.h"
 #include "IEInput.h"
 
-IEGlobalInputScript::IEGlobalInputScript(IEInput* val, QObject* parent) :
+IEGlobalInputScript::IEGlobalInputScript(IEInput* val, sol::table& globalTable, QObject* parent) :
     QObject(parent),
     input(val)
 {
-
+    globalTable["IEInput"] = this;
+    globalTable.new_usertype<IEGlobalInputScript>("", sol::constructors<>(),
+                                                  "isPressed", &IEGlobalInputScript::isPressed);
 }
 
 IEGlobalInputScript::~IEGlobalInputScript()
@@ -13,8 +15,8 @@ IEGlobalInputScript::~IEGlobalInputScript()
     input = nullptr;
 }
 
-bool IEGlobalInputScript::isPressed(const QString& keyName)
+bool IEGlobalInputScript::isPressed(const char* keyName)
 {
-    return input->isPressed(keyName.toStdString().c_str());
+    return input->isPressed(keyName);
 }
 

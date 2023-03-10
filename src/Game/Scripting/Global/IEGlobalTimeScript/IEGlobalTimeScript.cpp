@@ -13,7 +13,7 @@ IEGlobalTimeScript::IEGlobalTimeScript(IETime* val, sol::table& globalTable,  QO
     time(val)
 {
     globalTable["IETime"] = this;
-    globalTable.new_usertype<IEGlobalTimeScript>("IEGlobalTimeScript", sol::constructors<>(),
+    globalTable.new_usertype<IEGlobalTimeScript>("", sol::constructors<>(),
                                                  "fps", &IEGlobalTimeScript::fps,
                                                  "deltaTime", &IEGlobalTimeScript::deltaTime);
 }

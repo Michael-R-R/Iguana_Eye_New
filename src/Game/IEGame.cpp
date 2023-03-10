@@ -39,11 +39,11 @@ void IEGame::startup()
 {
     this->makeCurrent();
 
-    GameStartEvent gameStartEvent(time, input, scene);
+    GameStartEvent gameStartEvent(this);
     RenderEngineStartEvent renderStartEvent(scene);
 
-    scene->startup(gameStartEvent);
     scriptEngine->startup(gameStartEvent);
+    scene->startup(gameStartEvent);
     renderEngine->startup(renderStartEvent);
     time->startup(this);
 
@@ -56,8 +56,8 @@ void IEGame::shutdown()
 
     time->shutdown();
     renderEngine->shutdown();
-    scriptEngine->shutdown();
     scene->shutdown();
+    scriptEngine->shutdown();
 
     delete time;
     delete input;

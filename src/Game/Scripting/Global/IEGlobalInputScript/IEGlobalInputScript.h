@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <sol/sol.hpp>
 
 class IEInput;
 
@@ -12,10 +13,10 @@ class IEGlobalInputScript : public QObject
     IEInput* input;
 
 public:
-    IEGlobalInputScript(IEInput* val, QObject* parent = nullptr);
+    IEGlobalInputScript(IEInput* val, sol::table& globalTable, QObject* parent = nullptr);
     ~IEGlobalInputScript();
 
 public slots:
-    bool isPressed(const QString& keyName);
+    bool isPressed(const char* keyName);
 };
 
