@@ -1,21 +1,22 @@
 #include "IEScriptData.h"
 
 IEScriptData::IEScriptData() :
-    data()
+    tableNames(), strTableVals(),
+    numTableVals(), boolTableVals()
 {
 
 }
 
 IEScriptData::IEScriptData(const IEScriptData& other) :
-    data(other.data)
+    tableNames(other.tableNames), strTableVals(other.strTableVals),
+    numTableVals(other.numTableVals), boolTableVals(other.boolTableVals)
 {
 
 }
 
 void IEScriptData::fromScript(sol::environment& env)
 {
-    data.clear();
-
+    clear();
     fromScriptHelper(env);
 }
 
@@ -23,30 +24,38 @@ void IEScriptData::toScript(sol::environment& env)
 {
     sol::table table = env;
 
-    for(int i = 0; i < data.name.size(); i++)
+    for(int i = 0; i < tableNames.size(); i++)
     {
         if(i > 0)
-            table = table[data.name[i].toStdString()];
+            table = table[tableNames[i].toStdString()];
 
-        QMapIterator<QString, QString> it1(data.strTableVals[i]);
+        QMapIterator<QString, QString> it1(strTableVals[i]);
         while(it1.hasNext()) { it1.next(); table[it1.key().toStdString()] = it1.value().toStdString(); }
 
-        QMapIterator<QString, float> it2(data.numTableVals[i]);
+        QMapIterator<QString, float> it2(numTableVals[i]);
         while(it2.hasNext()) { it2.next(); table[it2.key().toStdString()] = it2.value(); }
 
-        QMapIterator<QString, bool> it3(data.boolTableVals[i]);
+        QMapIterator<QString, bool> it3(boolTableVals[i]);
         while(it3.hasNext()) { it3.next(); table[it3.key().toStdString()] = it3.value(); }
     }
 }
 
+void IEScriptData::clear()
+{
+    tableNames.clear();
+    strTableVals.clear();
+    numTableVals.clear();
+    boolTableVals.clear();
+}
+
 void IEScriptData::fromScriptHelper(sol::table& table, const QString& tableName)
 {
-    int index = data.name.size();
+    int index = tableNames.size();
 
-    data.name.append(tableName);
-    data.strTableVals.append(QMap<QString, QString>());
-    data.numTableVals.append(QMap<QString, float>());
-    data.boolTableVals.append(QMap<QString, bool>());
+    tableNames.append(tableName);
+    strTableVals.append(QMap<QString, QString>());
+    numTableVals.append(QMap<QString, float>());
+    boolTableVals.append(QMap<QString, bool>());
 
     for(const auto& i : table)
     {
@@ -58,19 +67,19 @@ void IEScriptData::fromScriptHelper(sol::table& table, const QString& tableName)
         case sol::type::string:
         {
             const QString value = QString(i.second.as<const char*>());
-            data.strTableVals[index][key] = value;
+            strTableVals[index][key] = value;
             break;
         }
         case sol::type::number:
         {
             float value = i.second.as<float>();
-            data.numTableVals[index][key] = value;
+            numTableVals[index][key] = value;
             break;
         }
         case sol::type::boolean:
         {
             bool value = i.second.as<bool>();
-            data.boolTableVals[index][key] = value;
+            boolTableVals[index][key] = value;
             break;
         }
         case sol::type::table:

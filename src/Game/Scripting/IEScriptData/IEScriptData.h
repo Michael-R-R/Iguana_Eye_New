@@ -10,37 +10,10 @@ class IEScript;
 
 class IEScriptData
 {
-    struct Table
-    {
-        QVector<QString> name;
-        QVector<QMap<QString, QString>> strTableVals;
-        QVector<QMap<QString, float>> numTableVals;
-        QVector<QMap<QString, bool>> boolTableVals;
-
-        friend QDataStream& operator<<(QDataStream& out, const Table& data)
-        {
-            out << data.name << data.strTableVals << data.numTableVals << data.boolTableVals;
-
-            return out;
-        }
-
-        friend QDataStream& operator>>(QDataStream& in, Table& data)
-        {
-            in >> data.name >> data.strTableVals >> data.numTableVals >> data.boolTableVals;
-
-            return in;
-        }
-
-        void clear()
-        {
-            name.clear();
-            strTableVals.clear();
-            numTableVals.clear();
-            boolTableVals.clear();
-        }
-    };
-
-    Table data;
+    QVector<QString> tableNames;
+    QVector<QMap<QString, QString>> strTableVals;
+    QVector<QMap<QString, float>> numTableVals;
+    QVector<QMap<QString, bool>> boolTableVals;
 
 public:
     IEScriptData();
@@ -49,21 +22,22 @@ public:
 
     void fromScript(sol::environment& env);
     void toScript(sol::environment& env);
+    void clear();
 
 private:
     void fromScriptHelper(sol::table& table, const QString& tableName = "");
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IEScriptData& scriptData)
+    friend QDataStream& operator<<(QDataStream& out, const IEScriptData& data)
     {
-        out << scriptData.data;
+        out << data.tableNames << data.strTableVals << data.numTableVals << data.boolTableVals;
 
         return out;
     }
 
-    friend QDataStream& operator>>(QDataStream& in, IEScriptData& scriptData)
+    friend QDataStream& operator>>(QDataStream& in, IEScriptData& data)
     {
-        in >> scriptData.data;
+        in >> data.tableNames >> data.strTableVals >> data.numTableVals >> data.boolTableVals;
 
         return in;
     }
