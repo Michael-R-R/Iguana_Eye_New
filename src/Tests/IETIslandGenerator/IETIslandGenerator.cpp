@@ -38,7 +38,7 @@ IETIslandGenerator::IETIslandGenerator(IEGame* game) :
     translateWorld(game);
 }
 
-void IETIslandGenerator::run(IEGame* game)
+void IETIslandGenerator::run(IEGame*)
 {
 
 }

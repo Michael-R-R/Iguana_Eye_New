@@ -1,33 +1,40 @@
-#include "IEScriptData.h"
+#include "ScriptData.h"
 
-IEScriptData::IEScriptData() :
+ScriptData::ScriptData() :
     tableNames(), strTableVals(),
     numTableVals(), boolTableVals()
 {
 
 }
 
-IEScriptData::IEScriptData(const IEScriptData& other) :
+ScriptData::ScriptData(const ScriptData& other) :
     tableNames(other.tableNames), strTableVals(other.strTableVals),
     numTableVals(other.numTableVals), boolTableVals(other.boolTableVals)
 {
 
 }
 
-void IEScriptData::fromScript(sol::environment& env)
+void ScriptData::clear()
+{
+    tableNames.clear();
+    strTableVals.clear();
+    numTableVals.clear();
+    boolTableVals.clear();
+}
+
+void ScriptData::fromScript(sol::environment& env)
 {
     clear();
     fromScriptHelper(env);
 }
 
-void IEScriptData::toScript(sol::environment& env)
+void ScriptData::toScript(sol::environment& env)
 {
-    sol::table table = env;
+    sol::environment table = env;
 
     for(int i = 0; i < tableNames.size(); i++)
     {
-        if(i > 0)
-            table = table[tableNames[i].toStdString()];
+        if(i > 0) { table = table[tableNames[i].toStdString()]; }
 
         QMapIterator<QString, QString> it1(strTableVals[i]);
         while(it1.hasNext()) { it1.next(); table[it1.key().toStdString()] = it1.value().toStdString(); }
@@ -40,15 +47,7 @@ void IEScriptData::toScript(sol::environment& env)
     }
 }
 
-void IEScriptData::clear()
-{
-    tableNames.clear();
-    strTableVals.clear();
-    numTableVals.clear();
-    boolTableVals.clear();
-}
-
-void IEScriptData::fromScriptHelper(sol::table& table, const QString& tableName)
+void ScriptData::fromScriptHelper(sol::table& table, const QString& tableName)
 {
     int index = tableNames.size();
 

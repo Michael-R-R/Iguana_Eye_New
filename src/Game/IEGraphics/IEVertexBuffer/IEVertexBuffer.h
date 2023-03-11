@@ -64,7 +64,7 @@ public:
         QOpenGLFunctions* func = QOpenGLContext::currentContext()->functions();
         if(divisor < 1)
         {
-            func->glVertexAttribPointer(attribLoc, tuple, GL_FLOAT, false, stride, (void*)ptrSize);
+            func->glVertexAttribPointer(attribLoc, tuple, GL_FLOAT, false, stride, (void*)(size_t)ptrSize);
             func->glEnableVertexAttribArray(attribLoc);
         }
         else
@@ -72,7 +72,7 @@ public:
             QOpenGLExtraFunctions* extraFunc = QOpenGLContext::currentContext()->extraFunctions();
             for(int i = 0; i < divisor; i++)
             {
-                func->glVertexAttribPointer(attribLoc + i, tuple, GL_FLOAT, false, stride, (void*)(i * ptrSize));
+                func->glVertexAttribPointer(attribLoc + i, tuple, GL_FLOAT, false, stride, (void*)(size_t)(i * ptrSize));
                 func->glEnableVertexAttribArray(attribLoc + i);
                 extraFunc->glVertexAttribDivisor(attribLoc + i, 1);
             }

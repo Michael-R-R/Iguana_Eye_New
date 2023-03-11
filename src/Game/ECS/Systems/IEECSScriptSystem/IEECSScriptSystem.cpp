@@ -33,7 +33,7 @@ int IEECSScriptSystem::attach(const IEEntity entity)
     entityMap[entity] = index;
 
     data.entity.append(entity);
-    data.scriptCollection.append(QMap<unsigned long long, IEScript*>());
+    data.scriptCollection.append(QMap<unsigned long long, IEEntityScript*>());
     data.disabledScripts.append(QSet<unsigned long long>());
     data.activeScripts.append(QSet<unsigned long long>());
 
@@ -142,7 +142,7 @@ void IEECSScriptSystem::disableScript(const int index, const unsigned long long 
     script->sleep(entityId);
 }
 
-void IEECSScriptSystem::addScript(const int index, IEScript* script)
+void IEECSScriptSystem::addScript(const int index, IEEntityScript* script)
 {
     if(!indexBoundCheck(index))
     {
@@ -188,7 +188,7 @@ void IEECSScriptSystem::clearAll()
 {
     for(int i = 1; i < entityMap.size(); i++)
     {
-        QMapIterator<unsigned long long, IEScript*> it(data.scriptCollection[i]);
+        QMapIterator<unsigned long long, IEEntityScript*> it(data.scriptCollection[i]);
         while(it.hasNext())
         {
             it.next();
@@ -205,7 +205,7 @@ void IEECSScriptSystem::clearAtIndex(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    QMapIterator<unsigned long long, IEScript*> it(data.scriptCollection[index]);
+    QMapIterator<unsigned long long, IEEntityScript*> it(data.scriptCollection[index]);
     while(it.hasNext())
     {
         it.next();

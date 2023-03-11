@@ -6,7 +6,7 @@
 #include <QSet>
 
 #include "IEECSSystem.h"
-#include "IEScript.h"
+#include "IEEntityScript.h"
 
 class GameStartEvent;
 class ECSOnUpdateEvent;
@@ -17,7 +17,7 @@ class IEECSScriptSystem : public IEECSSystem
     struct Data
     {
         QVector<IEEntity> entity;
-        QVector<QMap<unsigned long long, IEScript*>> scriptCollection;
+        QVector<QMap<unsigned long long, IEEntityScript*>> scriptCollection;
         QVector<QSet<unsigned long long>> disabledScripts;
         QVector<QSet<unsigned long long>> activeScripts;
 
@@ -29,7 +29,7 @@ class IEECSScriptSystem : public IEECSSystem
             for(int i = 1; i < data.scriptCollection.size(); i++)
             {
                 out << (int)data.scriptCollection[i].size();
-                QMapIterator<unsigned long long, IEScript*> it(data.scriptCollection[i]);
+                QMapIterator<unsigned long long, IEEntityScript*> it(data.scriptCollection[i]);
                 while(it.hasNext())
                 {
                     it.next();
@@ -49,14 +49,14 @@ class IEECSScriptSystem : public IEECSSystem
 
             for(int i = 1; i < size; i++)
             {
-                data.scriptCollection.append(QMap<unsigned long long, IEScript*>());
+                data.scriptCollection.append(QMap<unsigned long long, IEEntityScript*>());
 
                 int collectionSize = 0;
                 in >> collectionSize;
                 for(int j = 0; j < collectionSize; j++)
                 {
                     unsigned long long key = 0;
-                    IEScript* value = new IEScript();
+                    IEEntityScript* value = new IEEntityScript();
 
                     in >> key >> *value;
 
@@ -89,7 +89,7 @@ public:
     void enableScript(const int index, const unsigned long long id);
     void disableScript(const int index, const unsigned long long id);
 
-    void addScript(const int index, IEScript* script);
+    void addScript(const int index, IEEntityScript* script);
     void removeScript(const int index, const unsigned long long id);
     bool isScriptAttached(const int index, const unsigned long long id);
 
