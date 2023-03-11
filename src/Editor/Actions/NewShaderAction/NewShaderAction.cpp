@@ -5,11 +5,11 @@
 #include "IEFile.h"
 #include <QFileDialog>
 
-NewShaderAction::NewShaderAction(EWGlslEditor* editor, IEShaderManager* shaderManager,
+NewShaderAction::NewShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
                                  InputKey& shortcut, QObject* parent) :
     MenuAction("New", shortcut, parent)
 {
-    connect(this, &NewShaderAction::triggered, this, [editor, shaderManager]()
+    connect(this, &NewShaderAction::triggered, this, [editor, &shaderManager]()
     {
         QString path = QFileDialog::getSaveFileName(nullptr,
                                                     "New Shader...",
@@ -22,9 +22,9 @@ NewShaderAction::NewShaderAction(EWGlslEditor* editor, IEShaderManager* shaderMa
 
         unsigned long long id = IEHash::Compute(path);
         IEShader* shader = nullptr;
-        if(shaderManager->doesExist(id))
+        if(shaderManager.doesExist(id))
         {
-            shader = shaderManager->getValue(id);
+            shader = shaderManager.getValue(id);
             shader->setVertexSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
             shader->setFragmentSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
             shader->build();
@@ -33,7 +33,7 @@ NewShaderAction::NewShaderAction(EWGlslEditor* editor, IEShaderManager* shaderMa
         {
             shader = new IEShader(path, id);
             shader->build();
-            shaderManager->add(id, shader);
+            shaderManager.add(id, shader);
         }
 
         QString vSrc = "[VERTEX]\n" + shader->getVertexSrc();

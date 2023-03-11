@@ -11,7 +11,7 @@ class IECameraManager : public IEManager<IECamera>
     Q_OBJECT
 
 public:
-    IECameraManager(QObject* parent = nullptr);
+    IECameraManager();
     ~IECameraManager();
 
     void startup(const GameStartEvent& event) override;

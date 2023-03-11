@@ -8,7 +8,7 @@ class IEShaderManager;
 class SaveAsShaderAction : public MenuAction
 {
 public:
-    SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager* shaderManager,
+    SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
                        InputKey& shortcut, QObject* parent = nullptr);
     ~SaveAsShaderAction() {}
 };

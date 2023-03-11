@@ -2,6 +2,7 @@
 #include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 #include "IEScene.h"
+#include "IECameraManager.h"
 #include "IEECSTransformSystem.h"
 
 IEECSCameraSystem::IEECSCameraSystem() :
@@ -19,7 +20,7 @@ IEECSCameraSystem::~IEECSCameraSystem()
 
 void IEECSCameraSystem::startup(const GameStartEvent& event)
 {
-    cameraManager = event.getScene().getCameraManager();
+    cameraManager = &event.getScene().getCameraManager();
 }
 
 int IEECSCameraSystem::attach(const IEEntity entity)

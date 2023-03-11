@@ -5,7 +5,13 @@
 #include <QMatrix4x4>
 #include "RenderEngineStartEvent.h"
 #include "IEScene.h"
+#include "IEMeshManager.h"
+#include "IEMaterialManager.h"
+#include "IEShaderManager.h"
+#include "IERenderableManager.h"
+#include "IEECS.h"
 #include "IEECSCameraSystem.h"
+#include "IECamera.h"
 
 IERenderEngine::IERenderEngine() :
     IEObject(),
@@ -29,14 +35,14 @@ IERenderEngine::~IERenderEngine()
 void IERenderEngine::startup(const RenderEngineStartEvent& event)
 {
     auto& scene = event.getScene();
-    meshManager = scene.getMeshManager();
-    materialManager = scene.getMaterialManager();
-    shaderManager = scene.getShaderManager();
-    renderableManager = scene.getRenderableManager();
-    cameraManager = scene.getCameraManager();
+    meshManager = &scene.getMeshManager();
+    materialManager = &scene.getMaterialManager();
+    shaderManager = &scene.getShaderManager();
+    renderableManager = &scene.getRenderableManager();
+    cameraManager = &scene.getCameraManager();
 
-    auto ecs = scene.getECS();
-    cameraSystem = ecs->getComponent<IEECSCameraSystem>(IEComponentType::Camera);
+    auto& ecs = scene.getECS();
+    cameraSystem = ecs.getComponent<IEECSCameraSystem>(IEComponentType::Camera);
 }
 
 void IERenderEngine::shutdown()

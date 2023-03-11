@@ -2,6 +2,7 @@
 #include "GameStartEvent.h"
 #include "IEScene.h"
 #include "IEScript.h"
+#include "IEEntity.h"
 #include "LuaGlobalTime.h"
 #include "LuaGlobalInput.h"
 #include "LuaGlobalECS.h"

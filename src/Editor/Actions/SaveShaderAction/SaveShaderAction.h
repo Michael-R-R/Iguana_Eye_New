@@ -10,7 +10,7 @@ class SaveShaderAction : public MenuAction
     bool isShaderActive;
 
 public:
-    SaveShaderAction(EWGlslEditor* editor, IEShaderManager* shaderManager,
+    SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
                      InputKey& shortcut, QObject* parent = nullptr);
     ~SaveShaderAction() {}
 };

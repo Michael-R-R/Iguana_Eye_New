@@ -1,6 +1,7 @@
 #include "IEECSTransformSystem.h"
 #include "GameStartEvent.h"
 #include "IEScene.h"
+#include "IERenderableManager.h"
 #include "ECSOnUpdateEvent.h"
 #include "IEECSHierarchySystem.h"
 #include "IEECSRenderableSystem.h"
@@ -22,7 +23,7 @@ IEECSTransformSystem::~IEECSTransformSystem()
 void IEECSTransformSystem::startup(const GameStartEvent& event)
 {
     auto& scene = event.getScene();
-    renderableManager = scene.getRenderableManager();
+    renderableManager = &scene.getRenderableManager();
 }
 
 int IEECSTransformSystem::attach(const IEEntity entity)

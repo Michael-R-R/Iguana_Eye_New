@@ -1,8 +1,8 @@
 #include "IEMaterialManager.h"
 #include "GameStartEvent.h"
 
-IEMaterialManager::IEMaterialManager(QObject* parent) :
-    IEManager(parent)
+IEMaterialManager::IEMaterialManager() :
+    IEManager()
 {
 
 }

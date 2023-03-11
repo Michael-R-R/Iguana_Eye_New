@@ -2,6 +2,7 @@
 #include "AppStartEvent.h"
 #include "IEGame.h"
 #include "IEScene.h"
+#include "IEShaderManager.h"
 #include "IEFile.h"
 #include <QAbstractItemView>
 #include <QEvent>
@@ -38,7 +39,7 @@ bool EWShaderComboBox::eventFilter(QObject*, QEvent* event)
 
 void EWShaderComboBox::startup(const AppStartEvent& event)
 {
-    shaderManager = event.getGame()->getIEScene().getShaderManager();
+    shaderManager = &event.getGame()->getIEScene().getShaderManager();
 
     this->initialBuild(shaderManager);
 

@@ -14,7 +14,7 @@ class IERenderableManager : public IEManager<IERenderable>
     Q_OBJECT
 
 public:
-    IERenderableManager(QObject* parent = nullptr);
+    IERenderableManager();
     ~IERenderableManager();
 
     void startup(const GameStartEvent& event) override;

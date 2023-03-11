@@ -2,6 +2,7 @@
 #include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 #include "IEScene.h"
+#include "IEMaterialManager.h"
 
 IEECSMaterialSystem::IEECSMaterialSystem() :
     IEECSSystem(),
@@ -18,7 +19,7 @@ IEECSMaterialSystem::~IEECSMaterialSystem()
 
 void IEECSMaterialSystem::startup(const GameStartEvent& event)
 {
-    materialManager = event.getScene().getMaterialManager();
+    materialManager = &event.getScene().getMaterialManager();
 }
 
 int IEECSMaterialSystem::attach(const IEEntity entity)

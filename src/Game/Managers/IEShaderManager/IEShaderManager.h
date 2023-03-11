@@ -13,7 +13,7 @@ class IEShaderManager : public IEManager<IEShader>
     Q_OBJECT
 
 public:
-    IEShaderManager(QObject* parent = nullptr);
+    IEShaderManager();
     ~IEShaderManager();
 
     void startup(const GameStartEvent& event) override;

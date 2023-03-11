@@ -1,8 +1,8 @@
 #include "IEShaderManager.h"
 #include "GameStartEvent.h"
 
-IEShaderManager::IEShaderManager(QObject* parent) :
-    IEManager(parent)
+IEShaderManager::IEShaderManager() :
+    IEManager()
 {
 
 }

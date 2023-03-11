@@ -1,8 +1,8 @@
 #include "IEMeshManager.h"
 #include "GameStartEvent.h"
 
-IEMeshManager::IEMeshManager(QObject* parent) :
-    IEManager(parent)
+IEMeshManager::IEMeshManager() :
+    IEManager()
 {
 
 }

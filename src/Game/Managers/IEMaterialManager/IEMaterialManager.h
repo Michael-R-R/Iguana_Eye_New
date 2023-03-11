@@ -13,7 +13,7 @@ class IEMaterialManager: public IEManager<IEMaterial>
     Q_OBJECT
 
 public:
-    IEMaterialManager(QObject* parent = nullptr);
+    IEMaterialManager();
     ~IEMaterialManager();
 
     void startup(const GameStartEvent& event) override;

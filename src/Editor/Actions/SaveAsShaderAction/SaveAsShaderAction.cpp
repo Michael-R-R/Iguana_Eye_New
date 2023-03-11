@@ -6,13 +6,13 @@
 #include "IEGlslImporter.h"
 #include <QFileDialog>
 
-SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager* shaderManager,
+SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
                                        InputKey& shortcut, QObject* parent) :
     MenuAction("Save As", shortcut, parent)
 {
     this->setEnabled(false);
 
-    connect(this, &SaveAsShaderAction::triggered, this, [editor, shaderManager]()
+    connect(this, &SaveAsShaderAction::triggered, this, [editor, &shaderManager]()
     {
         unsigned long long id = editor->getShaderComboBox()->getSelectedId();
         if(id == 0)
@@ -28,7 +28,7 @@ SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager* sh
         editor->saveContentToFile(path);
 
         id = IEHash::Compute(path);
-        if(shaderManager->doesExist(id))
+        if(shaderManager.doesExist(id))
             return;
 
         auto shader = new IEShader(path, id);
@@ -39,7 +39,7 @@ SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager* sh
         }
 
         shader->build();
-        shaderManager->add(id, shader);
+        shaderManager.add(id, shader);
     });
 
     connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)

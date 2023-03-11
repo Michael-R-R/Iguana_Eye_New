@@ -13,7 +13,7 @@ class IEMeshManager : public IEManager<IEMesh>
     Q_OBJECT
 
 public:
-    IEMeshManager(QObject* parent = nullptr);
+    IEMeshManager();
     ~IEMeshManager();
 
     void startup(const GameStartEvent& event) override;

@@ -1,14 +1,20 @@
 #include "IEScene.h"
 #include "GameStartEvent.h"
+#include "IEMeshManager.h"
+#include "IEMaterialManager.h"
+#include "IEShaderManager.h"
+#include "IERenderableManager.h"
+#include "IECameraManager.h"
+#include "IEECS.h"
 
 IEScene::IEScene() :
     IEObject(),
-    meshManager(new IEMeshManager(this)),
-    materialManager(new IEMaterialManager(this)),
-    shaderManager(new IEShaderManager(this)),
-    renderableManager(new IERenderableManager(this)),
-    cameraManager(new IECameraManager(this)),
-    ecs(new IEECS(this))
+    meshManager(std::make_unique<IEMeshManager>()),
+    materialManager(std::make_unique<IEMaterialManager>()),
+    shaderManager(std::make_unique<IEShaderManager>()),
+    renderableManager(std::make_unique<IERenderableManager>()),
+    cameraManager(std::make_unique<IECameraManager>()),
+    ecs(std::make_unique<IEECS>())
 {
 
 }
@@ -41,4 +47,32 @@ void IEScene::shutdown()
 void IEScene::onUpdateFrame()
 {
     ecs->onUpdateFrame();
+}
+
+QDataStream& IEScene::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& scene = static_cast<const IEScene&>(obj);
+
+    out << *scene.meshManager
+        << *scene.materialManager
+        << *scene.shaderManager
+        << *scene.renderableManager
+        << *scene.cameraManager
+        << *scene.ecs;
+
+    return out;
+}
+
+QDataStream& IEScene::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& scene = static_cast<IEScene&>(obj);
+
+    in >> *scene.meshManager
+       >> *scene.materialManager
+       >> *scene.shaderManager
+       >> *scene.renderableManager
+       >> *scene.cameraManager
+       >> *scene.ecs;
+
+    return in;
 }

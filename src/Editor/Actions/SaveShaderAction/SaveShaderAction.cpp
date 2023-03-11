@@ -3,20 +3,20 @@
 #include "IEShaderManager.h"
 #include "IEFile.h"
 
-SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager* shaderManager,
+SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
                                    InputKey& shortcut, QObject* parent) :
     MenuAction("Save", shortcut, parent),
     isShaderActive(false)
 {
     this->setEnabled(false);
 
-    connect(this, &SaveShaderAction::triggered, this, [this, editor, shaderManager]()
+    connect(this, &SaveShaderAction::triggered, this, [this, editor, &shaderManager]()
     {
         unsigned long long id = editor->getShaderComboBox()->getSelectedId();
         if(id == 0)
             return;
 
-        auto shader = shaderManager->getValue(id);
+        auto shader = shaderManager.getValue(id);
         if(!shader)
             return;
 

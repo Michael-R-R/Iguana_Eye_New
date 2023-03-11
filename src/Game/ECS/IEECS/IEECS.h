@@ -22,7 +22,7 @@ class IEECS : public IEObject, public Serializable
     QMap<IEComponentType, IEECSSystem*> systems;
 
 public:
-    IEECS(QObject* parent = nullptr);
+    IEECS();
     ~IEECS();
 
     void startup(const GameStartEvent& event);

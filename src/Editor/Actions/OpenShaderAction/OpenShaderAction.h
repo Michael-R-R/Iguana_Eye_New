@@ -8,7 +8,7 @@ class OpenShaderAction : public MenuAction
 {
 
 public:
-    OpenShaderAction(IEShaderManager* shaderManager,
+    OpenShaderAction(IEShaderManager& shaderManager,
                      InputKey& shortcut, QObject* parent = nullptr);
     ~OpenShaderAction() {}
 };

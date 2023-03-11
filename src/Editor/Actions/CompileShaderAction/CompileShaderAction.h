@@ -9,7 +9,7 @@ class CompileShaderAction : public MenuAction
 {
 
 public:
-    CompileShaderAction(EWGlslEditor* editor, IEShaderManager* manager,
+    CompileShaderAction(EWGlslEditor* editor, IEShaderManager& manager,
                         InputKey& shortcut, QObject* parent = nullptr);
     ~CompileShaderAction() {}
 };

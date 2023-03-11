@@ -13,8 +13,8 @@ public:
     EGridRenderable(const unsigned long long id);
     ~EGridRenderable() {}
 
-    void setup(IEMeshManager* meshManager,
-               IEMaterialManager* materialManager,
-               IEShaderManager* shaderManager);
+    void setup(IEMeshManager& meshManager,
+               IEMaterialManager& materialManager,
+               IEShaderManager& shaderManager);
 };
 

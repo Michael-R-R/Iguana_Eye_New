@@ -1,7 +1,7 @@
 #include "LuaGlobalECS.h"
 #include "IEECS.h"
 
-LuaGlobalECS::LuaGlobalECS(IEECS* ecs_, sol::table& gameTable) :
+LuaGlobalECS::LuaGlobalECS(IEECS& ecs_, sol::table& gameTable) :
     ecs(ecs_)
 {
     gameTable["ECS"] = this;

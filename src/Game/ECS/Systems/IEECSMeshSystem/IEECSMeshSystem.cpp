@@ -2,6 +2,7 @@
 #include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 #include "IEScene.h"
+#include "IEMeshManager.h"
 
 IEECSMeshSystem::IEECSMeshSystem() :
     IEECSSystem(),
@@ -18,7 +19,7 @@ IEECSMeshSystem::~IEECSMeshSystem()
 
 void IEECSMeshSystem::startup(const GameStartEvent& event)
 {
-    meshManager = event.getScene().getMeshManager();
+    meshManager = &event.getScene().getMeshManager();
 }
 
 int IEECSMeshSystem::attach(const IEEntity entity)

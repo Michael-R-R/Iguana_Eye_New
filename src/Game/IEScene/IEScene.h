@@ -3,25 +3,26 @@
 #include <QDataStream>
 
 #include "IEObject.h"
-#include "IEMeshManager.h"
-#include "IEMaterialManager.h"
-#include "IEShaderManager.h"
-#include "IERenderableManager.h"
-#include "IECameraManager.h"
-#include "IEECS.h"
+#include "Serializable.h"
 
 class GameStartEvent;
+class IEMeshManager;
+class IEMaterialManager;
+class IEShaderManager;
+class IERenderableManager;
+class IECameraManager;
+class IEECS;
 
-class IEScene : public IEObject
+class IEScene : public IEObject, public Serializable
 {
     Q_OBJECT
 
-    IEMeshManager* meshManager;
-    IEMaterialManager* materialManager;
-    IEShaderManager* shaderManager;
-    IERenderableManager* renderableManager;
-    IECameraManager* cameraManager;
-    IEECS* ecs;
+    std::unique_ptr<IEMeshManager> meshManager;
+    std::unique_ptr<IEMaterialManager> materialManager;
+    std::unique_ptr<IEShaderManager> shaderManager;
+    std::unique_ptr<IERenderableManager> renderableManager;
+    std::unique_ptr<IECameraManager> cameraManager;
+    std::unique_ptr<IEECS> ecs;
 
 public:
     IEScene();
@@ -32,34 +33,13 @@ public:
 
     void onUpdateFrame();
 
-    IEMeshManager* getMeshManager() const { return meshManager; }
-    IEMaterialManager* getMaterialManager() const { return materialManager; }
-    IEShaderManager* getShaderManager() const { return shaderManager; }
-    IERenderableManager* getRenderableManager() const { return renderableManager; }
-    IECameraManager* getCameraManager() const { return cameraManager; }
-    IEECS* getECS() const { return ecs; }
+    IEMeshManager& getMeshManager() const { return *meshManager; }
+    IEMaterialManager& getMaterialManager() const { return *materialManager; }
+    IEShaderManager& getShaderManager() const { return *shaderManager; }
+    IERenderableManager& getRenderableManager() const { return *renderableManager; }
+    IECameraManager& getCameraManager() const { return *cameraManager; }
+    IEECS& getECS() const { return *ecs; }
 
-    friend QDataStream& operator<<(QDataStream& out, const IEScene& scene)
-    {
-        out << *scene.meshManager
-            << *scene.materialManager
-            << *scene.shaderManager
-            << *scene.renderableManager
-            << *scene.cameraManager
-            << *scene.ecs;
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEScene& scene)
-    {
-        in >> *scene.meshManager
-           >> *scene.materialManager
-           >> *scene.shaderManager
-           >> *scene.renderableManager
-           >> *scene.cameraManager
-           >> *scene.ecs;
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

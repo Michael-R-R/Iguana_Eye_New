@@ -1,9 +1,10 @@
 #include "IERenderableManager.h"
 #include "GameStartEvent.h"
 #include "IEScene.h"
+#include "IEShaderManager.h"
 
-IERenderableManager::IERenderableManager(QObject* parent) :
-    IEManager(parent)
+IERenderableManager::IERenderableManager() :
+    IEManager()
 {
 
 }
@@ -56,11 +57,11 @@ bool IERenderableManager::changeKey(const unsigned long long oldKey, const unsig
 
 void IERenderableManager::buildAllRenderables(const GameStartEvent& event)
 {
-    auto shaderManager = event.getScene().getShaderManager();
+    auto& shaderManager = event.getScene().getShaderManager();
 
     for(auto& renderable : resourceContainer->getResources())
     {
-        auto shader = shaderManager->getValue(renderable->getShaderId());
+        auto shader = shaderManager.getValue(renderable->getShaderId());
         if(!shader)
             continue;
         renderable->build(shader);

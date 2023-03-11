@@ -2,16 +2,16 @@
 #include "EWGlslEditor.h"
 #include "IEShaderManager.h"
 
-CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, IEShaderManager* manager,
+CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, IEShaderManager& manager,
                                          InputKey& shortcut, QObject* parent) :
     MenuAction("Compile", shortcut, parent)
 {
     this->setEnabled(false);
 
-    connect(this, &CompileShaderAction::triggered, this, [editor, manager]()
+    connect(this, &CompileShaderAction::triggered, this, [editor, &manager]()
     {
         unsigned long long id = editor->getShaderComboBox()->getSelectedId();
-        IEShader* shader = manager->getValue(id);
+        IEShader* shader = manager.getValue(id);
         if(!shader)
             return;
 

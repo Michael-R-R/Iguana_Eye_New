@@ -1,8 +1,8 @@
 #include "IECameraManager.h"
 #include "GameStartEvent.h"
 
-IECameraManager::IECameraManager(QObject* parent) :
-    IEManager(parent)
+IECameraManager::IECameraManager() :
+    IEManager()
 {
 
 }

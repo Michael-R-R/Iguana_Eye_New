@@ -15,23 +15,23 @@ EGridRenderable::EGridRenderable(const unsigned long long id) :
     this->setDrawType(GL_TRIANGLES);
 }
 
-void EGridRenderable::setup(IEMeshManager* meshManager,
-                            IEMaterialManager* materialManager,
-                            IEShaderManager* shaderManager)
+void EGridRenderable::setup(IEMeshManager& meshManager,
+                            IEMaterialManager& materialManager,
+                            IEShaderManager& shaderManager)
 {
     unsigned long long meshId = IEHash::Compute("EGridMesh");
     auto mesh = new EGridMesh(meshId);
-    meshManager->add(meshId, mesh);
+    meshManager.add(meshId, mesh);
 
     unsigned long long materialId = IEHash::Compute("EGridMaterial");
     auto material = new EDefaultMaterial("", materialId);
     material->setType(Type::Editor);
-    materialManager->add(materialId, material);
+    materialManager.add(materialId, material);
 
     unsigned long long shaderId = IEHash::Compute("EGridShader");
     auto shader = new EGridShader(shaderId);
     shader->build();
-    shaderManager->add(shaderId, shader);
+    shaderManager.add(shaderId, shader);
 
     this->setMeshId(meshId);
     this->setMaterialId(materialId);

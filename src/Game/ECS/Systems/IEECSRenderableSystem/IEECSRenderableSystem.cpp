@@ -1,6 +1,7 @@
 #include "IEECSRenderableSystem.h"
 #include "GameStartEvent.h"
 #include "IEScene.h"
+#include "IERenderableManager.h"
 #include "ECSOnUpdateEvent.h"
 
 IEECSRenderableSystem::IEECSRenderableSystem() :
@@ -20,7 +21,7 @@ IEECSRenderableSystem::~IEECSRenderableSystem()
 
 void IEECSRenderableSystem::startup(const GameStartEvent& event)
 {
-    renderableManager = event.getScene().getRenderableManager();
+    renderableManager = &event.getScene().getRenderableManager();
 }
 
 int IEECSRenderableSystem::attach(const IEEntity entity)

@@ -5,11 +5,11 @@
 #include "IEFile.h"
 #include <QFileDialog>
 
-OpenShaderAction::OpenShaderAction(IEShaderManager* shaderManager,
+OpenShaderAction::OpenShaderAction(IEShaderManager& shaderManager,
                                    InputKey& shortcut, QObject* parent) :
     MenuAction("Open", shortcut, parent)
 {
-    connect(this, &OpenShaderAction::triggered, this, [shaderManager]()
+    connect(this, &OpenShaderAction::triggered, this, [&shaderManager]()
     {
         QString path = QFileDialog::getOpenFileName(nullptr,
                                                     "Open Shader...",
@@ -19,7 +19,7 @@ OpenShaderAction::OpenShaderAction(IEShaderManager* shaderManager,
             return;
 
         unsigned long long id = IEHash::Compute(path);
-        if(shaderManager->doesExist(id))
+        if(shaderManager.doesExist(id))
             return;
 
         auto shader = new IEShader(path, id);
@@ -27,6 +27,6 @@ OpenShaderAction::OpenShaderAction(IEShaderManager* shaderManager,
             return;
 
         shader->build();
-        shaderManager->add(id, shader);
+        shaderManager.add(id, shader);
     });
 }

@@ -14,8 +14,8 @@
 #include "IEECSRenderableSystem.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECS::IEECS(QObject* parent) :
-    IEObject(parent),
+IEECS::IEECS() :
+    IEObject(),
     onUpdateEvent(nullptr),
     entityManager(new IEEntityManager()),
     systems()

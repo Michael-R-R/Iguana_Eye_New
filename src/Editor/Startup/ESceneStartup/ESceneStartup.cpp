@@ -2,10 +2,14 @@
 #include "AppStartEvent.h"
 #include "IEGame.h"
 #include "IEScene.h"
+#include "IEMaterialManager.h"
+#include "IERenderableManager.h"
+#include "IECameraManager.h"
 #include "IEHash.h"
 #include "IESerialize.h"
 #include "EDefaultCamera.h"
 #include "EDefaultMaterial.h"
+#include "IEShaderManager.h"
 #include "EGridRenderable.h"
 
 void ESceneStartup::startup(const AppStartEvent& event)
@@ -19,33 +23,33 @@ void ESceneStartup::startup(const AppStartEvent& event)
 void ESceneStartup::addDefaultCamera(const AppStartEvent& event)
 {
     auto& scene = event.getGame()->getIEScene();
-    auto cameraManager = scene.getCameraManager();
+    auto& cameraManager = scene.getCameraManager();
 
     QString path = "./resources/cameras/editor/default.iecam";
     unsigned long long id = IEHash::Compute(path);
     auto camera = new EDefaultCamera(path, id);
 
-    cameraManager->setDefaultResourceId(id);
-    cameraManager->add(id, camera);
+    cameraManager.setDefaultResourceId(id);
+    cameraManager.add(id, camera);
 }
 
 void ESceneStartup::addDefaultMaterial(const AppStartEvent& event)
 {
     auto& scene = event.getGame()->getIEScene();
-    auto materialManager = scene.getMaterialManager();
+    auto& materialManager = scene.getMaterialManager();
 
     QString path = "./resources/materials/editor/default.iemat";
     unsigned long long id = IEHash::Compute(path);
     auto material = new EDefaultMaterial(path, id);
 
-    materialManager->setDefaultResourceId(id);
-    materialManager->add(id, material);
+    materialManager.setDefaultResourceId(id);
+    materialManager.add(id, material);
 }
 
 void ESceneStartup::addDefaultShader(const AppStartEvent& event)
 {
     auto& scene = event.getGame()->getIEScene();
-    auto shaderManager = scene.getShaderManager();
+    auto& shaderManager = scene.getShaderManager();
 
     QString path = "./resources/shaders/editor/default.glsl";
     unsigned long long id = IEHash::Compute(path);
@@ -53,21 +57,21 @@ void ESceneStartup::addDefaultShader(const AppStartEvent& event)
     IEGlslImporter::importGlsl(path, shader);
     shader->build();
 
-    shaderManager->setDefaultResourceId(id);
-    shaderManager->add(id, shader);
+    shaderManager.setDefaultResourceId(id);
+    shaderManager.add(id, shader);
 }
 
 void ESceneStartup::buildGridRenderable(const AppStartEvent& event)
 {
     auto& scene = event.getGame()->getIEScene();
-    auto meshManager = scene.getMeshManager();
-    auto materialManager = scene.getMaterialManager();
-    auto shaderManager = scene.getShaderManager();
-    auto renderableManager = scene.getRenderableManager();
+    auto& meshManager = scene.getMeshManager();
+    auto& materialManager = scene.getMaterialManager();
+    auto& shaderManager = scene.getShaderManager();
+    auto& renderableManager = scene.getRenderableManager();
 
     unsigned long long id = IEHash::Compute("EGridRenderable");
     auto gridRenderable = new EGridRenderable(id);
     gridRenderable->setup(meshManager, materialManager, shaderManager);
 
-    renderableManager->add(id, gridRenderable);
+    renderableManager.add(id, gridRenderable);
 }
