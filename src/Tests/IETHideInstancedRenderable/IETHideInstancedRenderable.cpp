@@ -1,6 +1,7 @@
 #include "IETHideInstancedRenderable.h"
 #include "IEGame.h"
 #include "IEScene.h"
+#include "IEECSRenderableSystem.h"
 #include "IEHash.h"
 
 IETHideInstancedRenderable::IETHideInstancedRenderable() :

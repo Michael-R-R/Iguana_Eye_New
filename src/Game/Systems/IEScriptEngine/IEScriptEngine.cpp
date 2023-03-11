@@ -1,6 +1,7 @@
 #include "IEScriptEngine.h"
 #include "GameStartEvent.h"
 #include "IEScene.h"
+#include "IEScript.h"
 
 IEScriptEngine::IEScriptEngine(QObject* parent) :
     IEObject(parent),

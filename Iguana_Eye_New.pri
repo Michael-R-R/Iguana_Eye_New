@@ -184,6 +184,9 @@ INCLUDEPATH += $$PWD/src/Game/Systems \
 INCLUDEPATH += $$PWD/src/Game/Systems/IETime \
     $$PWD/src/Game/Systems/IETime/DeltaTime
 
+INCLUDEPATH += $$PWD/src/Serialize \
+    $$PWD/src/Serialize/Serializable \
+
 INCLUDEPATH += $$PWD/src/Tests \
     $$PWD/src/Tests/IETCreateInstancedRenderable \
     $$PWD/src/Tests/IETHideInstancedRenderable \

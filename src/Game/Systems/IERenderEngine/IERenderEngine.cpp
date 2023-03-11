@@ -5,6 +5,7 @@
 #include <QMatrix4x4>
 #include "RenderEngineStartEvent.h"
 #include "IEScene.h"
+#include "IEECSCameraSystem.h"
 
 IERenderEngine::IERenderEngine(QObject* parent) :
     IEObject(parent),

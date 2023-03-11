@@ -3,6 +3,7 @@
 #include "IEScene.h"
 #include "ECSOnUpdateEvent.h"
 #include "IEECSHierarchySystem.h"
+#include "IEECSRenderableSystem.h"
 
 IEECSTransformSystem::IEECSTransformSystem() :
     IEECSSystem(),

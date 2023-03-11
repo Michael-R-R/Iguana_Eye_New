@@ -2,6 +2,7 @@
 #include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 #include "IEScene.h"
+#include "IEECSTransformSystem.h"
 
 IEECSCameraSystem::IEECSCameraSystem() :
     data(),
