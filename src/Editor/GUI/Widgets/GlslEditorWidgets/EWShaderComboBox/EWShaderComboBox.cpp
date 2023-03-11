@@ -68,7 +68,7 @@ unsigned long long EWShaderComboBox::getSelectedId()
 
 void EWShaderComboBox::initialBuild(const IEShaderManager* shaderManager)
 {
-    auto resources = shaderManager->getResourceContainer()->getResources();
+    auto resources = shaderManager->getResourceContainer().getResources();
     for(auto item : resources)
     {
         if(item->getType() == IEResource::Type::Editor)

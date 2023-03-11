@@ -31,7 +31,7 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEMaterialManager& manager)
     {
-        auto& resources = manager.getResourceContainer()->getResources();
+        auto& resources = manager.getResourceContainer().getResources();
 
         out << (int)resources.size();
 

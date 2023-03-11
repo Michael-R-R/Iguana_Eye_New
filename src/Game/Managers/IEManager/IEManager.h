@@ -9,13 +9,13 @@ template <class T>
 class IEManager : public IEObject
 {
 protected:
-    IEResourceContainer<T>* resourceContainer;
+    std::unique_ptr<IEResourceContainer<T>> resourceContainer;
     unsigned long long defaultResourceId;
 
 public:
     IEManager(QObject* parent = nullptr) :
         IEObject(parent),
-        resourceContainer(new IEResourceContainer<T>(this)),
+        resourceContainer(std::make_unique<IEResourceContainer<T>>()),
         defaultResourceId(0)
     {
 
@@ -59,9 +59,9 @@ public:
         return resourceContainer->getValue(key);
     }
 
-    IEResourceContainer<T>* getResourceContainer() const
+    IEResourceContainer<T>& getResourceContainer() const
     {
-        return resourceContainer;
+        return *resourceContainer;
     }
 
     unsigned long long getDefaultResourceId() const

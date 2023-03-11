@@ -58,7 +58,7 @@ void IERenderEngine::onRenderFrame()
 {
     auto camera = cameraSystem->getActiveCamera();
 
-    auto renderables = renderableManager->getResourceContainer()->getResources();
+    auto renderables = renderableManager->getResourceContainer().getResources();
     for(auto* renderable : renderables)
     {
         auto mesh = meshManager->getValue(renderable->getMeshId());

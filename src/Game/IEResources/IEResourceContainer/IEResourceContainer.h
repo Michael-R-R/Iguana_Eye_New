@@ -11,9 +11,8 @@ class IEResourceContainer : public IEObject
     QMap<unsigned long long, T*> resources;
 
 public:
-    IEResourceContainer(QObject* parent = nullptr) :
-        IEObject(parent),
-        resources()
+    IEResourceContainer() :
+        IEObject(), resources()
     {
 
     }
