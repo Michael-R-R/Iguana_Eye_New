@@ -24,8 +24,8 @@ class IEGame : public QOpenGLWidget, public Serializable
 
     std::unique_ptr<IETime> time;
     std::unique_ptr<IEInput> input;
-    IEScriptEngine* scriptEngine;
-    IERenderEngine* renderEngine;
+    std::unique_ptr<IEScriptEngine> scriptEngine;
+    std::unique_ptr<IERenderEngine> renderEngine;
     IEScene* scene;
 
     int viewportWidth;
@@ -47,8 +47,8 @@ public:
 
     IETime& getIETime() { return *time; }
     IEInput& getIEInput() const { return *input; }
-    IEScriptEngine* getIEScriptEngine() const { return scriptEngine; }
-    IERenderEngine* getIERenderEngine() const { return renderEngine; }
+    IEScriptEngine& getIEScriptEngine() const { return *scriptEngine; }
+    IERenderEngine& getIERenderEngine() const { return *renderEngine; }
     IEScene* getIEScene() const { return scene; }
     QPair<int, int> viewportSize() { return QPair<int, int>(viewportWidth, viewportHeight); }
 

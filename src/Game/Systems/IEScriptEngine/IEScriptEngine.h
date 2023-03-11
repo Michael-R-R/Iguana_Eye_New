@@ -3,22 +3,22 @@
 #include <sol/sol.hpp>
 
 #include "IEObject.h"
-#include "LuaGlobalTime.h"
-#include "LuaGlobalInput.h"
-#include "LuaGlobalECS.h"
 
 class GameStartEvent;
+class LuaGlobalTime;
+class LuaGlobalInput;
+class LuaGlobalECS;
 
 class IEScriptEngine : public IEObject
 {
     sol::state lua;
 
-    LuaGlobalTime* globalTime;
-    LuaGlobalInput* globalInput;
-    LuaGlobalECS* globalECS;
+    std::unique_ptr<LuaGlobalTime> globalTime;
+    std::unique_ptr<LuaGlobalInput> globalInput;
+    std::unique_ptr<LuaGlobalECS> globalECS;
 
 public:
-    IEScriptEngine(QObject* parent = nullptr);
+    IEScriptEngine();
     ~IEScriptEngine();
 
     void startup(const GameStartEvent& event);

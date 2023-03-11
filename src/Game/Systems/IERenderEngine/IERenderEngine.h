@@ -23,7 +23,6 @@ class IERenderEngine : public IEObject
     const IEShaderManager* shaderManager;
     const IERenderableManager* renderableManager;
     const IECameraManager* cameraManager;
-
     const IEECSCameraSystem* cameraSystem;
 
 public:

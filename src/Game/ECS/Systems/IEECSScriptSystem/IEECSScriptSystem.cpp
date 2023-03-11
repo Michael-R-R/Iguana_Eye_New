@@ -19,7 +19,7 @@ IEECSScriptSystem::~IEECSScriptSystem()
 
 void IEECSScriptSystem::startup(const GameStartEvent& event)
 {
-    scriptEngine = event.getScriptEngine();
+    scriptEngine = &event.getScriptEngine();
 
     initAllScripts();
     deserializeScripts();

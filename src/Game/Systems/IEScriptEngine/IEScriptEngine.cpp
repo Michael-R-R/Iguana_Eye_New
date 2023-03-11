@@ -2,9 +2,12 @@
 #include "GameStartEvent.h"
 #include "IEScene.h"
 #include "IEScript.h"
+#include "LuaGlobalTime.h"
+#include "LuaGlobalInput.h"
+#include "LuaGlobalECS.h"
 
-IEScriptEngine::IEScriptEngine(QObject* parent) :
-    IEObject(parent),
+IEScriptEngine::IEScriptEngine() :
+    IEObject(),
     lua(), globalTime(nullptr), globalInput(nullptr), globalECS(nullptr)
 {
 
@@ -12,9 +15,7 @@ IEScriptEngine::IEScriptEngine(QObject* parent) :
 
 IEScriptEngine::~IEScriptEngine()
 {
-    delete globalTime;
-    delete globalInput;
-    delete globalECS;
+
 }
 
 void IEScriptEngine::startup(const GameStartEvent& event)
@@ -26,9 +27,9 @@ void IEScriptEngine::startup(const GameStartEvent& event)
     // Create namespaces
     auto gameTable = lua["game"].get_or_create<sol::table>();
 
-    globalTime = new LuaGlobalTime(event.getTime(), gameTable);
-    globalInput = new LuaGlobalInput(event.getInput(), gameTable);
-    globalECS = new LuaGlobalECS(event.getScene()->getECS(), gameTable);
+    globalTime = std::make_unique<LuaGlobalTime>(event.getTime(), gameTable);
+    globalInput = std::make_unique<LuaGlobalInput>(event.getInput(), gameTable);
+    globalECS = std::make_unique<LuaGlobalECS>(event.getScene()->getECS(), gameTable);
 }
 
 void IEScriptEngine::shutdown()

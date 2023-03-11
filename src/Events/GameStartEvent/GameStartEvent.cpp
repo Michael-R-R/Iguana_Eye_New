@@ -23,12 +23,12 @@ IEInput& GameStartEvent::getInput() const
     return game->getIEInput();
 }
 
-IEScriptEngine* GameStartEvent::getScriptEngine() const
+IEScriptEngine& GameStartEvent::getScriptEngine() const
 {
     return game->getIEScriptEngine();
 }
 
-IERenderEngine* GameStartEvent::getRenderEngine() const
+IERenderEngine& GameStartEvent::getRenderEngine() const
 {
     return game->getIERenderEngine();
 }
