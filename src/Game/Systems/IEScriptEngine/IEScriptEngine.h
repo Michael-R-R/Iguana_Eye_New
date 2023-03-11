@@ -3,10 +3,11 @@
 #include <sol/sol.hpp>
 
 #include "IEObject.h"
+#include "IEGlobalTimeScript.h"
+#include "IEGlobalInputScript.h"
+#include "IEGlobalECSScript.h"
 
 class GameStartEvent;
-class IEGlobalTimeScript;
-class IEGlobalInputScript;
 
 class IEScriptEngine : public IEObject
 {
@@ -14,6 +15,7 @@ class IEScriptEngine : public IEObject
 
     IEGlobalTimeScript* globalTime;
     IEGlobalInputScript* globalInput;
+    IEGlobalECSScript* globalECS;
 
 public:
     IEScriptEngine(QObject* parent = nullptr);
@@ -23,7 +25,8 @@ public:
     void shutdown();
 
     sol::state& getLua() { return lua; }
-    IEGlobalTimeScript* getGlobalTime() const { return globalTime; }
-    IEGlobalInputScript* getGlobalInput() const { return globalInput; }
+
+private:
+    void addGlobalUserTypes();
 };
 

@@ -1,13 +1,12 @@
 #include "IEGlobalInputScript.h"
 #include "IEInput.h"
 
-IEGlobalInputScript::IEGlobalInputScript(IEInput* val, sol::table& globalTable, QObject* parent) :
-    QObject(parent),
+IEGlobalInputScript::IEGlobalInputScript(IEInput* val, sol::table& gameTable) :
     input(val)
 {
-    globalTable["IEInput"] = this;
-    globalTable.new_usertype<IEGlobalInputScript>("", sol::constructors<>(),
-                                                  "isPressed", &IEGlobalInputScript::isPressed);
+    gameTable["IEInput"] = this;
+    gameTable.new_usertype<IEGlobalInputScript>("", sol::constructors<>(),
+                                                "isPressed", &IEGlobalInputScript::isPressed);
 }
 
 IEGlobalInputScript::~IEGlobalInputScript()

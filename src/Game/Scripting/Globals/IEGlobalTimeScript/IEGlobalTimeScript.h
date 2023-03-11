@@ -1,23 +1,18 @@
 #pragma once
 
-#include <QObject>
 #include <sol/sol.hpp>
 
 class IETime;
 
-class IEGlobalTimeScript : public QObject
+class IEGlobalTimeScript
 {
-    Q_OBJECT
-
     // DOES NOT OWN THIS POINTER
     IETime* time;
 
 public:
-    IEGlobalTimeScript();
-    IEGlobalTimeScript(IETime* val, sol::table& globalTable, QObject* parent = nullptr);
+    IEGlobalTimeScript(IETime* val, sol::table& gameTable);
     ~IEGlobalTimeScript();
 
-public slots:
     float fps();
     float deltaTime();
 };

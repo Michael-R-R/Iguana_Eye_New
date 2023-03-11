@@ -2,6 +2,7 @@
 #include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 #include "IEScriptEngine.h"
+#include "IEHash.h"
 
 IEECSScriptSystem::IEECSScriptSystem() :
     IEECSSystem(),
@@ -21,6 +22,7 @@ void IEECSScriptSystem::startup(const GameStartEvent& event)
     scriptEngine = event.getScriptEngine();
 
     createAllScripts();
+    deserializeAllScripts();
 }
 
 int IEECSScriptSystem::attach(const IEEntity entity)
@@ -47,7 +49,7 @@ bool IEECSScriptSystem::detach(const IEEntity entity)
 
     const int indexToRemove = entityMap[entity];
 
-    clearAtIndex(indexToRemove);
+    clearAll(indexToRemove);
 
     const int lastIndex = entityMap.size() - 1;
     const IEEntity lastEntity = data.entity[lastIndex];
@@ -86,10 +88,9 @@ void IEECSScriptSystem::createAllScripts()
 
     for(int i = 1; i < entityMap.size(); i++)
     {
-        foreach(auto script, data.scriptCollection[i])
+        foreach(auto* script, data.scriptCollection[i])
         {
             script->create(lua);
-            script->dataToScript();
         }
     }
 }
@@ -114,6 +115,18 @@ void IEECSScriptSystem::disableAllScripts()
             this->disableScript(i, script->getId());
         }
     }
+}
+
+void IEECSScriptSystem::createScript(const int index, const unsigned long long id)
+{
+    if(!indexBoundCheck(index))
+        return;
+
+    if(!isScriptAttached(index, id))
+        return;
+
+    IEEntityScript* script = data.scriptCollection[index][id];
+    script->create(scriptEngine->getLua());
 }
 
 void IEECSScriptSystem::enableScript(const int index, const unsigned long long id)
@@ -184,6 +197,40 @@ bool IEECSScriptSystem::isScriptAttached(const int index, const unsigned long lo
     return data.scriptCollection[index].contains(id);
 }
 
+IEEntityScript* IEECSScriptSystem::getScript(const int index, const unsigned long long id)
+{
+    if(!indexBoundCheck(index))
+        return nullptr;
+
+    if(!isScriptAttached(index, id))
+        return nullptr;
+
+    return data.scriptCollection[index][id];
+}
+
+IEEntityScript* IEECSScriptSystem::getScript(const int index, const QString& name)
+{
+    if(!indexBoundCheck(index))
+        return nullptr;
+
+    const unsigned long long id = IEHash::Compute(name);
+    if(!isScriptAttached(index, id))
+        return nullptr;
+
+    return data.scriptCollection[index][id];
+}
+
+void IEECSScriptSystem::deserializeAllScripts()
+{
+    for(int i = 1; i < entityMap.size(); i++)
+    {
+        foreach(auto* script, data.scriptCollection[i])
+        {
+            script->dataToScript();
+        }
+    }
+}
+
 void IEECSScriptSystem::clearAll()
 {
     for(int i = 1; i < entityMap.size(); i++)
@@ -200,7 +247,7 @@ void IEECSScriptSystem::clearAll()
     }
 }
 
-void IEECSScriptSystem::clearAtIndex(const int index)
+void IEECSScriptSystem::clearAll(const int index)
 {
     if(!indexBoundCheck(index))
         return;

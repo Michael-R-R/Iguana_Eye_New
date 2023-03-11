@@ -86,6 +86,7 @@ public:
     void enableAllScripts();
     void disableAllScripts();
 
+    void createScript(const int index, const unsigned long long id);
     void enableScript(const int index, const unsigned long long id);
     void disableScript(const int index, const unsigned long long id);
 
@@ -93,9 +94,13 @@ public:
     void removeScript(const int index, const unsigned long long id);
     bool isScriptAttached(const int index, const unsigned long long id);
 
+    IEEntityScript* getScript(const int index, const unsigned long long id);
+    IEEntityScript* getScript(const int index, const QString& name);
+
 private:
+    void deserializeAllScripts();
     void clearAll();
-    void clearAtIndex(const int index);
+    void clearAll(const int index);
 
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEECSScriptSystem& system)
