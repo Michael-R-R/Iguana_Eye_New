@@ -13,7 +13,7 @@ IEECSScriptSystem::IEECSScriptSystem() :
 
 IEECSScriptSystem::~IEECSScriptSystem()
 {
-    clearAll();
+    removeAll();
     scriptEngine = nullptr;
 }
 
@@ -21,8 +21,8 @@ void IEECSScriptSystem::startup(const GameStartEvent& event)
 {
     scriptEngine = event.getScriptEngine();
 
-    createAllScripts();
-    deserializeAllScripts();
+    initAllScripts();
+    deserializeScripts();
 }
 
 int IEECSScriptSystem::attach(const IEEntity entity)
@@ -36,8 +36,8 @@ int IEECSScriptSystem::attach(const IEEntity entity)
 
     data.entity.append(entity);
     data.scriptCollection.append(QMap<unsigned long long, IEEntityScript*>());
-    data.disabledScripts.append(QSet<unsigned long long>());
-    data.activeScripts.append(QSet<unsigned long long>());
+    data.sleepingScripts.append(QSet<unsigned long long>());
+    data.awakenedScripts.append(QSet<unsigned long long>());
 
     return index;
 }
@@ -49,20 +49,20 @@ bool IEECSScriptSystem::detach(const IEEntity entity)
 
     const int indexToRemove = entityMap[entity];
 
-    clearAll(indexToRemove);
+    removeAll(indexToRemove);
 
     const int lastIndex = entityMap.size() - 1;
     const IEEntity lastEntity = data.entity[lastIndex];
 
     data.entity[indexToRemove] = data.entity[lastIndex];
     data.scriptCollection[indexToRemove] = data.scriptCollection[lastIndex];
-    data.disabledScripts[indexToRemove] = data.disabledScripts[lastIndex];
-    data.activeScripts[indexToRemove] = data.activeScripts[lastIndex];
+    data.sleepingScripts[indexToRemove] = data.sleepingScripts[lastIndex];
+    data.awakenedScripts[indexToRemove] = data.awakenedScripts[lastIndex];
 
     data.entity.removeLast();
     data.scriptCollection.removeLast();
-    data.disabledScripts.removeLast();
-    data.activeScripts.removeLast();
+    data.sleepingScripts.removeLast();
+    data.awakenedScripts.removeLast();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);
@@ -74,85 +74,88 @@ void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent*)
 {
     for(int i = 1; i < entityMap.size(); i++)
     {
-        foreach(auto& id, data.activeScripts[i])
+        foreach(auto& id, data.awakenedScripts[i])
         {
-            const int entityId = data.entity[i].getId();
-            data.scriptCollection[i][id]->update(entityId);
+            data.scriptCollection[i][id]->update();
         }
     }
 }
 
-void IEECSScriptSystem::createAllScripts()
+void IEECSScriptSystem::initAllScripts()
 {
-    auto& lua = scriptEngine->getLua();
-
     for(int i = 1; i < entityMap.size(); i++)
     {
         foreach(auto* script, data.scriptCollection[i])
         {
-            script->create(lua);
+            initalizeScript(i, script->getId());
         }
     }
 }
 
-void IEECSScriptSystem::enableAllScripts()
+void IEECSScriptSystem::startAllScripts()
 {
     for(int i = 1; i < entityMap.size(); i++)
     {
-        foreach(auto script, data.scriptCollection[i])
+        foreach(auto* script, data.scriptCollection[i])
         {
-            this->enableScript(i, script->getId());
+            startScript(i, script->getId());
         }
     }
 }
 
-void IEECSScriptSystem::disableAllScripts()
+bool IEECSScriptSystem::initalizeScript(const int index, const unsigned long long id)
 {
-    for(int i = 1; i < entityMap.size(); i++)
-    {
-        foreach(auto script, data.scriptCollection[i])
-        {
-            this->disableScript(i, script->getId());
-        }
-    }
-}
-
-void IEECSScriptSystem::createScript(const int index, const unsigned long long id)
-{
-    if(!indexBoundCheck(index))
-        return;
-
     if(!isScriptAttached(index, id))
-        return;
+        return false;
 
-    IEEntityScript* script = data.scriptCollection[index][id];
-    script->create(scriptEngine->getLua());
+    return data.scriptCollection[index][id]->initalize(scriptEngine->getLua());
 }
 
-void IEECSScriptSystem::enableScript(const int index, const unsigned long long id)
+void IEECSScriptSystem::startScript(const int index, const unsigned long long id)
 {
-    if(!indexBoundCheck(index))
+    if(!isScriptValid(index, id))
         return;
 
-    data.disabledScripts[index].remove(id);
-    data.activeScripts[index].insert(id);
-
-    const int entityId = data.entity[index].getId();
-    auto* script = data.scriptCollection[index][id];
-    script->start(entityId);
+    data.scriptCollection[index][id]->start(data.entity[index]);
+    data.awakenedScripts[index].insert(id);
 }
 
-void IEECSScriptSystem::disableScript(const int index, const unsigned long long id)
+void IEECSScriptSystem::wakeScript(const int index, const unsigned long long id)
 {
-    if(!indexBoundCheck(index))
+    if(!isScriptValid(index, id))
         return;
 
-    data.activeScripts[index].remove(id);
-    data.disabledScripts[index].insert(id);
+    data.sleepingScripts[index].remove(id);
+    data.awakenedScripts[index].insert(id);
 
-    const int entityId = data.entity[index].getId();
-    auto* script = data.scriptCollection[index][id];
-    script->sleep(entityId);
+    data.scriptCollection[index][id]->wake();
+}
+
+void IEECSScriptSystem::sleepScript(const int index, const unsigned long long id)
+{
+    if(!isScriptValid(index, id))
+        return;
+
+    data.awakenedScripts[index].remove(id);
+    data.sleepingScripts[index].insert(id);
+
+    data.scriptCollection[index][id]->sleep();
+}
+
+void IEECSScriptSystem::clearSleepingScripts()
+{
+    for(int i = 1; i < entityMap.size(); i++)
+    {
+        data.sleepingScripts[i].clear();
+    }
+}
+
+void IEECSScriptSystem::clearAwakenScripts()
+{
+    for(int i = 1; i < entityMap.size(); i++)
+    {
+        data.awakenedScripts[i].clear();
+    }
 }
 
 void IEECSScriptSystem::addScript(const int index, IEEntityScript* script)
@@ -183,8 +186,8 @@ void IEECSScriptSystem::removeScript(const int index, const unsigned long long i
     auto temp = data.scriptCollection[index][id];
 
     data.scriptCollection[index].remove(id);
-    data.disabledScripts[index].remove(id);
-    data.activeScripts[index].remove(id);
+    data.sleepingScripts[index].remove(id);
+    data.awakenedScripts[index].remove(id);
 
     delete temp;
 }
@@ -197,22 +200,24 @@ bool IEECSScriptSystem::isScriptAttached(const int index, const unsigned long lo
     return data.scriptCollection[index].contains(id);
 }
 
-IEEntityScript* IEECSScriptSystem::getScript(const int index, const unsigned long long id)
+bool IEECSScriptSystem::isScriptValid(const int index, const unsigned long long id)
 {
-    if(!indexBoundCheck(index))
-        return nullptr;
+    if(!isScriptAttached(index, id))
+        return false;
 
+    return data.scriptCollection[index][id]->getIsValid();
+}
+
+IEScript* IEECSScriptSystem::getScript(const int index, const unsigned long long id)
+{
     if(!isScriptAttached(index, id))
         return nullptr;
 
     return data.scriptCollection[index][id];
 }
 
-IEEntityScript* IEECSScriptSystem::getScript(const int index, const QString& name)
+IEScript* IEECSScriptSystem::getScript(const int index, const QString& name)
 {
-    if(!indexBoundCheck(index))
-        return nullptr;
-
     const unsigned long long id = IEHash::Compute(name);
     if(!isScriptAttached(index, id))
         return nullptr;
@@ -220,7 +225,7 @@ IEEntityScript* IEECSScriptSystem::getScript(const int index, const QString& nam
     return data.scriptCollection[index][id];
 }
 
-void IEECSScriptSystem::deserializeAllScripts()
+void IEECSScriptSystem::deserializeScripts()
 {
     for(int i = 1; i < entityMap.size(); i++)
     {
@@ -231,7 +236,7 @@ void IEECSScriptSystem::deserializeAllScripts()
     }
 }
 
-void IEECSScriptSystem::clearAll()
+void IEECSScriptSystem::removeAll()
 {
     for(int i = 1; i < entityMap.size(); i++)
     {
@@ -247,7 +252,7 @@ void IEECSScriptSystem::clearAll()
     }
 }
 
-void IEECSScriptSystem::clearAll(const int index)
+void IEECSScriptSystem::removeAll(const int index)
 {
     if(!indexBoundCheck(index))
         return;

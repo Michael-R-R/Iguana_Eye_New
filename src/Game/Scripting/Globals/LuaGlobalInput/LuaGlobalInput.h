@@ -4,14 +4,14 @@
 
 class IEInput;
 
-class IEGlobalInputScript
+class LuaGlobalInput
 {
     // DOES NOT OWN THIS POINTER
     IEInput* input;
 
 public:
-    IEGlobalInputScript(IEInput* val, sol::table& gameTable);
-    ~IEGlobalInputScript();
+    LuaGlobalInput(IEInput* val, sol::table& gameTable);
+    ~LuaGlobalInput();
 
     bool isPressed(const char* keyName);
 };

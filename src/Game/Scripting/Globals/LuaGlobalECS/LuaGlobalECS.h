@@ -4,13 +4,13 @@
 
 class IEECS;
 
-class IEGlobalECSScript
+class LuaGlobalECS
 {
     // DOES NOT OWN THIS POINTER
     IEECS* ecs;
 
 public:
-    IEGlobalECSScript(IEECS* ecs_, sol::table& gameTable);
-    ~IEGlobalECSScript();
+    LuaGlobalECS(IEECS* ecs_, sol::table& gameTable);
+    ~LuaGlobalECS();
 };
 

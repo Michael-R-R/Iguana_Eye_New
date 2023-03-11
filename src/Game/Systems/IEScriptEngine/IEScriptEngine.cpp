@@ -25,9 +25,9 @@ void IEScriptEngine::startup(const GameStartEvent& event)
     // Create namespaces
     auto gameTable = lua["game"].get_or_create<sol::table>();
 
-    globalTime = new IEGlobalTimeScript(event.getTime(), gameTable);
-    globalInput = new IEGlobalInputScript(event.getInput(), gameTable);
-    globalECS = new IEGlobalECSScript(event.getScene()->getECS(), gameTable);
+    globalTime = new LuaGlobalTime(event.getTime(), gameTable);
+    globalInput = new LuaGlobalInput(event.getInput(), gameTable);
+    globalECS = new LuaGlobalECS(event.getScene()->getECS(), gameTable);
 }
 
 void IEScriptEngine::shutdown()
@@ -40,6 +40,9 @@ void IEScriptEngine::addGlobalUserTypes()
     lua.new_usertype<IEScript>("", sol::constructors<>(),
                                "value", &IEScript::value,
                                "func", &IEScript::func);
+
+    lua.new_usertype<IEEntity>("", sol::constructors<>(),
+                               "id", sol::property(&IEEntity::getId));
 }
 
 

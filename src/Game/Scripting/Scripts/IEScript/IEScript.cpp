@@ -2,14 +2,14 @@
 
 IEScript::IEScript() :
     IEResource("", 0),
-    env(), scriptData()
+    env(), isValid(false)
 {
 
 }
 
 IEScript::IEScript(const QString& path, const unsigned long long id) :
     IEResource(path, id),
-    env(), scriptData()
+    env(), isValid(false)
 {
 
 }
@@ -17,16 +17,6 @@ IEScript::IEScript(const QString& path, const unsigned long long id) :
 IEScript::~IEScript()
 {
 
-}
-
-void IEScript::dataFromScript()
-{
-    scriptData.fromScript(env);
-}
-
-void IEScript::dataToScript()
-{
-    scriptData.toScript(env);
 }
 
 sol::object IEScript::value(const char* name)

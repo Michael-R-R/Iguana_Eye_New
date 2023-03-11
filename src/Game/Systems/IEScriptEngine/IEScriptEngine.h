@@ -3,9 +3,9 @@
 #include <sol/sol.hpp>
 
 #include "IEObject.h"
-#include "IEGlobalTimeScript.h"
-#include "IEGlobalInputScript.h"
-#include "IEGlobalECSScript.h"
+#include "LuaGlobalTime.h"
+#include "LuaGlobalInput.h"
+#include "LuaGlobalECS.h"
 
 class GameStartEvent;
 
@@ -13,9 +13,9 @@ class IEScriptEngine : public IEObject
 {
     sol::state lua;
 
-    IEGlobalTimeScript* globalTime;
-    IEGlobalInputScript* globalInput;
-    IEGlobalECSScript* globalECS;
+    LuaGlobalTime* globalTime;
+    LuaGlobalInput* globalInput;
+    LuaGlobalECS* globalECS;
 
 public:
     IEScriptEngine(QObject* parent = nullptr);

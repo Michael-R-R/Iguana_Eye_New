@@ -4,14 +4,14 @@
 
 class IETime;
 
-class IEGlobalTimeScript
+class LuaGlobalTime
 {
     // DOES NOT OWN THIS POINTER
     IETime* time;
 
 public:
-    IEGlobalTimeScript(IETime* val, sol::table& gameTable);
-    ~IEGlobalTimeScript();
+    LuaGlobalTime(IETime* val, sol::table& gameTable);
+    ~LuaGlobalTime();
 
     float fps();
     float deltaTime();

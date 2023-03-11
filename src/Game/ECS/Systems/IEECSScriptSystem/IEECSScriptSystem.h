@@ -18,12 +18,12 @@ class IEECSScriptSystem : public IEECSSystem
     {
         QVector<IEEntity> entity;
         QVector<QMap<unsigned long long, IEEntityScript*>> scriptCollection;
-        QVector<QSet<unsigned long long>> disabledScripts;
-        QVector<QSet<unsigned long long>> activeScripts;
+        QVector<QSet<unsigned long long>> sleepingScripts;
+        QVector<QSet<unsigned long long>> awakenedScripts;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entity << data.disabledScripts << data.activeScripts;
+            out << data.entity << data.sleepingScripts << data.awakenedScripts;
 
             out << (int)data.scriptCollection.size();
             for(int i = 1; i < data.scriptCollection.size(); i++)
@@ -42,7 +42,7 @@ class IEECSScriptSystem : public IEECSSystem
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entity >> data.disabledScripts >> data.activeScripts;
+            in >> data.entity >> data.sleepingScripts >> data.awakenedScripts;
 
             int size = 0;
             in >> size;
@@ -82,25 +82,28 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
-    void createAllScripts();
-    void enableAllScripts();
-    void disableAllScripts();
-
-    void createScript(const int index, const unsigned long long id);
-    void enableScript(const int index, const unsigned long long id);
-    void disableScript(const int index, const unsigned long long id);
+    void initAllScripts();
+    void startAllScripts();
+    bool initalizeScript(const int index, const unsigned long long id);
+    void startScript(const int index, const unsigned long long id);
+    void wakeScript(const int index, const unsigned long long id);
+    void sleepScript(const int index, const unsigned long long id);
+    void clearSleepingScripts();
+    void clearAwakenScripts();
 
     void addScript(const int index, IEEntityScript* script);
     void removeScript(const int index, const unsigned long long id);
-    bool isScriptAttached(const int index, const unsigned long long id);
 
-    IEEntityScript* getScript(const int index, const unsigned long long id);
-    IEEntityScript* getScript(const int index, const QString& name);
+    bool isScriptAttached(const int index, const unsigned long long id);
+    bool isScriptValid(const int index, const unsigned long long id);
+
+    IEScript* getScript(const int index, const unsigned long long id);
+    IEScript* getScript(const int index, const QString& name);
 
 private:
-    void deserializeAllScripts();
-    void clearAll();
-    void clearAll(const int index);
+    void deserializeScripts();
+    void removeAll();
+    void removeAll(const int index);
 
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEECSScriptSystem& system)

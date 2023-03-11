@@ -5,22 +5,36 @@
 #include <sol/sol.hpp>
 
 #include "IEScript.h"
+#include "ScriptData.h"
+#include "IEEntity.h"
 
 class IEEntityScript : public IEScript
 {
     sol::function startFunc;
     sol::function updateFunc;
+    sol::function wakeFunc;
     sol::function sleepFunc;
+
+    ScriptData scriptData;
 
 public:
     IEEntityScript();
     IEEntityScript(const QString& path, const unsigned long long id);
     ~IEEntityScript();
 
-    void create(sol::state &lua) override;
-    void start(const int id);
-    void update(const int id);
-    void sleep(const int id);
+    bool operator==(const IEEntityScript& other) { return IEScript::operator==(other); }
+    bool operator!=(const IEEntityScript& other) { return IEScript::operator!=(other); }
+    bool operator<(const IEEntityScript& other) { return IEScript::operator<(other); }
+    bool operator>(const IEEntityScript& other) { return IEScript::operator>(other); }
+
+    bool initalize(sol::state &lua) override;
+    void start(const IEEntity entity);
+    void update();
+    void wake();
+    void sleep();
+
+    void dataFromScript();
+    void dataToScript();
 
     friend QDataStream& operator<<(QDataStream& out, const IEEntityScript& script)
     {

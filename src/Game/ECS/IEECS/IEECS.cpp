@@ -31,14 +31,15 @@ void IEECS::startup(const GameStartEvent& event)
 
     IEEntity entity = this->create();
     int index = this->attachComponent(entity, IEComponentType::Script);
-    scriptSystem->addScript(index, new IEEntityScript("./resources/scripts/test/test1.lua", 1));
+    scriptSystem->addScript(index, new IEEntityScript("./resources/scripts/test/test1.lua", 11));
+    scriptSystem->initalizeScript(index, 11);
+    scriptSystem->startScript(index, 11);
 
     entity = this->create();
     index = this->attachComponent(entity, IEComponentType::Script);
-    scriptSystem->addScript(index, new IEEntityScript("./resources/scripts/test/test2.lua", 2));
-
-    scriptSystem->createAllScripts();
-    scriptSystem->enableAllScripts();
+    scriptSystem->addScript(index, new IEEntityScript("./resources/scripts/test/test2.lua", 21));
+    scriptSystem->initalizeScript(index, 21);
+    scriptSystem->startScript(index, 21);
 }
 
 void IEECS::shutdown()
