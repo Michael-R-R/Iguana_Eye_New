@@ -1,5 +1,6 @@
 #include "GameStartEvent.h"
 #include "IEGame.h"
+#include "IETime.h"
 
 GameStartEvent::GameStartEvent(IEGame* game_) :
     game(game_)
@@ -12,7 +13,7 @@ GameStartEvent::~GameStartEvent()
     game = nullptr;
 }
 
-IETime* GameStartEvent::getTime() const
+IETime& GameStartEvent::getTime() const
 {
     return game->getIETime();
 }

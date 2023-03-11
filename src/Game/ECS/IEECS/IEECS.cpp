@@ -208,7 +208,7 @@ QDataStream& IEECS::serialize(QDataStream& out, const Serializable& obj) const
     return out;
 }
 
-QDataStream& IEECS::deserialize(QDataStream& in, Serializable& obj) const
+QDataStream& IEECS::deserialize(QDataStream& in, Serializable& obj)
 {
     IEECS& ecs = static_cast<IEECS&>(obj);
 

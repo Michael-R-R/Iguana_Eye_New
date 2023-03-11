@@ -8,7 +8,7 @@ class ToggleGameUpdateAction : public MenuAction
 {
 
 public:
-    ToggleGameUpdateAction(InputKey* shortcut, IETime* time, QObject* parent = nullptr);
+    ToggleGameUpdateAction(InputKey* shortcut, IETime& time, QObject* parent = nullptr);
     ~ToggleGameUpdateAction();
 };
 

@@ -6,11 +6,10 @@ class IETime;
 
 class LuaGlobalTime
 {
-    // DOES NOT OWN THIS POINTER
-    IETime* time;
+    IETime& time;
 
 public:
-    LuaGlobalTime(IETime* val, sol::table& gameTable);
+    LuaGlobalTime(IETime& val, sol::table& gameTable);
     ~LuaGlobalTime();
 
     float fps();

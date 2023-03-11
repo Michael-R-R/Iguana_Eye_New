@@ -4,26 +4,27 @@
 #include <QDataStream>
 
 #include "IEObject.h"
+#include "Serializable.h"
 #include "DeltaTime.h"
 
 class IEGame;
 
-class IETime : public IEObject
+class IETime : public IEObject, public Serializable
 {
     Q_OBJECT
 
-    QTimer* updateTimer;
-    QTimer* renderTimer;
+    QTimer updateTimer;
+    QTimer renderTimer;
     int updateRefresh;
     int renderRefresh;
 
     DeltaTime dt;
 
 public:
-    IETime(const int msUpdate, const int msRender, QObject* parent = nullptr);
+    IETime(const int msUpdate, const int msRender);
     ~IETime();
 
-    void startup(IEGame* game);
+    void startup(IEGame& game);
     void shutdown();
 
     void startUpdateTimer();
@@ -42,19 +43,10 @@ public:
     void setRenderRefresh(const int ms) { renderRefresh = ms; }
 
 private:
-    void setupUpdateTimer(IEGame* game);
-    void setupRenderTimer(IEGame* game);
+    void setupUpdateTimer(IEGame& game);
+    void setupRenderTimer(IEGame& game);
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IETime& time)
-    {
-        out << time.updateRefresh << time.renderRefresh;
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IETime& time)
-    {
-        in >> time.updateRefresh >> time.renderRefresh;
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

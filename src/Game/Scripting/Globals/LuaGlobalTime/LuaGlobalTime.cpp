@@ -1,7 +1,7 @@
 #include "LuaGlobalTime.h"
 #include "IETime.h"
 
-LuaGlobalTime::LuaGlobalTime(IETime* val, sol::table& gameTable) :
+LuaGlobalTime::LuaGlobalTime(IETime& val, sol::table& gameTable) :
     time(val)
 {
     gameTable["IETime"] = this;
@@ -12,15 +12,15 @@ LuaGlobalTime::LuaGlobalTime(IETime* val, sol::table& gameTable) :
 
 LuaGlobalTime::~LuaGlobalTime()
 {
-    time = nullptr;
+
 }
 
 float LuaGlobalTime::fps()
 {
-    return time->getFPS();
+    return time.getFPS();
 }
 
 float LuaGlobalTime::deltaTime()
 {
-    return time->getDeltaTime();
+    return time.getDeltaTime();
 }

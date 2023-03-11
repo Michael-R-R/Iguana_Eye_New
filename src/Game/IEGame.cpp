@@ -1,6 +1,7 @@
 #include "IEGame.h"
 #include "GameStartEvent.h"
 #include "RenderEngineStartEvent.h"
+#include "IETime.h"
 
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
@@ -9,7 +10,7 @@ IEGame::IEGame(QWidget* parent) :
     time(nullptr), input(nullptr),
     scriptEngine(nullptr), renderEngine(nullptr),
     scene(nullptr),
-    viewportWidth(0), viewportHeight(0)
+    viewportWidth(800), viewportHeight(600)
 {
     this->setFocusPolicy(Qt::StrongFocus);
 
@@ -24,60 +25,6 @@ IEGame::IEGame(QWidget* parent) :
 IEGame::~IEGame()
 {
 
-}
-
-void IEGame::init()
-{
-    time = new IETime(16, 16, this);
-    input = new IEInput(this, this);
-    scriptEngine = new IEScriptEngine(this);
-    renderEngine = new IERenderEngine(this);
-    scene = new IEScene(this);
-}
-
-void IEGame::startup()
-{
-    this->makeCurrent();
-
-    GameStartEvent gameStartEvent(this);
-    RenderEngineStartEvent renderStartEvent(scene);
-
-    scriptEngine->startup(gameStartEvent);
-    scene->startup(gameStartEvent);
-    renderEngine->startup(renderStartEvent);
-    time->startup(this);
-
-    this->setFocus();
-}
-
-void IEGame::shutdown()
-{
-    this->makeCurrent();
-
-    time->shutdown();
-    renderEngine->shutdown();
-    scene->shutdown();
-    scriptEngine->shutdown();
-
-    delete time;
-    delete input;
-    delete scriptEngine;
-    delete renderEngine;
-    delete scene;
-}
-
-void IEGame::onUpdateFrame()
-{
-    scene->onUpdateFrame();
-}
-
-void IEGame::onRenderFrame()
-{
-    glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    renderEngine->onRenderFrame();
-
-    time->processDeltaTime();
 }
 
 void IEGame::initializeGL()
@@ -110,4 +57,75 @@ void IEGame::resizeGL(int w, int h)
     viewportHeight = h;
 
     glFunc->glViewport(0, 0, w, h);
+}
+
+void IEGame::init()
+{
+    time = std::make_unique<IETime>(16, 16);
+    input = new IEInput(this, this);
+    scriptEngine = new IEScriptEngine(this);
+    renderEngine = new IERenderEngine(this);
+    scene = new IEScene(this);
+}
+
+void IEGame::startup()
+{
+    this->makeCurrent();
+
+    GameStartEvent gameStartEvent(this);
+    RenderEngineStartEvent renderStartEvent(scene);
+
+    scriptEngine->startup(gameStartEvent);
+    scene->startup(gameStartEvent);
+    renderEngine->startup(renderStartEvent);
+    time->startup(*this);
+
+    this->setFocus();
+}
+
+void IEGame::shutdown()
+{
+    this->makeCurrent();
+
+    time->shutdown();
+    renderEngine->shutdown();
+    scene->shutdown();
+    scriptEngine->shutdown();
+
+    delete input;
+    delete scriptEngine;
+    delete renderEngine;
+    delete scene;
+}
+
+void IEGame::onUpdateFrame()
+{
+    scene->onUpdateFrame();
+}
+
+void IEGame::onRenderFrame()
+{
+    glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    renderEngine->onRenderFrame();
+
+    time->processDeltaTime();
+}
+
+QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const IEGame& game = static_cast<const IEGame&>(obj);
+
+    out << *game.time << *game.input << *game.scene;
+
+    return out;
+}
+
+QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
+{
+    IEGame& game = static_cast<IEGame&>(obj);
+
+    in >> *game.time >> *game.input >> *game.scene;
+
+    return in;
 }
