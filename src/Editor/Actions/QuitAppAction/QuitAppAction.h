@@ -8,7 +8,7 @@ class QuitAppAction : public MenuAction
 {
 
 public:
-    QuitAppAction(InputKey* shortcut, QObject* parent = nullptr);
+    QuitAppAction(InputKey& shortcut, QObject* parent = nullptr);
     ~QuitAppAction();
 };
 

@@ -1,7 +1,7 @@
 #include "EWFetchUserInput.h"
 #include "InputContainer.h"
 
-EWFetchUserInput::EWFetchUserInput(const InputContainer* input, QWidget* parent) :
+EWFetchUserInput::EWFetchUserInput(const InputContainer& input, QWidget* parent) :
     QDialog(parent),
     inputContainer(input),
     vLayout(new QVBoxLayout(this)), hLayout(new QHBoxLayout()),
@@ -61,7 +61,7 @@ void EWFetchUserInput::processPressedInput(int mod, int key)
     {
         isValidKeySequence = false;
 
-        QString errorMsg = "Hotkey already bound to: " + inputContainer->getKey(mod, key);
+        QString errorMsg = "Hotkey already bound to: " + inputContainer.getKey(mod, key);
         errorMsgLabel->setText(errorMsg);
     }
     else
@@ -77,7 +77,7 @@ void EWFetchUserInput::processPressedInput(int mod, int key)
 
 bool EWFetchUserInput::hasDuplicateBinding(const int mod, const int key)
 {
-    return (inputContainer->doesExist(mod, key));
+    return (inputContainer.doesExist(mod, key));
 }
 
 int EWFetchUserInput::convertKey(int key)

@@ -3,7 +3,7 @@
 #include "IEShaderManager.h"
 
 CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, IEShaderManager* manager,
-                                         InputKey* shortcut, QObject* parent) :
+                                         InputKey& shortcut, QObject* parent) :
     MenuAction("Compile", shortcut, parent)
 {
     this->setEnabled(false);

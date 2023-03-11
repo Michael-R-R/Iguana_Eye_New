@@ -6,10 +6,10 @@ class EWEditorHotkeyTable : public EWHotkeyTable
 {
 
 public:
-    EWEditorHotkeyTable(InputContainer* inputContainer, QWidget* parent = nullptr);
+    EWEditorHotkeyTable(InputContainer& inputContainer, QWidget* parent = nullptr);
     ~EWEditorHotkeyTable();
 
 private:
-    void setupTables(InputContainer* inputContainer);
+    void setupTables(InputContainer& inputContainer);
 };
 

@@ -1,17 +1,16 @@
 #include "IEInput.h"
 
-IEInput::IEInput(QWidget* hostWidget, QObject* parent) :
-    IEObject(parent),
-    inputContainer(new InputContainer(this)),
-    inputCapture(new InputCapture(hostWidget))
+IEInput::IEInput(QWidget* hostWidget) :
+    IEObject(),
+    inputContainer(std::make_unique<InputContainer>()),
+    inputCapture(std::make_unique<InputCapture>(hostWidget))
 {
     setupInputContainer();
 }
 
 IEInput::~IEInput()
 {
-    delete inputContainer;
-    delete inputCapture;
+
 }
 
 bool IEInput::isPressed(const InputKey& key)
@@ -21,15 +20,34 @@ bool IEInput::isPressed(const InputKey& key)
 
 bool IEInput::isPressed(const QString& keyName)
 {
-    const InputKey* key = inputContainer->getValue(keyName);
-    return inputCapture->checkStatus(*key);
+    const InputKey& key = inputContainer->getValue(keyName);
+
+    return inputCapture->checkStatus(key);
 }
 
 void IEInput::setupInputContainer()
 {
-    inputContainer->addValue("Forward", new InputKey(0, Qt::Key_W));
-    inputContainer->addValue("Backward", new InputKey(0, Qt::Key_S));
-    inputContainer->addValue("Left", new InputKey(0, Qt::Key_A));
-    inputContainer->addValue("Right", new InputKey(0, Qt::Key_D));
-    inputContainer->addValue("Jump", new InputKey(0, Qt::Key_Space));
+    inputContainer->addValue("Forward", InputKey(0, Qt::Key_W));
+    inputContainer->addValue("Backward", InputKey(0, Qt::Key_S));
+    inputContainer->addValue("Left", InputKey(0, Qt::Key_A));
+    inputContainer->addValue("Right", InputKey(0, Qt::Key_D));
+    inputContainer->addValue("Jump", InputKey(0, Qt::Key_Space));
+}
+
+QDataStream& IEInput::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& input = static_cast<const IEInput&>(obj);
+
+    out << *input.inputContainer;
+
+    return out;
+}
+
+QDataStream& IEInput::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& input = static_cast<IEInput&>(obj);
+
+    in >> *input.inputContainer;
+
+    return in;
 }

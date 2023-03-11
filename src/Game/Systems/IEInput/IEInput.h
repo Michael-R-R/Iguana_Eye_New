@@ -1,43 +1,33 @@
 #pragma once
 
-#include <QDataStream>
-
 #include "IEObject.h"
+#include "Serializable.h"
 #include "InputContainer.h"
 #include "InputCapture.h"
 
 class QWidget;
 
-class IEInput : public IEObject
+class IEInput : public IEObject, public Serializable
 {
     Q_OBJECT
 
-    InputContainer* inputContainer;
-    InputCapture* inputCapture;
+    std::unique_ptr<InputContainer> inputContainer;
+    std::unique_ptr<InputCapture> inputCapture;
 
 public:
-    IEInput(QWidget* hostWidget, QObject* parent = nullptr);
+    IEInput(QWidget* hostWidget);
     ~IEInput();
 
     bool isPressed(const InputKey& key);
     bool isPressed(const QString& keyName);
 
-    InputContainer* getInputContainer() const { return inputContainer; }
-    InputCapture* getInputCapture() const { return inputCapture; }
+    InputContainer& getInputContainer() const { return *inputContainer; }
+    InputCapture& getInputCapture() const { return *inputCapture; }
 
 private:
     void setupInputContainer();
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IEInput& input)
-    {
-        out << *input.inputContainer;
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEInput& input)
-    {
-        in >> *input.inputContainer;
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

@@ -9,9 +9,9 @@ class ToggleWindowAction : public MenuAction
 
 public:
     ToggleWindowAction(const QString& title,
-                       InputKey* shortcut,
+                       InputKey& shortcut,
                        EWindow* window,
-                       QObject *parent = nullptr);
+                       QObject* parent = nullptr);
     ~ToggleWindowAction();
 };
 

@@ -12,7 +12,7 @@ class InputContainer;
 
 class EWFetchUserInput : public QDialog
 {
-    const InputContainer* inputContainer;
+    const InputContainer& inputContainer;
 
     QVBoxLayout* vLayout;
     QHBoxLayout* hLayout;
@@ -28,7 +28,7 @@ class EWFetchUserInput : public QDialog
     bool isValidKeySequence;
 
 public:
-    EWFetchUserInput(const InputContainer* input, QWidget* parent = nullptr);
+    EWFetchUserInput(const InputContainer& input, QWidget* parent = nullptr);
     ~EWFetchUserInput();
 
     int getMod() { return recordedModifier; }

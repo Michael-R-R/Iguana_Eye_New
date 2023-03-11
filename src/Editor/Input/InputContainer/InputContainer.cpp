@@ -1,24 +1,21 @@
 #include "InputContainer.h"
 
-InputContainer::InputContainer(QObject *parent) :
-    QObject(parent),
+InputContainer::InputContainer() :
+    QObject(),
     keys()
 {
-    addValue("Invalid", new InputKey(-1, -1));
+    addValue("Invalid", InputKey(-1, -1));
 }
 
 InputContainer::~InputContainer()
 {
-    clear();
+
 }
 
-bool InputContainer::addValue(const QString key, InputKey* value)
+bool InputContainer::addValue(const QString key, InputKey value)
 {
     if(doesExist(key))
-    {
-        delete value;
         return false;
-    }
 
     keys[key] = value;
 
@@ -30,9 +27,7 @@ bool InputContainer::removeValue(const QString& key)
     if(!doesExist(key))
         return false;
 
-    auto temp = keys[key];
     keys.remove(key);
-    delete temp;
 
     return true;
 }
@@ -42,7 +37,7 @@ bool InputContainer::updateValue(const QString& key, const int modVal, const int
     if(!doesExist(key))
         return false;
 
-    keys[key]->update(modVal, keyVal);
+    keys[key].update(modVal, keyVal);
 
     return true;
 }
@@ -51,11 +46,11 @@ QString InputContainer::getKey(const int mod, const int key) const
 {
     auto temp = InputKey(mod, key);
 
-    QMapIterator<QString, InputKey*> it(keys);
+    QMapIterator<QString, InputKey> it(keys);
     while(it.hasNext())
     {
         it.next();
-        if(*it.value() == temp)
+        if(it.value() == temp)
         {
             return it.key();
         }
@@ -64,9 +59,10 @@ QString InputContainer::getKey(const int mod, const int key) const
     return "";
 }
 
-InputKey* InputContainer::getValue(const QString& key) const
+InputKey& InputContainer::getValue(const QString& key)
 {
-    if(!doesExist(key)) { return keys["Invalid"]; }
+    if(!doesExist(key))
+        return keys["Invalid"];
 
     return keys[key];
 }
@@ -80,11 +76,11 @@ bool InputContainer::doesExist(const int mod, const int key) const
 {
     auto temp = InputKey(mod, key);
 
-    QMapIterator<QString, InputKey*> it(keys);
+    QMapIterator<QString, InputKey> it(keys);
     while(it.hasNext())
     {
         it.next();
-        if(*it.value() == temp)
+        if(it.value() == temp)
         {
             return true;
         }
@@ -95,16 +91,45 @@ bool InputContainer::doesExist(const int mod, const int key) const
 
 void InputContainer::clear()
 {
-    QMapIterator<QString, InputKey*> it(keys);
+    keys.clear();
+
+    emit cleared();
+}
+
+QDataStream& InputContainer::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& container = static_cast<const InputContainer&>(obj);
+
+    int size = (int)container.keys.size();
+    out << size;
+
+    QMapIterator<QString, InputKey> it(container.keys);
     while(it.hasNext())
     {
         it.next();
-
-        auto temp = it.value();
-        keys[it.key()] = nullptr;
-        delete temp;
+        out << it.key() << it.value();
     }
 
-    keys.clear();
-    emit cleared();
+    return out;
+}
+
+QDataStream& InputContainer::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& container = static_cast<InputContainer&>(obj);
+
+    int size = 0;
+    in >> size;
+
+    container.clear();
+    for(int i = 0; i < size; i++)
+    {
+        QString key = "";
+        InputKey value = InputKey();
+
+        in >> key >> value;
+
+        container.keys[key] = value;
+    }
+
+    return in;
 }

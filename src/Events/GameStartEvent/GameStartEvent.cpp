@@ -18,7 +18,7 @@ IETime& GameStartEvent::getTime() const
     return game->getIETime();
 }
 
-IEInput* GameStartEvent::getInput() const
+IEInput& GameStartEvent::getInput() const
 {
     return game->getIEInput();
 }

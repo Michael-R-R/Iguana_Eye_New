@@ -6,7 +6,7 @@
 #include <QFileDialog>
 
 OpenShaderAction::OpenShaderAction(IEShaderManager* shaderManager,
-                                       InputKey* shortcut, QObject* parent) :
+                                   InputKey& shortcut, QObject* parent) :
     MenuAction("Open", shortcut, parent)
 {
     connect(this, &OpenShaderAction::triggered, this, [shaderManager]()

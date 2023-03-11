@@ -62,7 +62,7 @@ void IEGame::resizeGL(int w, int h)
 void IEGame::init()
 {
     time = std::make_unique<IETime>(16, 16);
-    input = new IEInput(this, this);
+    input = std::make_unique<IEInput>(this);
     scriptEngine = new IEScriptEngine(this);
     renderEngine = new IERenderEngine(this);
     scene = new IEScene(this);
@@ -92,7 +92,6 @@ void IEGame::shutdown()
     scene->shutdown();
     scriptEngine->shutdown();
 
-    delete input;
     delete scriptEngine;
     delete renderEngine;
     delete scene;

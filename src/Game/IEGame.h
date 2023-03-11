@@ -23,7 +23,7 @@ class IEGame : public QOpenGLWidget, public Serializable
     QOpenGLExtraFunctions* glExtraFunc;
 
     std::unique_ptr<IETime> time;
-    IEInput* input;
+    std::unique_ptr<IEInput> input;
     IEScriptEngine* scriptEngine;
     IERenderEngine* renderEngine;
     IEScene* scene;
@@ -46,7 +46,7 @@ public:
     void shutdown();
 
     IETime& getIETime() { return *time; }
-    IEInput* getIEInput() const { return input; }
+    IEInput& getIEInput() const { return *input; }
     IEScriptEngine* getIEScriptEngine() const { return scriptEngine; }
     IERenderEngine* getIERenderEngine() const { return renderEngine; }
     IEScene* getIEScene() const { return scene; }

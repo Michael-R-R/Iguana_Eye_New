@@ -4,7 +4,9 @@
 #include <QKeySequence>
 #include <QDataStream>
 
-class InputKey : public QObject
+#include "Serializable.h"
+
+class InputKey : public QObject, public Serializable
 {
     Q_OBJECT
 
@@ -13,8 +15,8 @@ class InputKey : public QObject
     QKeySequence keySequence;
 
 public:
-    InputKey(QObject* parent = nullptr);
-    InputKey(int mod_, int key_, QObject* parent = nullptr);
+    InputKey();
+    InputKey(int mod_, int key_);
     InputKey(const InputKey& other);
     ~InputKey();
 
@@ -36,18 +38,6 @@ signals:
     void updated(const QKeySequence newBinding);
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const InputKey& input)
-    {
-        out << input.mod << input.key;
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, InputKey& input)
-    {
-        in >> input.mod >> input.key;
-
-        input.keySequence = QKeySequence(input.mod | input.key);
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

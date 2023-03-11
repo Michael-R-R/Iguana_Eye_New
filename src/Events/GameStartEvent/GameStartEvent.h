@@ -17,7 +17,7 @@ public:
     ~GameStartEvent();
 
     IETime& getTime() const;
-    IEInput* getInput() const;
+    IEInput& getInput() const;
     IEScriptEngine* getScriptEngine() const;
     IERenderEngine* getRenderEngine() const;
     IEScene* getScene() const;

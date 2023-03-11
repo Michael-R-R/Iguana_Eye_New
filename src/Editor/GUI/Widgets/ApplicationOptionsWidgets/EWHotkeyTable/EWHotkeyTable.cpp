@@ -18,7 +18,7 @@ void EWHotkeyTable::addTable(QString title, QTableWidget* table)
     this->addTab(table, title);
 }
 
-QTableWidget* EWHotkeyTable::createTable(const InputContainer* inputContainer, const QMap<QString, InputKey*>& keys)
+QTableWidget* EWHotkeyTable::createTable(const InputContainer& inputContainer, const QMap<QString, InputKey*>& keys)
 {
     int rows = keys.size();
     int cols = 2;
@@ -35,7 +35,7 @@ QTableWidget* EWHotkeyTable::createTable(const InputContainer* inputContainer, c
     return table;
 }
 
-void EWHotkeyTable::fillInTable(QTableWidget* table, const InputContainer* inputContainer, const QMap<QString, InputKey*>& keys)
+void EWHotkeyTable::fillInTable(QTableWidget* table, const InputContainer& inputContainer, const QMap<QString, InputKey*>& keys)
 {
     int row = 0;
 
@@ -60,9 +60,9 @@ void EWHotkeyTable::fillInTable(QTableWidget* table, const InputContainer* input
     }
 }
 
-void EWHotkeyTable::setupButtonConnect(QPushButton* button, const InputContainer* inputContainer, InputKey* key)
+void EWHotkeyTable::setupButtonConnect(QPushButton* button, const InputContainer& inputContainer, InputKey* key)
 {
-    connect(button, &QPushButton::clicked, key, [this, button, inputContainer, key]()
+    connect(button, &QPushButton::clicked, key, [this, button, &inputContainer, key]()
     {
         EWFetchUserInput fetchUserInput(inputContainer);
         fetchUserInput.exec();

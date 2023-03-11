@@ -2,7 +2,7 @@
 #include <QFileDialog>
 #include "ApplicationWindow.h"
 
-SaveGameFileAction::SaveGameFileAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent) :
+SaveGameFileAction::SaveGameFileAction(ApplicationWindow* window, InputKey& shortcut, QObject* parent) :
     MenuAction("Save File", shortcut, parent)
 {
     connect(this, &SaveGameFileAction::triggered, window, [this, window]()

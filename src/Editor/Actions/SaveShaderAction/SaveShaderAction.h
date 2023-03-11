@@ -11,7 +11,7 @@ class SaveShaderAction : public MenuAction
 
 public:
     SaveShaderAction(EWGlslEditor* editor, IEShaderManager* shaderManager,
-                     InputKey* shortcut, QObject* parent = nullptr);
+                     InputKey& shortcut, QObject* parent = nullptr);
     ~SaveShaderAction() {}
 };
 

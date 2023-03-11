@@ -8,7 +8,7 @@ class MenuAction : public QAction
 {
 
 public:
-    MenuAction(QString title, InputKey* shortcut, QObject* parent = nullptr);
+    MenuAction(QString title, InputKey& shortcut, QObject* parent = nullptr);
     ~MenuAction();
 };
 

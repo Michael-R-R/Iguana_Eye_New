@@ -8,7 +8,7 @@ class SaveGameFileAction : public MenuAction
 {
 
 public:
-    SaveGameFileAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent = nullptr);
+    SaveGameFileAction(ApplicationWindow* window, InputKey& shortcut, QObject* parent = nullptr);
     ~SaveGameFileAction();
 
 private:

@@ -6,11 +6,10 @@ class IEInput;
 
 class LuaGlobalInput
 {
-    // DOES NOT OWN THIS POINTER
-    IEInput* input;
+    IEInput& input;
 
 public:
-    LuaGlobalInput(IEInput* val, sol::table& gameTable);
+    LuaGlobalInput(IEInput& val, sol::table& gameTable);
     ~LuaGlobalInput();
 
     bool isPressed(const char* keyName);

@@ -33,7 +33,7 @@ void IEObjImporter::processNode(aiNode* node, const aiScene* scene, IEMesh* ieMe
     }
 }
 
-void IEObjImporter::processMesh(aiMesh* assimpMesh, const aiScene* scene, IEMesh* ieMesh)
+void IEObjImporter::processMesh(aiMesh* assimpMesh, const aiScene*, IEMesh* ieMesh)
 {
     for(unsigned i = 0; i < assimpMesh->mNumVertices; i++)
     {

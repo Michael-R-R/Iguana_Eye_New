@@ -2,9 +2,9 @@
 #include "EWindow.h"
 
 ToggleWindowAction::ToggleWindowAction(const QString& title,
-                                       InputKey* shortcut,
+                                       InputKey& shortcut,
                                        EWindow* window,
-                                       QObject *parent) :
+                                       QObject* parent) :
     MenuAction(title, shortcut, parent)
 {
     connect(this, &QAction::triggered, this, [this, window]()

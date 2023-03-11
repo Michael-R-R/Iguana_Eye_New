@@ -2,7 +2,7 @@
 
 EWOpenGLViewportInput::EWOpenGLViewportInput(QWidget* hostWidget, QObject* parent) :
     IEObject(parent),
-    inputContainer(new InputContainer(this)),
+    inputContainer(new InputContainer()),
     inputCapture(new InputCapture(hostWidget))
 {
 
@@ -20,6 +20,6 @@ bool EWOpenGLViewportInput::isPressed(const InputKey& key)
 
 bool EWOpenGLViewportInput::isPressed(const char* keyName)
 {
-    const InputKey* key = inputContainer->getValue(keyName);
-    return inputCapture->checkStatus(*key);
+    const InputKey& key = inputContainer->getValue(keyName);
+    return inputCapture->checkStatus(key);
 }

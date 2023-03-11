@@ -2,7 +2,7 @@
 #include "ApplicationWindow.h"
 #include <QMessageBox>
 
-NewGameFileAction::NewGameFileAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent) :
+NewGameFileAction::NewGameFileAction(ApplicationWindow* window, InputKey& shortcut, QObject* parent) :
     MenuAction("New File", shortcut, parent)
 {
     connect(this, &MenuAction::triggered, this, [window]()

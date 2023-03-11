@@ -12,7 +12,7 @@ EWGlslEditorViewMenu::EWGlslEditorViewMenu(QWidget* parent) :
 
 void EWGlslEditorViewMenu::startup(const AppStartEvent& event, EWGlslEditor* editor)
 {
-    auto inputContainer = event.getEditor()->getInput()->getInputContainer();
+    auto& inputContainer = event.getEditor()->getInput()->getInputContainer();
 
-    appendAction("Vertical/Horizontal", new ToggleGlslEditorViewAction(editor, inputContainer->getValue("Invalid"), this));
+    appendAction("Vertical/Horizontal", new ToggleGlslEditorViewAction(editor, inputContainer.getValue("Invalid"), this));
 }

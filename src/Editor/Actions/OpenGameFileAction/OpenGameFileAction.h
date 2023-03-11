@@ -8,7 +8,7 @@ class OpenGameFileAction : public MenuAction
 {
 
 public:
-    OpenGameFileAction(ApplicationWindow* window, InputKey* shortcut, QObject* parent = nullptr);
+    OpenGameFileAction(ApplicationWindow* window, InputKey& shortcut, QObject* parent = nullptr);
     ~OpenGameFileAction();
 
 private:

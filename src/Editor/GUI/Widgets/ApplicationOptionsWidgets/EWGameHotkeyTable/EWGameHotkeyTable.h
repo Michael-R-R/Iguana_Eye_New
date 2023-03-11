@@ -6,10 +6,10 @@ class EWGameHotkeyTable : public EWHotkeyTable
 {
 
 public:
-    EWGameHotkeyTable(InputContainer* inputContainer, QWidget* parent = nullptr);
+    EWGameHotkeyTable(InputContainer& inputContainer, QWidget* parent = nullptr);
     ~EWGameHotkeyTable();
 
 private:
-    void setupTables(InputContainer* inputContainer);
+    void setupTables(InputContainer& inputContainer);
 };
 

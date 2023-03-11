@@ -6,7 +6,7 @@
 
 class EInput : public QObject
 {
-    InputContainer* inputContainer;
+    std::unique_ptr<InputContainer> inputContainer;
 
 public:
     EInput(QObject *parent = nullptr);
@@ -14,6 +14,6 @@ public:
 
     void startup();
 
-    InputContainer* getInputContainer() { return inputContainer; }
+    InputContainer& getInputContainer() const { return *inputContainer; }
 };
 

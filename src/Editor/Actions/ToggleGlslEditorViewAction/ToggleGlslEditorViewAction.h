@@ -8,7 +8,7 @@ class ToggleGlslEditorViewAction : public MenuAction
 {
 
 public:
-    ToggleGlslEditorViewAction(EWGlslEditor* editor, InputKey* shortcut, QObject* parent = nullptr);
+    ToggleGlslEditorViewAction(EWGlslEditor* editor, InputKey& shortcut, QObject* parent = nullptr);
     ~ToggleGlslEditorViewAction() {}
 };
 
