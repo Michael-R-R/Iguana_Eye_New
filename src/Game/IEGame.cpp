@@ -2,10 +2,14 @@
 #include "GameStartEvent.h"
 #include "RenderEngineStartEvent.h"
 #include "IETime.h"
+#include "IEInput.h"
+#include "IEScriptEngine.h"
+#include "IERenderEngine.h"
+#include "IEScene.h"
 
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
-    format(new QSurfaceFormat()),
+    format(std::make_unique<QSurfaceFormat>()),
     glFunc(nullptr), glExtraFunc(nullptr),
     time(nullptr), input(nullptr),
     scriptEngine(nullptr), renderEngine(nullptr),
@@ -64,8 +68,8 @@ void IEGame::init()
     time = std::make_unique<IETime>(16, 16);
     input = std::make_unique<IEInput>(this);
     scriptEngine = std::make_unique<IEScriptEngine>();
-    renderEngine = std::make_unique<IERenderEngine>(this);
-    scene = new IEScene(this);
+    renderEngine = std::make_unique<IERenderEngine>();
+    scene = std::make_unique<IEScene>();
 }
 
 void IEGame::startup()
@@ -73,7 +77,7 @@ void IEGame::startup()
     this->makeCurrent();
 
     GameStartEvent gameStartEvent(this);
-    RenderEngineStartEvent renderStartEvent(scene);
+    RenderEngineStartEvent renderStartEvent(*scene);
 
     scriptEngine->startup(gameStartEvent);
     scene->startup(gameStartEvent);
@@ -91,8 +95,6 @@ void IEGame::shutdown()
     renderEngine->shutdown();
     scene->shutdown();
     scriptEngine->shutdown();
-
-    delete scene;
 }
 
 void IEGame::onUpdateFrame()

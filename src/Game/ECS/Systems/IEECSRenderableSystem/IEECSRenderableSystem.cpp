@@ -20,7 +20,7 @@ IEECSRenderableSystem::~IEECSRenderableSystem()
 
 void IEECSRenderableSystem::startup(const GameStartEvent& event)
 {
-    renderableManager = event.getScene()->getRenderableManager();
+    renderableManager = event.getScene().getRenderableManager();
 }
 
 int IEECSRenderableSystem::attach(const IEEntity entity)

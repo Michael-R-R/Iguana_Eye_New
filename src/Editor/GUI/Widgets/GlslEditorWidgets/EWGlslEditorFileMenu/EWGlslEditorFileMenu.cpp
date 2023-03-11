@@ -2,6 +2,7 @@
 #include "AppStartEvent.h"
 #include "EWGlslEditor.h"
 #include "IEGame.h"
+#include "IEScene.h"
 #include "Editor.h"
 #include "NewShaderAction.h"
 #include "OpenShaderAction.h"
@@ -17,7 +18,7 @@ EWGlslEditorFileMenu::EWGlslEditorFileMenu(QWidget* parent) :
 void EWGlslEditorFileMenu::startup(const AppStartEvent& event, EWGlslEditor* editor)
 {
     auto& inputContainer = event.getEditor()->getInput()->getInputContainer();
-    auto shaderManager = event.getGame()->getIEScene()->getShaderManager();
+    auto shaderManager = event.getGame()->getIEScene().getShaderManager();
 
     appendAction("New Shader", new NewShaderAction(editor, shaderManager, inputContainer.getValue(""), this));
     appendAction("Open Shader", new OpenShaderAction(shaderManager, inputContainer.getValue(""), this));

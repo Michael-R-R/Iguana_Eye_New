@@ -33,7 +33,7 @@ IERenderEngine& GameStartEvent::getRenderEngine() const
     return game->getIERenderEngine();
 }
 
-IEScene* GameStartEvent::getScene() const
+IEScene& GameStartEvent::getScene() const
 {
     return game->getIEScene();
 }

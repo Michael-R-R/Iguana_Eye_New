@@ -18,7 +18,7 @@ IEECSShaderSystem::~IEECSShaderSystem()
 
 void IEECSShaderSystem::startup(const GameStartEvent& event)
 {
-    shaderManager = event.getScene()->getShaderManager();
+    shaderManager = event.getScene().getShaderManager();
 }
 
 int IEECSShaderSystem::attach(const IEEntity entity)

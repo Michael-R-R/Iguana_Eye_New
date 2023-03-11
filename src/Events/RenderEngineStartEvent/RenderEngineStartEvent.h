@@ -4,13 +4,12 @@ class IEScene;
 
 class RenderEngineStartEvent
 {
-    // Does not own these pointers
-    const IEScene* scene;
+    const IEScene& scene;
 
 public:
-    RenderEngineStartEvent(IEScene* scene_);
+    RenderEngineStartEvent(IEScene& scene_);
     ~RenderEngineStartEvent();
 
-    const IEScene* getScene() const;
+    const IEScene& getScene() const;
 };
 

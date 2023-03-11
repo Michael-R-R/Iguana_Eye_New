@@ -7,8 +7,8 @@
 #include "IEScene.h"
 #include "IEECSCameraSystem.h"
 
-IERenderEngine::IERenderEngine(QObject* parent) :
-    IEObject(parent),
+IERenderEngine::IERenderEngine() :
+    IEObject(),
     meshManager(nullptr), materialManager(nullptr),
     shaderManager(nullptr), renderableManager(nullptr),
     cameraManager(nullptr), cameraSystem(nullptr)
@@ -28,14 +28,14 @@ IERenderEngine::~IERenderEngine()
 
 void IERenderEngine::startup(const RenderEngineStartEvent& event)
 {
-    auto scene = event.getScene();
-    meshManager = scene->getMeshManager();
-    materialManager = scene->getMaterialManager();
-    shaderManager = scene->getShaderManager();
-    renderableManager = scene->getRenderableManager();
-    cameraManager = scene->getCameraManager();
+    auto& scene = event.getScene();
+    meshManager = scene.getMeshManager();
+    materialManager = scene.getMaterialManager();
+    shaderManager = scene.getShaderManager();
+    renderableManager = scene.getRenderableManager();
+    cameraManager = scene.getCameraManager();
 
-    auto ecs = scene->getECS();
+    auto ecs = scene.getECS();
     cameraSystem = ecs->getComponent<IEECSCameraSystem>(IEComponentType::Camera);
 }
 

@@ -19,7 +19,7 @@ IEECSCameraSystem::~IEECSCameraSystem()
 
 void IEECSCameraSystem::startup(const GameStartEvent& event)
 {
-    cameraManager = event.getScene()->getCameraManager();
+    cameraManager = event.getScene().getCameraManager();
 }
 
 int IEECSCameraSystem::attach(const IEEntity entity)

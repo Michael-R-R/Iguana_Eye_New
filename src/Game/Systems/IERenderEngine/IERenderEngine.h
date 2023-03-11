@@ -26,7 +26,7 @@ class IERenderEngine : public IEObject
     const IEECSCameraSystem* cameraSystem;
 
 public:
-    IERenderEngine(QObject* parent = nullptr);
+    IERenderEngine();
     ~IERenderEngine();
 
     void startup(const RenderEngineStartEvent& event);

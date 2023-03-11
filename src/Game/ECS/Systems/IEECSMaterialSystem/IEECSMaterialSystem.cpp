@@ -18,7 +18,7 @@ IEECSMaterialSystem::~IEECSMaterialSystem()
 
 void IEECSMaterialSystem::startup(const GameStartEvent& event)
 {
-    materialManager = event.getScene()->getMaterialManager();
+    materialManager = event.getScene().getMaterialManager();
 }
 
 int IEECSMaterialSystem::attach(const IEEntity entity)

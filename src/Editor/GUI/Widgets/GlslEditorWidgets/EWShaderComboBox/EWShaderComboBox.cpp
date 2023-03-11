@@ -1,8 +1,11 @@
 #include "EWShaderComboBox.h"
 #include "AppStartEvent.h"
 #include "IEGame.h"
+#include "IEScene.h"
 #include "IEFile.h"
 #include <QAbstractItemView>
+#include <QEvent>
+#include <QMouseEvent>
 
 EWShaderComboBox::EWShaderComboBox(QWidget* parent) :
     QComboBox(parent),
@@ -35,7 +38,7 @@ bool EWShaderComboBox::eventFilter(QObject*, QEvent* event)
 
 void EWShaderComboBox::startup(const AppStartEvent& event)
 {
-    shaderManager = event.getGame()->getIEScene()->getShaderManager();
+    shaderManager = event.getGame()->getIEScene().getShaderManager();
 
     this->initialBuild(shaderManager);
 

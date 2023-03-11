@@ -20,6 +20,6 @@ public:
     IEInput& getInput() const;
     IEScriptEngine& getScriptEngine() const;
     IERenderEngine& getRenderEngine() const;
-    IEScene* getScene() const;
+    IEScene& getScene() const;
 };
 

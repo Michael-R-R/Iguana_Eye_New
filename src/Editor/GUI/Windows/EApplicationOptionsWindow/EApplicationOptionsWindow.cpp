@@ -3,6 +3,7 @@
 #include "AppStartEvent.h"
 #include "Editor.h"
 #include "IEGame.h"
+#include "IEInput.h"
 
 EApplicationOptionsWindow::EApplicationOptionsWindow(QWidget* parent) :
     EWindow("Options", parent),

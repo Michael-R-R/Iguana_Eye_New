@@ -29,7 +29,7 @@ void IEScriptEngine::startup(const GameStartEvent& event)
 
     globalTime = std::make_unique<LuaGlobalTime>(event.getTime(), gameTable);
     globalInput = std::make_unique<LuaGlobalInput>(event.getInput(), gameTable);
-    globalECS = std::make_unique<LuaGlobalECS>(event.getScene()->getECS(), gameTable);
+    globalECS = std::make_unique<LuaGlobalECS>(event.getScene().getECS(), gameTable);
 }
 
 void IEScriptEngine::shutdown()

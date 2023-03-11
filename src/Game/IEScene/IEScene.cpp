@@ -1,8 +1,8 @@
 #include "IEScene.h"
 #include "GameStartEvent.h"
 
-IEScene::IEScene(QObject* parent) :
-    IEObject(parent),
+IEScene::IEScene() :
+    IEObject(),
     meshManager(new IEMeshManager(this)),
     materialManager(new IEMaterialManager(this)),
     shaderManager(new IEShaderManager(this)),

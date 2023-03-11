@@ -188,10 +188,6 @@ INCLUDEPATH += $$PWD/src/Serialize \
     $$PWD/src/Serialize/Serializable \
 
 INCLUDEPATH += $$PWD/src/Tests \
-    $$PWD/src/Tests/IETCreateInstancedRenderable \
-    $$PWD/src/Tests/IETHideInstancedRenderable \
-    $$PWD/src/Tests/IETIslandGenerator \
-    $$PWD/src/Tests/IETRemoveInstancedRenderable \
 
 INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \

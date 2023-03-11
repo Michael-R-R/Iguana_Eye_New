@@ -6,19 +6,19 @@
 #include <QPair>
 
 #include "Serializable.h"
-#include "IEInput.h"
-#include "IEScriptEngine.h"
-#include "IERenderEngine.h"
-#include "IEScene.h"
 
 class ApplicationWindow;
 class IETime;
+class IEInput;
+class IEScriptEngine;
+class IERenderEngine;
+class IEScene;
 
 class IEGame : public QOpenGLWidget, public Serializable
 {
     Q_OBJECT
 
-    QSurfaceFormat* format;
+    std::unique_ptr<QSurfaceFormat> format;
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
 
@@ -26,7 +26,7 @@ class IEGame : public QOpenGLWidget, public Serializable
     std::unique_ptr<IEInput> input;
     std::unique_ptr<IEScriptEngine> scriptEngine;
     std::unique_ptr<IERenderEngine> renderEngine;
-    IEScene* scene;
+    std::unique_ptr<IEScene> scene;
 
     int viewportWidth;
     int viewportHeight;
@@ -49,7 +49,7 @@ public:
     IEInput& getIEInput() const { return *input; }
     IEScriptEngine& getIEScriptEngine() const { return *scriptEngine; }
     IERenderEngine& getIERenderEngine() const { return *renderEngine; }
-    IEScene* getIEScene() const { return scene; }
+    IEScene& getIEScene() const { return *scene; }
     QPair<int, int> viewportSize() { return QPair<int, int>(viewportWidth, viewportHeight); }
 
 public slots:

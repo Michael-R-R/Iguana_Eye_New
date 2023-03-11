@@ -21,8 +21,8 @@ IEECSTransformSystem::~IEECSTransformSystem()
 
 void IEECSTransformSystem::startup(const GameStartEvent& event)
 {
-    auto scene = event.getScene();
-    renderableManager = scene->getRenderableManager();
+    auto& scene = event.getScene();
+    renderableManager = scene.getRenderableManager();
 }
 
 int IEECSTransformSystem::attach(const IEEntity entity)

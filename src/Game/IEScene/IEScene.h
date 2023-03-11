@@ -24,7 +24,7 @@ class IEScene : public IEObject
     IEECS* ecs;
 
 public:
-    IEScene(QObject* parent = nullptr);
+    IEScene();
     ~IEScene();
 
     void startup(const GameStartEvent& event);

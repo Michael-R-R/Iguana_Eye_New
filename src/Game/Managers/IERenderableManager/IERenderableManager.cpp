@@ -56,7 +56,7 @@ bool IERenderableManager::changeKey(const unsigned long long oldKey, const unsig
 
 void IERenderableManager::buildAllRenderables(const GameStartEvent& event)
 {
-    auto shaderManager = event.getScene()->getShaderManager();
+    auto shaderManager = event.getScene().getShaderManager();
 
     for(auto& renderable : resourceContainer->getResources())
     {
