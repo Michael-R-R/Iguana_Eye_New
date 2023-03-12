@@ -19,8 +19,8 @@ ApplicationWindow::ApplicationWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setupGame();
-    setupEditor();
+    initEditor();
+    initGame();
 }
 
 ApplicationWindow::~ApplicationWindow()
@@ -66,24 +66,27 @@ void ApplicationWindow::startup()
     game->startup();
 
     #ifdef EDITOR_ENABLED
-    AppStartEvent startEvent(this, editor, game);
+    AppStartEvent startEvent(this, *editor, *game);
     editor->startup(startEvent);
     #endif
+
+    disconnect(&(*game), &IEGame::initialized, this, &ApplicationWindow::startup);
 }
 
-void ApplicationWindow::setupGame()
+void ApplicationWindow::initGame()
 {
-    game = new IEGame(this);
+    game = std::make_unique<IEGame>(this);
     game->init();
-    connect(game, &IEGame::initialized, this, &ApplicationWindow::startup);
+    connect(&(*game), &IEGame::initialized, this, &ApplicationWindow::startup);
 
-    this->setCentralWidget(game);
+    this->setCentralWidget(&(*game));
 }
 
-void ApplicationWindow::setupEditor()
+void ApplicationWindow::initEditor()
 {
     #ifdef EDITOR_ENABLED
-    editor = new Editor(this);
+    clearActions();
+    editor = std::make_unique<Editor>(this);
     editor->init();
     #endif
 }
@@ -102,38 +105,23 @@ void ApplicationWindow::clearActions()
 
 void ApplicationWindow::newFile()
 {
-    game->shutdown();
-    game->init();
-    game->startup();
-
     #ifdef EDITOR_ENABLED
-    clearActions();
-    AppStartEvent startEvent(this, editor, game);
-    editor->shutdown();
-    editor->init();
-    editor->startup(startEvent);
+    editor = nullptr;
+    initEditor();
     #endif
+
+    game = nullptr;
+    initGame();
 }
 
 bool ApplicationWindow::saveToFile(const QString& path)
 {
-    return IESerialize::write<IEGame>(path, game);
+    return IESerialize::write<IEGame>(path, &(*game));
 }
 
 bool ApplicationWindow::openFromFile(const QString& path)
 {
-    game->shutdown();
-    game->init();
-    bool success = IESerialize::read<IEGame>(path, game);
-    game->startup();
+    newFile();
 
-    #ifdef EDITOR_ENABLED
-    clearActions();
-    AppStartEvent startEvent(this, editor, game);
-    editor->shutdown();
-    editor->init();
-    editor->startup(startEvent);
-    #endif
-
-    return success;
+    return IESerialize::read<IEGame>(path, &(*game));
 }

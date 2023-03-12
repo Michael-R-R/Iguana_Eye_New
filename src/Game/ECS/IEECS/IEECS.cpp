@@ -16,9 +16,9 @@
 
 IEECS::IEECS() :
     IEObject(),
+    onUpdateEvent(nullptr),
     entityManager(std::make_unique<IEEntityManager>()),
-    systems(),
-    onUpdateEvent(nullptr)
+    systems()
 {
     initSystems();
 }

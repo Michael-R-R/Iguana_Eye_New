@@ -240,3 +240,21 @@ QMatrix4x4 IEECSTransformSystem::calcModelMatrix(const int index)
 
     return transform;
 }
+
+QDataStream& IEECSTransformSystem::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& system = static_cast<const IEECSTransformSystem&>(obj);
+
+    out << system.entityMap << system.data;
+
+    return out;
+}
+
+QDataStream& IEECSTransformSystem::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& system = static_cast<IEECSTransformSystem&>(obj);
+
+    in >> system.entityMap >> system.data;
+
+    return in;
+}

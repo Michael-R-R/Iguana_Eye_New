@@ -128,3 +128,21 @@ void IEECSCameraSystem::setCameraId(const int index, const unsigned long long va
 
     data.cameraId[index] = val;
 }
+
+QDataStream& IEECSCameraSystem::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& system = static_cast<const IEECSCameraSystem&>(obj);
+
+    out << system.entityMap << system.data << system.activeIndex;
+
+    return out;
+}
+
+QDataStream& IEECSCameraSystem::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& system = static_cast<IEECSCameraSystem&>(obj);
+
+    in >> system.entityMap >> system.data >> system.activeIndex;
+
+    return in;
+}

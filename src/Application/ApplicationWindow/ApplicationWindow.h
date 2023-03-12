@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
+#include <memory>
 
 #include "PreprocessDirectives.h"
 
@@ -15,10 +16,10 @@ class ApplicationWindow : public QMainWindow
 {
     Q_OBJECT
 
-    Ui::ApplicationWindow *ui;
+    Ui::ApplicationWindow* ui;
 
-    IEGame* game;
-    Editor* editor;
+    std::unique_ptr<IEGame> game;
+    std::unique_ptr<Editor> editor;
 
     const QString permenentTitle;
     QString tempTitle;
@@ -37,8 +38,8 @@ private slots:
     void startup();
 
 private:
-    void setupGame();
-    void setupEditor();
+    void initGame();
+    void initEditor();
     void clearActions();
 
 public slots:

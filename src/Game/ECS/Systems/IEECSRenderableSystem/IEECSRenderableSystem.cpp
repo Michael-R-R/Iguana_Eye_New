@@ -259,7 +259,7 @@ QVector<unsigned long long> IEECSRenderableSystem::massPurgeRenderableId(const u
     return result;
 }
 
-IERenderable* IEECSRenderableSystem::getAttachedRenderable(const int index)
+IERenderable* IEECSRenderableSystem::getAttachedRenderable(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
@@ -393,4 +393,26 @@ void IEECSRenderableSystem::clearTempData(const int index)
     data.tempVec3Data[index].clear();
     data.tempVec4Data[index].clear();
     data.tempMat4Data[index].clear();
+}
+
+QDataStream& IEECSRenderableSystem::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& system = static_cast<const IEECSRenderableSystem&>(obj);
+
+    out << system.entityMap << system.data
+        << system.shownEntityMap << system.shownEntityList
+        << system.hiddenEntityMap << system.hiddenEntityList;
+
+    return out;
+}
+
+QDataStream& IEECSRenderableSystem::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& system = static_cast<IEECSRenderableSystem&>(obj);
+
+    in >> system.entityMap >> system.data
+       >> system.shownEntityMap >> system.shownEntityList
+       >> system.hiddenEntityMap >> system.hiddenEntityList;
+
+    return in;
 }

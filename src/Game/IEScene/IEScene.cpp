@@ -8,7 +8,6 @@
 #include "IEECS.h"
 
 IEScene::IEScene() :
-    IEObject(),
     meshManager(std::make_unique<IEMeshManager>()),
     materialManager(std::make_unique<IEMaterialManager>()),
     shaderManager(std::make_unique<IEShaderManager>()),

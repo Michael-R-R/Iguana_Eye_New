@@ -96,7 +96,7 @@ QVector<unsigned long long> IEECSShaderSystem::massPurgeShaderId(const unsigned 
     return result;
 }
 
-IEShader* IEECSShaderSystem::getAttachedShader(const int index)
+IEShader* IEECSShaderSystem::getAttachedShader(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
@@ -104,7 +104,7 @@ IEShader* IEECSShaderSystem::getAttachedShader(const int index)
     return shaderManager->value(data.shaderId[index]);
 }
 
-unsigned long long IEECSShaderSystem::getShaderId(const int index)
+unsigned long long IEECSShaderSystem::getShaderId(const int index) const
 {
     if(!indexBoundCheck(index))
         return data.shaderId[0];
@@ -118,4 +118,22 @@ void IEECSShaderSystem::setShaderId(const int index, const unsigned long long va
         return;
 
     data.shaderId[index] = val;
+}
+
+QDataStream& IEECSShaderSystem::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& system = static_cast<const IEECSShaderSystem&>(obj);
+
+    out << system.entityMap << system.data;
+
+    return out;
+}
+
+QDataStream& IEECSShaderSystem::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& system = static_cast<IEECSShaderSystem&>(obj);
+
+    in >> system.entityMap >> system.data;
+
+    return in;
 }

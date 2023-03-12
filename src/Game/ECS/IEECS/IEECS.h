@@ -17,10 +17,9 @@ class IEECS : public IEObject, public Serializable
 {
     Q_OBJECT
 
+    std::unique_ptr<ECSOnUpdateEvent> onUpdateEvent;
     std::unique_ptr<IEEntityManager> entityManager;
     std::map<IEComponentType, std::unique_ptr<IEECSSystem>> systems;
-
-    std::unique_ptr<ECSOnUpdateEvent> onUpdateEvent;
 
 public:
     IEECS();

@@ -51,16 +51,7 @@ public:
     unsigned long long getMeshId(const int index);
     void setMeshId(const int index, const unsigned long long val);
 
-    friend QDataStream& operator<<(QDataStream& out, const IEECSMeshSystem& system)
-    {
-        out << system.entityMap << system.data;
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEECSMeshSystem& system)
-    {
-        in >> system.entityMap >> system.data;
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

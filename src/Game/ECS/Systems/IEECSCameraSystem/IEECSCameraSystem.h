@@ -56,16 +56,7 @@ public:
     unsigned long long getCameraId(const int index) const;
     void setCameraId(const int index, const unsigned long long val);
 
-    friend QDataStream& operator<<(QDataStream& out, const IEECSCameraSystem& system)
-    {
-        out << system.entityMap << system.data << system.activeIndex;
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEECSCameraSystem& system)
-    {
-        in >> system.entityMap >> system.data >> system.activeIndex;
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

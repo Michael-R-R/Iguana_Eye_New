@@ -3,7 +3,7 @@
 #include "Editor.h"
 #include "IEGame.h"
 
-AppStartEvent::AppStartEvent(ApplicationWindow* appWindow, Editor* editor_, IEGame* game_) :
+AppStartEvent::AppStartEvent(ApplicationWindow* appWindow, Editor& editor_, IEGame& game_) :
     appWindow(appWindow), editor(editor_), game(game_)
 {
 
@@ -12,8 +12,6 @@ AppStartEvent::AppStartEvent(ApplicationWindow* appWindow, Editor* editor_, IEGa
 AppStartEvent::~AppStartEvent()
 {
     appWindow = nullptr;
-    editor = nullptr;
-    game = nullptr;
 }
 
 ApplicationWindow* AppStartEvent::getAppWindow() const
@@ -21,12 +19,12 @@ ApplicationWindow* AppStartEvent::getAppWindow() const
     return appWindow;
 }
 
-const Editor* AppStartEvent::getEditor() const
+Editor* AppStartEvent::getEditor() const
 {
-    return editor;
+    return &editor;
 }
 
 IEGame* AppStartEvent::getGame() const
 {
-    return game;
+    return &game;
 }

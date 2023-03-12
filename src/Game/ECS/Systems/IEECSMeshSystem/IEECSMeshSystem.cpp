@@ -119,3 +119,21 @@ void IEECSMeshSystem::setMeshId(const int index, const unsigned long long val)
 
     data.meshId[index] = val;
 }
+
+QDataStream& IEECSMeshSystem::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& system = static_cast<const IEECSMeshSystem&>(obj);
+
+    out << system.entityMap << system.data;
+
+    return out;
+}
+
+QDataStream& IEECSMeshSystem::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& system = static_cast<IEECSMeshSystem&>(obj);
+
+    in >> system.entityMap >> system.data;
+
+    return in;
+}

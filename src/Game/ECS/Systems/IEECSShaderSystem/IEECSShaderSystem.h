@@ -46,21 +46,12 @@ public:
 
     QVector<unsigned long long> massReplaceShaderId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeShaderId(const unsigned long long idToPurge);
-    IEShader* getAttachedShader(const int index);
+    IEShader* getAttachedShader(const int index) const;
 
-    unsigned long long getShaderId(const int index);
+    unsigned long long getShaderId(const int index) const;
     void setShaderId(const int index, const unsigned long long val);
 
-    friend QDataStream& operator<<(QDataStream& out, const IEECSShaderSystem& system)
-    {
-        out << system.entityMap << system.data;
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEECSShaderSystem& system)
-    {
-        in >> system.entityMap >> system.data;
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

@@ -71,16 +71,7 @@ private:
     QMatrix4x4 calcModelMatrix(const int index);
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IEECSTransformSystem& system)
-    {
-        out << system.entityMap << system.data;
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEECSTransformSystem& system)
-    {
-        in >> system.entityMap >> system.data;
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

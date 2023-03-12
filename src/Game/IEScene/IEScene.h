@@ -1,6 +1,7 @@
 #pragma once
 
-#include "IEObject.h"
+#include <memory>
+
 #include "Serializable.h"
 
 class GameStartEvent;
@@ -11,10 +12,8 @@ class IERenderableManager;
 class IECameraManager;
 class IEECS;
 
-class IEScene : public IEObject, public Serializable
+class IEScene : public Serializable
 {
-    Q_OBJECT
-
     std::unique_ptr<IEMeshManager> meshManager;
     std::unique_ptr<IEMaterialManager> materialManager;
     std::unique_ptr<IEShaderManager> shaderManager;

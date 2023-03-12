@@ -119,3 +119,21 @@ void IEECSMaterialSystem::setMaterialId(const int index, const unsigned long lon
 
     data.materialId[index] = val;
 }
+
+QDataStream& IEECSMaterialSystem::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& system = static_cast<const IEECSMaterialSystem&>(obj);
+
+    out << system.entityMap << system.data;
+
+    return out;
+}
+
+QDataStream& IEECSMaterialSystem::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& system = static_cast<IEECSMaterialSystem&>(obj);
+
+    in >> system.entityMap >> system.data;
+
+    return in;
+}

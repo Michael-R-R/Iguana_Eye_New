@@ -79,7 +79,7 @@ public:
 
     QVector<unsigned long long> massReplaceRenderableId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeRenderableId(const unsigned long long idToPurge);
-    IERenderable* getAttachedRenderable(const int index);
+    IERenderable* getAttachedRenderable(const int index) const;
 
     unsigned long long getRenderableId(const int index) const;
     int getShownInstanceIndex(const int index) const;
@@ -97,22 +97,7 @@ private:
     void clearTempData(const int index);
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IEECSRenderableSystem& system)
-    {
-        out << system.entityMap << system.data
-            << system.shownEntityMap << system.shownEntityList
-            << system.hiddenEntityMap << system.hiddenEntityList;
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEECSRenderableSystem& system)
-    {
-        in >> system.entityMap >> system.data
-           >> system.shownEntityMap >> system.shownEntityList
-           >> system.hiddenEntityMap >> system.hiddenEntityList;
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 
