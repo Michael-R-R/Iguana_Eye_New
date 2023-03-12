@@ -1,12 +1,12 @@
 #pragma once
 
-#include <QDataStream>
 #include <QMap>
 #include <QStack>
 
 #include "IEEntity.h"
+#include "Serializable.h"
 
-class IEEntityManager
+class IEEntityManager : public Serializable
 {
     QMap<IEEntity, unsigned long long> entityMap; // <Entity, Attached components>
     QStack<int> freeIdStack;
@@ -25,21 +25,6 @@ public:
     unsigned long long getAttachComponents(const IEEntity& key) const;
     int count() const;
 
-    friend QDataStream& operator<<(QDataStream& out, const IEEntityManager& manager)
-    {
-        out << manager.entityMap
-            << manager.freeIdStack
-            << manager.nextId;
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEEntityManager& manager)
-    {
-        in >> manager.entityMap
-           >> manager.freeIdStack
-           >> manager.nextId;
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 };

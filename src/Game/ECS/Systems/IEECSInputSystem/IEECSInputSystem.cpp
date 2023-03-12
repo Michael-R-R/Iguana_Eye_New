@@ -76,3 +76,21 @@ void IEECSInputSystem::setHasInput(const int index, const bool val)
 
     data.hasInput[index] = val;
 }
+
+QDataStream& IEECSInputSystem::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& system = static_cast<const IEECSInputSystem&>(obj);
+
+    out << system.entityMap << system.data;
+
+    return out;
+}
+
+QDataStream& IEECSInputSystem::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& system = static_cast<IEECSInputSystem&>(obj);
+
+    in >> system.entityMap >> system.data;
+
+    return in;
+}

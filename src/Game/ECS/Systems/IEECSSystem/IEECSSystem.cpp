@@ -11,6 +11,16 @@ IEECSSystem::~IEECSSystem()
 
 }
 
+QDataStream& IEECSSystem::serialize(QDataStream& out, const Serializable&) const
+{
+    return out;
+}
+
+QDataStream& IEECSSystem::deserialize(QDataStream& in, Serializable&)
+{
+    return in;
+}
+
 bool IEECSSystem::doesExist(const IEEntity& key) const
 {
     return entityMap.contains(key);

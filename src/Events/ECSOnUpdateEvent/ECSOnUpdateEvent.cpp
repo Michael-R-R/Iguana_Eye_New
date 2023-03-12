@@ -26,7 +26,14 @@ ECSOnUpdateEvent::ECSOnUpdateEvent(IEECS* ecs) :
 
 ECSOnUpdateEvent::~ECSOnUpdateEvent()
 {
-
+    name = nullptr;
+    hierarchy = nullptr;
+    input = nullptr;
+    transform = nullptr;
+    mesh = nullptr;
+    material = nullptr;
+    shader = nullptr;
+    renderable = nullptr;
 }
 
 IEECSNameSystem* ECSOnUpdateEvent::getName() const

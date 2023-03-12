@@ -137,3 +137,21 @@ const QVector<IEEntity>& IEECSHierarchySystem::getChildrenList(const int index) 
 
     return data.children[index];
 }
+
+QDataStream& IEECSHierarchySystem::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& system = static_cast<const IEECSHierarchySystem&>(obj);
+
+    out << system.entityMap << system.data;
+
+    return out;
+}
+
+QDataStream& IEECSHierarchySystem::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& system = static_cast<IEECSHierarchySystem&>(obj);
+
+    in >> system.entityMap >> system.data;
+
+    return in;
+}

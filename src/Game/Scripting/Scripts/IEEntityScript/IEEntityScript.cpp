@@ -80,3 +80,23 @@ void IEEntityScript::dataToScript()
 
     scriptData.toScript(env);
 }
+
+QDataStream& IEEntityScript::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& script = static_cast<const IEEntityScript&>(obj);
+
+    const_cast<IEEntityScript&>(script).dataFromScript();
+
+    out << script.filePath << script.id << script.type << script.scriptData;
+
+    return out;
+}
+
+QDataStream& IEEntityScript::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& script = static_cast<IEEntityScript&>(obj);
+
+    in >> script.filePath >> script.id >> script.type >> script.scriptData;
+
+    return in;
+}

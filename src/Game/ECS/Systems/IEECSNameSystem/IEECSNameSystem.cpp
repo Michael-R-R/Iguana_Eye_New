@@ -257,3 +257,23 @@ void IEECSNameSystem::removeEntityTag(const unsigned long long key, const int ta
 
     tagEntityMap[key].removeLast();
 }
+
+QDataStream& IEECSNameSystem::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& system = static_cast<const IEECSNameSystem&>(obj);
+
+    out << system.entityMap << system.data << system.nameMap
+        << system.tagNameMap << system.tagEntityMap;
+
+    return out;
+}
+
+QDataStream& IEECSNameSystem::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& system = static_cast<IEECSNameSystem&>(obj);
+
+    in >> system.entityMap >> system.data >> system.nameMap
+       >> system.tagNameMap >> system.tagEntityMap;
+
+    return in;
+}

@@ -1,12 +1,10 @@
 #pragma once
 
-#include <QDataStream>
-
 #include "IEResourceManager.h"
+#include "Serializable.h"
 #include "IECamera.h"
-#include "IESerialize.h"
 
-class IECameraManager : public IEResourceManager<IECamera>
+class IECameraManager : public IEResourceManager<IECamera>, public Serializable
 {
     Q_OBJECT
 
@@ -26,52 +24,7 @@ signals:
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IECameraManager& manager)
-    {
-        out << (int)manager.resources.size();
-
-        for(auto& i : manager.resources)
-        {
-            auto& camera = *i.second;
-
-            out << camera.getType();
-
-            if(camera.getType() != IEResource::Type::Game)
-                continue;
-
-            out << camera.getFilePath();
-
-            IESerialize::write<IECamera>(camera.getFilePath(), &camera);
-        }
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IECameraManager& manager)
-    {
-        int size = 0;
-        in >> size;
-
-        IEResource::Type type;
-        QString filePath = "";
-
-        for(int i = 0; i < size; i++)
-        {
-            in >> type;
-
-            if(type != IEResource::Type::Game)
-                continue;
-
-            in >> filePath;
-
-            auto camera = std::make_unique<IECamera>();
-            if(!IESerialize::read<IECamera>(filePath, &(*camera)))
-                continue;
-
-            manager.add(camera->getId(), std::move(camera));
-        }
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

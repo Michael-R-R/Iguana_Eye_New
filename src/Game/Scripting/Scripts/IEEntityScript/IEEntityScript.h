@@ -1,14 +1,14 @@
 #pragma once
 
-#include <QDataStream>
 #include <QString>
 #include <sol/sol.hpp>
 
 #include "IEScript.h"
+#include "Serializable.h"
 #include "ScriptData.h"
 #include "IEEntity.h"
 
-class IEEntityScript : public IEScript
+class IEEntityScript : public IEScript, public Serializable
 {
     sol::function startFunc;
     sol::function updateFunc;
@@ -36,20 +36,7 @@ public:
     void dataFromScript();
     void dataToScript();
 
-    friend QDataStream& operator<<(QDataStream& out, const IEEntityScript& script)
-    {
-        const_cast<IEEntityScript&>(script).dataFromScript();
-
-        out << script.filePath << script.id << script.type << script.scriptData;
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEEntityScript& script)
-    {
-        in >> script.filePath >> script.id >> script.type >> script.scriptData;
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

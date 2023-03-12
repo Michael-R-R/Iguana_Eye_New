@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QDataStream>
 #include <QVector>
 #include <QMap>
 
@@ -69,18 +68,7 @@ private:
     void removeEntityTag(const unsigned long long key, const int indexToRemove);
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IEECSNameSystem& system)
-    {
-        out << system.entityMap << system.data << system.nameMap
-            << system.tagNameMap << system.tagEntityMap;
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEECSNameSystem& system)
-    {
-        in >> system.entityMap >> system.data >> system.nameMap
-           >> system.tagNameMap >> system.tagEntityMap;
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

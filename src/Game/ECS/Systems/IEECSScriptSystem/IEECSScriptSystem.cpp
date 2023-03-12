@@ -35,7 +35,7 @@ int IEECSScriptSystem::attach(const IEEntity entity)
     entityMap[entity] = index;
 
     data.entity.append(entity);
-    data.scriptCollection.append(QMap<unsigned long long, IEEntityScript*>());
+    data.scriptCollection.append(QMap<unsigned long long, IEEntityScript>());
     data.sleepingScripts.append(QSet<unsigned long long>());
     data.awakenedScripts.append(QSet<unsigned long long>());
 
@@ -76,7 +76,7 @@ void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent*)
     {
         foreach(auto& id, data.awakenedScripts[i])
         {
-            data.scriptCollection[i][id]->update();
+            data.scriptCollection[i][id].update();
         }
     }
 }
@@ -85,9 +85,9 @@ void IEECSScriptSystem::initAllScripts()
 {
     for(int i = 1; i < entityMap.size(); i++)
     {
-        foreach(auto* script, data.scriptCollection[i])
+        foreach(auto& script, data.scriptCollection[i])
         {
-            initalizeScript(i, script->getId());
+            initalizeScript(i, script.getId());
         }
     }
 }
@@ -96,9 +96,9 @@ void IEECSScriptSystem::startAllScripts()
 {
     for(int i = 1; i < entityMap.size(); i++)
     {
-        foreach(auto* script, data.scriptCollection[i])
+        foreach(auto& script, data.scriptCollection[i])
         {
-            startScript(i, script->getId());
+            startScript(i, script.getId());
         }
     }
 }
@@ -108,7 +108,7 @@ bool IEECSScriptSystem::initalizeScript(const int index, const unsigned long lon
     if(!isScriptAttached(index, id))
         return false;
 
-    return data.scriptCollection[index][id]->initalize(scriptEngine->getLua());
+    return data.scriptCollection[index][id].initalize(scriptEngine->getLua());
 }
 
 void IEECSScriptSystem::startScript(const int index, const unsigned long long id)
@@ -116,7 +116,7 @@ void IEECSScriptSystem::startScript(const int index, const unsigned long long id
     if(!isScriptValid(index, id))
         return;
 
-    data.scriptCollection[index][id]->start(data.entity[index]);
+    data.scriptCollection[index][id].start(data.entity[index]);
     data.awakenedScripts[index].insert(id);
 }
 
@@ -128,7 +128,7 @@ void IEECSScriptSystem::wakeScript(const int index, const unsigned long long id)
     data.sleepingScripts[index].remove(id);
     data.awakenedScripts[index].insert(id);
 
-    data.scriptCollection[index][id]->wake();
+    data.scriptCollection[index][id].wake();
 }
 
 void IEECSScriptSystem::sleepScript(const int index, const unsigned long long id)
@@ -139,7 +139,7 @@ void IEECSScriptSystem::sleepScript(const int index, const unsigned long long id
     data.awakenedScripts[index].remove(id);
     data.sleepingScripts[index].insert(id);
 
-    data.scriptCollection[index][id]->sleep();
+    data.scriptCollection[index][id].sleep();
 }
 
 void IEECSScriptSystem::clearSleepingScripts()
@@ -158,38 +158,22 @@ void IEECSScriptSystem::clearAwakenScripts()
     }
 }
 
-void IEECSScriptSystem::addScript(const int index, IEEntityScript* script)
+void IEECSScriptSystem::addScript(const int index, const IEEntityScript& script)
 {
-    if(!indexBoundCheck(index))
-    {
-        delete script;
+    if(isScriptAttached(index, script.getId()))
         return;
-    }
 
-    if(isScriptAttached(index, script->getId()))
-    {
-        delete script;
-        return;
-    }
-
-    data.scriptCollection[index][script->getId()] = script;
+    data.scriptCollection[index][script.getId()] = script;
 }
 
 void IEECSScriptSystem::removeScript(const int index, const unsigned long long id)
 {
-    if(!indexBoundCheck(index))
-        return;
-
     if(!isScriptAttached(index, id))
         return;
-
-    auto temp = data.scriptCollection[index][id];
 
     data.scriptCollection[index].remove(id);
     data.sleepingScripts[index].remove(id);
     data.awakenedScripts[index].remove(id);
-
-    delete temp;
 }
 
 bool IEECSScriptSystem::isScriptAttached(const int index, const unsigned long long id)
@@ -205,7 +189,7 @@ bool IEECSScriptSystem::isScriptValid(const int index, const unsigned long long 
     if(!isScriptAttached(index, id))
         return false;
 
-    return data.scriptCollection[index][id]->getIsValid();
+    return data.scriptCollection[index][id].getIsValid();
 }
 
 IEScript* IEECSScriptSystem::getScript(const int index, const unsigned long long id)
@@ -213,7 +197,7 @@ IEScript* IEECSScriptSystem::getScript(const int index, const unsigned long long
     if(!isScriptAttached(index, id))
         return nullptr;
 
-    return data.scriptCollection[index][id];
+    return &data.scriptCollection[index][id];
 }
 
 IEScript* IEECSScriptSystem::getScript(const int index, const QString& name)
@@ -222,16 +206,16 @@ IEScript* IEECSScriptSystem::getScript(const int index, const QString& name)
     if(!isScriptAttached(index, id))
         return nullptr;
 
-    return data.scriptCollection[index][id];
+    return &data.scriptCollection[index][id];
 }
 
 void IEECSScriptSystem::deserializeScripts()
 {
     for(int i = 1; i < entityMap.size(); i++)
     {
-        foreach(auto* script, data.scriptCollection[i])
+        foreach(auto script, data.scriptCollection[i])
         {
-            script->dataToScript();
+            script.dataToScript();
         }
     }
 }
@@ -240,15 +224,7 @@ void IEECSScriptSystem::removeAll()
 {
     for(int i = 1; i < entityMap.size(); i++)
     {
-        QMapIterator<unsigned long long, IEEntityScript*> it(data.scriptCollection[i]);
-        while(it.hasNext())
-        {
-            it.next();
-
-            auto* temp = it.value();
-            data.scriptCollection[i][it.key()] = nullptr;
-            delete temp;
-        }
+        data.scriptCollection[i].clear();
     }
 }
 
@@ -257,13 +233,23 @@ void IEECSScriptSystem::removeAll(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    QMapIterator<unsigned long long, IEEntityScript*> it(data.scriptCollection[index]);
-    while(it.hasNext())
-    {
-        it.next();
+    data.scriptCollection[index].clear();
+}
 
-        auto* temp = it.value();
-        data.scriptCollection[index][it.key()] = nullptr;
-        delete temp;
-    }
+QDataStream& IEECSScriptSystem::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& system = static_cast<const IEECSScriptSystem&>(obj);
+
+    out << system.entityMap << system.data;
+
+    return out;
+}
+
+QDataStream& IEECSScriptSystem::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& system = static_cast<IEECSScriptSystem&>(obj);
+
+    in >> system.entityMap >> system.data;
+
+    return in;
 }

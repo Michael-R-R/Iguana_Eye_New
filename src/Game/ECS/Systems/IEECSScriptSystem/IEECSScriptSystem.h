@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QDataStream>
 #include <QVector>
 #include <QMap>
 #include <QSet>
@@ -17,7 +16,7 @@ class IEECSScriptSystem : public IEECSSystem
     struct Data
     {
         QVector<IEEntity> entity;
-        QVector<QMap<unsigned long long, IEEntityScript*>> scriptCollection;
+        QVector<QMap<unsigned long long, IEEntityScript>> scriptCollection;
         QVector<QSet<unsigned long long>> sleepingScripts;
         QVector<QSet<unsigned long long>> awakenedScripts;
 
@@ -26,14 +25,16 @@ class IEECSScriptSystem : public IEECSSystem
             out << data.entity << data.sleepingScripts << data.awakenedScripts;
 
             out << (int)data.scriptCollection.size();
+
             for(int i = 1; i < data.scriptCollection.size(); i++)
             {
                 out << (int)data.scriptCollection[i].size();
-                QMapIterator<unsigned long long, IEEntityScript*> it(data.scriptCollection[i]);
+
+                QMapIterator<unsigned long long, IEEntityScript> it(data.scriptCollection[i]);
                 while(it.hasNext())
                 {
                     it.next();
-                    out << it.key() << *it.value();
+                    out << it.key() << it.value();
                 }
             }
 
@@ -49,16 +50,17 @@ class IEECSScriptSystem : public IEECSSystem
 
             for(int i = 1; i < size; i++)
             {
-                data.scriptCollection.append(QMap<unsigned long long, IEEntityScript*>());
-
                 int collectionSize = 0;
                 in >> collectionSize;
+
+                data.scriptCollection.append(QMap<unsigned long long, IEEntityScript>());
+
                 for(int j = 0; j < collectionSize; j++)
                 {
                     unsigned long long key = 0;
-                    IEEntityScript* value = new IEEntityScript();
+                    IEEntityScript value;
 
-                    in >> key >> *value;
+                    in >> key >> value;
 
                     data.scriptCollection[i][key] = value;
                 }
@@ -91,7 +93,7 @@ public:
     void clearSleepingScripts();
     void clearAwakenScripts();
 
-    void addScript(const int index, IEEntityScript* script);
+    void addScript(const int index, const IEEntityScript& script);
     void removeScript(const int index, const unsigned long long id);
 
     bool isScriptAttached(const int index, const unsigned long long id);
@@ -106,18 +108,7 @@ private:
     void removeAll(const int index);
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IEECSScriptSystem& system)
-    {
-        out << system.entityMap << system.data;
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEECSScriptSystem& system)
-    {
-        in >> system.entityMap >> system.data;
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

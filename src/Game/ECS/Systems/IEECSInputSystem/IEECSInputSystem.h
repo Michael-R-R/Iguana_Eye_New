@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QDataStream>
 #include <QVector>
 
 #include "IEECSSystem.h"
@@ -42,15 +41,6 @@ public:
     bool getHasInput(const int index) const;
     void setHasInput(const int index, const bool val);
 
-    friend QDataStream& operator<<(QDataStream& out, const IEECSInputSystem& system)
-    {
-        out << system.entityMap << system.data;
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEECSInputSystem& system)
-    {
-        in >> system.entityMap >> system.data;
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

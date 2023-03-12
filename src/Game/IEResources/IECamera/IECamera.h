@@ -1,12 +1,12 @@
 #pragma once
 
-#include <QDataStream>
 #include <QVector3D>
 #include <QMatrix4x4>
 
 #include "IEResource.h"
+#include "Serializable.h"
 
-class IECamera : public IEResource
+class IECamera : public IEResource, public Serializable
 {
 protected:
     QMatrix4x4 projection;
@@ -48,26 +48,7 @@ public:
     void setSpeed(const float val) { speed = val; }
     void setSensitivity(const float val) { sensitivity = val; }
 
-    friend QDataStream& operator<<(QDataStream& out, const IECamera& camera)
-    {
-        out << camera.filePath << camera.id << camera.type
-            << camera.projection << camera.view
-            << camera.up << camera.nearPlane
-            << camera.farPlane << camera.fov
-            << camera.speed << camera.sensitivity;
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IECamera& camera)
-    {
-        in >> camera.filePath >> camera.id >> camera.type
-           >> camera.projection >> camera.view
-           >> camera.up >> camera.nearPlane
-           >> camera.farPlane >> camera.fov
-           >> camera.speed >> camera.sensitivity;
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

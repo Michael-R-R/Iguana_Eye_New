@@ -48,15 +48,6 @@ public:
     IEEntity getParent(const int index) const;
     const QVector<IEEntity>& getChildrenList(const int index) const;
 
-    friend QDataStream& operator<<(QDataStream& out, const IEECSHierarchySystem& system)
-    {
-        out << system.entityMap << system.data;
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEECSHierarchySystem& system)
-    {
-        in >> system.entityMap >> system.data;
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

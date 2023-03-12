@@ -1,6 +1,7 @@
 #pragma once
 
-#include <QMap>
+#include <map>
+#include <memory>
 
 #include "IEObject.h"
 #include "Serializable.h"
@@ -16,10 +17,10 @@ class IEECS : public IEObject, public Serializable
 {
     Q_OBJECT
 
-    ECSOnUpdateEvent* onUpdateEvent;
+    std::unique_ptr<IEEntityManager> entityManager;
+    std::map<IEComponentType, std::unique_ptr<IEECSSystem>> systems;
 
-    IEEntityManager* entityManager;
-    QMap<IEComponentType, IEECSSystem*> systems;
+    std::unique_ptr<ECSOnUpdateEvent> onUpdateEvent;
 
 public:
     IEECS();
@@ -49,13 +50,13 @@ signals:
     void componentDetached(const IEEntity entity, const IEComponentType type);
 
 public:
-    template <class T>
+    template<class T>
     T* getComponent(const IEComponentType type) const
     {
         if(!doesSystemExist(type))
             return nullptr;
 
-        return dynamic_cast<T*>(systems[type]);
+        return dynamic_cast<T*>(&(*systems.at(type)));
     }
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;

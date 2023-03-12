@@ -1,5 +1,6 @@
 #include "IECameraManager.h"
 #include "GameStartEvent.h"
+#include "IESerialize.h"
 
 IECameraManager::IECameraManager() :
     IEResourceManager()
@@ -59,4 +60,56 @@ bool IECameraManager::changeKey(const unsigned long long oldKey, const unsigned 
     emit keyChanged(oldKey, newKey);
 
     return true;
+}
+
+QDataStream& IECameraManager::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& manager = static_cast<const IECameraManager&>(obj);
+
+    out << (int)manager.resources.size();
+
+    for(auto& i : manager.resources)
+    {
+        auto& camera = *i.second;
+
+        out << camera.getType();
+
+        if(camera.getType() != IEResource::Type::Game)
+            continue;
+
+        out << camera.getFilePath();
+
+        IESerialize::write<IECamera>(camera.getFilePath(), &camera);
+    }
+
+    return out;
+}
+
+QDataStream& IECameraManager::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& manager = static_cast<IECameraManager&>(obj);
+
+    int size = 0;
+    in >> size;
+
+    IEResource::Type type;
+    QString filePath = "";
+
+    for(int i = 0; i < size; i++)
+    {
+        in >> type;
+
+        if(type != IEResource::Type::Game)
+            continue;
+
+        in >> filePath;
+
+        auto camera = std::make_unique<IECamera>();
+        if(!IESerialize::read<IECamera>(filePath, &(*camera)))
+            continue;
+
+        manager.add(camera->getId(), std::move(camera));
+    }
+
+    return in;
 }

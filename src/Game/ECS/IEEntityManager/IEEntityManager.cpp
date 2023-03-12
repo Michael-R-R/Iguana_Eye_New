@@ -91,3 +91,25 @@ int IEEntityManager::count() const
 {
     return entityMap.size();
 }
+
+QDataStream& IEEntityManager::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& manager = static_cast<const IEEntityManager&>(obj);
+
+    out << manager.entityMap
+        << manager.freeIdStack
+        << manager.nextId;
+
+    return out;
+}
+
+QDataStream& IEEntityManager::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& manager = static_cast<IEEntityManager&>(obj);
+
+    in >> manager.entityMap
+       >> manager.freeIdStack
+       >> manager.nextId;
+
+    return in;
+}
