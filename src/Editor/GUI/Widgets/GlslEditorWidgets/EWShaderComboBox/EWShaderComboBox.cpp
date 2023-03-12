@@ -68,13 +68,15 @@ unsigned long long EWShaderComboBox::getSelectedId()
 
 void EWShaderComboBox::initialBuild(const IEShaderManager* shaderManager)
 {
-    const auto* resources = shaderManager->getResourceContainer().getResources();
+    const auto* resources = shaderManager->getResources();
     for(auto& i : *resources)
     {
-        if(i.second->getType() == IEResource::Type::Editor)
+        auto& shader = *i.second;
+
+        if(shader.getType() != IEResource::Type::Game)
             continue;
 
-        this->addShader(i.second->getId(), i.second->getFilePath());
+        this->addShader(shader.getId(), shader.getFilePath());
     }
 }
 
@@ -98,7 +100,7 @@ void EWShaderComboBox::currentShaderChanged(int index)
 
     auto resourceId = fullIdList[index];
 
-    auto* shader = shaderManager->getValue(resourceId);
+    auto* shader = shaderManager->value(resourceId);
     if(!shader)
     {
         emit cleared();
@@ -148,7 +150,7 @@ void EWShaderComboBox::changeShaderKey(const unsigned long long oldKey, const un
 
     fullIdList[index] = newKey;
 
-    auto* shader = shaderManager->getValue(newKey);
+    auto* shader = shaderManager->value(newKey);
     QString extractedName = IEFile::extractName(shader->getFilePath());
 
     this->setItemText(index, extractedName);

@@ -153,15 +153,14 @@ INCLUDEPATH += $$PWD/src/Game/IEResources \
     $$PWD/src/Game/IEResources/IEMesh \
     $$PWD/src/Game/IEResources/IERenderable \
     $$PWD/src/Game/IEResources/IEResource \
-    $$PWD/src/Game/IEResources/IEResourceContainer \
     $$PWD/src/Game/IEResources/IEShader \
 
 INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IECameraManager \
-    $$PWD/src/Game/Managers/IEManager \
     $$PWD/src/Game/Managers/IEMaterialManager \
     $$PWD/src/Game/Managers/IEMeshManager \
     $$PWD/src/Game/Managers/IERenderableManager \
+    $$PWD/src/Game/Managers/IEResourceManager \
     $$PWD/src/Game/Managers/IEShaderManager \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting \

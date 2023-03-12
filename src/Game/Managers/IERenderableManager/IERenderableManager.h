@@ -2,14 +2,15 @@
 
 #include <QDataStream>
 
-#include "IEManager.h"
-#include "IESerialize.h"
+#include "IEResourceManager.h"
 #include "IERenderable.h"
+#include "IESerialize.h"
+#include "IEFile.h"
 
 class GameStartEvent;
 class IEShader;
 
-class IERenderableManager : public IEManager<IERenderable>
+class IERenderableManager : public IEResourceManager<IERenderable>
 {
     Q_OBJECT
 
@@ -35,25 +36,27 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IERenderableManager& manager)
     {
-        const auto* resources = manager.getResourceContainer().getResources();
+        out << (int)manager.resources.size();
 
-        out << (int)resources->size();
-
-        for(auto& item : *resources)
+        for(auto& i : manager.resources)
         {
-            if(item.second->getIsEdited() && item.second->getType() == IEResource::Type::Game)
-            {
-                const QString& filePath = item.second->getFilePath();
-                if(!IEFile::doesPathExist(filePath))
-                    IEFile::makePath(filePath);
+            auto& renderable = *i.second;
 
-                IESerialize::write<IERenderable>(item.second->getFilePath(), &(*item.second));
-                item.second->setIsEdited(false);
+            out << renderable.getType();
+
+            if(renderable.getType() != IEResource::Type::Game)
+                continue;
+
+            if(renderable.getIsEdited())
+            {
+                if(!IEFile::doesPathExist(renderable.getFilePath()))
+                    IEFile::makePath(renderable.getFilePath());
+
+                if(IESerialize::write<IERenderable>(renderable.getFilePath(), &renderable))
+                    renderable.setIsEdited(false);
             }
 
-            out << item.second->getFilePath()
-                << item.second->getId()
-                << item.second->getType();
+            out << renderable.getFilePath();
         }
 
         return out;
@@ -64,18 +67,19 @@ public:
         int size = 0;
         in >> size;
 
-        QString filePath = "";
         IEResource::Type type;
-        std::unique_ptr<IERenderable> renderable = nullptr;
+        QString filePath = "";
 
         for(int i = 0; i < size; i++)
         {
-            in >> filePath >> type;
+            in >> type;
 
-            if(type == IEResource::Type::Editor)
+            if(type != IEResource::Type::Game)
                 continue;
 
-            renderable = std::make_unique<IERenderable>();
+            in >> filePath;
+
+            auto renderable = std::make_unique<IERenderable>();
             if(!IESerialize::read<IERenderable>(filePath, &(*renderable)))
                 continue;
 

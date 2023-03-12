@@ -23,7 +23,7 @@ NewShaderAction::NewShaderAction(EWGlslEditor* editor, IEShaderManager& shaderMa
         unsigned long long id = IEHash::Compute(path);
         if(shaderManager.doesExist(id))
         {
-            auto* shader = shaderManager.getValue(id);
+            auto* shader = shaderManager.value(id);
             shader->setVertexSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
             shader->setFragmentSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
             shader->build();

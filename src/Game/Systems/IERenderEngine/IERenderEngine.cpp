@@ -58,12 +58,12 @@ void IERenderEngine::onRenderFrame()
 {
     auto* camera = cameraSystem->getActiveCamera();
 
-    const auto* renderables = renderableManager->getResourceContainer().getResources();
+    const auto* renderables = renderableManager->getResources();
     for(auto& i : *renderables)
     {
-        auto* mesh = meshManager->getValue(i.second->getMeshId());
-        auto* material = materialManager->getValue(i.second->getMaterialId());
-        auto* shader = shaderManager->getValue(i.second->getShaderId());
+        auto* mesh = meshManager->value(i.second->getMeshId());
+        auto* material = materialManager->value(i.second->getMaterialId());
+        auto* shader = shaderManager->value(i.second->getShaderId());
         if(!mesh || !material || !shader)
             continue;
 

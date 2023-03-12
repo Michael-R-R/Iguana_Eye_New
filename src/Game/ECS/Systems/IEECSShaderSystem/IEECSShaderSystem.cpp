@@ -101,7 +101,7 @@ IEShader* IEECSShaderSystem::getAttachedShader(const int index)
     if(!indexBoundCheck(index))
         return nullptr;
 
-    return shaderManager->getValue(data.shaderId[index]);
+    return shaderManager->value(data.shaderId[index]);
 }
 
 unsigned long long IEECSShaderSystem::getShaderId(const int index)

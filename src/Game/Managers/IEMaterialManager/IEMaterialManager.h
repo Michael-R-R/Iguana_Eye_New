@@ -2,13 +2,14 @@
 
 #include <QDataStream>
 
-#include "IEManager.h"
-#include "IESerialize.h"
+#include "IEResourceManager.h"
 #include "IEMaterial.h"
+#include "IEFile.h"
+#include "IESerialize.h"
 
 class GameStartEvent;
 
-class IEMaterialManager: public IEManager<IEMaterial>
+class IEMaterialManager: public IEResourceManager<IEMaterial>
 {
     Q_OBJECT
 
@@ -31,21 +32,27 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEMaterialManager& manager)
     {
-        const auto* resources = manager.getResourceContainer().getResources();
+        out << (int)manager.resources.size();
 
-        out << (int)resources->size();
-
-        for(auto& item : *resources)
+        for(auto& i : manager.resources)
         {
-            if(item.second->getIsEdited() && item.second->getType() == IEResource::Type::Game)
+            auto& material = *i.second;
+
+            out << material.getType();
+
+            if(material.getType() != IEResource::Type::Game)
+                continue;
+
+            if(material.getIsEdited())
             {
-                item.second->setIsEdited(false);
-                IESerialize::write<IEMaterial>(item.second->getFilePath(), &(*item.second));
+                if(!IEFile::doesPathExist(material.getFilePath()))
+                    IEFile::makePath(material.getFilePath());
+
+                if(IESerialize::write<IEMaterial>(material.getFilePath(), &material))
+                    material.setIsEdited(false);
             }
 
-            out << item.second->getFilePath()
-                << item.second->getId()
-                << item.second->getType();
+            out << material.getFilePath();
         }
 
         return out;
@@ -56,18 +63,19 @@ public:
         int size = 0;
         in >> size;
 
-        QString filePath = "";
         IEResource::Type type;
-        std::unique_ptr<IEMaterial> material = nullptr;
+        QString filePath = "";
 
         for(int i = 0; i < size; i++)
         {
-            in >> filePath >> type;
+            in >> type;
 
             if(type != IEResource::Type::Game)
                 continue;
 
-            material = std::make_unique<IEMaterial>();
+            in >> filePath;
+
+            auto material = std::make_unique<IEMaterial>();
             if(!IESerialize::read<IEMaterial>(filePath, &(*material)))
                 continue;
 

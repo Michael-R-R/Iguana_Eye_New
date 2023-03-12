@@ -96,7 +96,7 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
             const int childIndex = renderableSystem->lookUpIndex(itChild.key());
             const unsigned long long renderableId = renderableSystem->getRenderableId(childIndex);
             const int childInstanceIndex = renderableSystem->getShownInstanceIndex(childIndex);
-            auto* renderable = renderableManager->getValue(renderableId);
+            auto* renderable = renderableManager->value(renderableId);
             if(!renderable)
                 continue;
 
@@ -107,7 +107,7 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
         const int parentIndex = renderableSystem->lookUpIndex(itParent.key());
         const unsigned long long renderableId = renderableSystem->getRenderableId(parentIndex);
         const int parentInstanceIndex = renderableSystem->getShownInstanceIndex(parentIndex);
-        auto* renderable = renderableManager->getValue(renderableId);
+        auto* renderable = renderableManager->value(renderableId);
         if(!renderable)
             continue;
 

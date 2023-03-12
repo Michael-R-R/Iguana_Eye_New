@@ -101,7 +101,7 @@ IEMesh* IEECSMeshSystem::getAttachedMesh(const int index)
     if(!indexBoundCheck(index))
         return nullptr;
 
-    return meshManager->getValue(data.meshId[index]);
+    return meshManager->value(data.meshId[index]);
 }
 
 unsigned long long IEECSMeshSystem::getMeshId(const int index)

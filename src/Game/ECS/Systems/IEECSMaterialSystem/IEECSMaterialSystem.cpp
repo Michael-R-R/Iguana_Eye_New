@@ -101,7 +101,7 @@ IEMaterial* IEECSMaterialSystem::getAttachedMaterial(const int index)
     if(!indexBoundCheck(index))
         return nullptr;
 
-    return materialManager->getValue(data.materialId[index]);
+    return materialManager->value(data.materialId[index]);
 }
 
 unsigned long long IEECSMaterialSystem::getMaterialId(const int index)

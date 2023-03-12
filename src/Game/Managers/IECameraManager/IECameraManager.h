@@ -2,11 +2,11 @@
 
 #include <QDataStream>
 
-#include "IEManager.h"
+#include "IEResourceManager.h"
 #include "IECamera.h"
 #include "IESerialize.h"
 
-class IECameraManager : public IEManager<IECamera>
+class IECameraManager : public IEResourceManager<IECamera>
 {
     Q_OBJECT
 
@@ -28,18 +28,20 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IECameraManager& manager)
     {
-        const auto* resources = manager.getResourceContainer().getResources();
+        out << (int)manager.resources.size();
 
-        out << (int)resources->size();
-
-        for(auto& item : *resources)
+        for(auto& i : manager.resources)
         {
-            if(item.second->getType() == IEResource::Type::Game)
-                IESerialize::write<IECamera>(item.second->getFilePath(), &(*item.second));
+            auto& camera = *i.second;
 
-            out << item.second->getFilePath()
-                << item.second->getId()
-                << item.second->getType();
+            out << camera.getType();
+
+            if(camera.getType() != IEResource::Type::Game)
+                continue;
+
+            out << camera.getFilePath();
+
+            IESerialize::write<IECamera>(camera.getFilePath(), &camera);
         }
 
         return out;
@@ -50,18 +52,19 @@ public:
         int size = 0;
         in >> size;
 
-        QString filePath = "";
         IEResource::Type type;
-        std::unique_ptr<IECamera> camera = nullptr;
+        QString filePath = "";
 
         for(int i = 0; i < size; i++)
         {
-            in >> filePath >> type;
+            in >> type;
 
             if(type != IEResource::Type::Game)
                 continue;
 
-            camera = std::make_unique<IECamera>();
+            in >> filePath;
+
+            auto camera = std::make_unique<IECamera>();
             if(!IESerialize::read<IECamera>(filePath, &(*camera)))
                 continue;
 

@@ -2,13 +2,13 @@
 
 #include <QDataStream>
 
-#include "IEManager.h"
+#include "IEResourceManager.h"
 #include "IEShader.h"
 #include "IEGlslImporter.h"
 
 class GameStartEvent;
 
-class IEShaderManager : public IEManager<IEShader>
+class IEShaderManager : public IEResourceManager<IEShader>
 {
     Q_OBJECT
 
@@ -34,15 +34,18 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEShaderManager& manager)
     {
-        const auto* resources = manager.getResourceContainer().getResources();
+        out << (int)manager.resources.size();
 
-        out << (int)resources->size();
-
-        for(auto& item : *resources)
+        for(auto& i : manager.resources)
         {
-            out << item.second->getFilePath()
-                << item.second->getId()
-                << item.second->getType();
+            auto& shader = *i.second;
+
+            out << shader.getType();
+
+            if(shader.getType() != IEResource::Type::Game)
+                continue;
+
+            out << shader.getFilePath() << shader.getId();
         }
 
         return out;
@@ -53,19 +56,20 @@ public:
         int size = 0;
         in >> size;
 
+        IEResource::Type type;
         QString path = "";
         unsigned long long id = 0;
-        IEResource::Type type;
-        std::unique_ptr<IEShader> shader = nullptr;
 
         for(int i = 0; i < size; i++)
         {
-            in >> path >> id >> type;
+            in >> type;
 
-            if(type == IEResource::Type::Editor)
+            if(type != IEResource::Type::Game)
                 continue;
 
-            shader = std::make_unique<IEShader>(path, id);
+            in >> path >> id;
+
+            auto shader = std::make_unique<IEShader>(path, id);
             if(!IEGlslImporter::importGlsl(path, *shader))
                 continue;
 

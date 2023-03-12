@@ -4,7 +4,7 @@
 #include "IEShaderManager.h"
 
 IERenderableManager::IERenderableManager() :
-    IEManager()
+    IEResourceManager()
 {
 
 }
@@ -21,25 +21,28 @@ void IERenderableManager::startup(const GameStartEvent& event)
 
 void IERenderableManager::shutdown()
 {
-    resourceContainer->clear();
+    clear();
 }
 
 bool IERenderableManager::add(const unsigned long long key, std::unique_ptr<IERenderable> value)
 {
-    IERenderable& temp = *value;
-    if(!IEManager::add(key, std::move(value)))
+    if(!value || doesExist(key))
         return false;
 
-    if(temp.getType() == IEResource::Type::Game)
-        emit added(key, temp.getFilePath());
+    if(value->getType() == IEResource::Type::Game)
+        emit added(key, value->getFilePath());
+
+    resources[key] = std::move(value);
 
     return true;
 }
 
 bool IERenderableManager::remove(const unsigned long long key)
 {
-    if(!IEManager::remove(key))
+    if(!doesExist(key))
         return false;
+
+    resources.erase(key);
 
     emit removed(key);
 
@@ -48,8 +51,12 @@ bool IERenderableManager::remove(const unsigned long long key)
 
 bool IERenderableManager::changeKey(const unsigned long long oldKey, const unsigned long long newKey)
 {
-    if(!IEManager::changeKey(oldKey, newKey))
+    if(!doesExist(oldKey) || doesExist(newKey))
         return false;
+
+    auto temp = std::move(resources.at(oldKey));
+    resources.erase(oldKey);
+    resources[newKey] = std::move(temp);
 
     emit keyChanged(oldKey, newKey);
 
@@ -60,12 +67,14 @@ void IERenderableManager::buildAllRenderables(const GameStartEvent& event)
 {
     auto& shaderManager = event.getScene().getShaderManager();
 
-    for(auto& i : *resourceContainer->getResources())
+    for(auto& i : resources)
     {
-        auto* shader = shaderManager.getValue(i.second->getShaderId());
+        auto& renderable = *i.second;
+
+        auto* shader = shaderManager.value(renderable.getShaderId());
         if(!shader)
             continue;
 
-        i.second->build(*shader);
+        renderable.build(*shader);
     }
 }

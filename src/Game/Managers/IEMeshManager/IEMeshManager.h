@@ -2,13 +2,13 @@
 
 #include <QDataStream>
 
-#include "IEManager.h"
+#include "IEResourceManager.h"
 #include "IEMesh.h"
 #include "IEObjImporter.h"
 
 class GameStartEvent;
 
-class IEMeshManager : public IEManager<IEMesh>
+class IEMeshManager : public IEResourceManager<IEMesh>
 {
     Q_OBJECT
 
@@ -31,15 +31,18 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEMeshManager& manager)
     {
-        const auto* resources = manager.getResourceContainer().getResources();
+        out << (int)manager.resources.size();
 
-        out << (int)resources->size();
-
-        for(auto& item : *resources)
+        for(auto& i : manager.resources)
         {
-            out << item.second->getFilePath()
-                << item.second->getId()
-                << item.second->getType();
+            auto& mesh = *i.second;
+
+            out << mesh.getType();
+
+            if(mesh.getType() != IEResource::Type::Game)
+                continue;
+
+            out << mesh.getFilePath() << mesh.getId();
         }
 
         return out;
@@ -50,23 +53,24 @@ public:
         int size = 0;
         in >> size;
 
+        IEResource::Type type;
         QString path = "";
         unsigned long long id = 0;
-        IEResource::Type type;
-        std::unique_ptr<IEMesh> mesh = nullptr;
 
         for(int i = 0; i < size; i++)
         {
-            in >> path >> id >> type;
+            in >> type;
 
-            if(type == IEResource::Type::Editor)
+            if(type != IEResource::Type::Game)
                 continue;
 
-            mesh = std::make_unique<IEMesh>(path, id);
+            in >> path >> id;
+
+            auto mesh = std::make_unique<IEMesh>(path, id);
             if(!IEObjImporter::importMesh(path, *mesh))
                 continue;
 
-            manager.add(mesh->getId(), std::move(mesh));
+            manager.add(id, std::move(mesh));
         }
 
         return in;

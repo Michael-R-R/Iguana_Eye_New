@@ -11,7 +11,7 @@ CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, IEShaderManager& 
     connect(this, &CompileShaderAction::triggered, this, [editor, &manager]()
     {
         unsigned long long id = editor->getShaderComboBox()->getSelectedId();
-        auto* shader = manager.getValue(id);
+        auto* shader = manager.value(id);
         if(!shader)
             return;
 

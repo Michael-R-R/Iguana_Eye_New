@@ -2,7 +2,7 @@
 #include "GameStartEvent.h"
 
 IECameraManager::IECameraManager() :
-    IEManager()
+    IEResourceManager()
 {
 
 }
@@ -19,25 +19,28 @@ void IECameraManager::startup(const GameStartEvent&)
 
 void IECameraManager::shutdown()
 {
-    resourceContainer->clear();
+    clear();
 }
 
 bool IECameraManager::add(const unsigned long long key, std::unique_ptr<IECamera> value)
 {
-    IECamera& temp = *value;
-    if(!IEManager::add(key, std::move(value)))
+    if(!value || doesExist(key))
         return false;
 
-    if(temp.getType() == IEResource::Type::Game)
-        emit added(key, temp.getFilePath());
+    if(value->getType() == IEResource::Type::Game)
+        emit added(key, value->getFilePath());
+
+    resources[key] = std::move(value);
 
     return true;
 }
 
 bool IECameraManager::remove(const unsigned long long key)
 {
-    if(!IEManager::remove(key))
+    if(!doesExist(key))
         return false;
+
+    resources.erase(key);
 
     emit removed(key);
 
@@ -46,8 +49,12 @@ bool IECameraManager::remove(const unsigned long long key)
 
 bool IECameraManager::changeKey(const unsigned long long oldKey, const unsigned long long newKey)
 {
-    if(!IEManager::changeKey(oldKey, newKey))
+    if(!doesExist(oldKey) || doesExist(newKey))
         return false;
+
+    auto temp = std::move(resources.at(oldKey));
+    resources.erase(oldKey);
+    resources[newKey] = std::move(temp);
 
     emit keyChanged(oldKey, newKey);
 

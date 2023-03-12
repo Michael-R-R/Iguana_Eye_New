@@ -16,7 +16,7 @@ SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shader
         if(id == 0)
             return;
 
-        auto* shader = shaderManager.getValue(id);
+        auto* shader = shaderManager.value(id);
         if(!shader)
             return;
 

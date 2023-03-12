@@ -92,7 +92,7 @@ void IEECSRenderableSystem::addShown(const int index)
         return;
 
     unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager->getValue(id);
+    auto* renderable = renderableManager->value(id);
     if(!renderable)
         return;
 
@@ -109,7 +109,7 @@ void IEECSRenderableSystem::addHidden(const int index)
         return;
 
     unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager->getValue(id);
+    auto* renderable = renderableManager->value(id);
     if(!renderable)
         return;
 
@@ -128,7 +128,7 @@ void IEECSRenderableSystem::removeShown(const int index)
         return;
 
     unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager->getValue(id);
+    auto* renderable = renderableManager->value(id);
     if(!renderable)
         return;
 
@@ -154,7 +154,7 @@ void IEECSRenderableSystem::removeHidden(const int index)
         return;
 
     unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager->getValue(id);
+    auto* renderable = renderableManager->value(id);
     if(!renderable)
         return;
 
@@ -207,7 +207,7 @@ void IEECSRenderableSystem::transferTempData(const int index)
         return;
 
     unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager->getValue(id);
+    auto* renderable = renderableManager->value(id);
     if(!renderable)
         return;
 
@@ -264,7 +264,7 @@ IERenderable* IEECSRenderableSystem::getAttachedRenderable(const int index)
     if(!indexBoundCheck(index))
         return nullptr;
 
-    return renderableManager->getValue(data.renderableId[index]);
+    return renderableManager->value(data.renderableId[index]);
 }
 
 unsigned long long IEECSRenderableSystem::getRenderableId(const int index) const
@@ -364,7 +364,7 @@ void IEECSRenderableSystem::cacheTempData(const int index)
         return;
 
     const unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager->getValue(id);
+    auto* renderable = renderableManager->value(id);
     if(!renderable)
         return;
 
