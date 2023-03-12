@@ -21,23 +21,23 @@ NewShaderAction::NewShaderAction(EWGlslEditor* editor, IEShaderManager& shaderMa
         editor->clearAll();
 
         unsigned long long id = IEHash::Compute(path);
-        IEShader* shader = nullptr;
         if(shaderManager.doesExist(id))
         {
-            shader = shaderManager.getValue(id);
-            shader->setVertexSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
-            shader->setFragmentSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
-            shader->build();
+            auto& shader = shaderManager.getValue(id);
+            shader.setVertexSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
+            shader.setFragmentSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
+            shader.build();
         }
         else
         {
-            shader = new IEShader(path, id);
+            std::unique_ptr<IEShader> shader = nullptr;
+            shader = std::make_unique<IEShader>(path, id);
             shader->build();
-            shaderManager.add(id, shader);
+            shaderManager.add(id, std::move(shader));
         }
 
-        QString vSrc = "[VERTEX]\n" + shader->getVertexSrc();
-        QString fSrc = "[FRAGMENT]\n" + shader->getFragmentSrc();
+        QString vSrc = "[VERTEX]\n#version 430 core\n\nvoid main()\n{\n\t\n}\n\n";
+        QString fSrc = "[FRAGMENT]\n#version 430 core\n\nvoid main()\n{\n\t\n}\n\n";
         IEFile::write(path, vSrc + fSrc);
     });
 }

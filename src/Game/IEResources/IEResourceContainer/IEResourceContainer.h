@@ -1,20 +1,20 @@
 #pragma once
 
 #include <QDataStream>
-#include <QMap>
+#include <map>
 
 #include "IEObject.h"
 
 template <class T>
 class IEResourceContainer : public IEObject
 {
-    QMap<unsigned long long, T*> resources;
+    std::map<unsigned long long, std::unique_ptr<T>> resources;
 
 public:
     IEResourceContainer() :
         IEObject(), resources()
     {
-
+        IEResourceContainer::add(0, std::move(std::make_unique<T>()));
     }
 
     ~IEResourceContainer()
@@ -22,18 +22,15 @@ public:
         clear();
     }
 
-    bool add(const unsigned long long key, T* resource)
+    bool add(const unsigned long long key, std::unique_ptr<T> resource)
     {
         if(!resource)
             return false;
 
         if(doesExist(key))
-        {
-            delete resource;
             return false;
-        }
 
-        resources[key] = resource;
+        resources[key] = std::move(resource);
 
         return true;
     }
@@ -43,9 +40,7 @@ public:
         if(!doesExist(key))
             return false;
 
-        T* temp = resources[key];
-        resources.remove(key);
-        delete temp;
+        resources.erase(key);
 
         return true;
     }
@@ -55,51 +50,30 @@ public:
         if(!doesExist(oldKey) || doesExist(newKey))
             return false;
 
-        T* temp = resources[oldKey];
-        resources.remove(oldKey);
-        resources[newKey] = temp;
+        auto temp = std::move(resources[oldKey]);
+        resources.erase(oldKey);
+        resources[newKey] = std::move(temp);
 
         return true;
     }
 
     void clear()
     {
-        QMapIterator<unsigned long long, T*> it(resources);
-        while(it.hasNext())
-        {
-            it.next();
-
-            T* temp = it.value();
-            delete temp;
-            temp = nullptr;
-        }
-
         resources.clear();
     }
 
-    unsigned long long getKey(const T* value) const
-    {
-        if(!doesExist(value))
-            return false;
-        return resources.key(value);
-    }
-
-    T* getValue(const unsigned long long key) const
+    T& getValue(const unsigned long long key) const
     {
         if(!doesExist(key))
-            return nullptr;
-        return resources[key];
+            return *resources.at(0);
+
+        return *resources.at(key);
     }
 
     bool doesExist(const unsigned long long key) const
     {
-        return resources.contains(key);
+        return (resources.find(key) != resources.end());
     }
 
-    bool doesExist(const T* value) const
-    {
-        return (std::find(resources.begin(), resources.end(), value) != resources.end());
-    }
-
-    const QMap<unsigned long long, T*>& getResources() const { return resources; }
+    const std::map<unsigned long long, std::unique_ptr<T>>* getResources() const { return &resources; }
 };

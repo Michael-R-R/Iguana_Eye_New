@@ -31,15 +31,12 @@ SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager& sh
         if(shaderManager.doesExist(id))
             return;
 
-        auto shader = new IEShader(path, id);
-        if(!IEGlslImporter::importGlsl(path, shader))
-        {
-            delete shader;
+        std::unique_ptr<IEShader> shader = std::make_unique<IEShader>(path, id);
+        if(!IEGlslImporter::importGlsl(path, *shader))
             return;
-        }
 
         shader->build();
-        shaderManager.add(id, shader);
+        shaderManager.add(id, std::move(shader));
     });
 
     connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)

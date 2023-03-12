@@ -20,7 +20,7 @@ public:
     void startup(const GameStartEvent& event) override;
     void shutdown() override;
 
-    bool add(const unsigned long long key, IERenderable* value) override;
+    bool add(const unsigned long long key, std::unique_ptr<IERenderable> value) override;
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
 
@@ -28,30 +28,32 @@ private:
     void buildAllRenderables(const GameStartEvent& event);
 
 signals:
-    void added(const unsigned long long key, const QString& value);
+    void added(const unsigned long long key, const QString& path);
     void removed(const unsigned long long key);
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 
 public:
     friend QDataStream& operator<<(QDataStream& out, const IERenderableManager& manager)
     {
-        auto& resources = manager.getResourceContainer().getResources();
+        const auto* resources = manager.getResourceContainer().getResources();
 
-        out << (int)resources.size();
+        out << (int)resources->size();
 
-        for(auto item : resources)
+        for(auto& item : *resources)
         {
-            if(item->getIsEdited() && item->getType() == IEResource::Type::Game)
+            if(item.second->getIsEdited() && item.second->getType() == IEResource::Type::Game)
             {
-                const QString& filePath = item->getFilePath();
+                const QString& filePath = item.second->getFilePath();
                 if(!IEFile::doesPathExist(filePath))
                     IEFile::makePath(filePath);
 
-                IESerialize::write<IERenderable>(item->getFilePath(), item);
-                item->setIsEdited(false);
+                IESerialize::write<IERenderable>(item.second->getFilePath(), &(*item.second));
+                item.second->setIsEdited(false);
             }
 
-            out << item->getFilePath() << item->getType();
+            out << item.second->getFilePath()
+                << item.second->getId()
+                << item.second->getType();
         }
 
         return out;
@@ -64,7 +66,7 @@ public:
 
         QString filePath = "";
         IEResource::Type type;
-        IERenderable* renderable = nullptr;
+        std::unique_ptr<IERenderable> renderable = nullptr;
 
         for(int i = 0; i < size; i++)
         {
@@ -73,14 +75,11 @@ public:
             if(type == IEResource::Type::Editor)
                 continue;
 
-            renderable = new IERenderable();
-            if(!IESerialize::read<IERenderable>(filePath, renderable))
-            {
-                delete renderable;
+            renderable = std::make_unique<IERenderable>();
+            if(!IESerialize::read<IERenderable>(filePath, &(*renderable)))
                 continue;
-            }
 
-            manager.add(renderable->getId(), renderable);
+            manager.add(renderable->getId(), std::move(renderable));
         }
 
         return in;

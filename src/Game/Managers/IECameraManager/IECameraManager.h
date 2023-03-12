@@ -16,30 +16,30 @@ public:
 
     void startup(const GameStartEvent& event) override;
     void shutdown() override;
-    bool add(const unsigned long long key, IECamera* value) override;
+    bool add(const unsigned long long key, std::unique_ptr<IECamera> value) override;
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
 
 signals:
-    void added(const unsigned long long key, const QString& value);
+    void added(const unsigned long long key, const QString& path);
     void removed(const unsigned long long key);
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 
 public:
     friend QDataStream& operator<<(QDataStream& out, const IECameraManager& manager)
     {
-        auto& resources = manager.getResourceContainer().getResources();
+        const auto* resources = manager.getResourceContainer().getResources();
 
-        out << (int)resources.size();
+        out << (int)resources->size();
 
-        for(auto item : resources)
+        for(auto& item : *resources)
         {
-            if(item->getType() == IEResource::Type::Game)
-            {
-                IESerialize::write<IECamera>(item->getFilePath(), item);
-            }
+            if(item.second->getType() == IEResource::Type::Game)
+                IESerialize::write<IECamera>(item.second->getFilePath(), &(*item.second));
 
-            out << item->getFilePath() << item->getType();
+            out << item.second->getFilePath()
+                << item.second->getId()
+                << item.second->getType();
         }
 
         return out;
@@ -52,7 +52,7 @@ public:
 
         QString filePath = "";
         IEResource::Type type;
-        IECamera* camera = nullptr;
+        std::unique_ptr<IECamera> camera = nullptr;
 
         for(int i = 0; i < size; i++)
         {
@@ -61,14 +61,11 @@ public:
             if(type != IEResource::Type::Game)
                 continue;
 
-            camera = new IECamera();
-            if(!IESerialize::read<IECamera>(filePath, camera))
-            {
-                delete camera;
+            camera = std::make_unique<IECamera>();
+            if(!IESerialize::read<IECamera>(filePath, &(*camera)))
                 continue;
-            }
 
-            manager.add(camera->getId(), camera);
+            manager.add(camera->getId(), std::move(camera));
         }
 
         return in;

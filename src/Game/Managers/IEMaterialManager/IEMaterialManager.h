@@ -19,31 +19,33 @@ public:
     void startup(const GameStartEvent& event) override;
     void shutdown() override;
 
-    bool add(const unsigned long long key, IEMaterial* value) override;
+    bool add(const unsigned long long key, std::unique_ptr<IEMaterial> value) override;
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
 
 signals:
-    void added(const unsigned long long key, const QString& value);
+    void added(const unsigned long long key, const QString& path);
     void removed(const unsigned long long key);
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEMaterialManager& manager)
     {
-        auto& resources = manager.getResourceContainer().getResources();
+        const auto* resources = manager.getResourceContainer().getResources();
 
-        out << (int)resources.size();
+        out << (int)resources->size();
 
-        for(auto item : resources)
+        for(auto& item : *resources)
         {
-            if(item->getIsEdited() && item->getType() == IEResource::Type::Game)
+            if(item.second->getIsEdited() && item.second->getType() == IEResource::Type::Game)
             {
-                item->setIsEdited(false);
-                IESerialize::write<IEMaterial>(item->getFilePath(), item);
+                item.second->setIsEdited(false);
+                IESerialize::write<IEMaterial>(item.second->getFilePath(), &(*item.second));
             }
 
-            out << item->getFilePath() << item->getType();
+            out << item.second->getFilePath()
+                << item.second->getId()
+                << item.second->getType();
         }
 
         return out;
@@ -56,7 +58,7 @@ public:
 
         QString filePath = "";
         IEResource::Type type;
-        IEMaterial* material = nullptr;
+        std::unique_ptr<IEMaterial> material = nullptr;
 
         for(int i = 0; i < size; i++)
         {
@@ -65,14 +67,11 @@ public:
             if(type != IEResource::Type::Game)
                 continue;
 
-            material = new IEMaterial();
-            if(!IESerialize::read<IEMaterial>(filePath, material))
-            {
-                delete material;
+            material = std::make_unique<IEMaterial>();
+            if(!IESerialize::read<IEMaterial>(filePath, &(*material)))
                 continue;
-            }
 
-            manager.add(material->getId(), material);
+            manager.add(material->getId(), std::move(material));
         }
 
         return in;

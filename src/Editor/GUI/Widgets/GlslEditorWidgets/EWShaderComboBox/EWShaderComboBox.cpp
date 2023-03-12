@@ -68,13 +68,13 @@ unsigned long long EWShaderComboBox::getSelectedId()
 
 void EWShaderComboBox::initialBuild(const IEShaderManager* shaderManager)
 {
-    auto resources = shaderManager->getResourceContainer().getResources();
-    for(auto item : resources)
+    const auto* resources = shaderManager->getResourceContainer().getResources();
+    for(auto& i : *resources)
     {
-        if(item->getType() == IEResource::Type::Editor)
+        if(i.second->getType() == IEResource::Type::Editor)
             continue;
 
-        this->addShader(item->getId(), item->getFilePath());
+        this->addShader(i.second->getId(), i.second->getFilePath());
     }
 }
 
@@ -98,15 +98,15 @@ void EWShaderComboBox::currentShaderChanged(int index)
 
     auto resourceId = fullIdList[index];
 
-    const IEShader* shader = shaderManager->getValue(resourceId);
-    if(!shader)
+    auto& shader = shaderManager->getValue(resourceId);
+    if(shader.getId() == 0)
     {
         emit cleared();
         return;
     }
 
-    emit vertexSrcSelected(shader->getVertexSrc());
-    emit fragmentSrcSelected(shader->getFragmentSrc());
+    emit vertexSrcSelected(shader.getVertexSrc());
+    emit fragmentSrcSelected(shader.getFragmentSrc());
 }
 
 void EWShaderComboBox::addShader(const unsigned long long key, const QString& path)
@@ -148,8 +148,8 @@ void EWShaderComboBox::changeShaderKey(const unsigned long long oldKey, const un
 
     fullIdList[index] = newKey;
 
-    auto shader = shaderManager->getValue(newKey);
-    QString extractedName = IEFile::extractName(shader->getFilePath());
+    auto& shader = shaderManager->getValue(newKey);
+    QString extractedName = IEFile::extractName(shader.getFilePath());
 
     this->setItemText(index, extractedName);
 }

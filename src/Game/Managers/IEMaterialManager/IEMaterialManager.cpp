@@ -22,13 +22,14 @@ void IEMaterialManager::shutdown()
     resourceContainer->clear();
 }
 
-bool IEMaterialManager::add(const unsigned long long key, IEMaterial* value)
+bool IEMaterialManager::add(const unsigned long long key, std::unique_ptr<IEMaterial> value)
 {
-    if(!IEManager::add(key, value))
+    IEMaterial& temp = *value;
+    if(!IEManager::add(key, std::move(value)))
         return false;
 
-    if(value->getType() == IEResource::Type::Game)
-        emit added(key, value->getFilePath());
+    if(temp.getType() == IEResource::Type::Game)
+        emit added(key, temp.getFilePath());
 
     return true;
 }

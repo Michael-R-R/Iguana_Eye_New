@@ -349,9 +349,9 @@ void IERenderable::setMat4InstanceValue(const QString& key, const int index, con
     buffer->subAllocate(index);
 }
 
-void IERenderable::build(IEShader* shader)
+void IERenderable::build(IEShader& shader)
 {
-    shader->bind();
+    shader.bind();
 
     if(!this->isCreated())
         this->create();
@@ -361,18 +361,18 @@ void IERenderable::build(IEShader* shader)
     indexBuffer->build();
 
     QMapIterator<QString, IEVertexBuffer<QVector2D>*> it2(vec2BufferContainer->getBuffers());
-    while(it2.hasNext()) { it2.next(); it2.value()->build(shader->attributeLocation(it2.key())); }
+    while(it2.hasNext()) { it2.next(); it2.value()->build(shader.attributeLocation(it2.key())); }
 
     QMapIterator<QString, IEVertexBuffer<QVector3D>*> it3(vec3BufferContainer->getBuffers());
-    while(it3.hasNext()) { it3.next(); it3.value()->build(shader->attributeLocation(it3.key())); }
+    while(it3.hasNext()) { it3.next(); it3.value()->build(shader.attributeLocation(it3.key())); }
 
     QMapIterator<QString, IEVertexBuffer<QVector4D>*> it4(vec4BufferContainer->getBuffers());
-    while(it4.hasNext()) { it4.next(); it4.value()->build(shader->attributeLocation(it4.key())); }
+    while(it4.hasNext()) { it4.next(); it4.value()->build(shader.attributeLocation(it4.key())); }
 
     QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it5(mat4BufferContainer->getBuffers());
-    while(it5.hasNext()) { it5.next(); it5.value()->build(shader->attributeLocation(it5.key())); }
+    while(it5.hasNext()) { it5.next(); it5.value()->build(shader.attributeLocation(it5.key())); }
 
-    shader->release();
+    shader.release();
     this->release();
     indexBuffer->release();
     vec2BufferContainer->releaseAllBuffers();
@@ -381,7 +381,7 @@ void IERenderable::build(IEShader* shader)
     mat4BufferContainer->releaseAllBuffers();
 }
 
-void IERenderable::bindUniformData(IEShader* shader)
+void IERenderable::bindUniformData(IEShader& shader)
 {
     uniformData.bind(shader);
 }

@@ -22,13 +22,14 @@ void IEMeshManager::shutdown()
     resourceContainer->clear();
 }
 
-bool IEMeshManager::add(const unsigned long long key, IEMesh* value)
+bool IEMeshManager::add(const unsigned long long key, std::unique_ptr<IEMesh> value)
 {
-    if(!IEManager::add(key, value))
+    IEMesh& temp = *value;
+    if(!IEManager::add(key, std::move(value)))
         return false;
 
-    if(value->getType() == IEResource::Type::Game)
-        emit added(key, value->getFilePath());
+    if(temp.getType() == IEResource::Type::Game)
+        emit added(key, temp.getFilePath());
 
     return true;
 }

@@ -99,8 +99,8 @@ public:
     void setVec4InstanceValue(const QString& key, const int index, const QVector4D& value);
     void setMat4InstanceValue(const QString& key, const int index, const QMatrix4x4& value);
 
-    void build(IEShader* shader);
-    void bindUniformData(IEShader* shader);
+    void build(IEShader& shader);
+    void bindUniformData(IEShader& shader);
     void checkForDirtyBuffers();
     bool equals(const unsigned long long meshId,
                 const unsigned long long materialId,

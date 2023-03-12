@@ -96,10 +96,10 @@ QVector<unsigned long long> IEECSShaderSystem::massPurgeShaderId(const unsigned 
     return result;
 }
 
-IEShader* IEECSShaderSystem::getAttachedShader(const int index)
+IEShader& IEECSShaderSystem::getAttachedShader(const int index)
 {
     if(!indexBoundCheck(index))
-        return nullptr;
+        return shaderManager->getValue(data.shaderId[0]);
 
     return shaderManager->getValue(data.shaderId[index]);
 }

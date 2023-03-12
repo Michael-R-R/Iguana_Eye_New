@@ -26,34 +26,34 @@ IEUniform::~IEUniform()
 
 }
 
-void IEUniform::bind(IEShader* shader) const
+void IEUniform::bind(IEShader& shader) const
 {
     QMapIterator<QString, int> it1(intData);
-    while(it1.hasNext()) { it1.next(); shader->setUniformValue(shader->uniformLocation(it1.key()), it1.value()); }
+    while(it1.hasNext()) { it1.next(); shader.setUniformValue(shader.uniformLocation(it1.key()), it1.value()); }
 
     QMapIterator<QString, float> it2(floatData);
-    while(it2.hasNext()) { it2.next(); shader->setUniformValue(shader->uniformLocation(it2.key()), it2.value()); }
+    while(it2.hasNext()) { it2.next(); shader.setUniformValue(shader.uniformLocation(it2.key()), it2.value()); }
 
     QMapIterator<QString, QVector2D> it3(vec2Data);
-    while(it3.hasNext()) { it3.next(); shader->setUniformValue(shader->uniformLocation(it3.key()), it3.value()); }
+    while(it3.hasNext()) { it3.next(); shader.setUniformValue(shader.uniformLocation(it3.key()), it3.value()); }
 
     QMapIterator<QString, QVector3D> it4(vec3Data);
-    while(it4.hasNext()) { it4.next(); shader->setUniformValue(shader->uniformLocation(it4.key()), it4.value()); }
+    while(it4.hasNext()) { it4.next(); shader.setUniformValue(shader.uniformLocation(it4.key()), it4.value()); }
 
     QMapIterator<QString, QVector4D> it5(vec4Data);
-    while(it5.hasNext()) { it5.next(); shader->setUniformValue(shader->uniformLocation(it5.key()), it5.value()); }
+    while(it5.hasNext()) { it5.next(); shader.setUniformValue(shader.uniformLocation(it5.key()), it5.value()); }
 
     QMapIterator<QString, QMatrix2x2> it6(mat2Data);
-    while(it6.hasNext()) { it6.next(); shader->setUniformValue(shader->uniformLocation(it6.key()), it6.value()); }
+    while(it6.hasNext()) { it6.next(); shader.setUniformValue(shader.uniformLocation(it6.key()), it6.value()); }
 
     QMapIterator<QString, QMatrix3x3> it7(mat3Data);
-    while(it7.hasNext()) { it7.next(); shader->setUniformValue(shader->uniformLocation(it7.key()), it7.value()); }
+    while(it7.hasNext()) { it7.next(); shader.setUniformValue(shader.uniformLocation(it7.key()), it7.value()); }
 
     QMapIterator<QString, QMatrix4x4> it8(mat4Data);
-    while(it8.hasNext()) { it8.next(); shader->setUniformValue(shader->uniformLocation(it8.key()), it8.value()); }
+    while(it8.hasNext()) { it8.next(); shader.setUniformValue(shader.uniformLocation(it8.key()), it8.value()); }
 
     QMapIterator<QString, QColor> it9(colData);
-    while(it9.hasNext()) { it9.next(); shader->setUniformValue(shader->uniformLocation(it9.key()), it9.value()); }
+    while(it9.hasNext()) { it9.next(); shader.setUniformValue(shader.uniformLocation(it9.key()), it9.value()); }
 }
 
 void IEUniform::add(const QString& name, const int data)

@@ -29,9 +29,9 @@ public:
     virtual void startup(const GameStartEvent& event) = 0;
     virtual void shutdown() = 0;
 
-    virtual bool add(const unsigned long long key, T* value)
+    virtual bool add(const unsigned long long key, std::unique_ptr<T> value)
     {
-        return resourceContainer->add(key, value);
+        return resourceContainer->add(key, std::move(value));
     }
 
     virtual bool remove(const unsigned long long key)
@@ -54,7 +54,7 @@ public:
         return resourceContainer->doesExist(value);
     }
 
-    T* getValue(const unsigned long long key) const
+    T& getValue(const unsigned long long key) const
     {
         return resourceContainer->getValue(key);
     }

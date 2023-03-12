@@ -31,7 +31,7 @@ public:
     IEUniform(const IEUniform& other);
     ~IEUniform();
 
-    void bind(IEShader* shader) const;
+    void bind(IEShader& shader) const;
 
     void add(const QString& name, const int data);
     void add(const QString& name, const float data);

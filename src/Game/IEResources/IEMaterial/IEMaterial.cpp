@@ -36,7 +36,7 @@ IEMaterial::~IEMaterial()
 
 }
 
-void IEMaterial::bindUniformData(IEShader* shader) const
+void IEMaterial::bindUniformData(IEShader& shader) const
 {
     uniformData.bind(shader);
 }

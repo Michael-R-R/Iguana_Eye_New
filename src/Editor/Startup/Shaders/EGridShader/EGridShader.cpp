@@ -6,5 +6,5 @@ EGridShader::EGridShader(const unsigned long long id) :
 {
     this->setType(Type::Editor);
 
-    IEGlslImporter::importGlsl("./resources/shaders/editor/persp_grid.glsl", this);
+    IEGlslImporter::importGlsl("./resources/shaders/editor/persp_grid.glsl", *this);
 }

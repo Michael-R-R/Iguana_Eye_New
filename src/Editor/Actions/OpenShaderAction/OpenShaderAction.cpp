@@ -22,11 +22,11 @@ OpenShaderAction::OpenShaderAction(IEShaderManager& shaderManager,
         if(shaderManager.doesExist(id))
             return;
 
-        auto shader = new IEShader(path, id);
-        if(!IEGlslImporter::importGlsl(path, shader))
+        std::unique_ptr<IEShader> shader = std::make_unique<IEShader>(path, id);
+        if(!IEGlslImporter::importGlsl(path, *shader))
             return;
 
         shader->build();
-        shaderManager.add(id, shader);
+        shaderManager.add(id, std::move(shader));
     });
 }

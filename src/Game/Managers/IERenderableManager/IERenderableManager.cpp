@@ -24,13 +24,14 @@ void IERenderableManager::shutdown()
     resourceContainer->clear();
 }
 
-bool IERenderableManager::add(const unsigned long long key, IERenderable* value)
+bool IERenderableManager::add(const unsigned long long key, std::unique_ptr<IERenderable> value)
 {
-    if(!IEManager::add(key, value))
+    IERenderable& temp = *value;
+    if(!IEManager::add(key, std::move(value)))
         return false;
 
-    if(value->getType() == IEResource::Type::Game)
-        emit added(key, value->getFilePath());
+    if(temp.getType() == IEResource::Type::Game)
+        emit added(key, temp.getFilePath());
 
     return true;
 }
@@ -59,11 +60,12 @@ void IERenderableManager::buildAllRenderables(const GameStartEvent& event)
 {
     auto& shaderManager = event.getScene().getShaderManager();
 
-    for(auto& renderable : resourceContainer->getResources())
+    for(auto& i : *resourceContainer->getResources())
     {
-        auto shader = shaderManager.getValue(renderable->getShaderId());
-        if(!shader)
+        auto& shader = shaderManager.getValue(i.second->getShaderId());
+        if(shader.getId() == 0)
             continue;
-        renderable->build(shader);
+
+        i.second->build(shader);
     }
 }

@@ -27,10 +27,10 @@ void ESceneStartup::addDefaultCamera(const AppStartEvent& event)
 
     QString path = "./resources/cameras/editor/default.iecam";
     unsigned long long id = IEHash::Compute(path);
-    auto camera = new EDefaultCamera(path, id);
+    std::unique_ptr<EDefaultCamera> camera = std::make_unique<EDefaultCamera>(path, id);
 
     cameraManager.setDefaultResourceId(id);
-    cameraManager.add(id, camera);
+    cameraManager.add(id, std::move(camera));
 }
 
 void ESceneStartup::addDefaultMaterial(const AppStartEvent& event)
@@ -40,10 +40,10 @@ void ESceneStartup::addDefaultMaterial(const AppStartEvent& event)
 
     QString path = "./resources/materials/editor/default.iemat";
     unsigned long long id = IEHash::Compute(path);
-    auto material = new EDefaultMaterial(path, id);
+    std::unique_ptr<EDefaultMaterial> material = std::make_unique<EDefaultMaterial>(path, id);
 
     materialManager.setDefaultResourceId(id);
-    materialManager.add(id, material);
+    materialManager.add(id, std::move(material));
 }
 
 void ESceneStartup::addDefaultShader(const AppStartEvent& event)
@@ -53,12 +53,12 @@ void ESceneStartup::addDefaultShader(const AppStartEvent& event)
 
     QString path = "./resources/shaders/editor/default.glsl";
     unsigned long long id = IEHash::Compute(path);
-    auto shader = new IEShader(path, id);
-    IEGlslImporter::importGlsl(path, shader);
+    std::unique_ptr<IEShader> shader = std::make_unique<IEShader>(path, id);
+    IEGlslImporter::importGlsl(path, *shader);
     shader->build();
 
     shaderManager.setDefaultResourceId(id);
-    shaderManager.add(id, shader);
+    shaderManager.add(id, std::move(shader));
 }
 
 void ESceneStartup::buildGridRenderable(const AppStartEvent& event)
@@ -70,8 +70,8 @@ void ESceneStartup::buildGridRenderable(const AppStartEvent& event)
     auto& renderableManager = scene.getRenderableManager();
 
     unsigned long long id = IEHash::Compute("EGridRenderable");
-    auto gridRenderable = new EGridRenderable(id);
+    std::unique_ptr<EGridRenderable> gridRenderable = std::make_unique<EGridRenderable>(id);
     gridRenderable->setup(meshManager, materialManager, shaderManager);
 
-    renderableManager.add(id, gridRenderable);
+    renderableManager.add(id, std::move(gridRenderable));
 }

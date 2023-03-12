@@ -56,88 +56,86 @@ void IERenderEngine::shutdown()
 
 void IERenderEngine::onRenderFrame()
 {
-    auto camera = cameraSystem->getActiveCamera();
+    auto& camera = cameraSystem->getActiveCamera();
 
-    auto renderables = renderableManager->getResourceContainer().getResources();
-    for(auto* renderable : renderables)
+    const auto* renderables = renderableManager->getResourceContainer().getResources();
+    for(auto& i : *renderables)
     {
-        auto mesh = meshManager->getValue(renderable->getMeshId());
-        auto material = materialManager->getValue(renderable->getMaterialId());
-        auto shader = shaderManager->getValue(renderable->getShaderId());
-        if(!mesh || !material || !shader)
+        auto& mesh = meshManager->getValue(i.second->getMeshId());
+        auto& material = materialManager->getValue(i.second->getMaterialId());
+        auto& shader = shaderManager->getValue(i.second->getShaderId());
+        if(mesh.getId() == 0 || material.getId() == 0 || shader.getId() == 0)
             continue;
 
         prepareShader(shader);
-        prepareRenderable(renderable);
+        prepareRenderable(*i.second);
         prepareViewProjection(shader, camera);
         prepareUniformData(shader, material);
-        prepareUniformData(shader, renderable);
-        draw(renderable, mesh);
-        cleanup(shader, renderable);
+        prepareUniformData(shader, *i.second);
+        draw(*i.second, mesh);
+        cleanup(shader, *i.second);
     }
 }
 
-void IERenderEngine::prepareShader(IEShader* shader)
+void IERenderEngine::prepareShader(IEShader& shader)
 {
-    shader->bind();
+    shader.bind();
 }
 
-void IERenderEngine::prepareRenderable(IERenderable* renderable)
+void IERenderEngine::prepareRenderable(IERenderable& renderable)
 {
-    renderable->checkForDirtyBuffers();
-    renderable->bind();
+    renderable.checkForDirtyBuffers();
+    renderable.bind();
 }
 
-void IERenderEngine::prepareViewProjection(IEShader* shader, IECamera* camera)
+void IERenderEngine::prepareViewProjection(IEShader& shader, IECamera& camera)
 {
-    QMatrix4x4 viewProj = (camera) ? camera->getViewProjection() : QMatrix4x4();
-
-    shader->setUniformValue("uViewProjection", viewProj);
+    shader.setUniformValue("uViewProjection", camera.getViewProjection());
 }
 
-void IERenderEngine::prepareUniformData(IEShader* shader, IEMaterial* material)
+void IERenderEngine::prepareUniformData(IEShader& shader, IEMaterial& material)
 {
-    material->bindUniformData(shader);
+    material.bindUniformData(shader);
 }
 
-void IERenderEngine::prepareUniformData(IEShader* shader, IERenderable* renderable)
+void IERenderEngine::prepareUniformData(IEShader& shader, IERenderable& renderable)
 {
-    renderable->bindUniformData(shader);
+    renderable.bindUniformData(shader);
 }
 
-void IERenderEngine::draw(IERenderable* renderable, IEMesh* mesh)
+void IERenderEngine::draw(IERenderable& renderable, IEMesh& mesh)
 {
     QOpenGLExtraFunctions* glFunc = QOpenGLContext::currentContext()->extraFunctions();
 
-    switch(renderable->getRenderType())
+    switch(renderable.getRenderType())
     {
     case IERenderable::RenderType::Vertex:
     {
-        GLenum mode = renderable->getDrawMode();
-        int count = mesh->getPosVertices().size();
+        GLenum mode = renderable.getDrawMode();
+        int count = mesh.getPosVertices().size();
         glFunc->glDrawArrays(mode, 0, count);
         break;
     }
     case IERenderable::RenderType::Index:
     {
-        GLenum mode = renderable->getDrawMode();
-        int count = mesh->getIndices().size();
+        GLenum mode = renderable.getDrawMode();
+        int count = mesh.getIndices().size();
         glFunc->glDrawElements(mode, count, GL_UNSIGNED_INT, 0);
         break;
     }
     case IERenderable::RenderType::I_Vertex:
     {
-        GLenum mode = renderable->getDrawMode();
-        int count = mesh->getPosVertices().size();
-        int instanceCount = renderable->shownInstanceCount();
+        GLenum mode = renderable.getDrawMode();
+        int count = mesh.getPosVertices().size();
+        int instanceCount = renderable.shownInstanceCount();
         glFunc->glDrawArraysInstanced(mode, 0, count, instanceCount);
         break;
     }
     case IERenderable::RenderType::I_Index:
     {
-        GLenum mode = renderable->getDrawMode();
-        int count = mesh->getIndices().size();
-        int instanceCount = renderable->shownInstanceCount();
+        GLenum mode = renderable.getDrawMode();
+        int count = mesh.getIndices().size();
+        int instanceCount = renderable.shownInstanceCount();
         glFunc->glDrawElementsInstanced(mode, count, GL_UNSIGNED_INT, 0, instanceCount);
         break;
     }
@@ -146,8 +144,8 @@ void IERenderEngine::draw(IERenderable* renderable, IEMesh* mesh)
     }
 }
 
-void IERenderEngine::cleanup(IEShader* shader, IERenderable* renderable)
+void IERenderEngine::cleanup(IEShader& shader, IERenderable& renderable)
 {
-    shader->release();
-    renderable->release();
+    shader.release();
+    renderable.release();
 }

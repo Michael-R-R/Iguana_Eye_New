@@ -22,13 +22,14 @@ void IECameraManager::shutdown()
     resourceContainer->clear();
 }
 
-bool IECameraManager::add(const unsigned long long key, IECamera* value)
+bool IECameraManager::add(const unsigned long long key, std::unique_ptr<IECamera> value)
 {
-    if(!IEManager::add(key, value))
+    IECamera& temp = *value;
+    if(!IEManager::add(key, std::move(value)))
         return false;
 
-    if(value->getType() == IEResource::Type::Game)
-        emit added(key, value->getFilePath());
+    if(temp.getType() == IEResource::Type::Game)
+        emit added(key, temp.getFilePath());
 
     return true;
 }

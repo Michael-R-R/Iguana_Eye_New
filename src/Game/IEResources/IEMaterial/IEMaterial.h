@@ -30,7 +30,7 @@ public:
     bool operator<(const IEMaterial& other) { return IEResource::operator<(other); }
     bool operator>(const IEMaterial& other) { return IEResource::operator>(other); }
 
-    void bindUniformData(IEShader* shader) const;
+    void bindUniformData(IEShader& shader) const;
 
     QColor getObjectColor() const { return objectColor; }
     unsigned long long getAtlasTexId() const { return atlasTexId; }

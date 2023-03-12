@@ -22,13 +22,14 @@ void IEShaderManager::shutdown()
     resourceContainer->clear();
 }
 
-bool IEShaderManager::add(const unsigned long long key, IEShader* value)
+bool IEShaderManager::add(const unsigned long long key, std::unique_ptr<IEShader> value)
 {
-    if(!IEManager::add(key, value))
+    IEShader& temp = *value;
+    if(!IEManager::add(key, std::move(value)))
         return false;
 
-    if(value->getType() == IEResource::Type::Game)
-        emit added(key, value->getFilePath());
+    if(temp.getType() == IEResource::Type::Game)
+        emit added(key, temp.getFilePath());
 
     return true;
 }
@@ -55,8 +56,8 @@ bool IEShaderManager::changeKey(const unsigned long long oldKey, const unsigned 
 
 void IEShaderManager::buildAllShaders()
 {
-    for(auto& shader : resourceContainer->getResources())
+    for(auto& i : *resourceContainer->getResources())
     {
-        shader->build();
+        i.second->build();
     }
 }

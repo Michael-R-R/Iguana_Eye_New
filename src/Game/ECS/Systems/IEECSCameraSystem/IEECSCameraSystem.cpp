@@ -76,8 +76,8 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     auto& pos = transformSystem->getPosition(transformIndex);
     auto& rot = transformSystem->getRotation(transformIndex);
 
-    IECamera* activeCamera = cameraManager->getValue(activeId);
-    activeCamera->updateView(pos, rot);
+    IECamera& activeCamera = cameraManager->getValue(activeId);
+    activeCamera.updateView(pos, rot);
 }
 
 int IEECSCameraSystem::getActiveIndex() const
@@ -93,17 +93,17 @@ IEEntity IEECSCameraSystem::getActiveEntity() const
     return data.entity[activeIndex];
 }
 
-IECamera* IEECSCameraSystem::getActiveCamera() const
+IECamera& IEECSCameraSystem::getActiveCamera() const
 {
     auto id = (indexBoundCheck(activeIndex)) ? data.cameraId[activeIndex] : cameraManager->getDefaultResourceId();
 
     return cameraManager->getValue(id);
 }
 
-IECamera* IEECSCameraSystem::getAttachedCamera(const int index) const
+IECamera& IEECSCameraSystem::getAttachedCamera(const int index) const
 {
     if(!indexBoundCheck(index))
-        return nullptr;
+        return cameraManager->getValue(data.cameraId[0]);
 
     return cameraManager->getValue(data.cameraId[index]);
 }

@@ -19,7 +19,7 @@ public:
     void startup(const GameStartEvent& event) override;
     void shutdown() override;
 
-    bool add(const unsigned long long key, IEShader* value) override;
+    bool add(const unsigned long long key, std::unique_ptr<IEShader> value) override;
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
 
@@ -34,13 +34,15 @@ signals:
 public:
     friend QDataStream& operator<<(QDataStream& out, const IEShaderManager& manager)
     {
-        auto& resources = manager.getResourceContainer().getResources();
+        const auto* resources = manager.getResourceContainer().getResources();
 
-        out << (int)resources.size();
+        out << (int)resources->size();
 
-        for(auto item : resources)
+        for(auto& item : *resources)
         {
-            out << item->getFilePath() << item->getId() << item->getType();
+            out << item.second->getFilePath()
+                << item.second->getId()
+                << item.second->getType();
         }
 
         return out;
@@ -54,7 +56,7 @@ public:
         QString path = "";
         unsigned long long id = 0;
         IEResource::Type type;
-        IEShader* shader = nullptr;
+        std::unique_ptr<IEShader> shader = nullptr;
 
         for(int i = 0; i < size; i++)
         {
@@ -63,14 +65,11 @@ public:
             if(type == IEResource::Type::Editor)
                 continue;
 
-            shader = new IEShader(path, id);
-            if(!IEGlslImporter::importGlsl(path, shader))
-            {
-                delete shader;
+            shader = std::make_unique<IEShader>(path, id);
+            if(!IEGlslImporter::importGlsl(path, *shader))
                 continue;
-            }
 
-            manager.add(id, shader);
+            manager.add(id, std::move(shader));
         }
 
         return in;

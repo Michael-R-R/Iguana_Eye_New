@@ -2,7 +2,7 @@
 #include "IEShader.h"
 #include "IEFile.h"
 
-bool IEGlslImporter::importGlsl(const QString& path, IEShader* shader)
+bool IEGlslImporter::importGlsl(const QString& path, IEShader& shader)
 {
     if(path.lastIndexOf(".glsl") < 0)
         return false;
@@ -14,8 +14,8 @@ bool IEGlslImporter::importGlsl(const QString& path, IEShader* shader)
     if(vSrc.isEmpty() || fSrc.isEmpty())
         return false;
 
-    shader->setVertexSrc(vSrc);
-    shader->setFragmentSrc(fSrc);
+    shader.setVertexSrc(vSrc);
+    shader.setFragmentSrc(fSrc);
 
     return true;
 }
