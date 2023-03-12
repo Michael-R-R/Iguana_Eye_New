@@ -33,7 +33,9 @@ void EGridRenderable::setup(IEMeshManager& meshManager,
     this->setMeshId(meshId);
     this->setMaterialId(materialId);
     this->setShaderId(shaderId);
-    this->addVec3Buffer("aPos", new IEVertexBuffer<QVector3D>(mesh->getPosVertices(), 12, 3, 0, 0, 0));
+
+    auto posBuffer = std::make_unique<IEVertexBuffer<QVector3D>>(mesh->getPosVertices(), 12, 3, 0, 0, 0);
+    this->addVec3Buffer("aPos", std::move(posBuffer));
     this->build(*shader);
 
     meshManager.add(meshId, std::move(mesh));

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QMap>
 #include <QString>
-#include <QVector>
+#include <map>
+#include <memory>
 
 #include "IEVertexBuffer.h"
 #include "Serializable.h"
@@ -10,7 +10,7 @@
 template <class T>
 class IEVertexBufferContainer : public Serializable
 {
-    QMap<QString, IEVertexBuffer<T>*> buffers;
+    std::map<QString, std::unique_ptr<IEVertexBuffer<T>>> buffers;
 
 public:
     IEVertexBufferContainer() :
@@ -22,31 +22,24 @@ public:
     IEVertexBufferContainer(const IEVertexBufferContainer& other) :
         buffers()
     {
-        QMap<QString, IEVertexBuffer<T>*> tempBuffers;
-        QMapIterator<QString, IEVertexBuffer<T>*> it(other.buffers);
-        while(it.hasNext())
+        for(auto& i : other.buffers)
         {
-            it.next();
-            tempBuffers[it.key()] = new IEVertexBuffer<T>();
+            auto tempBuffer = std::make_unique<IEVertexBuffer<T>>(*i.second);
+            buffers[i.first] = std::move(tempBuffer);
         }
-
-        buffers = tempBuffers;
     }
 
     ~IEVertexBufferContainer()
     {
-        clear();
+
     }
 
-    bool add(const QString key, IEVertexBuffer<T>* value)
+    bool add(const QString key, std::unique_ptr<IEVertexBuffer<T>> value)
     {
         if(doesExist(key))
-        {
-            delete value;
             return false;
-        }
 
-        buffers[key] = value;
+        buffers[key] = std::move(value);
 
         return true;
     }
@@ -56,50 +49,38 @@ public:
         if(!doesExist(key))
             return false;
 
-        auto temp = buffers[key];
         buffers.remove(key);
-        delete temp;
 
         return true;
     }
 
     void clear()
     {
-        QMapIterator<QString, IEVertexBuffer<T>*> it(buffers);
-        while(it.hasNext())
-        {
-            it.next();
-
-            auto temp = it.value();
-            buffers[it.key()] = nullptr;
-            delete temp;
-        }
-
         buffers.clear();
     }
 
     void releaseAllBuffers()
     {
-        for(auto& buffer : buffers)
+        for(auto& i : buffers)
         {
-            buffer->release();
+            i.second->release();
         }
     }
 
     bool doesExist(const QString& key) const
     {
-        return buffers.contains(key);
+        return (buffers.find(key) != buffers.end());
     }
 
-    IEVertexBuffer<T>* getValue(const QString& key) const
+    IEVertexBuffer<T>* value(const QString& key) const
     {
         if(!doesExist(key))
             return nullptr;
 
-        return buffers[key];
+        return &(*buffers.at(key));
     }
 
-    const QMap<QString, IEVertexBuffer<T>*>& getBuffers() const { return buffers; }
+    const std::map<QString, std::unique_ptr<IEVertexBuffer<T>>>* getBuffers() const { return &buffers; }
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override
     {
@@ -107,12 +88,9 @@ public:
 
         out << (int)container.buffers.size();
 
-        QMapIterator<QString, IEVertexBuffer<T>*> it(container.buffers);
-        while(it.hasNext())
+        for(auto& i : container.buffers)
         {
-            it.next();
-            out << it.key()
-                << *it.value();
+            out << i.first << *i.second;
         }
 
         return out;
@@ -126,18 +104,17 @@ public:
         in >> size;
 
         QString key;
-        IEVertexBuffer<T>* value = nullptr;
 
         container.clear();
         for(int i = 0; i < size; i++)
         {
             in >> key;
 
-            value = new IEVertexBuffer<T>();
+            auto value = std::make_unique<IEVertexBuffer<T>>();
 
             in >> *value;
 
-            container.buffers[key] = value;
+            container.buffers[key] = std::move(value);
         }
 
         return in;

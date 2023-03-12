@@ -33,11 +33,11 @@ protected:
     unsigned long long materialId;
     unsigned long long shaderId;
 
-    IEIndexBuffer* indexBuffer;
-    IEVertexBufferContainer<QVector2D>* vec2BufferContainer;
-    IEVertexBufferContainer<QVector3D>* vec3BufferContainer;
-    IEVertexBufferContainer<QVector4D>* vec4BufferContainer;
-    IEVertexBufferContainer<QMatrix4x4>* mat4BufferContainer;
+    std::unique_ptr<IEIndexBuffer> indexBuffer;
+    std::unique_ptr<IEVertexBufferContainer<QVector2D>> vec2BufferContainer;
+    std::unique_ptr<IEVertexBufferContainer<QVector3D>> vec3BufferContainer;
+    std::unique_ptr<IEVertexBufferContainer<QVector4D>> vec4BufferContainer;
+    std::unique_ptr<IEVertexBufferContainer<QMatrix4x4>> mat4BufferContainer;
     int shownCount;
     int hiddenCount;
 
@@ -65,11 +65,11 @@ public:
     bool operator<(const IERenderable& other) { return IEResource::operator<(other); }
     bool operator>(const IERenderable& other) { return IEResource::operator>(other); }
 
-    void addIndexBuffer(IEIndexBuffer* buffer);
-    void addVec2Buffer(const QString& key, IEVertexBuffer<QVector2D>* value);
-    void addVec3Buffer(const QString& key, IEVertexBuffer<QVector3D>* value);
-    void addVec4Buffer(const QString& key, IEVertexBuffer<QVector4D>* value);
-    void addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>* value);
+    void addIndexBuffer(std::unique_ptr<IEIndexBuffer> buffer);
+    void addVec2Buffer(const QString& key, std::unique_ptr<IEVertexBuffer<QVector2D>> value);
+    void addVec3Buffer(const QString& key, std::unique_ptr<IEVertexBuffer<QVector3D>> value);
+    void addVec4Buffer(const QString& key, std::unique_ptr<IEVertexBuffer<QVector4D>> value);
+    void addMat4Buffer(const QString& key, std::unique_ptr<IEVertexBuffer<QMatrix4x4>> value);
     void setVec2BufferData(const QString& key, const QVector<QVector2D>& data);
     void setVec3BufferData(const QString& key, const QVector<QVector3D>& data);
     void setVec4BufferData(const QString& key, const QVector<QVector4D>& data);
