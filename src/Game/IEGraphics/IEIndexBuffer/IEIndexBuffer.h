@@ -1,55 +1,21 @@
 #pragma once
 
-#include <QDataStream>
-
 #include "IEBuffer.h"
+#include "Serializable.h"
 
-class IEIndexBuffer : public IEBuffer<unsigned>
+class IEIndexBuffer : public IEBuffer<unsigned>, public Serializable
 {
 
 public:
-    IEIndexBuffer() :
-        IEBuffer(QOpenGLBuffer::IndexBuffer)
-    {
-
-    }
-
-    IEIndexBuffer(const QVector<unsigned>& data_) :
-        IEBuffer(QOpenGLBuffer::IndexBuffer, data_)
-    {
-
-    }
-
-    IEIndexBuffer(const IEIndexBuffer& other) :
-        IEBuffer(QOpenGLBuffer::IndexBuffer, other.bufferData)
-    {
-
-    }
+    IEIndexBuffer();
+    IEIndexBuffer(const QVector<unsigned>& data_);
+    IEIndexBuffer(const IEIndexBuffer& other);
 
     ~IEIndexBuffer() {}
 
-    void build(const int = -1) override
-    {
-        if(!this->isCreated())
-            this->create();
+    void build(const int = -1) override;
 
-        this->setUsagePattern(QOpenGLBuffer::StaticDraw);
-        this->bind();
-        this->allocate(bufferData.data(), (int)(bufferData.size() * sizeof(unsigned)));
-    }
-
-    friend QDataStream& operator<<(QDataStream& out, const IEIndexBuffer& buffer)
-    {
-        out << buffer.bufferData;
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEIndexBuffer& buffer)
-    {
-        in >> buffer.bufferData;
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

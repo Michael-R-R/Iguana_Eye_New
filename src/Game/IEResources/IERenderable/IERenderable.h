@@ -7,6 +7,7 @@
 #include <QVector4D>
 #include <QMatrix4x4>
 #include <gl/GL.h>
+#include <memory>
 
 #include "IEResource.h"
 #include "Serializable.h"
