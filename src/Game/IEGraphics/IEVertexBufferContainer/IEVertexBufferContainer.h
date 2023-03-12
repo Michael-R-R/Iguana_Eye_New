@@ -1,14 +1,14 @@
 #pragma once
 
-#include <QDataStream>
 #include <QMap>
 #include <QString>
 #include <QVector>
 
 #include "IEVertexBuffer.h"
+#include "Serializable.h"
 
 template <class T>
-class IEVertexBufferContainer
+class IEVertexBufferContainer : public Serializable
 {
     QMap<QString, IEVertexBuffer<T>*> buffers;
 
@@ -101,8 +101,10 @@ public:
 
     const QMap<QString, IEVertexBuffer<T>*>& getBuffers() const { return buffers; }
 
-    friend QDataStream& operator<<(QDataStream& out, const IEVertexBufferContainer<T>& container)
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override
     {
+        const auto& container = static_cast<const IEVertexBufferContainer&>(obj);
+
         out << (int)container.buffers.size();
 
         QMapIterator<QString, IEVertexBuffer<T>*> it(container.buffers);
@@ -116,8 +118,10 @@ public:
         return out;
     }
 
-    friend QDataStream& operator>>(QDataStream& in, IEVertexBufferContainer<T>& container)
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override
     {
+        auto& container = static_cast<IEVertexBufferContainer&>(obj);
+
         int size = 0;
         in >> size;
 

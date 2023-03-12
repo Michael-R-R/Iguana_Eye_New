@@ -428,3 +428,37 @@ void IERenderable::purgeInstanceValues(const int index)
     QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it4(mat4BufferContainer->getBuffers());
     while(it4.hasNext()) { it4.next(); removeMat4InstanceValue(it4.key(), index); }
 }
+
+QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& renderable = static_cast<const IERenderable&>(obj);
+
+    out << renderable.filePath << renderable.id
+        << renderable.type << renderable.renderType
+        << renderable.drawMode << renderable.meshId
+        << renderable.materialId << renderable.shaderId
+        << *renderable.indexBuffer << *renderable.vec2BufferContainer
+        << *renderable.vec3BufferContainer << *renderable.vec4BufferContainer
+        << *renderable.mat4BufferContainer << renderable.shownCount
+        << renderable.hiddenCount << renderable.uniformData
+        << renderable.isEdited;
+
+    return out;
+}
+
+QDataStream& IERenderable::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& renderable = static_cast<IERenderable&>(obj);
+
+    in >> renderable.filePath >> renderable.id
+       >> renderable.type >> renderable.renderType
+       >> renderable.drawMode >> renderable.meshId
+       >> renderable.materialId >> renderable.shaderId
+       >> *renderable.indexBuffer >> *renderable.vec2BufferContainer
+       >> *renderable.vec3BufferContainer >> *renderable.vec4BufferContainer
+       >> *renderable.mat4BufferContainer >> renderable.shownCount
+       >> renderable.hiddenCount >> renderable.uniformData
+       >> renderable.isEdited;
+
+    return in;
+}

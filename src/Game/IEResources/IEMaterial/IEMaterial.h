@@ -1,13 +1,12 @@
 #pragma once
 
-#include <QDataStream>
-
 #include "IEResource.h"
+#include "Serializable.h"
 #include "IEUniform.h"
 
 class IEShader;
 
-class IEMaterial : public IEResource
+class IEMaterial : public IEResource, public Serializable
 {
 protected:
     IEUniform uniformData;
@@ -49,37 +48,6 @@ public:
     void setHeightTexId(const unsigned long long val) { heightTexId = val; }
     void setIsEdited(const bool val) { isEdited = val; }
 
-    friend QDataStream& operator<<(QDataStream& out, const IEMaterial& material)
-    {
-        out << material.filePath
-            << material.id
-            << material.type
-            << material.uniformData
-            << material.objectColor
-            << material.atlasTexId
-            << material.diffuseTexId
-            << material.specularTexId
-            << material.normalTexId
-            << material.heightTexId
-            << material.isEdited;
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEMaterial& material)
-    {
-        in >> material.filePath
-           >> material.id
-           >> material.type
-           >> material.uniformData
-           >> material.objectColor
-           >> material.atlasTexId
-           >> material.diffuseTexId
-           >> material.specularTexId
-           >> material.normalTexId
-           >> material.heightTexId
-           >> material.isEdited;
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

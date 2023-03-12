@@ -40,3 +40,41 @@ void IEMaterial::bindUniformData(IEShader& shader) const
 {
     uniformData.bind(shader);
 }
+
+QDataStream& IEMaterial::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& material = static_cast<const IEMaterial&>(obj);
+
+    out << material.filePath
+        << material.id
+        << material.type
+        << material.uniformData
+        << material.objectColor
+        << material.atlasTexId
+        << material.diffuseTexId
+        << material.specularTexId
+        << material.normalTexId
+        << material.heightTexId
+        << material.isEdited;
+
+    return out;
+}
+
+QDataStream& IEMaterial::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& material = static_cast<IEMaterial&>(obj);
+
+    in >> material.filePath
+       >> material.id
+       >> material.type
+       >> material.uniformData
+       >> material.objectColor
+       >> material.atlasTexId
+       >> material.diffuseTexId
+       >> material.specularTexId
+       >> material.normalTexId
+       >> material.heightTexId
+       >> material.isEdited;
+
+    return in;
+}

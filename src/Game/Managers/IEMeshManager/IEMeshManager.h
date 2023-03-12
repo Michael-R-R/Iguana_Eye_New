@@ -1,14 +1,12 @@
 #pragma once
 
-#include <QDataStream>
-
 #include "IEResourceManager.h"
+#include "Serializable.h"
 #include "IEMesh.h"
-#include "IEObjImporter.h"
 
 class GameStartEvent;
 
-class IEMeshManager : public IEResourceManager<IEMesh>
+class IEMeshManager : public IEResourceManager<IEMesh>, public Serializable
 {
     Q_OBJECT
 
@@ -29,50 +27,6 @@ signals:
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IEMeshManager& manager)
-    {
-        out << (int)manager.resources.size();
-
-        for(auto& i : manager.resources)
-        {
-            auto& mesh = *i.second;
-
-            out << mesh.getType();
-
-            if(mesh.getType() != IEResource::Type::Game)
-                continue;
-
-            out << mesh.getFilePath() << mesh.getId();
-        }
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEMeshManager& manager)
-    {
-        int size = 0;
-        in >> size;
-
-        IEResource::Type type;
-        QString path = "";
-        unsigned long long id = 0;
-
-        for(int i = 0; i < size; i++)
-        {
-            in >> type;
-
-            if(type != IEResource::Type::Game)
-                continue;
-
-            in >> path >> id;
-
-            auto mesh = std::make_unique<IEMesh>(path, id);
-            if(!IEObjImporter::importMesh(path, *mesh))
-                continue;
-
-            manager.add(id, std::move(mesh));
-        }
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

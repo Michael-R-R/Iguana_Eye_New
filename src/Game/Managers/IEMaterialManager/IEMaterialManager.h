@@ -1,15 +1,12 @@
 #pragma once
 
-#include <QDataStream>
-
 #include "IEResourceManager.h"
+#include "Serializable.h"
 #include "IEMaterial.h"
-#include "IEFile.h"
-#include "IESerialize.h"
 
 class GameStartEvent;
 
-class IEMaterialManager: public IEResourceManager<IEMaterial>
+class IEMaterialManager: public IEResourceManager<IEMaterial>, public Serializable
 {
     Q_OBJECT
 
@@ -30,58 +27,6 @@ signals:
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IEMaterialManager& manager)
-    {
-        out << (int)manager.resources.size();
-
-        for(auto& i : manager.resources)
-        {
-            auto& material = *i.second;
-
-            out << material.getType();
-
-            if(material.getType() != IEResource::Type::Game)
-                continue;
-
-            if(material.getIsEdited())
-            {
-                if(!IEFile::doesPathExist(material.getFilePath()))
-                    IEFile::makePath(material.getFilePath());
-
-                if(IESerialize::write<IEMaterial>(material.getFilePath(), &material))
-                    material.setIsEdited(false);
-            }
-
-            out << material.getFilePath();
-        }
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEMaterialManager& manager)
-    {
-        int size = 0;
-        in >> size;
-
-        IEResource::Type type;
-        QString filePath = "";
-
-        for(int i = 0; i < size; i++)
-        {
-            in >> type;
-
-            if(type != IEResource::Type::Game)
-                continue;
-
-            in >> filePath;
-
-            auto material = std::make_unique<IEMaterial>();
-            if(!IESerialize::read<IEMaterial>(filePath, &(*material)))
-                continue;
-
-            manager.add(material->getId(), std::move(material));
-        }
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

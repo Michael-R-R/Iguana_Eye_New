@@ -1,14 +1,12 @@
 #pragma once
 
-#include <QDataStream>
-
 #include "IEResourceManager.h"
+#include "Serializable.h"
 #include "IEShader.h"
-#include "IEGlslImporter.h"
 
 class GameStartEvent;
 
-class IEShaderManager : public IEResourceManager<IEShader>
+class IEShaderManager : public IEResourceManager<IEShader>, public Serializable
 {
     Q_OBJECT
 
@@ -32,50 +30,6 @@ signals:
     void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IEShaderManager& manager)
-    {
-        out << (int)manager.resources.size();
-
-        for(auto& i : manager.resources)
-        {
-            auto& shader = *i.second;
-
-            out << shader.getType();
-
-            if(shader.getType() != IEResource::Type::Game)
-                continue;
-
-            out << shader.getFilePath() << shader.getId();
-        }
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IEShaderManager& manager)
-    {
-        int size = 0;
-        in >> size;
-
-        IEResource::Type type;
-        QString path = "";
-        unsigned long long id = 0;
-
-        for(int i = 0; i < size; i++)
-        {
-            in >> type;
-
-            if(type != IEResource::Type::Game)
-                continue;
-
-            in >> path >> id;
-
-            auto shader = std::make_unique<IEShader>(path, id);
-            if(!IEGlslImporter::importGlsl(path, *shader))
-                continue;
-
-            manager.add(id, std::move(shader));
-        }
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

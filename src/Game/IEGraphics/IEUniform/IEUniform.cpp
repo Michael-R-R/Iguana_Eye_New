@@ -164,42 +164,26 @@ void IEUniform::removeCol(const QString& name)
     colData.remove(name);
 }
 
-QDataStream& operator<<(QDataStream& out, const IEUniform& uniform)
+QDataStream& IEUniform::serialize(QDataStream& out, const Serializable& obj) const
 {
-    out << uniform.getIntData() << uniform.getFloatData()
-        << uniform.getVec2Data() << uniform.getVec3Data()
-        << uniform.getVec4Data() << uniform.getMat2Data()
-        << uniform.getMat3Data() << uniform.getMat4Data()
-        << uniform.getColData();
+    const auto& uniform = static_cast<const IEUniform&>(obj);
+
+    out << uniform.intData << uniform.floatData
+        << uniform.vec2Data << uniform.vec3Data
+        << uniform.vec4Data << uniform.mat2Data
+        << uniform.mat3Data << uniform.mat4Data
+        << uniform.colData;
 
     return out;
 }
 
-QDataStream& operator>>(QDataStream& in, IEUniform& uniform)
+QDataStream& IEUniform::deserialize(QDataStream& in, Serializable& obj)
 {
-    QMap<QString, int> intData;
-    QMap<QString, float> floatData;
-    QMap<QString, QVector2D> vec2Data;
-    QMap<QString, QVector3D> vec3Data;
-    QMap<QString, QVector4D> vec4Data;
-    QMap<QString, QMatrix2x2> mat2Data;
-    QMap<QString, QMatrix3x3> mat3Data;
-    QMap<QString, QMatrix4x4> mat4Data;
-    QMap<QString, QColor> colData;
+    auto& uniform = static_cast<IEUniform&>(obj);
 
-    in >> intData >> floatData >> vec2Data
-       >> vec3Data >> vec4Data >> mat2Data
-       >> mat3Data >> mat4Data >> colData;
-
-    uniform.setIntData(intData);
-    uniform.setFloatData(floatData);
-    uniform.setVec2Data(vec2Data);
-    uniform.setVec3Data(vec3Data);
-    uniform.setVec4Data(vec4Data);
-    uniform.setMat2Data(mat2Data);
-    uniform.setMat3Data(mat3Data);
-    uniform.setMat4Data(mat4Data);
-    uniform.setColData(colData);
+    in >> uniform.intData >> uniform.floatData >> uniform.vec2Data
+       >> uniform.vec3Data >> uniform.vec4Data >> uniform.mat2Data
+       >> uniform.mat3Data >> uniform.mat4Data >> uniform.colData;
 
     return in;
 }

@@ -1,5 +1,6 @@
 #include "IEShaderManager.h"
 #include "GameStartEvent.h"
+#include "IEGlslImporter.h"
 
 IEShaderManager::IEShaderManager() :
     IEResourceManager()
@@ -67,4 +68,55 @@ void IEShaderManager::buildAllShaders()
     {
         i.second->build();
     }
+}
+
+QDataStream& IEShaderManager::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& manager = static_cast<const IEShaderManager&>(obj);
+
+    out << (int)manager.resources.size();
+
+    for(auto& i : manager.resources)
+    {
+        auto& shader = *i.second;
+
+        out << shader.getType();
+
+        if(shader.getType() != IEResource::Type::Game)
+            continue;
+
+        out << shader.getFilePath() << shader.getId();
+    }
+
+    return out;
+}
+
+QDataStream& IEShaderManager::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& manager = static_cast<IEShaderManager&>(obj);
+
+    int size = 0;
+    in >> size;
+
+    IEResource::Type type;
+    QString path = "";
+    unsigned long long id = 0;
+
+    for(int i = 0; i < size; i++)
+    {
+        in >> type;
+
+        if(type != IEResource::Type::Game)
+            continue;
+
+        in >> path >> id;
+
+        auto shader = std::make_unique<IEShader>(path, id);
+        if(!IEGlslImporter::importGlsl(path, *shader))
+            continue;
+
+        manager.add(id, std::move(shader));
+    }
+
+    return in;
 }

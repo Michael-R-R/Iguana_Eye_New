@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QDataStream>
 #include <QOpenGLVertexArrayObject>
 #include <QSet>
 #include <QVector2D>
@@ -10,13 +9,14 @@
 #include <gl/GL.h>
 
 #include "IEResource.h"
+#include "Serializable.h"
 #include "IEIndexBuffer.h"
 #include "IEVertexBufferContainer.h"
 #include "IEUniform.h"
 
 class IEShader;
 
-class IERenderable : public QOpenGLVertexArrayObject, public IEResource
+class IERenderable : public QOpenGLVertexArrayObject, public IEResource, public Serializable
 {
 public:
     enum class RenderType
@@ -125,49 +125,6 @@ private:
     void purgeInstanceValues(const int index);
 
 public:
-    friend QDataStream& operator<<(QDataStream& out, const IERenderable& renderable)
-    {
-        out << renderable.filePath
-            << renderable.id
-            << renderable.type
-            << renderable.renderType
-            << renderable.drawMode
-            << renderable.meshId
-            << renderable.materialId
-            << renderable.shaderId
-            << *renderable.indexBuffer
-            << *renderable.vec2BufferContainer
-            << *renderable.vec3BufferContainer
-            << *renderable.vec4BufferContainer
-            << *renderable.mat4BufferContainer
-            << renderable.shownCount
-            << renderable.hiddenCount
-            << renderable.uniformData
-            << renderable.isEdited;
-
-        return out;
-    }
-
-    friend QDataStream& operator>>(QDataStream& in, IERenderable& renderable)
-    {
-        in >> renderable.filePath
-           >> renderable.id
-           >> renderable.type
-           >> renderable.renderType
-           >> renderable.drawMode
-           >> renderable.meshId
-           >> renderable.materialId
-           >> renderable.shaderId
-           >> *renderable.indexBuffer
-           >> *renderable.vec2BufferContainer
-           >> *renderable.vec3BufferContainer
-           >> *renderable.vec4BufferContainer
-           >> *renderable.mat4BufferContainer
-           >> renderable.shownCount
-           >> renderable.hiddenCount
-           >> renderable.uniformData
-           >> renderable.isEdited;
-
-        return in;
-    }
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

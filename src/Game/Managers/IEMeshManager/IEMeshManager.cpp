@@ -1,5 +1,6 @@
 #include "IEMeshManager.h"
 #include "GameStartEvent.h"
+#include "IEObjImporter.h"
 
 IEMeshManager::IEMeshManager() :
     IEResourceManager()
@@ -59,4 +60,55 @@ bool IEMeshManager::changeKey(const unsigned long long oldKey, const unsigned lo
     emit keyChanged(oldKey, newKey);
 
     return true;
+}
+
+QDataStream& IEMeshManager::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const auto& manager = static_cast<const IEMeshManager&>(obj);
+
+    out << (int)manager.resources.size();
+
+    for(auto& i : manager.resources)
+    {
+        auto& mesh = *i.second;
+
+        out << mesh.getType();
+
+        if(mesh.getType() != IEResource::Type::Game)
+            continue;
+
+        out << mesh.getFilePath() << mesh.getId();
+    }
+
+    return out;
+}
+
+QDataStream& IEMeshManager::deserialize(QDataStream& in, Serializable& obj)
+{
+    auto& manager = static_cast<IEMeshManager&>(obj);
+
+    int size = 0;
+    in >> size;
+
+    IEResource::Type type;
+    QString path = "";
+    unsigned long long id = 0;
+
+    for(int i = 0; i < size; i++)
+    {
+        in >> type;
+
+        if(type != IEResource::Type::Game)
+            continue;
+
+        in >> path >> id;
+
+        auto mesh = std::make_unique<IEMesh>(path, id);
+        if(!IEObjImporter::importMesh(path, *mesh))
+            continue;
+
+        manager.add(id, std::move(mesh));
+    }
+
+    return in;
 }

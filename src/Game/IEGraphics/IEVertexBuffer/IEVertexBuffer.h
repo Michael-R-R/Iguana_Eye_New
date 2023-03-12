@@ -1,15 +1,15 @@
 #pragma once
 
-#include <QDataStream>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
 #include <QVector>
 
 #include "IEBuffer.h"
+#include "Serializable.h"
 
 template <class T>
-class IEVertexBuffer : public IEBuffer<T>
+class IEVertexBuffer : public IEBuffer<T>, public Serializable
 {
     int typeSize;
     int tuple;
@@ -102,29 +102,30 @@ public:
         this->release();
     }
 
-    bool getIsInstanced() const { return isInstanced; }
-
-    friend QDataStream& operator<<(QDataStream& out, const IEVertexBuffer<T>& buffer)
+    bool getIsInstanced() const
     {
-        out << buffer.bufferData
-            << buffer.typeSize
-            << buffer.tuple
-            << buffer.stride
-            << buffer.divisor
-            << buffer.ptrSize
+        return isInstanced;
+    }
+
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override
+    {
+        const auto& buffer = static_cast<const IEVertexBuffer&>(obj);
+
+        out << buffer.bufferData << buffer.typeSize
+            << buffer.tuple << buffer.stride
+            << buffer.divisor << buffer.ptrSize
             << buffer.isInstanced;
 
         return out;
     }
 
-    friend QDataStream& operator>>(QDataStream& in, IEVertexBuffer<T>& buffer)
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override
     {
-        in >> buffer.bufferData
-           >> buffer.typeSize
-           >> buffer.tuple
-           >> buffer.stride
-           >> buffer.divisor
-           >> buffer.ptrSize
+        auto& buffer = static_cast<IEVertexBuffer&>(obj);
+
+        in >> buffer.bufferData >> buffer.typeSize
+           >> buffer.tuple >> buffer.stride
+           >> buffer.divisor >> buffer.ptrSize
            >> buffer.isInstanced;
 
         return in;

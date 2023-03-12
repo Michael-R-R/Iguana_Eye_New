@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QDataStream>
-
 #include <QMap>
 #include <QString>
 #include <QVector2D>
@@ -12,9 +10,11 @@
 #include <QMatrix4x4>
 #include <QColor>
 
+#include "Serializable.h"
+
 class IEShader;
 
-class IEUniform
+class IEUniform : public Serializable
 {
     QMap<QString, int> intData;
     QMap<QString, float> floatData;
@@ -72,7 +72,7 @@ public:
     void setMat3Data(const QMap<QString, QMatrix3x3>& val) { mat3Data = val; }
     void setMat4Data(const QMap<QString, QMatrix4x4>& val) { mat4Data = val; }
     void setColData(const QMap<QString, QColor>& val) { colData = val; }
-};
 
-QDataStream& operator<<(QDataStream& out, const IEUniform& uniform);
-QDataStream& operator>>(QDataStream& in, IEUniform& uniform);
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
+};
