@@ -1,19 +1,17 @@
 #pragma once
 
-#include <QObject>
-
 #include "InputContainer.h"
 
-class EInput : public QObject
+class EInput
 {
-    std::unique_ptr<InputContainer> inputContainer;
+    InputContainer inputContainer;
 
 public:
-    EInput(QObject *parent = nullptr);
+    EInput();
     ~EInput();
 
     void startup();
 
-    InputContainer& getInputContainer() const { return *inputContainer; }
+    InputContainer& getInputContainer() { return inputContainer; }
 };
 

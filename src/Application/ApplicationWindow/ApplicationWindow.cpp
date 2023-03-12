@@ -76,7 +76,6 @@ void ApplicationWindow::startup()
 void ApplicationWindow::initGame()
 {
     game = std::make_unique<IEGame>(this);
-    game->init();
     connect(&(*game), &IEGame::initialized, this, &ApplicationWindow::startup);
 
     this->setCentralWidget(&(*game));
@@ -87,7 +86,6 @@ void ApplicationWindow::initEditor()
     #ifdef EDITOR_ENABLED
     clearActions();
     editor = std::make_unique<Editor>(this);
-    editor->init();
     #endif
 }
 
@@ -106,11 +104,9 @@ void ApplicationWindow::clearActions()
 void ApplicationWindow::newFile()
 {
     #ifdef EDITOR_ENABLED
-    editor = nullptr;
     initEditor();
     #endif
 
-    game = nullptr;
     initGame();
 }
 

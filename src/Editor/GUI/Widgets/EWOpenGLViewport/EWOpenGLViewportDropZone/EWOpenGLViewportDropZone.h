@@ -13,7 +13,7 @@ class EWOpenGLViewportDropZone : public QWidget
     Q_OBJECT
 
 public:
-    EWOpenGLViewportDropZone(QWidget* parent = nullptr);
+    EWOpenGLViewportDropZone();
     ~EWOpenGLViewportDropZone() {}
 
     void startup(const AppStartEvent& event);

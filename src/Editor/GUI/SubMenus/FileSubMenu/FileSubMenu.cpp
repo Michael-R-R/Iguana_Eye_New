@@ -22,9 +22,9 @@ FileSubMenu::~FileSubMenu()
 
 void FileSubMenu::setupActions(const AppStartEvent& event)
 {
-    auto& inputContainer = event.getEditor()->getInput()->getInputContainer();
-    auto windowManager = event.getEditor()->getUi()->getWindowManager();
-    auto applicationWindow = event.getAppWindow();
+    auto& inputContainer = event.getEditor().getInput().getInputContainer();
+    auto* windowManager = event.getEditor().getUi().getWindowManager();
+    auto* applicationWindow = event.getAppWindow();
 
     appendAction("New File", new NewGameFileAction(applicationWindow, inputContainer.getValue("New File"), this));
     appendAction("Open File", new OpenGameFileAction(applicationWindow, inputContainer.getValue("Open File"), this));

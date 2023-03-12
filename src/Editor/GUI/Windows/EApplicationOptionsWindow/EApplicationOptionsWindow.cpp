@@ -23,10 +23,10 @@ EApplicationOptionsWindow::~EApplicationOptionsWindow()
 
 void EApplicationOptionsWindow::startup(const AppStartEvent& event)
 {
-    auto* editorInput = event.getEditor()->getInput();
-    auto& editorInputContainer = editorInput->getInputContainer();
+    auto& editorInput = event.getEditor().getInput();
+    auto& editorInputContainer = editorInput.getInputContainer();
 
-    auto& gameInput = event.getGame()->getIEInput();
+    auto& gameInput = event.getGame().getIEInput();
     auto& gameInputContainer = gameInput.getInputContainer();
 
     selectOptionsWidget->setupGameGroupBox(gameInputContainer);

@@ -41,7 +41,6 @@ protected:
     void resizeGL(int w, int h) override;
 
 public:
-    void init();
     void startup();
     void shutdown();
 

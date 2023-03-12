@@ -5,9 +5,9 @@
 
 Editor::Editor(QObject* parent) :
     QObject(parent),
-    input(nullptr),
-    ui(nullptr),
-    gameFileDropZone(nullptr)
+    input(std::make_unique<EInput>()),
+    ui(std::make_unique<EGUI>(this)),
+    gameFileDropZone(std::make_unique<EWOpenGLViewportDropZone>())
 {
 
 }
@@ -15,13 +15,6 @@ Editor::Editor(QObject* parent) :
 Editor::~Editor()
 {
 
-}
-
-void Editor::init()
-{
-    input = new EInput(this);
-    ui = new EGUI(this);
-    gameFileDropZone = new EWOpenGLViewportDropZone();
 }
 
 void Editor::startup(const AppStartEvent& event)
@@ -37,7 +30,5 @@ void Editor::startup(const AppStartEvent& event)
 
 void Editor::shutdown()
 {
-    delete gameFileDropZone;
-    delete ui;
-    delete input;
+
 }

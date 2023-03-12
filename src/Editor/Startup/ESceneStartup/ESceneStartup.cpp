@@ -23,7 +23,7 @@ void ESceneStartup::startup(const AppStartEvent& event)
 
 void ESceneStartup::addDefaultCamera(const AppStartEvent& event)
 {
-    auto& scene = event.getGame()->getIEScene();
+    auto& scene = event.getGame().getIEScene();
     auto& cameraManager = scene.getCameraManager();
 
     QString path = "./resources/cameras/editor/default.iecam";
@@ -36,7 +36,7 @@ void ESceneStartup::addDefaultCamera(const AppStartEvent& event)
 
 void ESceneStartup::addDefaultMaterial(const AppStartEvent& event)
 {
-    auto& scene = event.getGame()->getIEScene();
+    auto& scene = event.getGame().getIEScene();
     auto& materialManager = scene.getMaterialManager();
 
     QString path = "./resources/materials/editor/default.iemat";
@@ -49,7 +49,7 @@ void ESceneStartup::addDefaultMaterial(const AppStartEvent& event)
 
 void ESceneStartup::addDefaultShader(const AppStartEvent& event)
 {
-    auto& scene = event.getGame()->getIEScene();
+    auto& scene = event.getGame().getIEScene();
     auto& shaderManager = scene.getShaderManager();
 
     QString path = "./resources/shaders/editor/default.glsl";
@@ -64,7 +64,7 @@ void ESceneStartup::addDefaultShader(const AppStartEvent& event)
 
 void ESceneStartup::buildGridRenderable(const AppStartEvent& event)
 {
-    auto& scene = event.getGame()->getIEScene();
+    auto& scene = event.getGame().getIEScene();
     auto& meshManager = scene.getMeshManager();
     auto& materialManager = scene.getMaterialManager();
     auto& shaderManager = scene.getShaderManager();

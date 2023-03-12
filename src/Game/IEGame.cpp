@@ -11,9 +11,9 @@ IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(std::make_unique<QSurfaceFormat>()),
     glFunc(nullptr), glExtraFunc(nullptr),
-    time(nullptr), input(nullptr),
-    scriptEngine(nullptr), renderEngine(nullptr),
-    scene(nullptr),
+    time(std::make_unique<IETime>(16, 16)), input(std::make_unique<IEInput>(this)),
+    scriptEngine(std::make_unique<IEScriptEngine>()), renderEngine(std::make_unique<IERenderEngine>()),
+    scene(std::make_unique<IEScene>()),
     viewportWidth(800), viewportHeight(600)
 {
     this->setFocusPolicy(Qt::StrongFocus);
@@ -61,15 +61,6 @@ void IEGame::resizeGL(int w, int h)
     viewportHeight = h;
 
     glFunc->glViewport(0, 0, w, h);
-}
-
-void IEGame::init()
-{
-    time = std::make_unique<IETime>(16, 16);
-    input = std::make_unique<IEInput>(this);
-    scriptEngine = std::make_unique<IEScriptEngine>();
-    renderEngine = std::make_unique<IERenderEngine>();
-    scene = std::make_unique<IEScene>();
 }
 
 void IEGame::startup()

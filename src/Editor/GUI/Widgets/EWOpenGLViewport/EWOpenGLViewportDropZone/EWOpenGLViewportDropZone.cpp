@@ -3,17 +3,17 @@
 #include "IEGame.h"
 #include <QFileInfo>
 
-EWOpenGLViewportDropZone::EWOpenGLViewportDropZone(QWidget* parent) :
-    QWidget(parent)
+EWOpenGLViewportDropZone::EWOpenGLViewportDropZone() :
+    QWidget()
 {
 
 }
 
 void EWOpenGLViewportDropZone::startup(const AppStartEvent& event)
 {
-    auto host = event.getGame();
-    host->setAcceptDrops(true);
-    host->installEventFilter(this);
+    auto& host = event.getGame();
+    host.setAcceptDrops(true);
+    host.installEventFilter(this);
 }
 
 bool EWOpenGLViewportDropZone::eventFilter(QObject* watched, QEvent* event)

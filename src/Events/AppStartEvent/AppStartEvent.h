@@ -16,7 +16,7 @@ public:
     ~AppStartEvent();
 
     ApplicationWindow* getAppWindow() const;
-    Editor* getEditor() const;
-    IEGame* getGame() const;
+    Editor& getEditor() const;
+    IEGame& getGame() const;
 };
 
