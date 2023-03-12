@@ -33,9 +33,6 @@ IEShader::~IEShader()
 
 void IEShader::build()
 {
-    if(id == 0)
-        return;
-
     if(this->shaders().size() > 0)
         this->removeAllShaders();
 

@@ -49,12 +49,7 @@ public:
         return resourceContainer->doesExist(key);
     }
 
-    bool doesExist(const T* value) const
-    {
-        return resourceContainer->doesExist(value);
-    }
-
-    T& getValue(const unsigned long long key) const
+    T* getValue(const unsigned long long key) const
     {
         return resourceContainer->getValue(key);
     }

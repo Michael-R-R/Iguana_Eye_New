@@ -79,7 +79,7 @@ public:
 
     QVector<unsigned long long> massReplaceRenderableId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeRenderableId(const unsigned long long idToPurge);
-    IERenderable& getAttachedRenderable(const int index);
+    IERenderable* getAttachedRenderable(const int index);
 
     unsigned long long getRenderableId(const int index) const;
     int getShownInstanceIndex(const int index) const;

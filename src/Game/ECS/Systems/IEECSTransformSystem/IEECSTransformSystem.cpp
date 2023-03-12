@@ -96,23 +96,23 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
             const int childIndex = renderableSystem->lookUpIndex(itChild.key());
             const unsigned long long renderableId = renderableSystem->getRenderableId(childIndex);
             const int childInstanceIndex = renderableSystem->getShownInstanceIndex(childIndex);
-            auto renderable = renderableManager->getValue(renderableId);
-            if(renderable.getId() == 0)
+            auto* renderable = renderableManager->getValue(renderableId);
+            if(!renderable)
                 continue;
 
             QMatrix4x4& transform = data.transform[itChild.value()];
-            renderable.setMat4InstanceValue("aModel", childInstanceIndex, transform);
+            renderable->setMat4InstanceValue("aModel", childInstanceIndex, transform);
         }
 
         const int parentIndex = renderableSystem->lookUpIndex(itParent.key());
         const unsigned long long renderableId = renderableSystem->getRenderableId(parentIndex);
         const int parentInstanceIndex = renderableSystem->getShownInstanceIndex(parentIndex);
-        auto renderable = renderableManager->getValue(renderableId);
-        if(renderable.getId() == 0)
+        auto* renderable = renderableManager->getValue(renderableId);
+        if(!renderable)
             continue;
 
         QMatrix4x4& transform = data.transform[itParent.value()];
-        renderable.setMat4InstanceValue("aModel", parentInstanceIndex, transform);
+        renderable->setMat4InstanceValue("aModel", parentInstanceIndex, transform);
     }
 
     dirtyParents.clear();

@@ -16,18 +16,18 @@ SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shader
         if(id == 0)
             return;
 
-        auto& shader = shaderManager.getValue(id);
-        if(shader.getId() == 0)
+        auto* shader = shaderManager.getValue(id);
+        if(!shader)
             return;
 
-        const QString& path = shader.getFilePath();
+        const QString& path = shader->getFilePath();
         editor->saveContentToFile(path);
 
         QString vSrc = editor->getVertSrcEditor()->getTextContent();
         QString fSrc = editor->getFragSrcEditor()->getTextContent();
 
-        shader.setVertexSrc(vSrc);
-        shader.setFragmentSrc(fSrc);
+        shader->setVertexSrc(vSrc);
+        shader->setFragmentSrc(fSrc);
     });
 
     connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)

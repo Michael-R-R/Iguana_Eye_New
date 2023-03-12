@@ -49,8 +49,8 @@ public:
 
     int getActiveIndex() const;
     IEEntity getActiveEntity() const;
-    IECamera& getActiveCamera() const;
-    IECamera& getAttachedCamera(const int index) const;
+    IECamera* getActiveCamera() const;
+    IECamera* getAttachedCamera(const int index) const;
     void setActiveIndex(const int val);
 
     unsigned long long getCameraId(const int index) const;

@@ -62,10 +62,10 @@ void IERenderableManager::buildAllRenderables(const GameStartEvent& event)
 
     for(auto& i : *resourceContainer->getResources())
     {
-        auto& shader = shaderManager.getValue(i.second->getShaderId());
-        if(shader.getId() == 0)
+        auto* shader = shaderManager.getValue(i.second->getShaderId());
+        if(!shader)
             continue;
 
-        i.second->build(shader);
+        i.second->build(*shader);
     }
 }

@@ -56,24 +56,24 @@ void IERenderEngine::shutdown()
 
 void IERenderEngine::onRenderFrame()
 {
-    auto& camera = cameraSystem->getActiveCamera();
+    auto* camera = cameraSystem->getActiveCamera();
 
     const auto* renderables = renderableManager->getResourceContainer().getResources();
     for(auto& i : *renderables)
     {
-        auto& mesh = meshManager->getValue(i.second->getMeshId());
-        auto& material = materialManager->getValue(i.second->getMaterialId());
-        auto& shader = shaderManager->getValue(i.second->getShaderId());
-        if(mesh.getId() == 0 || material.getId() == 0 || shader.getId() == 0)
+        auto* mesh = meshManager->getValue(i.second->getMeshId());
+        auto* material = materialManager->getValue(i.second->getMaterialId());
+        auto* shader = shaderManager->getValue(i.second->getShaderId());
+        if(!mesh || !material || !shader)
             continue;
 
-        prepareShader(shader);
+        prepareShader(*shader);
         prepareRenderable(*i.second);
-        prepareViewProjection(shader, camera);
-        prepareUniformData(shader, material);
-        prepareUniformData(shader, *i.second);
-        draw(*i.second, mesh);
-        cleanup(shader, *i.second);
+        prepareViewProjection(*shader, *camera);
+        prepareUniformData(*shader, *material);
+        prepareUniformData(*shader, *i.second);
+        draw(*i.second, *mesh);
+        cleanup(*shader, *i.second);
     }
 }
 

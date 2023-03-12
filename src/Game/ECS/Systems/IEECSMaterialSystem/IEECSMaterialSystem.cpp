@@ -96,10 +96,10 @@ QVector<unsigned long long> IEECSMaterialSystem::massPurgeMaterialId(const unsig
     return result;
 }
 
-IEMaterial& IEECSMaterialSystem::getAttachedMaterial(const int index)
+IEMaterial* IEECSMaterialSystem::getAttachedMaterial(const int index)
 {
     if(!indexBoundCheck(index))
-        return materialManager->getValue(data.materialId[0]);
+        return nullptr;
 
     return materialManager->getValue(data.materialId[index]);
 }

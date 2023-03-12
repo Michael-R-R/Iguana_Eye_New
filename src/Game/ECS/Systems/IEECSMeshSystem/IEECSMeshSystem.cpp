@@ -96,10 +96,10 @@ QVector<unsigned long long> IEECSMeshSystem::massPurgeMeshId(const unsigned long
     return result;
 }
 
-IEMesh& IEECSMeshSystem::getAttachedMesh(const int index)
+IEMesh* IEECSMeshSystem::getAttachedMesh(const int index)
 {
     if(!indexBoundCheck(index))
-        return meshManager->getValue(data.meshId[0]);
+        return nullptr;
 
     return meshManager->getValue(data.meshId[index]);
 }

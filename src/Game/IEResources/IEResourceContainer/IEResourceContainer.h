@@ -14,7 +14,7 @@ public:
     IEResourceContainer() :
         IEObject(), resources()
     {
-        IEResourceContainer::add(0, std::move(std::make_unique<T>()));
+
     }
 
     ~IEResourceContainer()
@@ -62,12 +62,12 @@ public:
         resources.clear();
     }
 
-    T& getValue(const unsigned long long key) const
+    T* getValue(const unsigned long long key) const
     {
         if(!doesExist(key))
-            return *resources.at(0);
+            return nullptr;
 
-        return *resources.at(key);
+        return &(*resources.at(key));
     }
 
     bool doesExist(const unsigned long long key) const
