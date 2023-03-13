@@ -10,6 +10,6 @@ class LuaGlobalECS
 
 public:
     LuaGlobalECS(IEECS& ecs_, sol::table& gameTable);
-    ~LuaGlobalECS();
+    ~LuaGlobalECS() {}
 };
 

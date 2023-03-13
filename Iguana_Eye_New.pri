@@ -167,8 +167,10 @@ INCLUDEPATH += $$PWD/src/Game/Scripting \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/Globals \
     $$PWD/src/Game/Scripting/Globals/LuaGlobalECS \
+    $$PWD/src/Game/Scripting/Globals/LuaGlobalEnum \
     $$PWD/src/Game/Scripting/Globals/LuaGlobalInput \
     $$PWD/src/Game/Scripting/Globals/LuaGlobalTime \
+    $$PWD/src/Game/Scripting/Globals/LuaGlobalType \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/Scripts \
     $$PWD/src/Game/Scripting/Scripts/IEEntityScript \

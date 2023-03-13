@@ -5,7 +5,7 @@ enum class IEComponentType : unsigned long long
     Name = 1,                // implemented
     Hierarchy = 2,           // implemented
     Input = 4,               // implemented
-    Script = 8,              //
+    Script = 8,              // implemented
     Physics = 16,            //
     Transform = 32,          // implemented
     Camera = 64,             // implemented

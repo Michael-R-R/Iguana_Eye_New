@@ -7,8 +7,3 @@ LuaGlobalECS::LuaGlobalECS(IEECS& ecs_, sol::table& gameTable) :
     gameTable["ECS"] = this;
     gameTable.new_usertype<LuaGlobalECS>("", sol::constructors<>());
 }
-
-LuaGlobalECS::~LuaGlobalECS()
-{
-
-}
