@@ -2,21 +2,22 @@
 
 #include <QMenu>
 #include <QString>
-#include <QMap>
 #include <QAction>
+#include <map>
+#include <memory>
 
 class SubMenu : public QMenu
 {
-    QMap<QString, QAction*> actionCollection;
+    std::map<QString, std::unique_ptr<QAction>> actionCollection;
 
 public:
     SubMenu(QString title, QWidget* parent = nullptr);
     ~SubMenu();
 
-    bool appendAction(const QString title, QAction* action);
-    bool removeAction(const QString& title);
-    bool doesExist(const QString& title);
+    bool appendAction(const QString& key, std::unique_ptr<QAction> action);
+    bool removeAction(const QString& key);
+    bool doesExist(const QString& key);
 
-    QAction* getAction(const QString& title);
+    QAction* getAction(const QString& key);
 };
 

@@ -17,5 +17,5 @@ void EWGlslEditorEditMenu::startup(const AppStartEvent& event, EWGlslEditor* edi
     auto& inputContainer = event.getEditor().getInput().getInputContainer();
     auto& shaderManager = event.getGame().getIEScene().getShaderManager();
 
-    appendAction("Compile", new CompileShaderAction(editor, shaderManager, inputContainer.getValue(""), this));
+    appendAction("Compile", std::move(std::make_unique<CompileShaderAction>(editor, shaderManager, inputContainer.getValue(""), this)));
 }

@@ -14,5 +14,5 @@ void EWGlslEditorViewMenu::startup(const AppStartEvent& event, EWGlslEditor* edi
 {
     auto& inputContainer = event.getEditor().getInput().getInputContainer();
 
-    appendAction("Vertical/Horizontal", new ToggleGlslEditorViewAction(editor, inputContainer.getValue("Invalid"), this));
+    appendAction("Vertical/Horizontal", std::move(std::make_unique<ToggleGlslEditorViewAction>(editor, inputContainer.getValue("Invalid"), this)));
 }
