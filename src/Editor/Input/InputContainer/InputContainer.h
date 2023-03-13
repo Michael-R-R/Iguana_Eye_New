@@ -17,7 +17,7 @@ public:
     InputContainer();
     ~InputContainer();
 
-    bool addValue(const QString& key, const InputKey& value);
+    bool addValue(const QString key, InputKey value);
     bool removeValue(const QString& key);
     bool updateValue(const QString& key, const int modVal, const int keyVal);
     QString getKey(const int mod, const int key) const;
@@ -31,9 +31,6 @@ public:
 
 signals:
     void cleared();
-    void keyAdded(const QString& key, const InputKey& value);
-    void keyRemoved(const QString& key);
-    void keyUpdated(const QString& key, const InputKey& value);
 
 public:
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

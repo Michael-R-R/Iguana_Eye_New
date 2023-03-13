@@ -5,7 +5,8 @@
 #include "EGlslEditorWindow.h"
 #include "EFileExplorerWindow.h"
 
-EWindowManager::EWindowManager() :
+EWindowManager::EWindowManager(QObject* parent) :
+    QObject(parent),
     windowCollection()
 {
 
@@ -13,7 +14,7 @@ EWindowManager::EWindowManager() :
 
 EWindowManager::~EWindowManager()
 {
-
+    clear();
 }
 
 void EWindowManager::startup(const AppStartEvent& event)
@@ -25,92 +26,95 @@ void EWindowManager::startup(const AppStartEvent& event)
 
 void EWindowManager::showAll()
 {
-    for(auto& i : windowCollection)
+    foreach(auto item, windowCollection.values())
     {
-        if(i.second->getIsActive())
-            i.second->show();
+        if(item->getIsActive()) { item->show(); }
     }
 }
 
 void EWindowManager::hideAll()
 {
-    for(auto& i : windowCollection)
+    foreach(auto item, windowCollection.values())
     {
-        if(i.second->getIsActive())
-            i.second->hide();
+        if(item->getIsActive()) { item->hide(); }
     }
 }
 
-bool EWindowManager::appendWindow(const QString& key, std::unique_ptr<EWindow> value)
+bool EWindowManager::appendWindow(const QString title, EWindow* window)
 {
-    if(doesExist(key))
-        return false;
-
-    windowCollection[key] = std::move(value);
+    if(doesExist(title)) { return false; }
+    windowCollection[title] = window;
 
     return true;
 }
 
-bool EWindowManager::removeWindow(const QString& key)
+bool EWindowManager::removeWindow(const QString& title)
 {
-    if(!doesExist(key))
-        return false;
-
-    windowCollection.erase(key);
+    if(!doesExist(title)) { return false; }
+    auto temp = windowCollection[title];
+    windowCollection.remove(title);
+    delete temp;
 
     return true;
 }
 
-EWindow* EWindowManager::getValue(const QString& key)
+EWindow* EWindowManager::getValue(const QString& title) const
 {
-    if(!doesExist(key))
-        return nullptr;
-
-    return &(*windowCollection[key]);
+    if(!doesExist(title)) { return nullptr; }
+    return windowCollection[title];
 }
 
-bool EWindowManager::doesExist(const QString& key) const
+bool EWindowManager::doesExist(const QString& title) const
 {
-    return (windowCollection.find(key) != windowCollection.end());
+    return (windowCollection.find(title) != windowCollection.end());
 }
 
 void EWindowManager::clear()
 {
-    windowCollection.clear();
+    QMapIterator<QString, EWindow*> it(windowCollection);
+    while(it.hasNext())
+    {
+        it.next();
+
+        auto temp = it.value();
+        windowCollection[it.key()] = nullptr;
+        delete temp;
+    }
 }
 
 void EWindowManager::setupOptionsWindow(const AppStartEvent& event)
 {
     auto applicationWindow = event.getAppWindow();
 
-    auto optionsWindow = std::make_unique<EApplicationOptionsWindow>(applicationWindow);
+    auto optionsWindow = new EApplicationOptionsWindow(applicationWindow);
     optionsWindow->startup(event);
 
-    applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, &(*optionsWindow));
+    this->appendWindow("Options", optionsWindow);
 
-    this->appendWindow("Options", std::move(optionsWindow));
+    applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, optionsWindow);
 }
 
 void EWindowManager::setupGlslEditorWindow(const AppStartEvent& event)
 {
     auto applicationWindow = event.getAppWindow();
 
-    auto glslEditorWindow = std::make_unique<EGlslEditorWindow>(applicationWindow);
+    auto glslEditorWindow = new EGlslEditorWindow(applicationWindow);
     glslEditorWindow->startup(event);
 
-    applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, &(*glslEditorWindow));
+    this->appendWindow("GLSL Editor", glslEditorWindow);
 
-    this->appendWindow("GLSL Editor", std::move(glslEditorWindow));
+    applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, glslEditorWindow);
 }
 
 void EWindowManager::setupFileExplorerWindow(const AppStartEvent& event)
 {
     auto applicationWindow = event.getAppWindow();
 
-    auto fileExpWindow = std::make_unique<EFileExplorerWindow>(applicationWindow);
+    auto fileExpWindow = new EFileExplorerWindow(applicationWindow);
     fileExpWindow->startup();
 
-    applicationWindow->addDockWidget(Qt::BottomDockWidgetArea, &(*fileExpWindow));
+    this->appendWindow("File Explorer", fileExpWindow);
 
-    this->appendWindow("File Explorer", std::move(fileExpWindow));
+    applicationWindow->addDockWidget(Qt::BottomDockWidgetArea, fileExpWindow);
+
 }

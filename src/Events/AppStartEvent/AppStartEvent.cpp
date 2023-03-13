@@ -19,12 +19,12 @@ ApplicationWindow* AppStartEvent::getAppWindow() const
     return appWindow;
 }
 
-Editor& AppStartEvent::getEditor() const
+Editor* AppStartEvent::getEditor() const
 {
-    return editor;
+    return &editor;
 }
 
-IEGame& AppStartEvent::getGame() const
+IEGame* AppStartEvent::getGame() const
 {
-    return game;
+    return &game;
 }

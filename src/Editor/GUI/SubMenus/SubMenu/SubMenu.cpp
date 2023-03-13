@@ -12,36 +12,32 @@ SubMenu::~SubMenu()
 
 }
 
-bool SubMenu::appendAction(const QString& key, std::unique_ptr<QAction> action)
+bool SubMenu::appendAction(const QString title, QAction* action)
 {
-    if(doesExist(key))
-        return false;
-
-    this->addAction(&(*action));
-    actionCollection[key] = std::move(action);
+    if(doesExist(title)) { return false; }
+    actionCollection[title] = action;
+    this->addAction(action);
 
     return true;
 }
 
-bool SubMenu::removeAction(const QString& key)
+bool SubMenu::removeAction(const QString& title)
 {
-    if(!doesExist(key))
-        return false;
-
-    actionCollection.erase(key);
+    if(!doesExist(title)) { return false; }
+    auto temp = actionCollection[title];
+    actionCollection.remove(title);
+    delete temp;
 
     return true;
 }
 
-bool SubMenu::doesExist(const QString& key)
+bool SubMenu::doesExist(const QString& title)
 {
-    return (actionCollection.find(key) != actionCollection.end());
+    return (actionCollection.find(title) != actionCollection.end());
 }
 
-QAction* SubMenu::getAction(const QString& key)
+QAction* SubMenu::getAction(const QString& title)
 {
-    if(!doesExist(key))
-        return nullptr;
-
-    return &(*actionCollection[key]);
+    if(!doesExist(title)) { return nullptr; }
+    return actionCollection[title];
 }

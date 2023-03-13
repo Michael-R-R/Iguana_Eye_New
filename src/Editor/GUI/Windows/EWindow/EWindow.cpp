@@ -1,7 +1,7 @@
 #include "EWindow.h"
 #include "IEFile.h"
 
-EWindow::EWindow(const QString& title, QWidget* parent) :
+EWindow::EWindow(QString title, QWidget* parent) :
     QDockWidget(title, parent),
     permenentTitle(title),
     tempTitle(permenentTitle),

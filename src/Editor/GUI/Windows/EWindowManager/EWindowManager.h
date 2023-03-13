@@ -1,18 +1,18 @@
 #pragma once
 
-#include <map>
-#include <memory>
+#include <QObject>
+#include <QMap>
 
 #include "EWindow.h"
 
 class AppStartEvent;
 
-class EWindowManager
+class EWindowManager : public QObject
 {
-    std::map<QString, std::unique_ptr<EWindow>> windowCollection;
+    QMap<QString, EWindow*> windowCollection;
 
 public:
-    EWindowManager();
+    EWindowManager(QObject* parent = nullptr);
     ~EWindowManager();
 
     void startup(const AppStartEvent& event);
@@ -20,10 +20,10 @@ public:
     void showAll();
     void hideAll();
 
-    bool appendWindow(const QString& key, std::unique_ptr<EWindow> value);
-    bool removeWindow(const QString& key);
-    EWindow* getValue(const QString& key);
-    bool doesExist(const QString& key) const;
+    bool appendWindow(const QString title, EWindow* window);
+    bool removeWindow(const QString& title);
+    EWindow* getValue(const QString& title) const;
+    bool doesExist(const QString& title) const;
 
     void clear();
 

@@ -3,14 +3,14 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QString>
-#include <map>
+
+#include "SubMenu.h"
 
 class AppStartEvent;
-class SubMenu;
 
 class MainMenuBar : public QMenuBar
 {
-    std::map<QString, std::unique_ptr<SubMenu>> menuCollection;
+    QMap<QString, SubMenu*> menuCollection;
 
 public:
     MainMenuBar(QWidget* parent = nullptr);
@@ -18,11 +18,11 @@ public:
 
     void startup(const AppStartEvent& event);
 
-    bool appendSubMenu(const QString& key, std::unique_ptr<SubMenu> value);
-    bool removeSubMenu(const QString& key);
-    bool doesExist(const QString& key);
+    bool appendSubMenu(QString title, SubMenu* menu);
+    bool removeSubMenu(const QString& title);
+    bool doesExist(const QString& title);
 
-    SubMenu* getMenu(const QString& key);
+    SubMenu* getMenu(const QString& title);
     QAction* getMenuAction(const QString& menuTitle, const QString& actionTitle);
 
 private:

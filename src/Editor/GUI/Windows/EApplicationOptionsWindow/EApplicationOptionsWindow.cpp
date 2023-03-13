@@ -7,13 +7,13 @@
 
 EApplicationOptionsWindow::EApplicationOptionsWindow(QWidget* parent) :
     EWindow("Options", parent),
-    selectOptionsWidget(std::make_unique<EWSelectApplicationOption>(this))
+    selectOptionsWidget(new EWSelectApplicationOption(this))
 {
     this->setWindowFlags(Qt::WindowStaysOnTopHint);
     this->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetFloatable);
     this->resize(450, 250);
     this->setFloating(true);
-    this->setWidget(&(*selectOptionsWidget));
+    this->setWidget(selectOptionsWidget);
 }
 
 EApplicationOptionsWindow::~EApplicationOptionsWindow()
@@ -23,10 +23,10 @@ EApplicationOptionsWindow::~EApplicationOptionsWindow()
 
 void EApplicationOptionsWindow::startup(const AppStartEvent& event)
 {
-    auto& editorInput = event.getEditor().getInput();
-    auto& editorInputContainer = editorInput.getInputContainer();
+    auto* editorInput = event.getEditor()->getInput();
+    auto& editorInputContainer = editorInput->getInputContainer();
 
-    auto& gameInput = event.getGame().getIEInput();
+    auto& gameInput = event.getGame()->getIEInput();
     auto& gameInputContainer = gameInput.getInputContainer();
 
     selectOptionsWidget->setupGameGroupBox(gameInputContainer);

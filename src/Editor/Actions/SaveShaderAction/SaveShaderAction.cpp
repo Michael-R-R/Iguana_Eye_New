@@ -12,7 +12,7 @@ SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shader
 
     connect(this, &SaveShaderAction::triggered, this, [this, editor, &shaderManager]()
     {
-        unsigned long long id = editor->getShaderComboBox().getSelectedId();
+        unsigned long long id = editor->getShaderComboBox()->getSelectedId();
         if(id == 0)
             return;
 
@@ -23,27 +23,27 @@ SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shader
         const QString& path = shader->getFilePath();
         editor->saveContentToFile(path);
 
-        QString vSrc = editor->getVertSrcEditor().getTextContent();
-        QString fSrc = editor->getFragSrcEditor().getTextContent();
+        QString vSrc = editor->getVertSrcEditor()->getTextContent();
+        QString fSrc = editor->getFragSrcEditor()->getTextContent();
 
         shader->setVertexSrc(vSrc);
         shader->setFragmentSrc(fSrc);
     });
 
-    connect(&editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)
+    connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)
     {
         isShaderActive = (index > 0) ? true : false;
         if(!isShaderActive)
             this->setEnabled(false);
     });
 
-    connect(&editor->getVertSrcEditor(), &EWGlslSrcEditor::modified, this, [this, editor](const bool val)
+    connect(editor->getVertSrcEditor(), &EWGlslSrcEditor::modified, this, [this, editor](const bool val)
     {
         bool status = (isShaderActive) ? val : false;
         this->setEnabled(status);
     });
 
-    connect(&editor->getFragSrcEditor(), &EWGlslSrcEditor::modified, this, [this, editor](const bool val)
+    connect(editor->getFragSrcEditor(), &EWGlslSrcEditor::modified, this, [this, editor](const bool val)
     {
         bool status = (isShaderActive) ? val : false;
         this->setEnabled(status);

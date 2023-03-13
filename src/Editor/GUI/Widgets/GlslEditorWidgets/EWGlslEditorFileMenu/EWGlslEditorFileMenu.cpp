@@ -17,11 +17,11 @@ EWGlslEditorFileMenu::EWGlslEditorFileMenu(QWidget* parent) :
 
 void EWGlslEditorFileMenu::startup(const AppStartEvent& event, EWGlslEditor* editor)
 {
-    auto& inputContainer = event.getEditor().getInput().getInputContainer();
-    auto& shaderManager = event.getGame().getIEScene().getShaderManager();
+    auto& inputContainer = event.getEditor()->getInput()->getInputContainer();
+    auto& shaderManager = event.getGame()->getIEScene().getShaderManager();
 
-    appendAction("New Shader", std::move(std::make_unique<NewShaderAction>(editor, shaderManager, inputContainer.getValue(""), this)));
-    appendAction("Open Shader", std::move(std::make_unique<OpenShaderAction>(shaderManager, inputContainer.getValue(""), this)));
-    appendAction("Save Shader", std::move(std::make_unique<SaveShaderAction>(editor, shaderManager, inputContainer.getValue(""), this)));
-    appendAction("Save As Shader", std::move(std::make_unique<SaveAsShaderAction>(editor, shaderManager, inputContainer.getValue(""), this)));
+    appendAction("New Shader", new NewShaderAction(editor, shaderManager, inputContainer.getValue(""), this));
+    appendAction("Open Shader", new OpenShaderAction(shaderManager, inputContainer.getValue(""), this));
+    appendAction("Save Shader", new SaveShaderAction(editor, shaderManager, inputContainer.getValue(""), this));
+    appendAction("Save As Shader", new SaveAsShaderAction(editor, shaderManager, inputContainer.getValue(""), this));
 }

@@ -10,9 +10,9 @@ class AppStartEvent;
 
 class EGUI : public QObject
 {
-    std::unique_ptr<MainMenuBar> mainMenuBar;
-    std::unique_ptr<StatusBar> statusBar;
-    std::unique_ptr<EWindowManager> windowManager;
+    MainMenuBar* mainMenuBar;
+    StatusBar* statusBar;
+    EWindowManager* windowManager;
 
 public:
     EGUI(QObject* parent = nullptr);
@@ -20,9 +20,9 @@ public:
 
     void startup(const AppStartEvent& event);
 
-    MainMenuBar& getMainMenuBar() const { return *mainMenuBar; }
-    StatusBar& getStatusBar() const { return *statusBar; }
-    EWindowManager& getWindowManager() const { return *windowManager; }
+    MainMenuBar* getMainMenuBar() const { return mainMenuBar; }
+    StatusBar* getStatusBar() const { return statusBar; }
+    EWindowManager* getWindowManager() const { return windowManager; }
 
 public slots:
     void toggleUi(bool val);

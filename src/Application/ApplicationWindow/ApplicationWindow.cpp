@@ -76,6 +76,7 @@ void ApplicationWindow::startup()
 void ApplicationWindow::initGame()
 {
     game = std::make_unique<IEGame>(this);
+
     connect(&(*game), &IEGame::initialized, this, &ApplicationWindow::startup);
 
     this->setCentralWidget(&(*game));

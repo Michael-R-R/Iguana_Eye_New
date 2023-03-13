@@ -12,7 +12,7 @@ class EWindow : public QDockWidget
     bool isActive;
 
 public:
-    EWindow(const QString& title, QWidget* parent = nullptr);
+    EWindow(QString title, QWidget* parent = nullptr);
     ~EWindow();
 
     void modifyTitle(const QString& text);

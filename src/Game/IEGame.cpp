@@ -11,8 +11,10 @@ IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(std::make_unique<QSurfaceFormat>()),
     glFunc(nullptr), glExtraFunc(nullptr),
-    time(std::make_unique<IETime>(16, 16)), input(std::make_unique<IEInput>(this)),
-    scriptEngine(std::make_unique<IEScriptEngine>()), renderEngine(std::make_unique<IERenderEngine>()),
+    time(std::make_unique<IETime>(16, 16)),
+    input(std::make_unique<IEInput>(this)),
+    scriptEngine(std::make_unique<IEScriptEngine>()),
+    renderEngine(std::make_unique<IERenderEngine>()),
     scene(std::make_unique<IEScene>()),
     viewportWidth(800), viewportHeight(600)
 {

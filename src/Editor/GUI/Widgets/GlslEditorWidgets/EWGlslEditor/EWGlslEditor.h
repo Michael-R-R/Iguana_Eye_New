@@ -17,10 +17,10 @@ class EWGlslEditor : public QWidget
     QSplitter* hSplitter;
     bool isVerticalView;
 
-    std::unique_ptr<EWGlslEditorMenuBar> menuBar;
-    std::unique_ptr<EWShaderComboBox> shaderComboBox;
-    std::unique_ptr<EWGlslSrcEditor> vSrcEditor;
-    std::unique_ptr<EWGlslSrcEditor> fSrcEditor;
+    EWGlslEditorMenuBar* menuBar;
+    EWShaderComboBox* shaderComboBox;
+    EWGlslSrcEditor* vSrcEditor;
+    EWGlslSrcEditor* fSrcEditor;
 
 public:
     EWGlslEditor(QWidget* parent = nullptr);
@@ -28,9 +28,9 @@ public:
 
     void startup(const AppStartEvent& event);
 
-    EWShaderComboBox& getShaderComboBox() const { return *shaderComboBox; }
-    EWGlslSrcEditor& getVertSrcEditor() const { return *vSrcEditor; }
-    EWGlslSrcEditor& getFragSrcEditor() const { return *fSrcEditor; }
+    EWShaderComboBox* getShaderComboBox() const { return shaderComboBox; }
+    EWGlslSrcEditor* getVertSrcEditor() const { return vSrcEditor; }
+    EWGlslSrcEditor* getFragSrcEditor() const { return fSrcEditor; }
 
 public slots:
     void clearAll();

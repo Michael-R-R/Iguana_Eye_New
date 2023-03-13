@@ -1,5 +1,8 @@
 #pragma once
 
+#include <QEvent>
+#include <QMouseEvent>
+
 #include "EWindow.h"
 
 class AppStartEvent;
@@ -9,7 +12,7 @@ class EApplicationOptionsWindow : public EWindow
 {
     Q_OBJECT
 
-    std::unique_ptr<EWSelectApplicationOption> selectOptionsWidget;
+    EWSelectApplicationOption* selectOptionsWidget;
 
 public:
     EApplicationOptionsWindow(QWidget* parent = nullptr);

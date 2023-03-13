@@ -12,14 +12,12 @@ InputContainer::~InputContainer()
 
 }
 
-bool InputContainer::addValue(const QString& key, const InputKey& value)
+bool InputContainer::addValue(const QString key, InputKey value)
 {
     if(doesExist(key))
         return false;
 
     keys[key] = value;
-
-    emit keyAdded(key, value);
 
     return true;
 }
@@ -31,8 +29,6 @@ bool InputContainer::removeValue(const QString& key)
 
     keys.remove(key);
 
-    emit keyRemoved(key);
-
     return true;
 }
 
@@ -42,8 +38,6 @@ bool InputContainer::updateValue(const QString& key, const int modVal, const int
         return false;
 
     keys[key].update(modVal, keyVal);
-
-    emit keyUpdated(key, keys[key]);
 
     return true;
 }
