@@ -42,7 +42,7 @@ void IERenderEngine::startup(const RenderEngineStartEvent& event)
     cameraManager = &scene.getCameraManager();
 
     auto& ecs = scene.getECS();
-    cameraSystem = ecs.getComponent<IEECSCameraSystem>(IEComponentType::Camera);
+    cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
 }
 
 void IERenderEngine::shutdown()

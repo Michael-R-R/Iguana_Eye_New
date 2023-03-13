@@ -14,14 +14,14 @@ ECSOnUpdateEvent::ECSOnUpdateEvent(IEECS* ecs) :
     transform(nullptr), mesh(nullptr), material(nullptr),
     shader(nullptr), renderable(nullptr)
 {
-    name = ecs->getComponent<IEECSNameSystem>(IEComponentType::Name);
-    hierarchy = ecs->getComponent<IEECSHierarchySystem>(IEComponentType::Hierarchy);
-    input = ecs->getComponent<IEECSInputSystem>(IEComponentType::Input);
-    transform = ecs->getComponent<IEECSTransformSystem>(IEComponentType::Transform);
-    mesh = ecs->getComponent<IEECSMeshSystem>(IEComponentType::Mesh);
-    material = ecs->getComponent<IEECSMaterialSystem>(IEComponentType::Material);
-    shader = ecs->getComponent<IEECSShaderSystem>(IEComponentType::Shader);
-    renderable = ecs->getComponent<IEECSRenderableSystem>(IEComponentType::Renderable);
+    name = ecs->getComponent<IEECSNameSystem>("Name");
+    hierarchy = ecs->getComponent<IEECSHierarchySystem>("Hierarchy");
+    input = ecs->getComponent<IEECSInputSystem>("Input");
+    transform = ecs->getComponent<IEECSTransformSystem>("Transform");
+    mesh = ecs->getComponent<IEECSMeshSystem>("Mesh");
+    material = ecs->getComponent<IEECSMaterialSystem>("Material");
+    shader = ecs->getComponent<IEECSShaderSystem>("Shader");
+    renderable = ecs->getComponent<IEECSRenderableSystem>("Renderable");
 }
 
 ECSOnUpdateEvent::~ECSOnUpdateEvent()

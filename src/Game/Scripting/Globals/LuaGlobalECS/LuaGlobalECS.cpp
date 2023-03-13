@@ -13,10 +13,10 @@ LuaGlobalECS::LuaGlobalECS(IEECS& ecs_, sol::table& gameTable) :
 
 IEECSNameSystem* LuaGlobalECS::getNameComponent()
 {
-    return ecs.getComponent<IEECSNameSystem>(IEComponentType::Name);
+    return ecs.getComponent<IEECSNameSystem>("Name");
 }
 
 IEECSScriptSystem* LuaGlobalECS::getScriptComponent()
 {
-    return ecs.getComponent<IEECSScriptSystem>(IEComponentType::Script);
+    return ecs.getComponent<IEECSScriptSystem>("Script");
 }

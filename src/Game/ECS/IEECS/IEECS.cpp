@@ -41,15 +41,15 @@ void IEECS::startup(const GameStartEvent& event)
     onUpdateEvent = std::make_unique<ECSOnUpdateEvent>(this);
 
     // TODO test
-    auto* scriptSystem = this->getComponent<IEECSScriptSystem>(IEComponentType::Script);
+    auto* scriptSystem = this->getComponent<IEECSScriptSystem>("Script");
     IEEntity entity = this->create();
-    int index1 = this->attachComponent(entity, IEComponentType::Script);
+    int index1 = this->attachComponent(entity, "Script");
     unsigned long long id1 = IEHash::Compute("test1");
     scriptSystem->addScript(index1, IEEntityScript("./resources/scripts/test/test1.lua", id1));
     scriptSystem->initalizeScript(index1, id1);
 
     entity = this->create();
-    int index2 = this->attachComponent(entity, IEComponentType::Script);
+    int index2 = this->attachComponent(entity, "Script");
     unsigned long long id2 = IEHash::Compute("test2");
     scriptSystem->addScript(index2, IEEntityScript("./resources/scripts/test/test2.lua", id2));
     scriptSystem->initalizeScript(index2, id2);
@@ -75,9 +75,9 @@ IEEntity IEECS::create()
 {
     IEEntity entity = entityManager->create();
 
-    this->attachComponent(entity, IEComponentType::Name);
-    this->attachComponent(entity, IEComponentType::Hierarchy);
-    this->attachComponent(entity, IEComponentType::Transform);
+    this->attachComponent(entity, "Name");
+    this->attachComponent(entity, "Hierarchy");
+    this->attachComponent(entity, "Transform");
 
     emit entityCreated(entity);
 
@@ -87,7 +87,7 @@ IEEntity IEECS::create()
 void IEECS::remove(const IEEntity entity)
 {
     // Recursively remove child entities
-    auto* hierarchySystem = getComponent<IEECSHierarchySystem>(IEComponentType::Hierarchy);
+    auto* hierarchySystem = getComponent<IEECSHierarchySystem>("Hierarchy");
     int hierarchyIndex = hierarchySystem->lookUpIndex(entity);
     auto childrenList = hierarchySystem->getChildrenList(hierarchyIndex);
     for(auto& child : childrenList)
@@ -106,36 +106,40 @@ void IEECS::remove(const IEEntity entity)
     emit entityRemoved(entity);
 }
 
-int IEECS::attachComponent(const IEEntity entity, const IEComponentType type)
+int IEECS::attachComponent(const IEEntity entity, const QString& component)
 {
-    if(!doesSystemExist(type))
+    if(!doesSystemExist(component))
         return -1;
 
-    if(!entityManager->attachComponent(entity, (unsigned long long)type))
+    if(!entityManager->attachComponent(entity, component))
         return -1;
 
-    return systems[type]->attach(entity);
+    emit componentAttached(entity, component);
+
+    return systems[component]->attach(entity);
 }
 
-bool IEECS::detachComponent(const IEEntity entity, const IEComponentType type)
+bool IEECS::detachComponent(const IEEntity entity, const QString& component)
 {
-    if(!doesSystemExist(type))
+    if(!doesSystemExist(component))
         return false;
 
-    if(!entityManager->detachComponent(entity, (unsigned long long)type))
+    if(!entityManager->detachComponent(entity, component))
         return false;
 
-    return systems[type]->detach(entity);
+    emit componentDetached(entity, component);
+
+    return systems[component]->detach(entity);
 }
 
-bool IEECS::hasComponent(const IEEntity entity, const IEComponentType type) const
+bool IEECS::hasComponent(const IEEntity entity, const QString& component) const
 {
-    return entityManager->hasComponent(entity, (unsigned long long)type);
+    return entityManager->hasComponent(entity, component);
 }
 
-bool IEECS::doesSystemExist(const IEComponentType type) const
+bool IEECS::doesSystemExist(const QString& component) const
 {
-    return (systems.find(type) != systems.end());
+    return (systems.find(component) != systems.end());
 }
 
 int IEECS::entityCount() const
@@ -161,45 +165,27 @@ void IEECS::initSystems()
     auto shaderSystem = std::make_unique<IEECSShaderSystem>();
     auto renderableSystem = std::make_unique<IEECSRenderableSystem>();
 
-    systems[IEComponentType::Name] = std::move(nameSystem);
-    systems[IEComponentType::Hierarchy] = std::move(hierarchySystem);
-    systems[IEComponentType::Input] = std::move(inputSystem);
-    systems[IEComponentType::Script] = std::move(scriptSystem);
-    systems[IEComponentType::Transform] = std::move(transformSystem);
-    systems[IEComponentType::Camera] = std::move(cameraSystem);
-    systems[IEComponentType::Mesh] = std::move(meshSystem);
-    systems[IEComponentType::Material] = std::move(materialSystem);
-    systems[IEComponentType::Shader] = std::move(shaderSystem);
-    systems[IEComponentType::Renderable] = std::move(renderableSystem);
+    systems["Name"] = std::move(nameSystem);
+    systems["Hierarchy"] = std::move(hierarchySystem);
+    systems["Input"] = std::move(inputSystem);
+    systems["Script"] = std::move(scriptSystem);
+    systems["Transform"] = std::move(transformSystem);
+    systems["Camera"] = std::move(cameraSystem);
+    systems["Mesh"] = std::move(meshSystem);
+    systems["Material"] = std::move(materialSystem);
+    systems["Shader"] = std::move(shaderSystem);
+    systems["Renderable"] = std::move(renderableSystem);
 }
 
 QDataStream& IEECS::serialize(QDataStream& out, const Serializable& obj) const
 {
     const auto& ecs = static_cast<const IEECS&>(obj);
 
-    out << *ecs.entityManager << (int)ecs.systems.size();
+    out << *ecs.entityManager;
 
     for(auto& i : ecs.systems)
     {
-        out << i.first;
-
-        auto* value = &(*i.second);
-
-        switch(i.first)
-        {
-        case IEComponentType::Name: { out << *static_cast<IEECSNameSystem*>(value); break; }
-        case IEComponentType::Hierarchy: { out << *static_cast<IEECSHierarchySystem*>(value); break; }
-        case IEComponentType::Input: { out << *static_cast<IEECSInputSystem*>(value); break; }
-        case IEComponentType::Script: { out << *static_cast<IEECSScriptSystem*>(value); break; }
-        case IEComponentType::Physics: { break; }
-        case IEComponentType::Transform: { out << *static_cast<IEECSTransformSystem*>(value); break; }
-        case IEComponentType::Camera: { out << *static_cast<IEECSCameraSystem*>(value); break; }
-        case IEComponentType::Material: { out << *static_cast<IEECSMaterialSystem*>(value); break; }
-        case IEComponentType::Mesh: { out << *static_cast<IEECSMeshSystem*>(value); break; }
-        case IEComponentType::Shader: { out << *static_cast<IEECSShaderSystem*>(value); break; }
-        case IEComponentType::Renderable: { out << *static_cast<IEECSRenderableSystem*>(value); break; }
-        default: { break; }
-        }
+        out << *i.second;
     }
 
     return out;
@@ -209,31 +195,11 @@ QDataStream& IEECS::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& ecs = static_cast<IEECS&>(obj);
 
-    int size = 0;
-    in >> *ecs.entityManager >> size;
+    in >> *ecs.entityManager;
 
-    IEComponentType type;
-    for(int i = 0; i < size; i++)
+    for(auto& i : ecs.systems)
     {
-        in >> type;
-
-        auto* value = &(*ecs.systems.at(type));
-
-        switch(type)
-        {
-        case IEComponentType::Name: { in >> *static_cast<IEECSNameSystem*>(value); break; }
-        case IEComponentType::Hierarchy: { in >> *static_cast<IEECSHierarchySystem*>(value); break; }
-        case IEComponentType::Input: { in >> *static_cast<IEECSInputSystem*>(value); break; }
-        case IEComponentType::Script: { in >> *static_cast<IEECSScriptSystem*>(value); break; }
-        case IEComponentType::Physics: { break; }
-        case IEComponentType::Transform: { in >> *static_cast<IEECSTransformSystem*>(value); break; }
-        case IEComponentType::Camera: { in >> *static_cast<IEECSCameraSystem*>(value); break; }
-        case IEComponentType::Material: { in >> *static_cast<IEECSMaterialSystem*>(value); break; }
-        case IEComponentType::Mesh: { in >> *static_cast<IEECSMeshSystem*>(value); break; }
-        case IEComponentType::Shader: { in >> *static_cast<IEECSShaderSystem*>(value); break; }
-        case IEComponentType::Renderable: { in >> *static_cast<IEECSRenderableSystem*>(value); break; }
-        default: { break; }
-        }
+        in >> *i.second;
     }
 
     return in;

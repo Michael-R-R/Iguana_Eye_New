@@ -122,7 +122,6 @@ INCLUDEPATH += $$PWD/src/Game \
     $$PWD/src/Game/IEScene \
 
 INCLUDEPATH += $$PWD/src/Game/ECS \
-    $$PWD/src/Game/ECS/IEComponentType \
     $$PWD/src/Game/ECS/IEECS \
     $$PWD/src/Game/ECS/IEEntity \
     $$PWD/src/Game/ECS/IEEntityManager \

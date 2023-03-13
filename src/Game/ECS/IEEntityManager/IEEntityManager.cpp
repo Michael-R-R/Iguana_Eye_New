@@ -24,20 +24,20 @@ IEEntity IEEntityManager::create()
     else
     {
         entity = IEEntity(++nextId);
-        while(doesExist(entity))
+        while(doesEntityExist(entity))
         {
             entity = IEEntity(++nextId);
         }
     }
 
-    entityMap[entity] = 0;
+    entityMap[entity] = QSet<QString>();
 
     return entity;
 }
 
 bool IEEntityManager::remove(const IEEntity key)
 {
-    if(!doesExist(key))
+    if(!doesEntityExist(key))
         return false;
 
     entityMap.remove(key);
@@ -46,43 +46,43 @@ bool IEEntityManager::remove(const IEEntity key)
     return true;
 }
 
-bool IEEntityManager::attachComponent(const IEEntity& key, const unsigned long long component)
+bool IEEntityManager::attachComponent(const IEEntity& key, const QString& component)
 {
-    if(!doesExist(key) || hasComponent(key, component))
+    if(hasComponent(key, component))
         return false;
 
-    entityMap[key] += component;
+    entityMap[key].insert(component);
 
     return true;
 }
 
-bool IEEntityManager::detachComponent(const IEEntity& key, const unsigned long long component)
+bool IEEntityManager::detachComponent(const IEEntity& key, const QString& component)
 {
-    if(!doesExist(key) || !hasComponent(key, component))
+    if(!hasComponent(key, component))
         return false;
 
-    entityMap[key] -= component;
+    entityMap[key].remove(component);
 
     return true;
 }
 
-bool IEEntityManager::doesExist(const IEEntity& key) const
+bool IEEntityManager::doesEntityExist(const IEEntity& key) const
 {
     return entityMap.contains(key);
 }
 
-bool IEEntityManager::hasComponent(const IEEntity& key, const unsigned long long component) const
+bool IEEntityManager::hasComponent(const IEEntity& key, const QString& component) const
 {
-    if(!doesExist(key))
+    if(!doesEntityExist(key))
         return false;
 
-    return ((entityMap[key] & component) == component);
+    return entityMap[key].contains(component);
 }
 
-unsigned long long IEEntityManager::getAttachComponents(const IEEntity& key) const
+QSet<QString> IEEntityManager::getAttachComponents(const IEEntity& key) const
 {
-    if(!doesExist(key))
-        return 0;
+    if(!doesEntityExist(key))
+        return QSet<QString>();
 
     return entityMap[key];
 }

@@ -5,7 +5,6 @@
 
 #include "IEObject.h"
 #include "Serializable.h"
-#include "IEComponentType.h"
 #include "IEEntity.h"
 
 class GameStartEvent;
@@ -19,7 +18,7 @@ class IEECS : public IEObject, public Serializable
 
     std::unique_ptr<ECSOnUpdateEvent> onUpdateEvent;
     std::unique_ptr<IEEntityManager> entityManager;
-    std::map<IEComponentType, std::unique_ptr<IEECSSystem>> systems;
+    std::map<QString, std::unique_ptr<IEECSSystem>> systems;
 
 public:
     IEECS();
@@ -32,10 +31,10 @@ public:
 
     IEEntity create();
     void remove(const IEEntity entity);
-    int attachComponent(const IEEntity entity, const IEComponentType type);
-    bool detachComponent(const IEEntity entity, const IEComponentType type);
-    bool hasComponent(const IEEntity entity, const IEComponentType type) const;
-    bool doesSystemExist(const IEComponentType type) const;
+    int attachComponent(const IEEntity entity, const QString& component);
+    bool detachComponent(const IEEntity entity, const QString& component);
+    bool hasComponent(const IEEntity entity, const QString& component) const;
+    bool doesSystemExist(const QString& component) const;
     int entityCount() const;
     void clearSystems();
 
@@ -43,19 +42,19 @@ private:
     void initSystems();
 
 signals:
-    void entityCreated(const IEEntity entity);
-    void entityRemoved(const IEEntity entity);
-    void componentAttached(const IEEntity entity, const IEComponentType type);
-    void componentDetached(const IEEntity entity, const IEComponentType type);
+    void entityCreated(const IEEntity& entity);
+    void entityRemoved(const IEEntity& entity);
+    void componentAttached(const IEEntity& entity, const QString& component);
+    void componentDetached(const IEEntity& entity, const QString& component);
 
 public:
     template<class T>
-    T* getComponent(const IEComponentType type) const
+    T* getComponent(const QString& component) const
     {
-        if(!doesSystemExist(type))
+        if(!doesSystemExist(component))
             return nullptr;
 
-        return dynamic_cast<T*>(&(*systems.at(type)));
+        return dynamic_cast<T*>(&(*systems.at(component)));
     }
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;

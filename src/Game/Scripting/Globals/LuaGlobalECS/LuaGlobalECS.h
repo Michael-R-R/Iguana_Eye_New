@@ -4,7 +4,6 @@
 
 #include "IEECS.h"
 
-class IEECSSystem;
 class IEECSNameSystem;
 class IEECSScriptSystem;
 
