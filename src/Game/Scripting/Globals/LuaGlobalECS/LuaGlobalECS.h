@@ -2,7 +2,11 @@
 
 #include <sol/sol.hpp>
 
-class IEECS;
+#include "IEECS.h"
+
+class IEECSSystem;
+class IEECSNameSystem;
+class IEECSScriptSystem;
 
 class LuaGlobalECS
 {
@@ -11,5 +15,9 @@ class LuaGlobalECS
 public:
     LuaGlobalECS(IEECS& ecs_, sol::table& gameTable);
     ~LuaGlobalECS() {}
+
+private:
+    IEECSNameSystem* getNameComponent();
+    IEECSScriptSystem* getScriptComponent();
 };
 

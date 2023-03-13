@@ -14,6 +14,9 @@
 #include "IEECSRenderableSystem.h"
 #include "ECSOnUpdateEvent.h"
 
+// TODO test
+#include "IEHash.h"
+
 IEECS::IEECS() :
     IEObject(),
     onUpdateEvent(nullptr),
@@ -40,10 +43,19 @@ void IEECS::startup(const GameStartEvent& event)
     // TODO test
     auto* scriptSystem = this->getComponent<IEECSScriptSystem>(IEComponentType::Script);
     IEEntity entity = this->create();
-    int index = this->attachComponent(entity, IEComponentType::Script);
-    scriptSystem->addScript(index, IEEntityScript("./resources/scripts/test/test1.lua", 1));
-    scriptSystem->initalizeScript(index, 1);
-    scriptSystem->startScript(index, 1);
+    int index1 = this->attachComponent(entity, IEComponentType::Script);
+    unsigned long long id1 = IEHash::Compute("test1");
+    scriptSystem->addScript(index1, IEEntityScript("./resources/scripts/test/test1.lua", id1));
+    scriptSystem->initalizeScript(index1, id1);
+
+    entity = this->create();
+    int index2 = this->attachComponent(entity, IEComponentType::Script);
+    unsigned long long id2 = IEHash::Compute("test2");
+    scriptSystem->addScript(index2, IEEntityScript("./resources/scripts/test/test2.lua", id2));
+    scriptSystem->initalizeScript(index2, id2);
+
+    scriptSystem->startScript(index1, id1);
+    scriptSystem->startScript(index2, id2);
 }
 
 void IEECS::shutdown()

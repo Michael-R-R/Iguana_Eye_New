@@ -100,7 +100,7 @@ public:
     bool isScriptValid(const int index, const unsigned long long id);
 
     IEScript* getScript(const int index, const unsigned long long id);
-    IEScript* getScript(const int index, const QString& name);
+    IEScript* getScript(const int index, const char* name);
 
 private:
     void deserializeScripts();

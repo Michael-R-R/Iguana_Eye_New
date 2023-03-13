@@ -200,7 +200,7 @@ IEScript* IEECSScriptSystem::getScript(const int index, const unsigned long long
     return &data.scriptCollection[index][id];
 }
 
-IEScript* IEECSScriptSystem::getScript(const int index, const QString& name)
+IEScript* IEECSScriptSystem::getScript(const int index, const char* name)
 {
     const unsigned long long id = IEHash::Compute(name);
     if(!isScriptAttached(index, id))
