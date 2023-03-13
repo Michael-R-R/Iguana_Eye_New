@@ -7,13 +7,13 @@
 
 EApplicationOptionsWindow::EApplicationOptionsWindow(QWidget* parent) :
     EWindow("Options", parent),
-    selectOptionsWidget(new EWSelectApplicationOption(this))
+    selectOptionsWidget(std::make_unique<EWSelectApplicationOption>(this))
 {
     this->setWindowFlags(Qt::WindowStaysOnTopHint);
     this->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetFloatable);
     this->resize(450, 250);
     this->setFloating(true);
-    this->setWidget(selectOptionsWidget);
+    this->setWidget(&(*selectOptionsWidget));
 }
 
 EApplicationOptionsWindow::~EApplicationOptionsWindow()

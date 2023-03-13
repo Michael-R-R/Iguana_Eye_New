@@ -5,8 +5,8 @@
 EGUI::EGUI(QObject* parent) :
     QObject(parent),
     mainMenuBar(std::make_unique<MainMenuBar>()),
-    statusBar(new StatusBar()),
-    windowManager(new EWindowManager(this))
+    statusBar(std::make_unique<StatusBar>()),
+    windowManager(std::make_unique<EWindowManager>())
 {
 
 }
@@ -53,7 +53,7 @@ void EGUI::setupStatusBar(const AppStartEvent& event)
     statusBar->setupIEObjectConnections(event);
 
     auto applicationWindow = event.getAppWindow();
-    applicationWindow->setStatusBar(statusBar);
+    applicationWindow->setStatusBar(&(*statusBar));
 }
 
 void EGUI::setupWindowManager(const AppStartEvent& event)

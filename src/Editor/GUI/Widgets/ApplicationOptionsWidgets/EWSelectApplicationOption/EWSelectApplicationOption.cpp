@@ -9,12 +9,12 @@ EWSelectApplicationOption::EWSelectApplicationOption(QWidget* parent) :
     vContentAreaLayout(new QVBoxLayout()),
     gameGroupBox(new QGroupBox("Game", this)), gameGroupLayout(new QVBoxLayout(gameGroupBox)),
     editorGroupBox(new QGroupBox("Editor", this)), editorGroupLayout(new QVBoxLayout(editorGroupBox)),
-    contentWidget(new QWidget(this))
+    contentWidget(std::make_unique<QWidget>(this))
 {
     vOptionSelectLayout->addWidget(gameGroupBox);
     vOptionSelectLayout->addWidget(editorGroupBox);
 
-    vContentAreaLayout->addWidget(contentWidget);
+    vContentAreaLayout->addWidget(&(*contentWidget));
 
     hMainLayout->addLayout(vOptionSelectLayout);
     hMainLayout->addLayout(vContentAreaLayout);
@@ -32,9 +32,8 @@ void EWSelectApplicationOption::setupGameGroupBox(InputContainer& input)
     auto gameHotkeysButton = new QPushButton("Hotkeys", gameGroupBox);
     connect(gameHotkeysButton, &QPushButton::clicked, gameHotkeysButton, [this, &input]()
     {
-        delete contentWidget;
-        contentWidget = new EWGameHotkeyTable(input, this);
-        vContentAreaLayout->addWidget(contentWidget);
+        contentWidget = std::make_unique<EWGameHotkeyTable>(input, this);
+        vContentAreaLayout->addWidget(&(*contentWidget));
     });
 
     gameGroupLayout->addWidget(gameHotkeysButton);
@@ -48,9 +47,8 @@ void EWSelectApplicationOption::setupEditorGroupBox(InputContainer& input)
     auto editorHotkeysButton = new QPushButton("Hotkeys", editorGroupBox);
     connect(editorHotkeysButton, &QPushButton::clicked, editorHotkeysButton, [this, &input]()
     {
-        delete contentWidget;
-        contentWidget = new EWEditorHotkeyTable(input, this);
-        vContentAreaLayout->addWidget(contentWidget);
+        contentWidget = std::make_unique<EWEditorHotkeyTable>(input, this);
+        vContentAreaLayout->addWidget(&(*contentWidget));
     });
 
     editorGroupLayout->addWidget(editorHotkeysButton);

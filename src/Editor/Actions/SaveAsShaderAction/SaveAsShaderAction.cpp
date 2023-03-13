@@ -14,7 +14,7 @@ SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager& sh
 
     connect(this, &SaveAsShaderAction::triggered, this, [editor, &shaderManager]()
     {
-        unsigned long long id = editor->getShaderComboBox()->getSelectedId();
+        unsigned long long id = editor->getShaderComboBox().getSelectedId();
         if(id == 0)
             return;
 
@@ -39,7 +39,7 @@ SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager& sh
         shaderManager.add(id, std::move(shader));
     });
 
-    connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)
+    connect(&editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)
     {
         this->setEnabled((index > 0));
     });

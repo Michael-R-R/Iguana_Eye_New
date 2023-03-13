@@ -9,7 +9,7 @@ class EGlslEditorWindow : public EWindow
 {
     Q_OBJECT
 
-    EWGlslEditor* glslEditorWidget;
+    std::unique_ptr<EWGlslEditor> glslEditorWidget;
 
 public:
     EGlslEditorWindow(QWidget* parent = nullptr);

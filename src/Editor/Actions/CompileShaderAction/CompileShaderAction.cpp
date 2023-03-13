@@ -10,13 +10,13 @@ CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, IEShaderManager& 
 
     connect(this, &CompileShaderAction::triggered, this, [editor, &manager]()
     {
-        unsigned long long id = editor->getShaderComboBox()->getSelectedId();
+        unsigned long long id = editor->getShaderComboBox().getSelectedId();
         auto* shader = manager.value(id);
         if(!shader)
             return;
 
-        QString vSrc = editor->getVertSrcEditor()->getTextContent();
-        QString fSrc = editor->getFragSrcEditor()->getTextContent();
+        QString vSrc = editor->getVertSrcEditor().getTextContent();
+        QString fSrc = editor->getFragSrcEditor().getTextContent();
 
         shader->setVertexSrc(vSrc);
         shader->setFragmentSrc(fSrc);
@@ -24,7 +24,7 @@ CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, IEShaderManager& 
         shader->build();
     });
 
-    connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)
+    connect(&editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)
     {
         this->setEnabled((index > 0));
     });

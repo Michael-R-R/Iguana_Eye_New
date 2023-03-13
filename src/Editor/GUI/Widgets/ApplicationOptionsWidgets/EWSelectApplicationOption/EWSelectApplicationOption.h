@@ -23,7 +23,7 @@ class EWSelectApplicationOption : public QWidget
     QGroupBox* editorGroupBox;
     QVBoxLayout* editorGroupLayout;
 
-    QWidget* contentWidget;
+    std::unique_ptr<QWidget> contentWidget;
 
 public:
     EWSelectApplicationOption(QWidget* parent = nullptr);
