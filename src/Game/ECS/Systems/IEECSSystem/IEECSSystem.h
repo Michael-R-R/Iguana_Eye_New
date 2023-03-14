@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QMap>
+#include <QString>
 
 #include "Serializable.h"
 #include "IEEntity.h"
@@ -10,6 +11,7 @@ class ECSOnUpdateEvent;
 
 class IEECSSystem : public Serializable
 {
+
 protected:
     QMap<IEEntity, int> entityMap; // Entity, index
 

@@ -6,21 +6,27 @@
 #include "IEObject.h"
 
 class GameStartEvent;
-class LuaGlobalType;
-class LuaGlobalEnum;
-class LuaGlobalTime;
-class LuaGlobalInput;
-class LuaGlobalECS;
+class LuaUtility;
+class LuaEnum;
+class LuaIEEntity;
+class LuaIEScript;
+class LuaIETime;
+class LuaIEInput;
+class LuaIEECS;
+class LuaIEECSScriptSystem;
 
 class IEScriptEngine : public IEObject
 {
     sol::state lua;
 
-    std::unique_ptr<LuaGlobalType> globalType;
-    std::unique_ptr<LuaGlobalEnum> globalEnum;
-    std::unique_ptr<LuaGlobalTime> globalTime;
-    std::unique_ptr<LuaGlobalInput> globalInput;
-    std::unique_ptr<LuaGlobalECS> globalECS;
+    std::unique_ptr<LuaEnum> luaEnum;
+    std::unique_ptr<LuaUtility> luaUtility;
+    std::unique_ptr<LuaIEEntity> luaEntity;
+    std::unique_ptr<LuaIEScript> luaScript;
+    std::unique_ptr<LuaIETime> luaTime;
+    std::unique_ptr<LuaIEInput> luaInput;
+    std::unique_ptr<LuaIEECS> luaECS;
+    std::unique_ptr<LuaIEECSScriptSystem> luaScriptSystem;
 
 public:
     IEScriptEngine();

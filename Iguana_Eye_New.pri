@@ -164,12 +164,15 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting \
 
-INCLUDEPATH += $$PWD/src/Game/Scripting/Globals \
-    $$PWD/src/Game/Scripting/Globals/LuaGlobalECS \
-    $$PWD/src/Game/Scripting/Globals/LuaGlobalEnum \
-    $$PWD/src/Game/Scripting/Globals/LuaGlobalInput \
-    $$PWD/src/Game/Scripting/Globals/LuaGlobalTime \
-    $$PWD/src/Game/Scripting/Globals/LuaGlobalType \
+INCLUDEPATH += $$PWD/src/Game/Scripting/API \
+    $$PWD/src/Game/Scripting/API/LuaEnum \
+    $$PWD/src/Game/Scripting/API/LuaUtility \
+    $$PWD/src/Game/Scripting/API/LuaIEECS \
+    $$PWD/src/Game/Scripting/API/LuaIEECSScriptSystem \
+    $$PWD/src/Game/Scripting/API/LuaIEEntity \
+    $$PWD/src/Game/Scripting/API/LuaIEInput \
+    $$PWD/src/Game/Scripting/API/LuaIEScript \
+    $$PWD/src/Game/Scripting/API/LuaIETime \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/Scripts \
     $$PWD/src/Game/Scripting/Scripts/IEEntityScript \

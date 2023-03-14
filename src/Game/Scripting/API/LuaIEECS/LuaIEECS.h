@@ -7,13 +7,13 @@
 class IEECSNameSystem;
 class IEECSScriptSystem;
 
-class LuaGlobalECS
+class LuaIEECS
 {
     IEECS& ecs;
 
 public:
-    LuaGlobalECS(IEECS& ecs_, sol::table& gameTable);
-    ~LuaGlobalECS() {}
+    LuaIEECS(IEECS& ecs_, sol::table& gameTable);
+    ~LuaIEECS() {}
 
 private:
     IEECSNameSystem* getNameComponent();

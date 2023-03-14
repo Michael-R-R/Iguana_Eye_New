@@ -19,7 +19,7 @@ public:
     ~IEInput();
 
     bool isPressed(const InputKey& key);
-    bool isPressed(const QString& keyName);
+    bool isPressed(const char* keyName);
 
     InputContainer& getInputContainer() const { return *inputContainer; }
     InputCapture& getInputCapture() const { return *inputCapture; }

@@ -1,18 +1,21 @@
 #include "IEScriptEngine.h"
 #include "GameStartEvent.h"
 #include "IEScene.h"
-#include "LuaGlobalType.h"
-#include "LuaGlobalEnum.h"
-#include "LuaGlobalTime.h"
-#include "LuaGlobalInput.h"
-#include "LuaGlobalECS.h"
+#include "LuaEnum.h"
+#include "LuaUtility.h"
+#include "LuaIEEntity.h"
+#include "LuaIEScript.h"
+#include "LuaIETime.h"
+#include "LuaIEInput.h"
+#include "LuaIEECS.h"
+#include "LuaIEECSScriptSystem.h"
 
 IEScriptEngine::IEScriptEngine() :
     IEObject(),
     lua(),
-    globalType(nullptr), globalEnum(nullptr),
-    globalTime(nullptr), globalInput(nullptr),
-    globalECS(nullptr)
+    luaEnum(nullptr), luaUtility(nullptr), luaEntity(nullptr),
+    luaScript(nullptr), luaTime(nullptr), luaInput(nullptr),
+    luaECS(nullptr)
 {
 
 }
@@ -27,14 +30,18 @@ void IEScriptEngine::startup(const GameStartEvent& event)
     lua.open_libraries(sol::lib::base);
 
     // Create namespaces
-    auto gameTable = lua["game"].get_or_create<sol::table>();
     auto enumTable = lua["enum"].get_or_create<sol::table>();
+    auto utilityTable = lua["util"].get_or_create<sol::table>();
+    auto gameTable = lua["game"].get_or_create<sol::table>();
 
-    globalType = std::make_unique<LuaGlobalType>(lua);
-    globalEnum = std::make_unique<LuaGlobalEnum>(enumTable);
-    globalTime = std::make_unique<LuaGlobalTime>(event.getTime(), gameTable);
-    globalInput = std::make_unique<LuaGlobalInput>(event.getInput(), gameTable);
-    globalECS = std::make_unique<LuaGlobalECS>(event.getScene().getECS(), gameTable);
+    luaEnum = std::make_unique<LuaEnum>(enumTable);
+    luaUtility = std::make_unique<LuaUtility>(utilityTable);
+    luaEntity = std::make_unique<LuaIEEntity>(lua);
+    luaScript = std::make_unique<LuaIEScript>(lua);
+    luaTime = std::make_unique<LuaIETime>(event.getTime(), gameTable);
+    luaInput = std::make_unique<LuaIEInput>(event.getInput(), gameTable);
+    luaECS = std::make_unique<LuaIEECS>(event.getScene().getECS(), gameTable);
+    luaScriptSystem = std::make_unique<LuaIEECSScriptSystem>(lua);
 }
 
 void IEScriptEngine::shutdown()
