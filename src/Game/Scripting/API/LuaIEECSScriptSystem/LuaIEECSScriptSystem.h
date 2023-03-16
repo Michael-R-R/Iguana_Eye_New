@@ -7,5 +7,6 @@ class LuaIEECSScriptSystem
 
 public:
     LuaIEECSScriptSystem(sol::state& lua);
+    ~LuaIEECSScriptSystem() {}
 };
 

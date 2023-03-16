@@ -6,6 +6,7 @@
 
 class IEECSNameSystem;
 class IEECSScriptSystem;
+class IEECSTransformSystem;
 
 class LuaIEECS
 {
@@ -16,7 +17,8 @@ public:
     ~LuaIEECS() {}
 
 private:
-    IEECSNameSystem* getNameComponent();
-    IEECSScriptSystem* getScriptComponent();
+    IEECSNameSystem* nameComponent();
+    IEECSScriptSystem* scriptComponent();
+    IEECSTransformSystem* transformComponent();
 };
 

@@ -169,10 +169,14 @@ INCLUDEPATH += $$PWD/src/Game/Scripting/API \
     $$PWD/src/Game/Scripting/API/LuaUtility \
     $$PWD/src/Game/Scripting/API/LuaIEECS \
     $$PWD/src/Game/Scripting/API/LuaIEECSScriptSystem \
+    $$PWD/src/Game/Scripting/API/LuaIEECSTransformSystem \
     $$PWD/src/Game/Scripting/API/LuaIEEntity \
     $$PWD/src/Game/Scripting/API/LuaIEInput \
     $$PWD/src/Game/Scripting/API/LuaIEScript \
     $$PWD/src/Game/Scripting/API/LuaIETime \
+
+INCLUDEPATH += $$PWD/src/Game/Scripting/API/LuaCommonType \
+    $$PWD/src/Game/Scripting/API/LuaCommonType/LuaVec3Wrapper \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/Scripts \
     $$PWD/src/Game/Scripting/Scripts/IEEntityScript \

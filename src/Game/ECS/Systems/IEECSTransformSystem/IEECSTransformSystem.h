@@ -62,7 +62,6 @@ public:
     void setPosition(const int index, const QVector3D& val);
     void setRotation(const int index, const QVector3D& val);
     void setScale(const int index, const QVector3D& val);
-    void setTransform(const int index, const QMatrix4x4& val);
 
 private:
     void updateTransform(const int index,

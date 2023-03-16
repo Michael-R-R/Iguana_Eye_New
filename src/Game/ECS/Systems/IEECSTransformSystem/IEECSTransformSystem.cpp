@@ -180,16 +180,6 @@ void IEECSTransformSystem::setScale(const int index, const QVector3D& val)
     dirtyParents[data.entity[index]] = index;
 }
 
-void IEECSTransformSystem::setTransform(const int index, const QMatrix4x4& val)
-{
-    if(!indexBoundCheck(index))
-        return;
-
-    data.transform[index] = val;
-
-    dirtyParents[data.entity[index]] = index;
-}
-
 void IEECSTransformSystem::updateTransform(const int index,
                                            QMap<IEEntity, int>& dirtyChildren,
                                            const IEECSHierarchySystem* hierarchySystem)

@@ -105,7 +105,7 @@ void IEECSScriptSystem::startAllScripts()
 
 bool IEECSScriptSystem::initalizeScript(const int index, const unsigned long long id)
 {
-    if(!isScriptAttached(index, id))
+    if(!hasScript(index, id))
         return false;
 
     return data.scriptCollection[index][id].initalize(scriptEngine->getLua());
@@ -160,7 +160,7 @@ void IEECSScriptSystem::clearAwakenScripts()
 
 void IEECSScriptSystem::addScript(const int index, const IEEntityScript& script)
 {
-    if(isScriptAttached(index, script.getId()))
+    if(hasScript(index, script.getId()))
         return;
 
     data.scriptCollection[index][script.getId()] = script;
@@ -168,7 +168,7 @@ void IEECSScriptSystem::addScript(const int index, const IEEntityScript& script)
 
 void IEECSScriptSystem::removeScript(const int index, const unsigned long long id)
 {
-    if(!isScriptAttached(index, id))
+    if(!hasScript(index, id))
         return;
 
     data.scriptCollection[index].remove(id);
@@ -176,7 +176,7 @@ void IEECSScriptSystem::removeScript(const int index, const unsigned long long i
     data.awakenedScripts[index].remove(id);
 }
 
-bool IEECSScriptSystem::isScriptAttached(const int index, const unsigned long long id)
+bool IEECSScriptSystem::hasScript(const int index, const unsigned long long id)
 {
     if(!indexBoundCheck(index))
         return false;
@@ -186,7 +186,7 @@ bool IEECSScriptSystem::isScriptAttached(const int index, const unsigned long lo
 
 bool IEECSScriptSystem::isScriptValid(const int index, const unsigned long long id)
 {
-    if(!isScriptAttached(index, id))
+    if(!hasScript(index, id))
         return false;
 
     return data.scriptCollection[index][id].getIsValid();
@@ -194,7 +194,7 @@ bool IEECSScriptSystem::isScriptValid(const int index, const unsigned long long 
 
 IEScript* IEECSScriptSystem::getScript(const int index, const unsigned long long id)
 {
-    if(!isScriptAttached(index, id))
+    if(!hasScript(index, id))
         return nullptr;
 
     return &data.scriptCollection[index][id];
@@ -203,7 +203,7 @@ IEScript* IEECSScriptSystem::getScript(const int index, const unsigned long long
 IEScript* IEECSScriptSystem::getScript(const int index, const char* name)
 {
     const unsigned long long id = IEHash::Compute(name);
-    if(!isScriptAttached(index, id))
+    if(!hasScript(index, id))
         return nullptr;
 
     return &data.scriptCollection[index][id];

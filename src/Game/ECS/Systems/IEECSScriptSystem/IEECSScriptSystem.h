@@ -96,7 +96,7 @@ public:
     void addScript(const int index, const IEEntityScript& script);
     void removeScript(const int index, const unsigned long long id);
 
-    bool isScriptAttached(const int index, const unsigned long long id);
+    bool hasScript(const int index, const unsigned long long id);
     bool isScriptValid(const int index, const unsigned long long id);
 
     IEScript* getScript(const int index, const unsigned long long id);
