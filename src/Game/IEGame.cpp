@@ -9,6 +9,9 @@
 #include "IEECS.h"
 #include "IEECSCameraSystem.h"
 
+// TODO test
+#include "IETCreateRenderable.h"
+
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(std::make_unique<QSurfaceFormat>()),
@@ -82,6 +85,9 @@ void IEGame::startup()
     scene->startup(gameStartEvent);
     renderEngine->startup(renderStartEvent);
     time->startup(*this);
+
+    // TODO test
+    IETCreateRenderable test(gameStartEvent);
 
     this->setFocus();
 }
