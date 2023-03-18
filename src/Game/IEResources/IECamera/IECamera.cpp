@@ -37,7 +37,7 @@ IECamera::~IECamera()
 void IECamera::updateView(const QVector3D& position, const QVector3D& rotation)
 {
     view.setToIdentity();
-    view.lookAt(position, rotation, up);
+    view.lookAt(position, position + rotation, up);
 }
 
 QDataStream& IECamera::serialize(QDataStream& out, const Serializable& obj) const

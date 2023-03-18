@@ -16,6 +16,7 @@ public:
     GameStartEvent(IEGame* game_);
     ~GameStartEvent();
 
+    IEGame& getGame() const;
     IETime& getTime() const;
     IEInput& getInput() const;
     IEScriptEngine& getScriptEngine() const;

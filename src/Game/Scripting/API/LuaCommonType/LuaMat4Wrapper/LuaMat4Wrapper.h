@@ -10,6 +10,7 @@ class LuaMat4Wrapper
 public:
     LuaMat4Wrapper() : mat4() {}
     LuaMat4Wrapper(const QMatrix4x4& n) : mat4(n) {}
+    LuaMat4Wrapper(const LuaMat4Wrapper& n) : mat4(n.mat4) {}
     ~LuaMat4Wrapper() {}
 
     QMatrix4x4 inverted(bool* invertible = nullptr) { return mat4.inverted(invertible); }
@@ -20,18 +21,19 @@ public:
     void scale(float x, float y, float z) { mat4.scale(x, y, z); }
     void translate(float x, float y, float z) { mat4.translate(x, y, z); }
     void setToIdentity() { mat4.setToIdentity(); }
+    QMatrix4x4 get() { return mat4; }
 
-    LuaMat4Wrapper addition(const LuaMat4Wrapper& n)
+    LuaMat4Wrapper operator +(const LuaMat4Wrapper& n)
     {
         return LuaMat4Wrapper(this->mat4 + n.mat4);
     }
 
-    LuaMat4Wrapper subtraction(const LuaMat4Wrapper& n)
+    LuaMat4Wrapper operator -(const LuaMat4Wrapper& n)
     {
         return LuaMat4Wrapper(this->mat4 - n.mat4);
     }
 
-    LuaMat4Wrapper multiply(const LuaMat4Wrapper& n)
+    LuaMat4Wrapper operator *(const LuaMat4Wrapper& n)
     {
         return LuaMat4Wrapper(this->mat4 * n.mat4);
     }

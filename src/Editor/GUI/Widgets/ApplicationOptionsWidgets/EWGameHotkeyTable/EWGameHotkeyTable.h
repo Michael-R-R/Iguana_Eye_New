@@ -2,14 +2,16 @@
 
 #include "EWHotkeyTable.h"
 
+class BaseInput;
+
 class EWGameHotkeyTable : public EWHotkeyTable
 {
 
 public:
-    EWGameHotkeyTable(InputContainer& inputContainer, QWidget* parent = nullptr);
+    EWGameHotkeyTable(BaseInput* input, QWidget* parent = nullptr);
     ~EWGameHotkeyTable();
 
 private:
-    void setupTables(InputContainer& inputContainer);
+    void setupTables(BaseInput* input);
 };
 

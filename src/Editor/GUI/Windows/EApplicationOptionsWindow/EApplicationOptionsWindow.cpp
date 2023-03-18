@@ -3,6 +3,7 @@
 #include "AppStartEvent.h"
 #include "Editor.h"
 #include "IEGame.h"
+#include "BaseInput.h"
 #include "IEInput.h"
 
 EApplicationOptionsWindow::EApplicationOptionsWindow(QWidget* parent) :
@@ -23,12 +24,9 @@ EApplicationOptionsWindow::~EApplicationOptionsWindow()
 
 void EApplicationOptionsWindow::startup(const AppStartEvent& event)
 {
-    auto* editorInput = event.getEditor()->getInput();
-    auto& editorInputContainer = editorInput->getInputContainer();
+    BaseInput* gameInput = &event.getGame()->getIEInput();
+    BaseInput* editorInput = event.getEditor()->getInput();
 
-    auto& gameInput = event.getGame()->getIEInput();
-    auto& gameInputContainer = gameInput.getInputContainer();
-
-    selectOptionsWidget->setupGameGroupBox(gameInputContainer);
-    selectOptionsWidget->setupEditorGroupBox(editorInputContainer);
+    selectOptionsWidget->setupGameGroupBox(gameInput);
+    selectOptionsWidget->setupEditorGroupBox(editorInput);
 }

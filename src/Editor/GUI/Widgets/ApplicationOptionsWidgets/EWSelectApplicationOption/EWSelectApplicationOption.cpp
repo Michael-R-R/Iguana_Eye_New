@@ -1,6 +1,7 @@
 #include "EWSelectApplicationOption.h"
 #include "EWGameHotkeyTable.h"
 #include "EWEditorHotkeyTable.h"
+#include "BaseInput.h"
 
 EWSelectApplicationOption::EWSelectApplicationOption(QWidget* parent) :
     QWidget(parent),
@@ -25,12 +26,12 @@ EWSelectApplicationOption::~EWSelectApplicationOption()
 
 }
 
-void EWSelectApplicationOption::setupGameGroupBox(InputContainer& input)
+void EWSelectApplicationOption::setupGameGroupBox(BaseInput* input)
 {
     gameGroupBox->setAlignment(Qt::AlignHCenter);
 
     auto gameHotkeysButton = new QPushButton("Hotkeys", gameGroupBox);
-    connect(gameHotkeysButton, &QPushButton::clicked, gameHotkeysButton, [this, &input]()
+    connect(gameHotkeysButton, &QPushButton::clicked, gameHotkeysButton, [this, input]()
     {
         delete contentWidget;
         contentWidget = new EWGameHotkeyTable(input, this);
@@ -41,12 +42,12 @@ void EWSelectApplicationOption::setupGameGroupBox(InputContainer& input)
     gameGroupLayout->addStretch(1);
 }
 
-void EWSelectApplicationOption::setupEditorGroupBox(InputContainer& input)
+void EWSelectApplicationOption::setupEditorGroupBox(BaseInput* input)
 {
     editorGroupBox->setAlignment(Qt::AlignHCenter);
 
     auto editorHotkeysButton = new QPushButton("Hotkeys", editorGroupBox);
-    connect(editorHotkeysButton, &QPushButton::clicked, editorHotkeysButton, [this, &input]()
+    connect(editorHotkeysButton, &QPushButton::clicked, editorHotkeysButton, [this, input]()
     {
         delete contentWidget;
         contentWidget = new EWEditorHotkeyTable(input, this);

@@ -8,7 +8,7 @@
 IEECSCameraSystem::IEECSCameraSystem() :
     data(),
     activeIndex(-1),
-    hasDirtyProjection(false),
+    hasDirtyProjection(true),
     cameraManager(nullptr)
 {
     IEECSCameraSystem::attach(IEEntity(-1));

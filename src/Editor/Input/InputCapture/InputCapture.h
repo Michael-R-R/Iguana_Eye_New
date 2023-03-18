@@ -29,6 +29,9 @@ public:
     void clear();
     bool checkStatus(const InputKey& key);
 
+    QPoint getCursorPos() { return cursorPos; }
+    QPoint getWheelDelta() { return wheelDelta; }
+
 protected:
     bool eventFilter(QObject* watched, QEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;

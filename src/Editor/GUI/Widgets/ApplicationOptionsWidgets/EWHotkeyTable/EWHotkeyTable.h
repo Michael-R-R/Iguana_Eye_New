@@ -7,7 +7,8 @@
 #include <QLabel>
 #include <QPushButton>
 
-#include "InputContainer.h"
+class BaseInput;
+class InputKey;
 
 class EWHotkeyTable : public QTabWidget
 {
@@ -19,11 +20,11 @@ public:
 
 protected:
     void addTable(QString title, QTableWidget* table);
-    QTableWidget* createTable(const InputContainer& inputContainer, const QMap<QString, InputKey*>& keys);
+    QTableWidget* createTable(const BaseInput* input, const QMap<QString, InputKey*>& keys);
 
 private:
-    void fillInTable(QTableWidget* table, const InputContainer& inputContainer, const QMap<QString, InputKey*>& keys);
-    void setupButtonConnect(QPushButton* button, const InputContainer& inputContainer, InputKey* key);
+    void fillInTable(QTableWidget* table, const BaseInput* input, const QMap<QString, InputKey*>& keys);
+    void setupButtonConnect(QPushButton* button, const BaseInput* input, InputKey* key);
     QString convertText(QString text, int key);
 };
 

@@ -8,11 +8,12 @@
 #include <QMouseEvent>
 #include <QKeyEvent>
 
-class InputContainer;
+class BaseInput;
 
 class EWFetchUserInput : public QDialog
 {
-    const InputContainer& inputContainer;
+    // DOES NOT OWN THIS POINTER
+    const BaseInput* input;
 
     QVBoxLayout* vLayout;
     QHBoxLayout* hLayout;
@@ -28,7 +29,7 @@ class EWFetchUserInput : public QDialog
     bool isValidKeySequence;
 
 public:
-    EWFetchUserInput(const InputContainer& input, QWidget* parent = nullptr);
+    EWFetchUserInput(const BaseInput* input_, QWidget* parent = nullptr);
     ~EWFetchUserInput();
 
     int getMod() { return recordedModifier; }

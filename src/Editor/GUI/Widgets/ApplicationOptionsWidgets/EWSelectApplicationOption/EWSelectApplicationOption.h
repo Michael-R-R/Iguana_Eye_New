@@ -6,7 +6,7 @@
 #include <QGroupBox>
 #include <QPushButton>
 
-class InputContainer;
+class BaseInput;
 
 class EWSelectApplicationOption : public QWidget
 {
@@ -29,7 +29,7 @@ public:
     EWSelectApplicationOption(QWidget* parent = nullptr);
     ~EWSelectApplicationOption();
 
-    void setupGameGroupBox(InputContainer& input);
-    void setupEditorGroupBox(InputContainer& input);
+    void setupGameGroupBox(BaseInput* input);
+    void setupEditorGroupBox(BaseInput* input);
 };
 

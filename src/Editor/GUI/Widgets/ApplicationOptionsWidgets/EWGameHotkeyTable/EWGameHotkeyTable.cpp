@@ -1,9 +1,11 @@
 #include "EWGameHotkeyTable.h"
+#include "BaseInput.h"
+#include "InputKey.h"
 
-EWGameHotkeyTable::EWGameHotkeyTable(InputContainer& inputContainer, QWidget* parent) :
+EWGameHotkeyTable::EWGameHotkeyTable(BaseInput* input, QWidget* parent) :
     EWHotkeyTable(parent)
 {
-    setupTables(inputContainer);
+    setupTables(input);
 }
 
 EWGameHotkeyTable::~EWGameHotkeyTable()
@@ -11,13 +13,15 @@ EWGameHotkeyTable::~EWGameHotkeyTable()
 
 }
 
-void EWGameHotkeyTable::setupTables(InputContainer& inputContainer)
+void EWGameHotkeyTable::setupTables(BaseInput* input)
 {
     QMap<QString, InputKey*> movementKeys;
-    movementKeys["Forward"] = &inputContainer.getValue("Forward");
-    movementKeys["Backward"] = &inputContainer.getValue("Backward");
-    movementKeys["Left"] = &inputContainer.getValue("Left");
-    movementKeys["Right"] = &inputContainer.getValue("Right");
-    movementKeys["Jump"] = &inputContainer.getValue("Jump");
-    this->addTable("Movement", this->createTable(inputContainer, movementKeys));
+    movementKeys["Forward"] = &input->getConfigKey("Forward");
+    movementKeys["Backward"] = &input->getConfigKey("Backward");
+    movementKeys["Left"] = &input->getConfigKey("Left");
+    movementKeys["Right"] = &input->getConfigKey("Right");
+    movementKeys["Up"] = &input->getConfigKey("Up");
+    movementKeys["Down"] = &input->getConfigKey("Down");
+    movementKeys["Jump"] = &input->getConfigKey("Jump");
+    this->addTable("Movement", this->createTable(input, movementKeys));
 }

@@ -1,17 +1,13 @@
 #pragma once
 
-#include "IEObject.h"
-#include "Serializable.h"
+#include "BaseInput.h"
 #include "InputContainer.h"
 #include "InputCapture.h"
 
 class QWidget;
 
-class IEInput : public IEObject, public Serializable
+class IEInput : public BaseInput
 {
-    Q_OBJECT
-
-    std::unique_ptr<InputContainer> inputContainer;
     std::unique_ptr<InputCapture> inputCapture;
 
 public:
@@ -20,12 +16,11 @@ public:
 
     bool isPressed(const InputKey& key);
     bool isPressed(const char* keyName);
+    QPoint cursorPos() const;
+    QPoint wheelDelta() const;
 
-    InputContainer& getInputContainer() const { return *inputContainer; }
-    InputCapture& getInputCapture() const { return *inputCapture; }
-
-private:
-    void setupInputContainer();
+protected:
+    void setupInputContainer() override;
 
 public:
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

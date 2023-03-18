@@ -39,23 +39,6 @@ void IEECS::startup(const GameStartEvent& event)
     }
 
     onUpdateEvent = std::make_unique<ECSOnUpdateEvent>(this);
-
-    // TODO test
-    auto* scriptSystem = this->getComponent<IEECSScriptSystem>("Script");
-    IEEntity entity = this->create();
-    int index1 = this->attachComponent(entity, "Script");
-    unsigned long long id1 = IEHash::Compute("test1");
-    scriptSystem->addScript(index1, IEEntityScript("./resources/scripts/test/test1.lua", id1));
-    scriptSystem->initalizeScript(index1, id1);
-
-    entity = this->create();
-    int index2 = this->attachComponent(entity, "Script");
-    unsigned long long id2 = IEHash::Compute("test2");
-    scriptSystem->addScript(index2, IEEntityScript("./resources/scripts/test/test2.lua", id2));
-    scriptSystem->initalizeScript(index2, id2);
-
-    scriptSystem->startScript(index1, id1);
-    scriptSystem->startScript(index2, id2);
 }
 
 void IEECS::shutdown()

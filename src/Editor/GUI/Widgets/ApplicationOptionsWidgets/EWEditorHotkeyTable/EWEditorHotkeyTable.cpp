@@ -1,9 +1,11 @@
 #include "EWEditorHotkeyTable.h"
+#include "BaseInput.h"
+#include "InputKey.h"
 
-EWEditorHotkeyTable::EWEditorHotkeyTable(InputContainer& inputContainer, QWidget* parent) :
+EWEditorHotkeyTable::EWEditorHotkeyTable(BaseInput* input, QWidget* parent) :
     EWHotkeyTable(parent)
 {
-    setupTables(inputContainer);
+    setupTables(input);
 }
 
 EWEditorHotkeyTable::~EWEditorHotkeyTable()
@@ -11,25 +13,25 @@ EWEditorHotkeyTable::~EWEditorHotkeyTable()
 
 }
 
-void EWEditorHotkeyTable::setupTables(InputContainer& inputContainer)
+void EWEditorHotkeyTable::setupTables(BaseInput* input)
 {
     QMap<QString, InputKey*> applicationKeys;
-    applicationKeys["New File"] = &inputContainer.getValue("New File");
-    applicationKeys["Open File"] = &inputContainer.getValue("Open File");
-    applicationKeys["Save File"] = &inputContainer.getValue("Save File");
-    applicationKeys["Save File As"] = &inputContainer.getValue("Save File As");
-    applicationKeys["Toggle Ui"] = &inputContainer.getValue("Toggle Ui");
-    applicationKeys["Quit"] = &inputContainer.getValue("Quit");
-    this->addTable("Application", this->createTable(inputContainer, applicationKeys));
+    applicationKeys["New File"] = &input->getConfigKey("New File");
+    applicationKeys["Open File"] = &input->getConfigKey("Open File");
+    applicationKeys["Save File"] = &input->getConfigKey("Save File");
+    applicationKeys["Save File As"] = &input->getConfigKey("Save File As");
+    applicationKeys["Toggle Ui"] = &input->getConfigKey("Toggle Ui");
+    applicationKeys["Quit"] = &input->getConfigKey("Quit");
+    this->addTable("Application", this->createTable(input, applicationKeys));
 
     QMap<QString, InputKey*> gameKeys;
-    gameKeys["Toggle Rendering"] = &inputContainer.getValue("Toggle Rendering");
-    gameKeys["Toggle Updating"] = &inputContainer.getValue("Toggle Updating");
-    this->addTable("Game", this->createTable(inputContainer, gameKeys));
+    gameKeys["Toggle Rendering"] = &input->getConfigKey("Toggle Rendering");
+    gameKeys["Toggle Updating"] = &input->getConfigKey("Toggle Updating");
+    this->addTable("Game", this->createTable(input, gameKeys));
 
     QMap<QString, InputKey*> windowKeys;
-    windowKeys["Options"] = &inputContainer.getValue("Options");
-    windowKeys["File Explorer"] = &inputContainer.getValue("File Explorer");
-    windowKeys["GLSL Editor"] = &inputContainer.getValue("GLSL Editor");
-    this->addTable("Window", this->createTable(inputContainer, windowKeys));
+    windowKeys["Options"] = &input->getConfigKey("Options");
+    windowKeys["File Explorer"] = &input->getConfigKey("File Explorer");
+    windowKeys["GLSL Editor"] = &input->getConfigKey("GLSL Editor");
+    this->addTable("Window", this->createTable(input, windowKeys));
 }

@@ -87,6 +87,7 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Windows \
     $$PWD/src/Editor/GUI/Windows/EWindow \
 
 INCLUDEPATH += $$PWD/src/Editor/Input \
+    $$PWD/src/Editor/Input/BaseInput \
     $$PWD/src/Editor/Input/EInput \
     $$PWD/src/Editor/Input/InputCapture \
     $$PWD/src/Editor/Input/InputKey \
@@ -165,6 +166,7 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
 INCLUDEPATH += $$PWD/src/Game/Scripting \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/API \
+    $$PWD/src/Game/Scripting/API/LuaApplication \
     $$PWD/src/Game/Scripting/API/LuaEnum \
     $$PWD/src/Game/Scripting/API/LuaIECamera \
     $$PWD/src/Game/Scripting/API/LuaUtility \

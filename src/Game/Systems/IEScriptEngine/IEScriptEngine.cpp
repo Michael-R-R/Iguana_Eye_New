@@ -4,6 +4,7 @@
 #include "LuaEnum.h"
 #include "LuaCommonType.h"
 #include "LuaUtility.h"
+#include "LuaApplication.h"
 #include "LuaIETime.h"
 #include "LuaIEInput.h"
 #include "LuaIEECS.h"
@@ -15,7 +16,7 @@
 IEScriptEngine::IEScriptEngine() :
     IEObject(),
     lua(),
-    luaEnum(nullptr), luaCommonType(nullptr), luaUtility(nullptr),
+    luaEnum(nullptr), luaCommonType(nullptr), luaUtility(nullptr), luaApplication(nullptr),
     luaTime(nullptr), luaInput(nullptr), luaECS(nullptr),
     luaInputSystem(nullptr), luaScriptSystem(nullptr), luaTransformSystem(nullptr),
     luaCameraSystem(nullptr)
@@ -40,6 +41,7 @@ void IEScriptEngine::startup(const GameStartEvent& event)
     luaEnum = std::make_unique<LuaEnum>(enumTable);
     luaCommonType = std::make_unique<LuaCommonType>(lua);
     luaUtility = std::make_unique<LuaUtility>(utilityTable);
+    luaApplication = std::make_unique<LuaApplication>(event.getGame(), gameTable);
     luaTime = std::make_unique<LuaIETime>(event.getTime(), gameTable);
     luaInput = std::make_unique<LuaIEInput>(event.getInput(), gameTable);
     luaECS = std::make_unique<LuaIEECS>(event.getScene().getECS(), lua, gameTable);

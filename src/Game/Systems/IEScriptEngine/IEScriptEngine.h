@@ -9,6 +9,7 @@ class GameStartEvent;
 class LuaUtility;
 class LuaEnum;
 class LuaCommonType;
+class LuaApplication;
 class LuaIETime;
 class LuaIEInput;
 class LuaIEECS;
@@ -24,6 +25,7 @@ class IEScriptEngine : public IEObject
     std::unique_ptr<LuaEnum> luaEnum;
     std::unique_ptr<LuaCommonType> luaCommonType;
     std::unique_ptr<LuaUtility> luaUtility;
+    std::unique_ptr<LuaApplication> luaApplication;
     std::unique_ptr<LuaIETime> luaTime;
     std::unique_ptr<LuaIEInput> luaInput;
     std::unique_ptr<LuaIEECS> luaECS;

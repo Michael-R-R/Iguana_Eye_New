@@ -1,9 +1,10 @@
 #include "EWFetchUserInput.h"
 #include "InputContainer.h"
+#include "BaseInput.h"
 
-EWFetchUserInput::EWFetchUserInput(const InputContainer& input, QWidget* parent) :
+EWFetchUserInput::EWFetchUserInput(const BaseInput* input_, QWidget* parent) :
     QDialog(parent),
-    inputContainer(input),
+    input(input_),
     vLayout(new QVBoxLayout(this)), hLayout(new QHBoxLayout()),
     confirmButton(new QPushButton("Confirm", this)),
     cancelButton(new QPushButton("Cancel", this)),
@@ -36,7 +37,7 @@ EWFetchUserInput::EWFetchUserInput(const InputContainer& input, QWidget* parent)
 
 EWFetchUserInput::~EWFetchUserInput()
 {
-
+    input = nullptr;
 }
 
 void EWFetchUserInput::mousePressEvent(QMouseEvent* event)
@@ -61,7 +62,7 @@ void EWFetchUserInput::processPressedInput(int mod, int key)
     {
         isValidKeySequence = false;
 
-        QString errorMsg = "Hotkey already bound to: " + inputContainer.getKey(mod, key);
+        QString errorMsg = "Hotkey already bound to: " + input->getKeyName(mod, key);
         errorMsgLabel->setText(errorMsg);
     }
     else
@@ -77,7 +78,7 @@ void EWFetchUserInput::processPressedInput(int mod, int key)
 
 bool EWFetchUserInput::hasDuplicateBinding(const int mod, const int key)
 {
-    return (inputContainer.doesExist(mod, key));
+    return (input->doesExist(mod, key));
 }
 
 int EWFetchUserInput::convertKey(int key)

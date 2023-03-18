@@ -1,19 +1,20 @@
 #pragma once
 
-#include <QObject>
-
+#include "BaseInput.h"
 #include "InputContainer.h"
 
-class EInput : public QObject
+class EInput : public BaseInput
 {
-    std::unique_ptr<InputContainer> inputContainer;
 
 public:
     EInput(QObject *parent = nullptr);
     ~EInput();
 
-    void startup();
+protected:
+    void setupInputContainer() override;
 
-    InputContainer& getInputContainer() const { return *inputContainer; }
+public:
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

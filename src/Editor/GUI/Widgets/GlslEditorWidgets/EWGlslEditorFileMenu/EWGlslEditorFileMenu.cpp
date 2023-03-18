@@ -17,11 +17,11 @@ EWGlslEditorFileMenu::EWGlslEditorFileMenu(QWidget* parent) :
 
 void EWGlslEditorFileMenu::startup(const AppStartEvent& event, EWGlslEditor* editor)
 {
-    auto& inputContainer = event.getEditor()->getInput()->getInputContainer();
+    auto* input = event.getEditor()->getInput();
     auto& shaderManager = event.getGame()->getIEScene().getShaderManager();
 
-    appendAction("New Shader", new NewShaderAction(editor, shaderManager, inputContainer.getValue(""), this));
-    appendAction("Open Shader", new OpenShaderAction(shaderManager, inputContainer.getValue(""), this));
-    appendAction("Save Shader", new SaveShaderAction(editor, shaderManager, inputContainer.getValue(""), this));
-    appendAction("Save As Shader", new SaveAsShaderAction(editor, shaderManager, inputContainer.getValue(""), this));
+    appendAction("New Shader", new NewShaderAction(editor, shaderManager, input->getConfigKey(""), this));
+    appendAction("Open Shader", new OpenShaderAction(shaderManager, input->getConfigKey(""), this));
+    appendAction("Save Shader", new SaveShaderAction(editor, shaderManager, input->getConfigKey(""), this));
+    appendAction("Save As Shader", new SaveAsShaderAction(editor, shaderManager, input->getConfigKey(""), this));
 }

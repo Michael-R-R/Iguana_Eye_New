@@ -1,5 +1,7 @@
 #include "EWHotkeyTable.h"
 #include "EWFetchUserInput.h"
+#include "BaseInput.h"
+#include "InputKey.h"
 
 EWHotkeyTable::EWHotkeyTable(QWidget* parent) :
     QTabWidget(parent),
@@ -18,7 +20,7 @@ void EWHotkeyTable::addTable(QString title, QTableWidget* table)
     this->addTab(table, title);
 }
 
-QTableWidget* EWHotkeyTable::createTable(const InputContainer& inputContainer, const QMap<QString, InputKey*>& keys)
+QTableWidget* EWHotkeyTable::createTable(const BaseInput* input, const QMap<QString, InputKey*>& keys)
 {
     int rows = keys.size();
     int cols = 2;
@@ -30,12 +32,12 @@ QTableWidget* EWHotkeyTable::createTable(const InputContainer& inputContainer, c
     table->horizontalHeader()->hide();
     table->verticalHeader()->hide();
 
-    this->fillInTable(table, inputContainer, keys);
+    this->fillInTable(table, input, keys);
 
     return table;
 }
 
-void EWHotkeyTable::fillInTable(QTableWidget* table, const InputContainer& inputContainer, const QMap<QString, InputKey*>& keys)
+void EWHotkeyTable::fillInTable(QTableWidget* table, const BaseInput* input, const QMap<QString, InputKey*>& keys)
 {
     int row = 0;
 
@@ -51,7 +53,7 @@ void EWHotkeyTable::fillInTable(QTableWidget* table, const InputContainer& input
         QString buttonTitle = convertText(keySequenceText, key);
         auto button = new QPushButton(buttonTitle, table);
         button->setFlat(true);
-        setupButtonConnect(button, inputContainer, it.value());
+        setupButtonConnect(button, input, it.value());
 
         table->setCellWidget(row, 0, nameLabel);
         table->setCellWidget(row, 1, button);
@@ -60,11 +62,11 @@ void EWHotkeyTable::fillInTable(QTableWidget* table, const InputContainer& input
     }
 }
 
-void EWHotkeyTable::setupButtonConnect(QPushButton* button, const InputContainer& inputContainer, InputKey* key)
+void EWHotkeyTable::setupButtonConnect(QPushButton* button, const BaseInput* input, InputKey* key)
 {
-    connect(button, &QPushButton::clicked, key, [this, button, &inputContainer, key]()
+    connect(button, &QPushButton::clicked, key, [this, button, input, key]()
     {
-        EWFetchUserInput fetchUserInput(inputContainer);
+        EWFetchUserInput fetchUserInput(input);
         fetchUserInput.exec();
         if(fetchUserInput.result() == QDialog::Rejected) { return; }
 

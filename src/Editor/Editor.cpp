@@ -20,7 +20,6 @@ Editor::~Editor()
 void Editor::startup(const AppStartEvent& event)
 {
     // *** DO NOT REORDER *** //
-    input->startup();
     ui->startup(event);
     gameFileDropZone->startup(event);
 

@@ -14,8 +14,8 @@ EWGlslEditorEditMenu::EWGlslEditorEditMenu(QWidget* parent) :
 
 void EWGlslEditorEditMenu::startup(const AppStartEvent& event, EWGlslEditor* editor)
 {
-    auto& inputContainer = event.getEditor()->getInput()->getInputContainer();
+    auto* input = event.getEditor()->getInput();
     auto& shaderManager = event.getGame()->getIEScene().getShaderManager();
 
-    appendAction("Compile", new CompileShaderAction(editor, shaderManager, inputContainer.getValue(""), this));
+    appendAction("Compile", new CompileShaderAction(editor, shaderManager, input->getConfigKey(""), this));
 }
