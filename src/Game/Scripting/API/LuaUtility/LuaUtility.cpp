@@ -8,6 +8,11 @@ LuaUtility::LuaUtility(sol::table& utilityTable)
                                           "compute", &LuaUtility::computeHash);
 }
 
+LuaUtility::~LuaUtility()
+{
+
+}
+
 unsigned long long LuaUtility::computeHash(const char* str)
 {
     return IEHash::Compute(str);

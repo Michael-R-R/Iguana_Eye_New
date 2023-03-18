@@ -16,23 +16,23 @@ public:
     float y() const { return vec3.y(); }
     float z() const { return vec3.z(); }
 
-    LuaVec3Wrapper addition(const LuaVec3Wrapper& n2)
+    LuaVec3Wrapper addition(const LuaVec3Wrapper& n)
     {
-        return LuaVec3Wrapper(this->vec3 + n2.vec3);
+        return LuaVec3Wrapper(this->vec3 + n.vec3);
     }
 
-    LuaVec3Wrapper subtraction(const LuaVec3Wrapper& n2)
+    LuaVec3Wrapper subtraction(const LuaVec3Wrapper& n)
     {
-        return LuaVec3Wrapper(this->vec3 - n2.vec3);
+        return LuaVec3Wrapper(this->vec3 - n.vec3);
     }
 
-    LuaVec3Wrapper multiply(const LuaVec3Wrapper& n2)
+    LuaVec3Wrapper multiply(const LuaVec3Wrapper& n)
     {
-        return LuaVec3Wrapper(this->vec3 * n2.vec3);
+        return LuaVec3Wrapper(this->vec3 * n.vec3);
     }
 
-    LuaVec3Wrapper division(const LuaVec3Wrapper& n2)
+    LuaVec3Wrapper division(const LuaVec3Wrapper& n)
     {
-        return LuaVec3Wrapper(this->vec3 / n2.vec3);
+        return LuaVec3Wrapper(this->vec3 / n.vec3);
     }
 };

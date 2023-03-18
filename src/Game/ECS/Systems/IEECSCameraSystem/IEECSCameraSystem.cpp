@@ -8,6 +8,7 @@
 IEECSCameraSystem::IEECSCameraSystem() :
     data(),
     activeIndex(-1),
+    hasDirtyProjection(false),
     cameraManager(nullptr)
 {
     IEECSCameraSystem::attach(IEEntity(-1));
@@ -85,6 +86,11 @@ int IEECSCameraSystem::getActiveIndex() const
     return activeIndex;
 }
 
+bool IEECSCameraSystem::getHasDirtyProj() const
+{
+    return hasDirtyProjection;
+}
+
 IEEntity IEECSCameraSystem::getActiveEntity() const
 {
     if(!indexBoundCheck(activeIndex))
@@ -111,6 +117,12 @@ IECamera* IEECSCameraSystem::getAttachedCamera(const int index) const
 void IEECSCameraSystem::setActiveIndex(const int val)
 {
     activeIndex = val;
+    hasDirtyProjection = true;
+}
+
+void IEECSCameraSystem::setHasDirtyProj(const bool val)
+{
+    hasDirtyProjection = val;
 }
 
 unsigned long long IEECSCameraSystem::getCameraId(const int index) const

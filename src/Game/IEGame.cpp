@@ -6,6 +6,8 @@
 #include "IEScriptEngine.h"
 #include "IERenderEngine.h"
 #include "IEScene.h"
+#include "IEECS.h"
+#include "IEECSCameraSystem.h"
 
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
@@ -63,6 +65,10 @@ void IEGame::resizeGL(int w, int h)
     viewportHeight = h;
 
     glFunc->glViewport(0, 0, w, h);
+
+    auto& ecs = scene->getECS();
+    auto* cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
+    cameraSystem->setHasDirtyProj(true);
 }
 
 void IEGame::startup()

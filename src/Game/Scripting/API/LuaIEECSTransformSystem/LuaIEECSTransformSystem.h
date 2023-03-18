@@ -7,6 +7,6 @@ class LuaIEECSTransformSystem
 
 public:
     LuaIEECSTransformSystem(sol::state& lua);
-    ~LuaIEECSTransformSystem() {}
+    ~LuaIEECSTransformSystem();
 };
 

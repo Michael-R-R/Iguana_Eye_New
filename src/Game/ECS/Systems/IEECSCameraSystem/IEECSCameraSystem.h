@@ -34,6 +34,7 @@ class IEECSCameraSystem : public IEECSSystem
     Data data;
 
     int activeIndex;
+    bool hasDirtyProjection;
 
     // DOES NOT OWN THIS POINTER
     IECameraManager* cameraManager;
@@ -48,10 +49,12 @@ public:
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
     int getActiveIndex() const;
+    bool getHasDirtyProj() const;
     IEEntity getActiveEntity() const;
     IECamera* getActiveCamera() const;
     IECamera* getAttachedCamera(const int index) const;
     void setActiveIndex(const int val);
+    void setHasDirtyProj(const bool val);
 
     unsigned long long getCameraId(const int index) const;
     void setCameraId(const int index, const unsigned long long val);

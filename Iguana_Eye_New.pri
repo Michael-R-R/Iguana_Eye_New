@@ -166,8 +166,11 @@ INCLUDEPATH += $$PWD/src/Game/Scripting \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/API \
     $$PWD/src/Game/Scripting/API/LuaEnum \
+    $$PWD/src/Game/Scripting/API/LuaIECamera \
     $$PWD/src/Game/Scripting/API/LuaUtility \
     $$PWD/src/Game/Scripting/API/LuaIEECS \
+    $$PWD/src/Game/Scripting/API/LuaIEECSCameraSystem \
+    $$PWD/src/Game/Scripting/API/LuaIEECSInputSystem \
     $$PWD/src/Game/Scripting/API/LuaIEECSScriptSystem \
     $$PWD/src/Game/Scripting/API/LuaIEECSTransformSystem \
     $$PWD/src/Game/Scripting/API/LuaIEEntity \
@@ -176,7 +179,10 @@ INCLUDEPATH += $$PWD/src/Game/Scripting/API \
     $$PWD/src/Game/Scripting/API/LuaIETime \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/API/LuaCommonType \
+    $$PWD/src/Game/Scripting/API/LuaCommonType/LuaVec2Wrapper \
     $$PWD/src/Game/Scripting/API/LuaCommonType/LuaVec3Wrapper \
+    $$PWD/src/Game/Scripting/API/LuaCommonType/LuaVec4Wrapper \
+    $$PWD/src/Game/Scripting/API/LuaCommonType/LuaMat4Wrapper \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/Scripts \
     $$PWD/src/Game/Scripting/Scripts/IEEntityScript \

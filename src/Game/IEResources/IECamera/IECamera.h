@@ -22,7 +22,7 @@ public:
     IECamera();
     IECamera(const QString& path, const unsigned long long resourceId);
     IECamera(const IECamera& other);
-    ~IECamera() {}
+    ~IECamera();
 
     bool operator==(const IECamera& other) { return IEResource::operator==(other); }
     bool operator!=(const IECamera& other) { return IEResource::operator!=(other); }
@@ -42,8 +42,8 @@ public:
     float getSensitivity() { return sensitivity; }
 
     void setProjection(const QMatrix4x4& val) { projection = val; }
-    void setNear(const float val) { nearPlane = val; }
-    void setFar(const float val) { farPlane = val; }
+    void setNearPlane(const float val) { nearPlane = val; }
+    void setFarPlane(const float val) { farPlane = val; }
     void setFOV(const float val) { fov = val; }
     void setSpeed(const float val) { speed = val; }
     void setSensitivity(const float val) { sensitivity = val; }

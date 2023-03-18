@@ -7,7 +7,7 @@ class LuaUtility
 
 public:
     LuaUtility(sol::table& utilityTable);
-    ~LuaUtility() {}
+    ~LuaUtility();
 
 private:
     unsigned long long computeHash(const char* str);

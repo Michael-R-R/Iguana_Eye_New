@@ -7,6 +7,6 @@ class LuaCommonType
 
 public:
     LuaCommonType(sol::state& lua);
-    ~LuaCommonType() {}
+    ~LuaCommonType();
 };
 
