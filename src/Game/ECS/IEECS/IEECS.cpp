@@ -14,9 +14,6 @@
 #include "IEECSRenderableSystem.h"
 #include "ECSOnUpdateEvent.h"
 
-// TODO test
-#include "IEHash.h"
-
 IEECS::IEECS() :
     IEObject(),
     onUpdateEvent(nullptr),

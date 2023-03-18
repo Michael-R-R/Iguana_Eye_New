@@ -25,39 +25,17 @@ void ESceneStartup::startup(const AppStartEvent& event)
     addDefaultMaterial(event);
     addDefaultShader(event);
     buildGridRenderable(event);
+    buildCameraEntity(event);
 }
 
 void ESceneStartup::addDefaultCamera(const AppStartEvent& event)
 {
-    // TODO test
     auto& scene = event.getGame()->getIEScene();
-    auto& ecs = scene.getECS();
-    auto* inputSystem = ecs.getComponent<IEECSInputSystem>("Input");
-    auto* scriptSystem = ecs.getComponent<IEECSScriptSystem>("Script");
-    auto* transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");
-    auto* cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
     auto& cameraManager = scene.getCameraManager();
 
     QString path = "./resources/cameras/editor/default.iecam";
     unsigned long long id = IEHash::Compute(path);
     auto camera = std::make_unique<EDefaultCamera>(path, id);
-
-    IEEntity entity = ecs.create();
-    const int inputIndex = ecs.attachComponent(entity, "Input");
-    inputSystem->setHasInput(inputIndex, true);
-
-    const int scriptIndex = ecs.attachComponent(entity, "Script");
-    const unsigned long long scriptId = IEHash::Compute("perspController");
-    scriptSystem->addScript(scriptIndex, IEEntityScript("./resources/scripts/test/perspController.lua", scriptId));
-    scriptSystem->initalizeScript(scriptIndex, scriptId);
-    scriptSystem->startScript(scriptIndex, scriptId);
-
-    const int transformIndex = transformSystem->lookUpIndex(entity);
-    transformSystem->setRotation(transformIndex, QVector3D(0.0f, 0.0f, -1.0f));
-
-    const int cameraIndex = ecs.attachComponent(entity, "Camera");
-    cameraSystem->setCameraId(cameraIndex, id);
-    cameraSystem->setActiveIndex(cameraIndex);
 
     cameraManager.setDefaultResourceId(id);
     cameraManager.add(id, std::move(camera));
@@ -104,4 +82,34 @@ void ESceneStartup::buildGridRenderable(const AppStartEvent& event)
     gridRenderable->setup(meshManager, materialManager, shaderManager);
 
     renderableManager.add(id, std::move(gridRenderable));
+}
+
+void ESceneStartup::buildCameraEntity(const AppStartEvent& event)
+{
+    auto& scene = event.getGame()->getIEScene();
+    auto& ecs = scene.getECS();
+    auto* inputSystem = ecs.getComponent<IEECSInputSystem>("Input");
+    auto* scriptSystem = ecs.getComponent<IEECSScriptSystem>("Script");
+    auto* transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");
+    auto* cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
+    auto& cameraManager = scene.getCameraManager();
+
+    const unsigned long long cameraId = cameraManager.getDefaultResourceId();
+
+    IEEntity entity = ecs.create();
+    const int inputIndex = ecs.attachComponent(entity, "Input");
+    inputSystem->setHasInput(inputIndex, true);
+
+    const int scriptIndex = ecs.attachComponent(entity, "Script");
+    const unsigned long long scriptId = IEHash::Compute("perspController");
+    scriptSystem->addScript(scriptIndex, IEEntityScript("./resources/scripts/editor/perspController.lua", scriptId));
+    scriptSystem->initalizeScript(scriptIndex, scriptId);
+    scriptSystem->startScript(scriptIndex, scriptId);
+
+    const int transformIndex = transformSystem->lookUpIndex(entity);
+    transformSystem->setRotation(transformIndex, QVector3D(0.0f, 0.0f, -1.0f));
+
+    const int cameraIndex = ecs.attachComponent(entity, "Camera");
+    cameraSystem->setCameraId(cameraIndex, cameraId);
+    cameraSystem->setActiveIndex(cameraIndex);
 }
