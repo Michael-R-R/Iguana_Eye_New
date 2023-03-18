@@ -17,7 +17,7 @@ public:
     float y() const { return vec4.y(); }
     float z() const { return vec4.z(); }
     float w() const { return vec4.w(); }
-    QVector4D get() { return vec4; }
+    QVector4D& get() { return vec4; }
 
     LuaVec4Wrapper operator +(const LuaVec4Wrapper& n)
     {

@@ -15,7 +15,7 @@ public:
 
     float x() const { return vec2.x(); }
     float y() const { return vec2.y(); }
-    QVector2D get() { return vec2; }
+    QVector2D& get() { return vec2; }
 
     LuaVec2Wrapper operator +(const LuaVec2Wrapper& n)
     {

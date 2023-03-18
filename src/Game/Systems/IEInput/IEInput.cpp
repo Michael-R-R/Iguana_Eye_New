@@ -24,12 +24,12 @@ bool IEInput::isPressed(const char* keyName)
     return inputCapture->checkStatus(key);
 }
 
-QPoint IEInput::cursorPos() const
+const QVector2D& IEInput::cursorPos() const
 {
     return inputCapture->getCursorPos();
 }
 
-QPoint IEInput::wheelDelta() const
+const QVector2D& IEInput::wheelDelta() const
 {
     return inputCapture->getWheelDelta();
 }
@@ -43,6 +43,9 @@ void IEInput::setupInputContainer()
     inputContainer.addValue("Up", InputKey(0, Qt::Key_E));
     inputContainer.addValue("Down", InputKey(0, Qt::Key_Q));
     inputContainer.addValue("Jump", InputKey(0, Qt::Key_Space));
+    inputContainer.addValue("Left Click", InputKey(0, Qt::LeftButton));
+    inputContainer.addValue("Middle Click", InputKey(0, Qt::MiddleButton));
+    inputContainer.addValue("Right Click", InputKey(0, Qt::RightButton));
 }
 
 QDataStream& IEInput::serialize(QDataStream& out, const Serializable& obj) const

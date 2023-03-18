@@ -16,7 +16,7 @@ public:
     float x() const { return vec3.x(); }
     float y() const { return vec3.y(); }
     float z() const { return vec3.z(); }
-    QVector3D get() { return vec3; }
+    QVector3D& get() { return vec3; }
 
     LuaVec3Wrapper normalize()
     {

@@ -16,8 +16,8 @@ public:
 
     bool isPressed(const InputKey& key);
     bool isPressed(const char* keyName);
-    QPoint cursorPos() const;
-    QPoint wheelDelta() const;
+    const QVector2D& cursorPos() const;
+    const QVector2D& wheelDelta() const;
 
 protected:
     void setupInputContainer() override;

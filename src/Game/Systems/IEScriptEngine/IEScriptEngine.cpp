@@ -31,7 +31,7 @@ IEScriptEngine::~IEScriptEngine()
 
 void IEScriptEngine::startup(const GameStartEvent& event)
 {
-    lua.open_libraries(sol::lib::base);
+    lua.open_libraries(sol::lib::base, sol::lib::math);
 
     // Create namespaces
     auto enumTable = lua["enum"].get_or_create<sol::table>();

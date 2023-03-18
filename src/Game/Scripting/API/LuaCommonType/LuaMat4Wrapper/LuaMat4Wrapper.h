@@ -21,7 +21,7 @@ public:
     void scale(float x, float y, float z) { mat4.scale(x, y, z); }
     void translate(float x, float y, float z) { mat4.translate(x, y, z); }
     void setToIdentity() { mat4.setToIdentity(); }
-    QMatrix4x4 get() { return mat4; }
+    QMatrix4x4& get() { return mat4; }
 
     LuaMat4Wrapper operator +(const LuaMat4Wrapper& n)
     {

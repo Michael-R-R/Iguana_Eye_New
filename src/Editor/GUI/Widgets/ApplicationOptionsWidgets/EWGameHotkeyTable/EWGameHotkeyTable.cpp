@@ -23,5 +23,8 @@ void EWGameHotkeyTable::setupTables(BaseInput* input)
     movementKeys["Up"] = &input->getConfigKey("Up");
     movementKeys["Down"] = &input->getConfigKey("Down");
     movementKeys["Jump"] = &input->getConfigKey("Jump");
+    movementKeys["Left Click"] = &input->getConfigKey("Left Click");
+    movementKeys["Middle Click"] = &input->getConfigKey("Middle Click");
+    movementKeys["Right Click"] = &input->getConfigKey("Right Click");
     this->addTable("Movement", this->createTable(input, movementKeys));
 }

@@ -6,7 +6,7 @@
 
 LuaCommonType::LuaCommonType(sol::state& lua)
 {
-    lua.new_usertype<LuaVec2Wrapper>("Vec2", sol::constructors<LuaVec2Wrapper(), LuaVec2Wrapper(float, float), LuaVec2Wrapper(const LuaVec2Wrapper&)>(),
+    lua.new_usertype<LuaVec2Wrapper>("Vec2", sol::constructors<LuaVec2Wrapper(), LuaVec2Wrapper(float, float), LuaVec2Wrapper(const QVector2D&), LuaVec2Wrapper(const LuaVec2Wrapper&)>(),
                                      "x", &LuaVec2Wrapper::x,
                                      "y", &LuaVec2Wrapper::y,
                                      "get", &LuaVec2Wrapper::get,
@@ -16,7 +16,7 @@ LuaCommonType::LuaCommonType(sol::state& lua)
                                                                                        sol::resolve<float>(&LuaVec2Wrapper::operator *)),
                                      sol::meta_function::division, &LuaVec2Wrapper::operator /);
 
-    lua.new_usertype<LuaVec3Wrapper>("Vec3", sol::constructors<LuaVec3Wrapper(), LuaVec3Wrapper(float, float, float), LuaVec3Wrapper(const QVector3D), LuaVec3Wrapper(const LuaVec3Wrapper&)>(),
+    lua.new_usertype<LuaVec3Wrapper>("Vec3", sol::constructors<LuaVec3Wrapper(), LuaVec3Wrapper(float, float, float), LuaVec3Wrapper(const QVector3D&), LuaVec3Wrapper(const LuaVec3Wrapper&)>(),
                                      "x", &LuaVec3Wrapper::x,
                                      "y", &LuaVec3Wrapper::y,
                                      "z", &LuaVec3Wrapper::z,
@@ -29,7 +29,7 @@ LuaCommonType::LuaCommonType(sol::state& lua)
                                                                                        sol::resolve<float>(&LuaVec3Wrapper::operator *)),
                                      sol::meta_function::division, &LuaVec3Wrapper::operator /);
 
-    lua.new_usertype<LuaVec4Wrapper>("Vec4", sol::constructors<LuaVec4Wrapper(), LuaVec4Wrapper(float, float, float, float), LuaVec4Wrapper(const LuaVec4Wrapper&)>(),
+    lua.new_usertype<LuaVec4Wrapper>("Vec4", sol::constructors<LuaVec4Wrapper(), LuaVec4Wrapper(float, float, float, float), LuaVec4Wrapper(const QVector4D&), LuaVec4Wrapper(const LuaVec4Wrapper&)>(),
                                      "x", &LuaVec4Wrapper::x,
                                      "y", &LuaVec4Wrapper::y,
                                      "z", &LuaVec4Wrapper::z,
@@ -41,7 +41,7 @@ LuaCommonType::LuaCommonType(sol::state& lua)
                                                                                        sol::resolve<float>(&LuaVec4Wrapper::operator *)),
                                      sol::meta_function::division, &LuaVec4Wrapper::operator /);
 
-    lua.new_usertype<LuaMat4Wrapper>("Mat4", sol::constructors<LuaMat4Wrapper(), LuaMat4Wrapper(const LuaMat4Wrapper&)>(),
+    lua.new_usertype<LuaMat4Wrapper>("Mat4", sol::constructors<LuaMat4Wrapper(), LuaMat4Wrapper(const QMatrix4x4&), LuaMat4Wrapper(const LuaMat4Wrapper&)>(),
                                      "inverted", &LuaMat4Wrapper::inverted,
                                      "lookAt", &LuaMat4Wrapper::lookAt,
                                      "ortho", &LuaMat4Wrapper::ortho,

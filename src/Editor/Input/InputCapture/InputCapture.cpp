@@ -8,9 +8,9 @@ InputCapture::InputCapture(QWidget* parent) :
     lastMod(Qt::NoModifier),
     cursorPos(), wheelDelta()
 {
-    this->setFocusPolicy(Qt::StrongFocus);
-    this->setMouseTracking(true);
-    this->setFocus();
+    parent->setFocusPolicy(Qt::StrongFocus);
+    parent->setFocus();
+    parent->setMouseTracking(true);
     parent->installEventFilter(this);
 }
 
@@ -22,8 +22,8 @@ InputCapture::~InputCapture()
 void InputCapture::clear()
 {
     currKey = InputKey();
-    cursorPos = QPoint();
-    wheelDelta = QPoint();
+    cursorPos = QVector2D();
+    wheelDelta = QVector2D();
     capturedInput.clear();
 }
 
@@ -70,13 +70,17 @@ void InputCapture::mouseReleaseEvent(QMouseEvent* event)
 void InputCapture::mouseMoveEvent(QMouseEvent* event)
 {
     if(!event) { return; }
-    cursorPos = event->pos();
+
+    QPoint pos = event->pos();
+    cursorPos = QVector2D(pos.x(), pos.y());
 }
 
 void InputCapture::wheelEvent(QWheelEvent* event)
 {
     if(!event) { return; }
-    wheelDelta = event->angleDelta();
+
+    QPoint pos = event->angleDelta();
+    wheelDelta = QVector2D(pos.x(), pos.y());
 }
 
 void InputCapture::keyPressEvent(QKeyEvent* event)

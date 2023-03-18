@@ -2,6 +2,7 @@
 
 #include <QWidget>
 #include <QMap>
+#include <QVector2D>
 #include <QEvent>
 #include <QMouseEvent>
 #include <QWheelEvent>
@@ -19,8 +20,8 @@ class InputCapture : public QWidget
     InputKey currKey;
     int lastMod;
 
-    QPoint cursorPos;
-    QPoint wheelDelta;
+    QVector2D cursorPos;
+    QVector2D wheelDelta;
 
 public:
     InputCapture(QWidget* parent = nullptr);
@@ -29,8 +30,8 @@ public:
     void clear();
     bool checkStatus(const InputKey& key);
 
-    QPoint getCursorPos() { return cursorPos; }
-    QPoint getWheelDelta() { return wheelDelta; }
+    const QVector2D& getCursorPos() const { return cursorPos; }
+    const QVector2D& getWheelDelta() const { return wheelDelta; }
 
 protected:
     bool eventFilter(QObject* watched, QEvent* event) override;
