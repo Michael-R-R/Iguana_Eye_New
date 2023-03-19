@@ -1,7 +1,7 @@
 #include "LuaIEScript.h"
 #include "IEScript.h"
 
-LuaIEScript::LuaIEScript(sol::state& lua)
+void LuaIEScript::addToLua(sol::state& lua)
 {
     lua.new_usertype<IEScript>("", sol::no_constructor,
                                "id", sol::property(&IEScript::getId),

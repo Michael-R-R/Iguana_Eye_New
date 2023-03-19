@@ -6,7 +6,6 @@ class LuaIEEntity
 {
 
 public:
-    LuaIEEntity(sol::state& lua);
-    ~LuaIEEntity() {}
+    static void addToLua(sol::state& lua);
 };
 

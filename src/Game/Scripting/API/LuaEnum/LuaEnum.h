@@ -6,7 +6,6 @@ class LuaEnum
 {
 
 public:
-    LuaEnum(sol::table& enumTable);
-    ~LuaEnum();
+    static void addToLua(sol::table& enumTable);
 };
 

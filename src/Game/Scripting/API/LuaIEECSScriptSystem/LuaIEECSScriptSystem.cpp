@@ -1,9 +1,11 @@
 #include "LuaIEECSScriptSystem.h"
+#include "LuaIEScript.h"
 #include "IEECSScriptSystem.h"
 
-LuaIEECSScriptSystem::LuaIEECSScriptSystem(sol::state& lua) :
-    luaScript(std::make_unique<LuaIEScript>(lua))
+void LuaIEECSScriptSystem::addToLua(sol::state& lua)
 {
+    LuaIEScript::addToLua(lua);
+
     lua.new_usertype<IEECSScriptSystem>("", sol::no_constructor,
                                         "lookUpIndex", &IEECSScriptSystem::lookUpIndex,
                                         "hasScript", &IEECSScriptSystem::hasScript,
@@ -13,9 +15,4 @@ LuaIEECSScriptSystem::LuaIEECSScriptSystem(sol::state& lua) :
                                         "sleepScript", &IEECSScriptSystem::sleepScript,
                                         "getScript", sol::overload(sol::resolve<const int, const unsigned long long>(&IEECSScriptSystem::getScript),
                                                                    sol::resolve<const int, const char*>(&IEECSScriptSystem::getScript)));
-}
-
-LuaIEECSScriptSystem::~LuaIEECSScriptSystem()
-{
-
 }

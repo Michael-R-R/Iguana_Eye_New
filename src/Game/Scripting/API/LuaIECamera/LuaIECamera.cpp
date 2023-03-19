@@ -1,7 +1,7 @@
 #include "LuaIECamera.h"
 #include "IECamera.h"
 
-LuaIECamera::LuaIECamera(sol::state& lua)
+void LuaIECamera::addToLua(sol::state& lua)
 {
     lua.new_usertype<IECamera>("", sol::no_constructor,
                                "projection", sol::property(&IECamera::getProjection, &IECamera::setProjection),
@@ -13,9 +13,4 @@ LuaIECamera::LuaIECamera(sol::state& lua)
                                "speed", sol::property(&IECamera::getSpeed, &IECamera::setSpeed),
                                "sensitivity", sol::property(&IECamera::getSensitivity, &IECamera::setSensitivity),
                                "updateView", &IECamera::updateView);
-}
-
-LuaIECamera::~LuaIECamera()
-{
-
 }

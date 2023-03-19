@@ -3,9 +3,7 @@
 #include <sol/sol.hpp>
 
 #include "IEECS.h"
-#include "LuaIEEntity.h"
 
-class LuaIEEntity;
 class IEECSNameSystem;
 class IEECSInputSystem;
 class IEECSScriptSystem;
@@ -14,12 +12,16 @@ class IEECSCameraSystem;
 
 class LuaIEECS
 {
-    IEECS& ecs;
-    std::unique_ptr<LuaIEEntity> luaEntity;
+    LuaIEECS();
+    static LuaIEECS instance;
+
+    // DOES NOT OWN THIS POINTER
+    IEECS* ecs;
 
 public:
-    LuaIEECS(IEECS& ecs_, sol::state& lua, sol::table& gameTable);
     ~LuaIEECS();
+
+    static void addToLua(IEECS* val, sol::state& lua, sol::table& gameTable);
 
 private:
     IEECSNameSystem* nameComponent();

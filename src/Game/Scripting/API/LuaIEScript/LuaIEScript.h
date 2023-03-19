@@ -6,7 +6,6 @@ class LuaIEScript
 {
 
 public:
-    LuaIEScript(sol::state& lua);
-    ~LuaIEScript() {}
+    static void addToLua(sol::state& lua);
 };
 

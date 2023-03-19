@@ -4,15 +4,10 @@
 #include "LuaVec4Wrapper.h"
 #include "LuaMat4Wrapper.h"
 
-LuaCommonType::LuaCommonType(sol::state& lua)
+void LuaCommonType::addToLua(sol::state& lua)
 {
     LuaVec2Wrapper::addToLua(lua);
     LuaVec3Wrapper::addToLua(lua);
     LuaVec4Wrapper::addToLua(lua);
     LuaMat4Wrapper::addToLua(lua);
-}
-
-LuaCommonType::~LuaCommonType()
-{
-
 }

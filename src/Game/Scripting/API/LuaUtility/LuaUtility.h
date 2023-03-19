@@ -4,10 +4,13 @@
 
 class LuaUtility
 {
+    LuaUtility();
+    static LuaUtility instance;
 
 public:
-    LuaUtility(sol::table& utilityTable);
     ~LuaUtility();
+
+    static void addToLua(sol::table& utilityTable);
 
 private:
     unsigned long long computeHash(const char* str);

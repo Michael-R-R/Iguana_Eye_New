@@ -6,7 +6,6 @@ class LuaIECamera
 {
 
 public:
-    LuaIECamera(sol::state& lua);
-    ~LuaIECamera();
+    static void addToLua(sol::state& lua);
 };
 

@@ -6,12 +6,18 @@ class IEGame;
 
 class LuaApplication
 {
-    IEGame& game;
+    LuaApplication();
+    static LuaApplication instance;
+
+    // DOES NOT OWN THIS POINTER
+    IEGame* game;
 
 public:
-    LuaApplication(IEGame& game_, sol::table gameTable);
     ~LuaApplication();
 
+    static void addToLua(IEGame* val, sol::table gameTable);
+
+private:
     float viewportWidth();
     float viewportHeight();
 };

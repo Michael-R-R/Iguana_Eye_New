@@ -1,26 +1,35 @@
 #include "LuaApplication.h"
 #include "IEGame.h"
 
-LuaApplication::LuaApplication(IEGame& game_, sol::table gameTable) :
-    game(game_)
+LuaApplication LuaApplication::instance;
+
+LuaApplication::LuaApplication() :
+    game(nullptr)
 {
-    gameTable["Application"] = this;
+
+}
+
+LuaApplication::~LuaApplication()
+{
+    game = nullptr;
+}
+
+void LuaApplication::addToLua(IEGame* val, sol::table gameTable)
+{
+    instance.game = val;
+
+    gameTable["Application"] = instance;
     gameTable.new_usertype<LuaApplication>("", sol::no_constructor,
                                            "viewportWidth", &LuaApplication::viewportWidth,
                                            "viewportHeight", &LuaApplication::viewportHeight);
 }
 
-LuaApplication::~LuaApplication()
-{
-
-}
-
 float LuaApplication::viewportWidth()
 {
-    return (float)game.viewportSize().first;
+    return (float)game->viewportSize().first;
 }
 
 float LuaApplication::viewportHeight()
 {
-    return (float)game.viewportSize().second;
+    return (float)game->viewportSize().second;
 }

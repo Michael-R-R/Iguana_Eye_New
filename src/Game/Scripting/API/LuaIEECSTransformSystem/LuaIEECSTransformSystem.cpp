@@ -1,7 +1,7 @@
 #include "LuaIEECSTransformSystem.h"
 #include "IEECSTransformSystem.h"
 
-LuaIEECSTransformSystem::LuaIEECSTransformSystem(sol::state& lua)
+void LuaIEECSTransformSystem::addToLua(sol::state& lua)
 {
     lua.new_usertype<IEECSTransformSystem>("", sol::no_constructor,
                                            "lookUpIndex", &IEECSTransformSystem::lookUpIndex,
@@ -11,9 +11,4 @@ LuaIEECSTransformSystem::LuaIEECSTransformSystem(sol::state& lua)
                                            "setPosition", &IEECSTransformSystem::setPosition,
                                            "setRotation", &IEECSTransformSystem::setRotation,
                                            "setScale", &IEECSTransformSystem::setScale);
-}
-
-LuaIEECSTransformSystem::~LuaIEECSTransformSystem()
-{
-
 }

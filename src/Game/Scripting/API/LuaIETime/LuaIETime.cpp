@@ -1,15 +1,35 @@
 #include "LuaIETime.h"
 #include "IETime.h"
 
-LuaIETime::LuaIETime(IETime& val, sol::table& gameTable)
+LuaIETime LuaIETime::instance;
+
+LuaIETime::LuaIETime() :
+    time(nullptr)
 {
-    gameTable["IETime"] = &val;
-    gameTable.new_usertype<IETime>("", sol::no_constructor,
-                                   "fps", &IETime::getFPS,
-                                   "deltaTime", &IETime::getDeltaTime);
+
 }
 
 LuaIETime::~LuaIETime()
 {
+    time = nullptr;
+}
 
+void LuaIETime::addToLua(IETime* val, sol::table& gameTable)
+{
+    instance.time = val;
+
+    gameTable["IETime"] = instance;
+    gameTable.new_usertype<LuaIETime>("", sol::no_constructor,
+                                      "fps", &LuaIETime::fps,
+                                      "deltaTime", &LuaIETime::deltaTime);
+}
+
+float LuaIETime::fps()
+{
+    return time->getFPS();
+}
+
+float LuaIETime::deltaTime()
+{
+    return time->getDeltaTime();
 }
