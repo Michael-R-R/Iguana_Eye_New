@@ -20,8 +20,8 @@ void LuaApplication::addToLua(IEGame* val, sol::table gameTable)
 
     gameTable["Application"] = instance;
     gameTable.new_usertype<LuaApplication>("", sol::no_constructor,
-                                           "viewportWidth", &LuaApplication::viewportWidth,
-                                           "viewportHeight", &LuaApplication::viewportHeight);
+                                           "width", &LuaApplication::viewportWidth,
+                                           "height", &LuaApplication::viewportHeight);
 }
 
 float LuaApplication::viewportWidth()

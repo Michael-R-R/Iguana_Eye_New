@@ -27,12 +27,12 @@ void IEScriptEngine::startup(const GameStartEvent& event)
 
     // Create namespaces
     auto enumTable = lua["enum"].get_or_create<sol::table>();
-    auto utilityTable = lua["util"].get_or_create<sol::table>();
+    auto utilTable = lua["util"].get_or_create<sol::table>();
     auto gameTable = lua["game"].get_or_create<sol::table>();
 
     LuaCommonType::addToLua(lua);
     LuaEnum::addToLua(enumTable);
-    LuaUtility::addToLua(utilityTable);
+    LuaUtility::addToLua(utilTable);
     LuaApplication::addToLua(&event.getGame(), gameTable);
     LuaIETime::addToLua(&event.getTime(), gameTable);
     LuaIEInput::addToLua(&event.getInput(), gameTable);

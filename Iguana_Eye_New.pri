@@ -163,6 +163,9 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IEResourceManager \
     $$PWD/src/Game/Managers/IEShaderManager \
 
+INCLUDEPATH += $$PWD/src/Game/Physics \
+    $$PWD/src/Game/Physics/PhysicsTest
+
 INCLUDEPATH += $$PWD/src/Game/Scripting \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/API \
