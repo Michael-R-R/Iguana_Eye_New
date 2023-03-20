@@ -38,7 +38,7 @@ int IEECSTransformSystem::attach(const IEEntity entity)
 
     data.entity.append(entity);
     data.position.append(QVector3D(0.0f, 0.0f, 0.0f));
-    data.rotation.append(QVector3D(0.0f, 0.0f, 0.0f));
+    data.rotation.append(QVector4D(0.0f, 0.0f, 0.0f, 0.0f));
     data.scale.append(QVector3D(1.0f, 1.0f, 1.0f));
     data.transform.append(QMatrix4x4());
 
@@ -126,7 +126,7 @@ const QVector3D& IEECSTransformSystem::getPosition(const int index) const
     return data.position[index];
 }
 
-const QVector3D& IEECSTransformSystem::getRotation(const int index) const
+const QVector4D& IEECSTransformSystem::getRotation(const int index) const
 {
     if(!indexBoundCheck(index))
         return data.rotation[0];
@@ -161,6 +161,16 @@ void IEECSTransformSystem::setPosition(const int index, const QVector3D& val)
 }
 
 void IEECSTransformSystem::setRotation(const int index, const QVector3D& val)
+{
+    if(!indexBoundCheck(index))
+        return;
+
+    data.rotation[index] = QVector4D(val.x(), val.y(), val.z(), 0.0f);
+
+    dirtyParents[data.entity[index]] = index;
+}
+
+void IEECSTransformSystem::setRotation(const int index, const QVector4D& val)
 {
     if(!indexBoundCheck(index))
         return;
@@ -223,9 +233,7 @@ QMatrix4x4 IEECSTransformSystem::calcModelMatrix(const int index)
 
     QMatrix4x4 transform;
     transform.translate(pos);
-    transform.rotate(rot.x(), 1.0f, 0.0f, 0.0f);
-    transform.rotate(rot.y(), 0.0f, 1.0f, 0.0f);
-    transform.rotate(rot.z(), 0.0f, 0.0f, 1.0f);
+    transform.rotate(rot.w(), rot.x(), rot.y(), rot.z());
     transform.scale(scl);
 
     return transform;

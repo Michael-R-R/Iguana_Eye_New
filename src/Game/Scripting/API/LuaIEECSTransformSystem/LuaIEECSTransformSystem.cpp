@@ -9,6 +9,7 @@ void LuaIEECSTransformSystem::addToLua(sol::state& lua)
                                            "getRotation", &IEECSTransformSystem::getRotation,
                                            "getScale", &IEECSTransformSystem::getScale,
                                            "setPosition", &IEECSTransformSystem::setPosition,
-                                           "setRotation", &IEECSTransformSystem::setRotation,
+                                           "setRotation", sol::overload(sol::resolve<const int, const QVector3D&>(&IEECSTransformSystem::setRotation),
+                                                                        sol::resolve<const int, const QVector4D&>(&IEECSTransformSystem::setRotation)),
                                            "setScale", &IEECSTransformSystem::setScale);
 }

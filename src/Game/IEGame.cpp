@@ -84,6 +84,9 @@ void IEGame::startup()
     time->startup(*this);
 
     this->setFocus();
+
+    // TODO test
+    testPhysics->startup(gameStartEvent);
 }
 
 void IEGame::shutdown()
@@ -94,10 +97,16 @@ void IEGame::shutdown()
     renderEngine->shutdown();
     scene->shutdown();
     scriptEngine->shutdown();
+
+    // TODO test
+    testPhysics->shutdown();
 }
 
 void IEGame::onUpdateFrame()
 {
+    // TODO test
+    testPhysics->simulate(time->getDeltaTime());
+
     scene->onUpdateFrame();
 }
 

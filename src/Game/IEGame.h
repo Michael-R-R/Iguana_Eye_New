@@ -14,6 +14,9 @@ class IEScriptEngine;
 class IERenderEngine;
 class IEScene;
 
+// TODO test
+#include <IETBasicPhysics.h>
+
 class IEGame : public QOpenGLWidget, public Serializable
 {
     Q_OBJECT
@@ -30,6 +33,9 @@ class IEGame : public QOpenGLWidget, public Serializable
 
     int viewportWidth;
     int viewportHeight;
+
+    // TODO test
+    std::unique_ptr<IETBasicPhysics> testPhysics = std::make_unique<IETBasicPhysics>();
 
 public:
     IEGame(QWidget* parent = nullptr);

@@ -3,6 +3,7 @@
 #include <sol/sol.hpp>
 
 #include <QVector3D>
+#include <QVector4D>
 
 class LuaVec3Wrapper
 {
@@ -12,6 +13,7 @@ public:
     LuaVec3Wrapper();
     LuaVec3Wrapper(float n1, float n2, float n3);
     LuaVec3Wrapper(const QVector3D& n);
+    LuaVec3Wrapper(const QVector4D& n);
     LuaVec3Wrapper(const LuaVec3Wrapper& n);
     ~LuaVec3Wrapper();
 

@@ -1,5 +1,6 @@
 INCLUDEPATH += $$PWD/required/include \
 INCLUDEPATH += $$PWD/required/include/lua \
+INCLUDEPATH += $$PWD/required/include/physx \
 
 INCLUDEPATH += $$PWD/src/Application \
     $$PWD/src/Application/ApplicationWindow \
@@ -164,7 +165,6 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IEShaderManager \
 
 INCLUDEPATH += $$PWD/src/Game/Physics \
-    $$PWD/src/Game/Physics/PhysicsTest
 
 INCLUDEPATH += $$PWD/src/Game/Scripting \
 
@@ -206,7 +206,8 @@ INCLUDEPATH += $$PWD/src/Serialize \
     $$PWD/src/Serialize/Serializable \
 
 INCLUDEPATH += $$PWD/src/Tests \
-    INCLUDEPATH += $$PWD/src/Tests/IETCreateRenderable \
+    $$PWD/src/Tests/IETCreateRenderable \
+    $$PWD/src/Tests/IETBasicPhysics
 
 INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \

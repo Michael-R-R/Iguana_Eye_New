@@ -18,6 +18,12 @@ LuaVec3Wrapper::LuaVec3Wrapper(const QVector3D& n) :
 
 }
 
+LuaVec3Wrapper::LuaVec3Wrapper(const QVector4D& n) :
+    vec3(n.toVector3D())
+{
+
+}
+
 LuaVec3Wrapper::LuaVec3Wrapper(const LuaVec3Wrapper& n) :
     vec3(n.vec3)
 {
@@ -34,6 +40,7 @@ void LuaVec3Wrapper::addToLua(sol::state& lua)
     lua.new_usertype<LuaVec3Wrapper>("Vec3", sol::constructors<LuaVec3Wrapper(),
                                      LuaVec3Wrapper(float, float, float),
                                      LuaVec3Wrapper(const QVector3D&),
+                                     LuaVec3Wrapper(const QVector4D&),
                                      LuaVec3Wrapper(const LuaVec3Wrapper&)>(),
                                      "x", &LuaVec3Wrapper::x,
                                      "y", &LuaVec3Wrapper::y,

@@ -19,7 +19,7 @@ class IEECSTransformSystem : public IEECSSystem
     {
         QVector<IEEntity> entity;
         QVector<QVector3D> position;
-        QVector<QVector3D> rotation;
+        QVector<QVector4D> rotation;
         QVector<QVector3D> scale;
         QVector<QMatrix4x4> transform;
 
@@ -55,12 +55,13 @@ public:
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
     const QVector3D& getPosition(const int index) const;
-    const QVector3D& getRotation(const int index) const;
+    const QVector4D& getRotation(const int index) const;
     const QVector3D& getScale(const int index) const;
     const QMatrix4x4& getTransform(const int index) const;
 
     void setPosition(const int index, const QVector3D& val);
     void setRotation(const int index, const QVector3D& val);
+    void setRotation(const int index, const QVector4D& val);
     void setScale(const int index, const QVector3D& val);
 
 private:

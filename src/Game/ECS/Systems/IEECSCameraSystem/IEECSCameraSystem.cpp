@@ -78,7 +78,7 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     auto& rot = transformSystem->getRotation(transformIndex);
 
     IECamera* activeCamera = cameraManager->value(activeId);
-    activeCamera->updateView(pos, rot);
+    activeCamera->updateView(pos, rot.toVector3D());
 }
 
 int IEECSCameraSystem::getActiveIndex() const
