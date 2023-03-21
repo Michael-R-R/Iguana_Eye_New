@@ -62,5 +62,6 @@ private:
     void createEntities(const GameStartEvent& event, const unsigned long long rendId);
     void updateEntities();
     QVector3D scrPosToWorldRay();
+    void castRay();
 };
 

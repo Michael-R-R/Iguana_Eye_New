@@ -76,28 +76,11 @@ void IETBasicPhysics::shutdown()
 
 void IETBasicPhysics::simulate(const float dt)
 {
-    if(input->isPressed("Left Click"))
-    {
-        //qDebug() << scrPosToWorldRay();
-        QVector3D qDir = scrPosToWorldRay();
-
-        physx::PxVec3 origin(0.0f, 15.0f, 20.0f);
-        physx::PxVec3 dir(qDir.x(), qDir.y(), qDir.z());
-        physx::PxReal maxDistance = 1000.0f;
-        physx::PxRaycastBuffer hit;
-
-        bool status = scene->raycast(origin, dir, maxDistance, hit);
-        if(status)
-        {
-            qDebug() << hit.block.position.x << hit.block.position.y << hit.block.position.z;
-            qDebug() << (int)(size_t)hit.block.actor->userData;
-        }
-    }
-
     scene->simulate(dt);
     scene->fetchResults(true);
 
     updateEntities();
+    castRay();
 }
 
 physx::PxRigidStatic* IETBasicPhysics::createStatic(const physx::PxTransform& transform,
@@ -200,7 +183,7 @@ void IETBasicPhysics::createEntities(const GameStartEvent& event, const unsigned
             physx::PxTransform t = posT * (xrotT * yrotT * zrotT);
             physx::PxBoxGeometry dGeometry = physx::PxBoxGeometry(1.0f, 1.0f, 1.0f);
             auto* dynamicItem = this->createDynamic(t, dGeometry);
-            dynamicItem->setMass(500);
+            dynamicItem->setMass(100);
             dynamicItem->setSleepThreshold(0.1f);
 
             auto& scene = event.getScene();
@@ -242,9 +225,6 @@ void IETBasicPhysics::updateEntities()
         const int transIndex = transformSystem->lookUpIndex(entities[i]);
         transformSystem->setPosition(transIndex, QVector3D(pos.x, pos.y, pos.z));
         transformSystem->setRotation(transIndex, QVector4D(rot.x, rot.y, rot.z, qRadiansToDegrees(angle)));
-
-        int userData = (int)(size_t)dynamicItems[i]->userData;
-        //qDebug() << userData;
     }
 }
 
@@ -253,30 +233,48 @@ QVector3D IETBasicPhysics::scrPosToWorldRay()
     QVector2D cursorPos = input->cursorPos();
     QVector2D dimension = game->viewportSize();
 
-    QVector4D lRayStartNDC((cursorPos.x() / dimension.x() - 0.5f) * 2.0f,
-                           (cursorPos.y() / dimension.y() - 0.5f) * 2.0f,
-                           -1.0f,
-                           1.0f);
-
-    QVector4D lRayEndNDC((cursorPos.x() / dimension.x() - 0.5f) * 2.0f,
-                         (cursorPos.y() / dimension.y() - 0.5f) * 2.0f,
-                         0.0f,
-                         1.0f);
-
     auto cameraId = cameraManager->getDefaultResourceId();
     auto* camera = cameraManager->value(cameraId);
+    QMatrix4x4 projection = camera->getProjection();
+    QMatrix4x4 view = camera->getView();
 
-    QMatrix4x4 mat(camera->getViewProjection());
-    mat = mat.inverted();
+    // Normal device coords
+    const float x = (2.0f * cursorPos.x()) / dimension.x() - 1.0f;
+    const float y = 1.0f - (2.0f * cursorPos.y()) / dimension.y();
+    const float z = 1.0f;
+    QVector3D rayNDC = QVector3D(x, y, z);
 
-    QVector4D lRayStartWorld = mat * lRayStartNDC;
-    lRayStartWorld /= lRayStartWorld.w();
+    // 4D homogenous clip coords
+    QVector4D rayClip = QVector4D(rayNDC.x(), rayNDC.y(), -1.0f, 1.0f);
 
-    QVector4D lRayEndWorld = mat * lRayEndNDC;
-    lRayEndWorld /= lRayEndWorld.w();
+    // 4D eye coords
+    QVector4D rayEye = projection.inverted() * rayClip;
+    rayEye = QVector4D(rayEye.x(), rayEye.y(), -1.0f, 0.0f);
 
-    QVector3D lRayDirWorld(lRayEndWorld - lRayStartWorld);
-    lRayDirWorld.normalize();
+    // 4D world coords
+    QVector4D inverseMat = view.inverted() * rayEye;
+    QVector3D rayWorld = QVector3D(inverseMat.x(), inverseMat.y(), inverseMat.z());
 
-    return lRayDirWorld;
+    return rayWorld.normalized();
+}
+
+void IETBasicPhysics::castRay()
+{
+    if(input->isPressed("Left Click"))
+    {
+        QVector3D qDir = scrPosToWorldRay();
+
+        physx::PxVec3 origin(0.0f, 15.0f, 20.0f);
+        physx::PxVec3 dir(qDir.x(), qDir.y(), qDir.z());
+        physx::PxReal maxDistance = 1000.0f;
+        physx::PxRaycastBuffer hit;
+
+        bool status = scene->raycast(origin, dir, maxDistance, hit);
+        if(status)
+        {
+            qDebug() << "Hit: " << (int)(size_t)hit.block.actor->userData;
+        }
+        else
+            qDebug() << "No hit";
+    }
 }
