@@ -14,8 +14,14 @@
 
 #include "IEEntity.h"
 #include <QVector>
+#include <QVector4D>
+#include <QMatrix4x4>
 
 class GameStartEvent;
+class IEGame;
+class IEInput;
+class IECameraManager;
+class IEECSCameraSystem;
 class IEECSTransformSystem;
 
 class IETBasicPhysics
@@ -31,6 +37,9 @@ class IETBasicPhysics
 
     QVector<physx::PxRigidDynamic*> dynamicItems;
     QVector<IEEntity> entities;
+    IEGame* game = nullptr;
+    IEInput* input = nullptr;
+    IECameraManager* cameraManager = nullptr;
     IEECSTransformSystem* transformSystem = nullptr;
 
 public:
@@ -52,5 +61,6 @@ private:
     void createRenderable(const GameStartEvent& event);
     void createEntities(const GameStartEvent& event, const unsigned long long rendId);
     void updateEntities();
+    QVector3D scrPosToWorldRay();
 };
 

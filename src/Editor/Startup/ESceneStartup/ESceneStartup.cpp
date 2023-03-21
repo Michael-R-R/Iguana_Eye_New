@@ -108,7 +108,7 @@ void ESceneStartup::buildCameraEntity(const AppStartEvent& event)
 
     const int transformIndex = transformSystem->lookUpIndex(entity);
     transformSystem->setPosition(transformIndex, QVector3D(0.0f, 15.0f, 20.0f));
-    transformSystem->setRotation(transformIndex, QVector4D(0.0f, 0.0f, 1.0f, qRadiansToDegrees(-1.0f)));
+    transformSystem->setRotation(transformIndex, QVector4D(0.0f, 0.0f, -1.0f, 0.0f));
 
     const int cameraIndex = ecs.attachComponent(entity, "Camera");
     cameraSystem->setCameraId(cameraIndex, cameraId);

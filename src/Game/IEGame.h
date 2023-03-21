@@ -55,7 +55,7 @@ public:
     IEScriptEngine& getIEScriptEngine() const { return *scriptEngine; }
     IERenderEngine& getIERenderEngine() const { return *renderEngine; }
     IEScene& getIEScene() const { return *scene; }
-    QPair<int, int> viewportSize() { return QPair<int, int>(viewportWidth, viewportHeight); }
+    QVector2D viewportSize() { return QVector2D(viewportWidth, viewportHeight); }
 
 public slots:
     void onUpdateFrame();

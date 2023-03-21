@@ -26,10 +26,10 @@ void LuaApplication::addToLua(IEGame* val, sol::table gameTable)
 
 float LuaApplication::viewportWidth()
 {
-    return (float)game->viewportSize().first;
+    return game->viewportSize().x();
 }
 
 float LuaApplication::viewportHeight()
 {
-    return (float)game->viewportSize().second;
+    return game->viewportSize().y();
 }

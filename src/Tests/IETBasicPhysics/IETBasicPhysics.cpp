@@ -1,6 +1,7 @@
 #include "IETBasicPhysics.h"
 #include "GameStartEvent.h"
 #include "IEGame.h"
+#include "IEInput.h"
 #include "IEScene.h"
 #include "IEECS.h"
 #include "IEECSTransformSystem.h"
@@ -9,6 +10,8 @@
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
+#include "IECameraManager.h"
+#include "IECamera.h"
 #include "IEMesh.h"
 #include "IEMaterial.h"
 #include "IEShader.h"
@@ -58,6 +61,9 @@ void IETBasicPhysics::startup(const GameStartEvent& event)
 
     createGround();
     createRenderable(event);
+    game = &event.getGame();
+    input = &event.getInput();
+    cameraManager = &event.getScene().getCameraManager();
 }
 
 void IETBasicPhysics::shutdown()
@@ -70,6 +76,24 @@ void IETBasicPhysics::shutdown()
 
 void IETBasicPhysics::simulate(const float dt)
 {
+    if(input->isPressed("Left Click"))
+    {
+        //qDebug() << scrPosToWorldRay();
+        QVector3D qDir = scrPosToWorldRay();
+
+        physx::PxVec3 origin(0.0f, 15.0f, 20.0f);
+        physx::PxVec3 dir(qDir.x(), qDir.y(), qDir.z());
+        physx::PxReal maxDistance = 1000.0f;
+        physx::PxRaycastBuffer hit;
+
+        bool status = scene->raycast(origin, dir, maxDistance, hit);
+        if(status)
+        {
+            qDebug() << hit.block.position.x << hit.block.position.y << hit.block.position.z;
+            qDebug() << (int)(size_t)hit.block.actor->userData;
+        }
+    }
+
     scene->simulate(dt);
     scene->fetchResults(true);
 
@@ -167,7 +191,7 @@ void IETBasicPhysics::createEntities(const GameStartEvent& event, const unsigned
 {
     for(int i = 1; i < 10; i++)
     {
-        for(int j = -15 + i; j < 15 - i; j++)
+        for(int j = -5 + i; j < 5 - i; j++)
         {
             physx::PxTransform posT(j * 4, i * 4, 0.0f);
             physx::PxTransform xrotT(physx::PxQuat(qDegreesToRadians(187.0f), physx::PxVec3(1, 0, 0)));
@@ -178,15 +202,13 @@ void IETBasicPhysics::createEntities(const GameStartEvent& event, const unsigned
             auto* dynamicItem = this->createDynamic(t, dGeometry);
             dynamicItem->setMass(500);
             dynamicItem->setSleepThreshold(0.1f);
-            dynamicItems.push_back(dynamicItem);
 
             auto& scene = event.getScene();
             auto& ecs = scene.getECS();
             transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");
             auto* renderableSystem = ecs.getComponent<IEECSRenderableSystem>("Renderable");
 
-            IEEntity entity = ecs.create();
-            entities.push_back(entity);
+            auto entity = ecs.create();
 
             const int transIndex = transformSystem->lookUpIndex(entity);
             transformSystem->setPosition(transIndex, QVector3D(i + 5.0f, 50.0f, 0.0f));
@@ -197,6 +219,11 @@ void IETBasicPhysics::createEntities(const GameStartEvent& event, const unsigned
             renderableSystem->addShown(rendIndex);
             auto* renderable = renderableSystem->getAttachedRenderable(rendIndex);
             renderable->appendMat4InstanceValue("aModel", transformSystem->getTransform(transIndex));
+
+            dynamicItems.push_back(dynamicItem);
+            entities.push_back(entity);
+
+            dynamicItem->userData = (void*)(size_t)entity.getId();
         }
     }
 }
@@ -215,5 +242,41 @@ void IETBasicPhysics::updateEntities()
         const int transIndex = transformSystem->lookUpIndex(entities[i]);
         transformSystem->setPosition(transIndex, QVector3D(pos.x, pos.y, pos.z));
         transformSystem->setRotation(transIndex, QVector4D(rot.x, rot.y, rot.z, qRadiansToDegrees(angle)));
+
+        int userData = (int)(size_t)dynamicItems[i]->userData;
+        //qDebug() << userData;
     }
+}
+
+QVector3D IETBasicPhysics::scrPosToWorldRay()
+{
+    QVector2D cursorPos = input->cursorPos();
+    QVector2D dimension = game->viewportSize();
+
+    QVector4D lRayStartNDC((cursorPos.x() / dimension.x() - 0.5f) * 2.0f,
+                           (cursorPos.y() / dimension.y() - 0.5f) * 2.0f,
+                           -1.0f,
+                           1.0f);
+
+    QVector4D lRayEndNDC((cursorPos.x() / dimension.x() - 0.5f) * 2.0f,
+                         (cursorPos.y() / dimension.y() - 0.5f) * 2.0f,
+                         0.0f,
+                         1.0f);
+
+    auto cameraId = cameraManager->getDefaultResourceId();
+    auto* camera = cameraManager->value(cameraId);
+
+    QMatrix4x4 mat(camera->getViewProjection());
+    mat = mat.inverted();
+
+    QVector4D lRayStartWorld = mat * lRayStartNDC;
+    lRayStartWorld /= lRayStartWorld.w();
+
+    QVector4D lRayEndWorld = mat * lRayEndNDC;
+    lRayEndWorld /= lRayEndWorld.w();
+
+    QVector3D lRayDirWorld(lRayEndWorld - lRayStartWorld);
+    lRayDirWorld.normalize();
+
+    return lRayDirWorld;
 }
