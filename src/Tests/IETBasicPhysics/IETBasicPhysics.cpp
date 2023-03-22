@@ -27,10 +27,10 @@ IETBasicPhysics::IETBasicPhysics() :
     defaultErrorCallback(),
     defaultDispatcher(nullptr),
     toleranceScale(),
-    foundation(nullptr),
-    physics(nullptr),
-    scene(nullptr),
-    material(nullptr)
+    pxFoundation(nullptr),
+    pxPhysics(nullptr),
+    pxScene(nullptr),
+    pxMaterial(nullptr)
 {
 
 }
@@ -42,22 +42,22 @@ IETBasicPhysics::~IETBasicPhysics()
 
 void IETBasicPhysics::startup(const GameStartEvent& event)
 {
-    foundation = PxCreateFoundation(PX_PHYSICS_VERSION, defaultAllocatorCallback, defaultErrorCallback);
-    if(!foundation)
+    pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, defaultAllocatorCallback, defaultErrorCallback);
+    if(!pxFoundation)
         throw("PxCreateFoundation failed");
 
     toleranceScale.length = 100;
     toleranceScale.speed = 981;
-    physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, toleranceScale, true);
+    pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, toleranceScale, true);
 
-    physx::PxSceneDesc sceneDesc(physics->getTolerancesScale());
+    physx::PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
     sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
     defaultDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
     sceneDesc.cpuDispatcher = defaultDispatcher;
     sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
-    scene = physics->createScene(sceneDesc);
+    pxScene = pxPhysics->createScene(sceneDesc);
 
-    material = physics->createMaterial(0.5f, 0.5f, 0.5f);
+    pxMaterial = pxPhysics->createMaterial(0.5f, 0.5f, 0.5f);
 
     createGround();
     createRenderable(event);
@@ -68,48 +68,36 @@ void IETBasicPhysics::startup(const GameStartEvent& event)
 
 void IETBasicPhysics::shutdown()
 {
-    scene->release();
+    pxScene->release();
     defaultDispatcher->release();
-    physics->release();
-    foundation->release();
+    pxPhysics->release();
+    pxFoundation->release();
 }
 
 void IETBasicPhysics::simulate(const float dt)
 {
-    scene->simulate(dt);
-    scene->fetchResults(true);
+    pxScene->simulate(dt);
+    pxScene->fetchResults(true);
 
     updateEntities();
     castRay();
 }
 
-physx::PxRigidStatic* IETBasicPhysics::createStatic(const physx::PxTransform& transform,
-                                                    const physx::PxGeometry& geometry)
-{
-    physx::PxRigidStatic* staticObj = physx::PxCreateStatic(*physics, transform, geometry, *material);
-    scene->addActor(*staticObj);
-
-    return staticObj;
-}
-
-physx::PxRigidDynamic* IETBasicPhysics::createDynamic(const physx::PxTransform& transform,
-                                                      const physx::PxGeometry& geometry)
-{
-    physx::PxRigidDynamic* dynamicObj = physx::PxCreateDynamic(*physics, transform, geometry, *material, 10.0f);
-    scene->addActor(*dynamicObj);
-
-    return dynamicObj;
-}
-
 void IETBasicPhysics::createGround()
 {
-    physx::PxTransform sTransform1(0.0f, 0.0f, 0.0f);
-    physx::PxBoxGeometry sGeometry1 = physx::PxBoxGeometry(1000, 0.1f, 1000);
-    this->createStatic(sTransform1, sGeometry1);
+    physx::PxTransform t1(0.0f, 0.0f, 0.0f);
+    physx::PxBoxGeometry g1 = physx::PxBoxGeometry(1000, 0.1f, 1000);
+    auto obj1 = std::make_unique<IERigidBody>(*pxPhysics, *pxMaterial, t1, g1, -1);
+    pxScene->addActor(*obj1->getActor());
+    rigidBodies.push_back(std::move(obj1));
+    entities.push_back(IEEntity(-1));
 
-    physx::PxTransform sTransform2(0.0f, 60.0f, 0.0f);
-    physx::PxBoxGeometry sGeometry2 = physx::PxBoxGeometry(1000, 0.1f, 1000);
-    this->createStatic(sTransform2, sGeometry2);
+    physx::PxTransform t2(0.0f, 60.0f, 0.0f);
+    physx::PxBoxGeometry g2 = physx::PxBoxGeometry(1000, 0.1f, 1000);
+    auto obj2 = std::make_unique<IERigidBody>(*pxPhysics, *pxMaterial, t2, g2, -1);
+    pxScene->addActor(*obj2->getActor());
+    rigidBodies.push_back(std::move(obj2));
+    entities.push_back(IEEntity(-1));
 }
 
 void IETBasicPhysics::createRenderable(const GameStartEvent& event)
@@ -176,16 +164,6 @@ void IETBasicPhysics::createEntities(const GameStartEvent& event, const unsigned
     {
         for(int j = -5 + i; j < 5 - i; j++)
         {
-            physx::PxTransform posT(j * 4, i * 4, 0.0f);
-            physx::PxTransform xrotT(physx::PxQuat(qDegreesToRadians(187.0f), physx::PxVec3(1, 0, 0)));
-            physx::PxTransform yrotT(physx::PxQuat(qDegreesToRadians(55.0f), physx::PxVec3(0, 1, 0)));
-            physx::PxTransform zrotT(physx::PxQuat(qDegreesToRadians(55.0f), physx::PxVec3(0, 0, 1)));
-            physx::PxTransform t = posT * (xrotT * yrotT * zrotT);
-            physx::PxBoxGeometry dGeometry = physx::PxBoxGeometry(1.0f, 1.0f, 1.0f);
-            auto* dynamicItem = this->createDynamic(t, dGeometry);
-            dynamicItem->setMass(100);
-            dynamicItem->setSleepThreshold(0.1f);
-
             auto& scene = event.getScene();
             auto& ecs = scene.getECS();
             transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");
@@ -203,20 +181,31 @@ void IETBasicPhysics::createEntities(const GameStartEvent& event, const unsigned
             auto* renderable = renderableSystem->getAttachedRenderable(rendIndex);
             renderable->appendMat4InstanceValue("aModel", transformSystem->getTransform(transIndex));
 
-            dynamicItems.push_back(dynamicItem);
-            entities.push_back(entity);
+            physx::PxTransform posT(j * 4, i * 4, 0.0f);
+            physx::PxTransform xrotT(physx::PxQuat(qDegreesToRadians(187.0f), physx::PxVec3(1, 0, 0)));
+            physx::PxTransform yrotT(physx::PxQuat(qDegreesToRadians(55.0f), physx::PxVec3(0, 1, 0)));
+            physx::PxTransform zrotT(physx::PxQuat(qDegreesToRadians(55.0f), physx::PxVec3(0, 0, 1)));
+            physx::PxTransform t = posT * (xrotT * yrotT * zrotT);
+            physx::PxBoxGeometry dGeometry = physx::PxBoxGeometry(1.0f, 1.0f, 1.0f);
+            auto dynamicObj = std::make_unique<IERigidBody>(*pxPhysics, *pxMaterial, t, dGeometry, 500.0f, 0.1f, entity.getId());
 
-            dynamicItem->userData = (void*)(size_t)entity.getId();
+            pxScene->addActor(*dynamicObj->getActor());
+
+            rigidBodies.push_back(std::move(dynamicObj));
+            entities.push_back(entity);
         }
     }
 }
 
 void IETBasicPhysics::updateEntities()
 {
-    for(int i = 0; i < dynamicItems.size(); i++)
+    for(int i = 0; i < rigidBodies.size(); i++)
     {
-        physx::PxVec3 pos = dynamicItems[i]->getGlobalPose().p;
-        physx::PxQuat quat = dynamicItems[i]->getGlobalPose().q;
+        if(rigidBodies[i]->getBodyType() == IERigidBody::BodyType::Static)
+            continue;
+
+        physx::PxVec3 pos = rigidBodies[i]->getActor()->getGlobalPose().p;
+        physx::PxQuat quat = rigidBodies[i]->getActor()->getGlobalPose().q;
 
         float angle = 0.0f;
         physx::PxVec3 rot;
@@ -269,10 +258,14 @@ void IETBasicPhysics::castRay()
         physx::PxReal maxDistance = 1000.0f;
         physx::PxRaycastBuffer hit;
 
-        bool status = scene->raycast(origin, dir, maxDistance, hit);
+        bool status = pxScene->raycast(origin, dir, maxDistance, hit);
         if(status)
         {
-            qDebug() << "Hit: " << (int)(size_t)hit.block.actor->userData;
+            auto* actor = hit.block.actor;
+            if(actor->is<physx::PxRigidDynamic>())
+            {
+                qDebug() << "Hit: " << (int)(size_t)actor->userData;
+            }
         }
         else
             qDebug() << "No hit";

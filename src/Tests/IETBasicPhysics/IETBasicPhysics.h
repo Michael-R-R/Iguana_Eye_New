@@ -1,21 +1,14 @@
 #pragma once
 
-#include "physx/PxPhysics.h"
-#include "physx/PxPhysicsAPI.h"
-#include "physx/PxRigidDynamic.h"
-#include "physx/geometry/PxGeometry.h"
-#include "physx/geometry/PxBoxGeometry.h"
-#include "physx/foundation/PxTransform.h"
-#include "physx/foundation/PxVec3.h"
-#include "physx/extensions/PxDefaultAllocator.h"
-#include "physx/extensions/PxDefaultErrorCallback.h"
-#include "physx/extensions/PxDefaultCpuDispatcher.h"
-#include "physx/extensions/PxDefaultSimulationFilterShader.h"
+#include "PxPhysics.h"
+#include "PxPhysicsAPI.h"
 
 #include "IEEntity.h"
+#include "IERigidBody.h"
 #include <QVector>
 #include <QVector4D>
 #include <QMatrix4x4>
+#include <vector>
 
 class GameStartEvent;
 class IEGame;
@@ -30,12 +23,12 @@ class IETBasicPhysics
     physx::PxDefaultErrorCallback defaultErrorCallback;
     physx::PxDefaultCpuDispatcher* defaultDispatcher;
     physx::PxTolerancesScale toleranceScale;
-    physx::PxFoundation* foundation;
-    physx::PxPhysics* physics;
-    physx::PxScene* scene;
-    physx::PxMaterial* material;
+    physx::PxFoundation* pxFoundation;
+    physx::PxPhysics* pxPhysics;
+    physx::PxScene* pxScene;
+    physx::PxMaterial* pxMaterial;
 
-    QVector<physx::PxRigidDynamic*> dynamicItems;
+    std::vector<std::unique_ptr<IERigidBody>> rigidBodies;
     QVector<IEEntity> entities;
     IEGame* game = nullptr;
     IEInput* input = nullptr;
@@ -49,12 +42,6 @@ public:
     void startup(const GameStartEvent& event);
     void shutdown();
     void simulate(const float dt);
-
-    physx::PxRigidStatic* createStatic(const physx::PxTransform& transform,
-                                       const physx::PxGeometry& geometry);
-
-    physx::PxRigidDynamic* createDynamic(const physx::PxTransform& transform,
-                                         const physx::PxGeometry& geometry);
 
 private:
     void createGround();
