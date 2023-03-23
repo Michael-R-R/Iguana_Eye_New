@@ -38,7 +38,7 @@ void IERigidBody::createAsStatic(physx::PxPhysics& physics,
     auto* obj = physx::PxCreateStatic(physics, t, geometry, material);
 
     rigidActor = obj;
-    bodyType == BodyType::Static;
+    bodyType = BodyType::Static;
 }
 
 void IERigidBody::createAsDynamic(physx::PxPhysics& physics,

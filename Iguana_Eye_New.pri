@@ -165,6 +165,8 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IEShaderManager \
 
 INCLUDEPATH += $$PWD/src/Game/Physics \
+    $$PWD/src/Game/Physics/IEBaseCollider \
+    $$PWD/src/Game/Physics/IEBoxCollider \
     $$PWD/src/Game/Physics/IERigidBody \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting \
