@@ -20,7 +20,11 @@ IERigidBody::IERigidBody(physx::PxPhysics& physics,
                          const int attachedId,
                          bool isKinematic)
 {
-    this->createAsDynamic(physics, material, t, geometry, density, sleepThresh, isKinematic);
+    if(isKinematic)
+        this->createAsKinematic(physics, material, t, geometry, density, sleepThresh);
+    else
+        this->createAsDynamic(physics, material, t, geometry, density, sleepThresh);
+
     rigidActor->userData = (void*)(size_t)attachedId;
 }
 
@@ -35,10 +39,12 @@ void IERigidBody::createAsStatic(physx::PxPhysics& physics,
                                  const physx::PxTransform& t,
                                  const physx::PxGeometry& geometry)
 {
-    auto* obj = physx::PxCreateStatic(physics, t, geometry, material);
+    auto* actor = physx::PxCreateStatic(physics, t, geometry, material);
 
-    rigidActor = obj;
+    rigidActor = actor;
     bodyType = BodyType::Static;
+
+    rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, false);
 }
 
 void IERigidBody::createAsDynamic(physx::PxPhysics& physics,
@@ -46,13 +52,29 @@ void IERigidBody::createAsDynamic(physx::PxPhysics& physics,
                                   const physx::PxTransform& t,
                                   const physx::PxGeometry& geometry,
                                   const float density,
-                                  const float sleepThresh,
-                                  bool isKinematic)
+                                  const float sleepThresh)
 {
-    auto* obj = physx::PxCreateDynamic(physics, t, geometry, material, density);
-    obj->setSleepThreshold(sleepThresh);
-    obj->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, isKinematic);
+    auto* actor = physx::PxCreateDynamic(physics, t, geometry, material, density);
+    actor->setSleepThreshold(sleepThresh);
 
-    rigidActor = obj;
-    bodyType = (isKinematic) ? BodyType::Kinematic : BodyType::Dynamic;
+    rigidActor = actor;
+    bodyType = BodyType::Dynamic;
+
+    rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
+}
+
+void IERigidBody::createAsKinematic(physx::PxPhysics& physics,
+                                    physx::PxMaterial& material,
+                                    const physx::PxTransform& t,
+                                    const physx::PxGeometry& geometry,
+                                    const float density,
+                                    const float sleepThresh)
+{
+    auto* actor = physx::PxCreateKinematic(physics, t, geometry, material, density);
+    actor->setSleepThreshold(sleepThresh);
+
+    rigidActor = actor;
+    bodyType = BodyType::Kinematic;
+
+    rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
 }

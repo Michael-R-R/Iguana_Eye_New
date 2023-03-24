@@ -6,7 +6,6 @@
 class IEBaseCollider
 {
 protected:
-    physx::PxShape* shape;
     physx::PxRigidActor* rigidActor;
 
 public:
@@ -15,7 +14,6 @@ public:
 
     void setIsTrigger(const bool val);
 
-    physx::PxShape* getShape() { return shape; }
     physx::PxRigidActor* getActor() { return rigidActor; }
 
 protected:

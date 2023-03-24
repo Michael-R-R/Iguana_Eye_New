@@ -3,7 +3,7 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
-#include <QPair>
+#include <QVector2D>
 
 #include "Serializable.h"
 
@@ -11,11 +11,9 @@ class ApplicationWindow;
 class IETime;
 class IEInput;
 class IEScriptEngine;
+class IEPhysicsEngine;
 class IERenderEngine;
 class IEScene;
-
-// TODO test
-#include <IETBasicPhysics.h>
 
 class IEGame : public QOpenGLWidget, public Serializable
 {
@@ -28,14 +26,12 @@ class IEGame : public QOpenGLWidget, public Serializable
     std::unique_ptr<IETime> time;
     std::unique_ptr<IEInput> input;
     std::unique_ptr<IEScriptEngine> scriptEngine;
+    std::unique_ptr<IEPhysicsEngine> physicsEngine;
     std::unique_ptr<IERenderEngine> renderEngine;
     std::unique_ptr<IEScene> scene;
 
     int viewportWidth;
     int viewportHeight;
-
-    // TODO test
-    std::unique_ptr<IETBasicPhysics> testPhysics = std::make_unique<IETBasicPhysics>();
 
 public:
     IEGame(QWidget* parent = nullptr);
@@ -53,6 +49,7 @@ public:
     IETime& getIETime() { return *time; }
     IEInput& getIEInput() const { return *input; }
     IEScriptEngine& getIEScriptEngine() const { return *scriptEngine; }
+    IEPhysicsEngine& getIEPhysicsEngine() const { return *physicsEngine; }
     IERenderEngine& getIERenderEngine() const { return *renderEngine; }
     IEScene& getIEScene() const { return *scene; }
     QVector2D viewportSize() { return QVector2D(viewportWidth, viewportHeight); }

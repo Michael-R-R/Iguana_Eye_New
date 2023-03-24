@@ -51,7 +51,13 @@ private:
                          const physx::PxTransform& t,
                          const physx::PxGeometry& geometry,
                          const float density,
-                         const float sleepThresh,
-                         bool isKinematic);
+                         const float sleepThresh);
+
+    void createAsKinematic(physx::PxPhysics& physics,
+                           physx::PxMaterial& material,
+                           const physx::PxTransform& t,
+                           const physx::PxGeometry& geometry,
+                           const float density,
+                           const float sleepThresh);
 };
 

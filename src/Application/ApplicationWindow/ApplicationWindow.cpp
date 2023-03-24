@@ -105,9 +105,11 @@ void ApplicationWindow::clearActions()
 void ApplicationWindow::newFile()
 {
     #ifdef EDITOR_ENABLED
+    editor->shutdown();
     initEditor();
     #endif
 
+    game->shutdown();
     initGame();
 }
 

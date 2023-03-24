@@ -4,6 +4,7 @@
 #include "IETime.h"
 #include "IEInput.h"
 #include "IEScriptEngine.h"
+#include "IEPhysicsEngine.h"
 #include "IERenderEngine.h"
 #include "IEScene.h"
 #include "IEECS.h"
@@ -16,6 +17,7 @@ IEGame::IEGame(QWidget* parent) :
     time(std::make_unique<IETime>(16, 16)),
     input(std::make_unique<IEInput>(this)),
     scriptEngine(std::make_unique<IEScriptEngine>()),
+    physicsEngine(std::make_unique<IEPhysicsEngine>()),
     renderEngine(std::make_unique<IERenderEngine>()),
     scene(std::make_unique<IEScene>()),
     viewportWidth(800), viewportHeight(600)
@@ -79,14 +81,12 @@ void IEGame::startup()
     RenderEngineStartEvent renderStartEvent(*scene);
 
     scriptEngine->startup(gameStartEvent);
+    physicsEngine->startup(gameStartEvent);
     scene->startup(gameStartEvent);
     renderEngine->startup(renderStartEvent);
     time->startup(*this);
 
     this->setFocus();
-
-    // TODO test
-    testPhysics->startup(gameStartEvent);
 }
 
 void IEGame::shutdown()
@@ -96,26 +96,20 @@ void IEGame::shutdown()
     time->shutdown();
     renderEngine->shutdown();
     scene->shutdown();
+    physicsEngine->shutdown();
     scriptEngine->shutdown();
-
-    // TODO test
-    testPhysics->shutdown();
 }
 
 void IEGame::onUpdateFrame()
 {
-    // TODO test
-    testPhysics->simulate(time->getDeltaTime());
-
+    physicsEngine->onUpdateFrame(time->getDeltaTime());
     scene->onUpdateFrame();
 }
 
 void IEGame::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     renderEngine->onRenderFrame();
-
     time->processDeltaTime();
 }
 

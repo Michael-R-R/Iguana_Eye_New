@@ -5,6 +5,7 @@
 
 #include "IEEntity.h"
 #include "IERigidBody.h"
+#include "IEBoxCollider.h"
 #include <QVector>
 #include <QVector4D>
 #include <QMatrix4x4>
@@ -17,8 +18,25 @@ class IECameraManager;
 class IEECSCameraSystem;
 class IEECSTransformSystem;
 
+class ContactReportCallback : public physx::PxSimulationEventCallback
+{
+
+public:
+    ContactReportCallback() {}
+    ~ContactReportCallback() {}
+
+    void onConstraintBreak(physx::PxConstraintInfo*, physx::PxU32) override {}
+    void onWake(physx::PxActor** actors, physx::PxU32 count) override;
+    void onSleep(physx::PxActor** actors, physx::PxU32 count) override;
+    void onContact(const physx::PxContactPairHeader&, const physx::PxContactPair*, physx::PxU32) override {}
+    void onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 count) override;
+    void onAdvance(const physx::PxRigidBody* const* , const physx::PxTransform*, const physx::PxU32) override {}
+};
+
 class IETBasicPhysics
 {
+    ContactReportCallback reportCallback;
+
     physx::PxDefaultAllocator defaultAllocatorCallback;
     physx::PxDefaultErrorCallback defaultErrorCallback;
     physx::PxDefaultCpuDispatcher* defaultDispatcher;
@@ -28,7 +46,11 @@ class IETBasicPhysics
     physx::PxScene* pxScene;
     physx::PxMaterial* pxMaterial;
 
-    std::vector<std::unique_ptr<IERigidBody>> rigidBodies;
+    float accumulator = 0.0f;
+    float stepSize = 1.0f / 60.f;
+
+    std::vector<std::unique_ptr<IERigidBody>> dynamicBodies;
+    std::vector<std::unique_ptr<IEBoxCollider>> boxColliders;
     QVector<IEEntity> entities;
     IEGame* game = nullptr;
     IEInput* input = nullptr;
@@ -51,4 +73,3 @@ private:
     QVector3D scrPosToWorldRay();
     void castRay();
 };
-

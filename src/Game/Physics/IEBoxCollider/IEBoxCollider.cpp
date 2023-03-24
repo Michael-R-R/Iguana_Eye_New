@@ -4,11 +4,11 @@
 
 IEBoxCollider::IEBoxCollider(physx::PxPhysics& physics,
                              physx::PxMaterial& material,
-                             const physx::PxGeometry& geometry,
+                             const physx::PxBoxGeometry& box,
                              const physx::PxTransform& t,
                              const int attachedId)
 {
-    IEBoxCollider::createShape(physics, material, geometry, t);
+    IEBoxCollider::createShape(physics, material, box, t);
     rigidActor->userData = (void*)(size_t)attachedId;
 }
 
@@ -19,12 +19,10 @@ IEBoxCollider::~IEBoxCollider()
 
 void IEBoxCollider::createShape(physx::PxPhysics& physics,
                                 physx::PxMaterial& material,
-                                const physx::PxGeometry& geometry,
+                                const physx::PxGeometry& box,
                                 const physx::PxTransform& t)
 {
-    auto* actor = physx::PxCreateStatic(physics, t, geometry, material);
+    physx::PxRigidStatic* actor = physx::PxCreateStatic(physics, t, box, material);
 
-    shape = physics.createShape(geometry, material);
     rigidActor = actor;
-    rigidActor->attachShape(*shape);
 }
