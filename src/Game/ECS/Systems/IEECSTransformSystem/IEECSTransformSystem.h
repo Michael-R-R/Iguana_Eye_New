@@ -3,6 +3,7 @@
 #include <QDataStream>
 #include <QMap>
 #include <QVector>
+#include <QSet>
 #include <QVector3D>
 #include <QMatrix4x4>
 
@@ -40,7 +41,7 @@ class IEECSTransformSystem : public IEECSSystem
 
     Data data;
 
-    QVector<int> dirtyParentIndices;
+    QSet<int> dirtyParentIndices;
 
     // DOES NOT OWN THESE POINTERS
     IERenderableManager* renderableManager;
@@ -66,7 +67,7 @@ public:
 
 private:
     void updateTransform(const int index,
-                         QVector<int>& dirtyChildren,
+                         QSet<int>& dirtyChildren,
                          const IEECSHierarchySystem* hierarchySystem);
     QMatrix4x4 calcModelMatrix(const int index);
 
