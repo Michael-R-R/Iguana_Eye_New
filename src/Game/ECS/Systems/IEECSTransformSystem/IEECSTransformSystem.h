@@ -40,7 +40,7 @@ class IEECSTransformSystem : public IEECSSystem
 
     Data data;
 
-    QMap<IEEntity, int> dirtyParents; // Dirty entity, index of data
+    QVector<int> dirtyParentIndices;
 
     // DOES NOT OWN THESE POINTERS
     IERenderableManager* renderableManager;
@@ -66,7 +66,7 @@ public:
 
 private:
     void updateTransform(const int index,
-                         QMap<IEEntity, int>& dirtyChildren,
+                         QVector<int>& dirtyChildren,
                          const IEECSHierarchySystem* hierarchySystem);
     QMatrix4x4 calcModelMatrix(const int index);
 

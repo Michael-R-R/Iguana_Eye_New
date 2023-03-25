@@ -6,6 +6,7 @@
 #include "IEECSHierarchySystem.h"
 #include "IEECSInputSystem.h"
 #include "IEECSScriptSystem.h"
+#include "IEECSPhysicsSystem.h"
 #include "IEECSTransformSystem.h"
 #include "IEECSCameraSystem.h"
 #include "IEECSMeshSystem.h"
@@ -138,6 +139,7 @@ void IEECS::initSystems()
     auto hierarchySystem = std::make_unique<IEECSHierarchySystem>();
     auto inputSystem = std::make_unique<IEECSInputSystem>();
     auto scriptSystem = std::make_unique<IEECSScriptSystem>();
+    auto physicsSystem = std::make_unique<IEECSPhysicsSystem>();
     auto transformSystem = std::make_unique<IEECSTransformSystem>();
     auto cameraSystem = std::make_unique<IEECSCameraSystem>();
     auto meshSystem = std::make_unique<IEECSMeshSystem>();
@@ -149,6 +151,7 @@ void IEECS::initSystems()
     systems["Hierarchy"] = std::move(hierarchySystem);
     systems["Input"] = std::move(inputSystem);
     systems["Script"] = std::move(scriptSystem);
+    systems["Physics"] = std::move(physicsSystem);
     systems["Transform"] = std::move(transformSystem);
     systems["Camera"] = std::move(cameraSystem);
     systems["Mesh"] = std::move(meshSystem);
