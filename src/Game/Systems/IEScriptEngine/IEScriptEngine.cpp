@@ -33,7 +33,7 @@ void IEScriptEngine::startup(const GameStartEvent& event)
     LuaCommonType::addToLua(lua);
     LuaEnum::addToLua(enumTable);
     LuaUtility::addToLua(utilTable);
-    LuaApplication::addToLua(&event.getGame(), gameTable);
+    LuaApplication::addToLua(gameTable);
     LuaIETime::addToLua(&event.getTime(), gameTable);
     LuaIEInput::addToLua(&event.getInput(), gameTable);
     LuaIEECS::addToLua(&event.getScene().getECS(), lua, gameTable);

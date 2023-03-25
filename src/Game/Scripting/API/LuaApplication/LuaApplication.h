@@ -9,13 +9,10 @@ class LuaApplication
     LuaApplication();
     static LuaApplication instance;
 
-    // DOES NOT OWN THIS POINTER
-    IEGame* game;
-
 public:
     ~LuaApplication();
 
-    static void addToLua(IEGame* val, sol::table gameTable);
+    static void addToLua(sol::table gameTable);
 
 private:
     float viewportWidth();

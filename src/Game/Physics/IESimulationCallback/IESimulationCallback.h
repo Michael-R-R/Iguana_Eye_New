@@ -3,11 +3,13 @@
 #include "PxPhysics.h"
 #include "PxPhysicsAPI.h"
 
+class GameStartEvent;
+
 class IESimulationCallback : public physx::PxSimulationEventCallback
 {
 
 public:
-    IESimulationCallback();
+    IESimulationCallback(const GameStartEvent& event);
     ~IESimulationCallback();
 
     void onWake(physx::PxActor** actors, physx::PxU32 count) override;

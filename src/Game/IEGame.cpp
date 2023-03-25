@@ -1,4 +1,5 @@
 #include "IEGame.h"
+#include "ApplicationProperties.h"
 #include "GameStartEvent.h"
 #include "RenderEngineStartEvent.h"
 #include "IETime.h"
@@ -19,8 +20,7 @@ IEGame::IEGame(QWidget* parent) :
     scriptEngine(std::make_unique<IEScriptEngine>()),
     physicsEngine(std::make_unique<IEPhysicsEngine>()),
     renderEngine(std::make_unique<IERenderEngine>()),
-    scene(std::make_unique<IEScene>()),
-    viewportWidth(800), viewportHeight(600)
+    scene(std::make_unique<IEScene>())
 {
     this->setFocusPolicy(Qt::StrongFocus);
 
@@ -63,8 +63,7 @@ void IEGame::paintGL()
 
 void IEGame::resizeGL(int w, int h)
 {
-    viewportWidth = w;
-    viewportHeight = h;
+    ApplicationProperties::viewportDimensions = QVector2D(w, h);
 
     glFunc->glViewport(0, 0, w, h);
 

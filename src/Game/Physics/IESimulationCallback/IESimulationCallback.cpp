@@ -1,7 +1,8 @@
 #include "IESimulationCallback.h"
+#include "GameStartEvent.h"
 #include <QDebug>
 
-IESimulationCallback::IESimulationCallback()
+IESimulationCallback::IESimulationCallback(const GameStartEvent&)
 {
 
 }

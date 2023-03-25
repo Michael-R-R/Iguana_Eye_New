@@ -30,9 +30,6 @@ class IEGame : public QOpenGLWidget, public Serializable
     std::unique_ptr<IERenderEngine> renderEngine;
     std::unique_ptr<IEScene> scene;
 
-    int viewportWidth;
-    int viewportHeight;
-
 public:
     IEGame(QWidget* parent = nullptr);
     ~IEGame();
@@ -52,7 +49,6 @@ public:
     IEPhysicsEngine& getIEPhysicsEngine() const { return *physicsEngine; }
     IERenderEngine& getIERenderEngine() const { return *renderEngine; }
     IEScene& getIEScene() const { return *scene; }
-    QVector2D viewportSize() { return QVector2D(viewportWidth, viewportHeight); }
 
 public slots:
     void onUpdateFrame();

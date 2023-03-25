@@ -1,4 +1,5 @@
 #include "IETBasicPhysics.h"
+#include "ApplicationProperties.h"
 #include "GameStartEvent.h"
 #include "IEGame.h"
 #include "IEInput.h"
@@ -265,7 +266,7 @@ void IETBasicPhysics::updateEntities()
 QVector3D IETBasicPhysics::scrPosToWorldRay()
 {
     QVector2D cursorPos = input->cursorPos();
-    QVector2D dimension = game->viewportSize();
+    QVector2D dimension = ApplicationProperties::viewportDimensions;
 
     auto cameraId = cameraManager->getDefaultResourceId();
     auto* camera = cameraManager->value(cameraId);
