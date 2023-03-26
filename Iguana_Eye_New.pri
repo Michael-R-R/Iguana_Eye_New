@@ -136,7 +136,7 @@ INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
     $$PWD/src/Game/ECS/Systems/IEECSMaterialSystem \
     $$PWD/src/Game/ECS/Systems/IEECSMeshSystem \
     $$PWD/src/Game/ECS/Systems/IEECSNameSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSPhysicsSystem \
+    $$PWD/src/Game/ECS/Systems/IEECSRigidbody3DSystem \
     $$PWD/src/Game/ECS/Systems/IEECSRenderableSystem \
     $$PWD/src/Game/ECS/Systems/IEECSScriptSystem \
     $$PWD/src/Game/ECS/Systems/IEECSShaderSystem \

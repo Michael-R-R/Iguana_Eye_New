@@ -1,37 +1,91 @@
 #include "IERigidBody.h"
+#include "IEPhysicsEngine.h"
 #include "physx/extensions/PxSimpleFactory.h"
 
-IERigidBody::IERigidBody(physx::PxPhysics& physics,
-                         physx::PxMaterial& material,
+IERigidBody::IERigidBody() :
+    rigidActor(nullptr),
+    bodyType(BodyType::None)
+{
+
+}
+
+IERigidBody::IERigidBody(physx::PxPhysics& p,
+                         physx::PxMaterial& m,
                          const physx::PxTransform& t,
-                         const physx::PxGeometry& geometry,
+                         const physx::PxGeometry& g,
                          const int attachedId)
 {
-    this->createAsStatic(physics, material, t, geometry);
+    this->createAsStatic(p, m, t, g);
     rigidActor->userData = (void*)(size_t)attachedId;
 }
 
-IERigidBody::IERigidBody(physx::PxPhysics& physics,
-                         physx::PxMaterial& material,
+IERigidBody::IERigidBody(physx::PxPhysics& p,
+                         physx::PxMaterial& m,
                          const physx::PxTransform& t,
-                         const physx::PxGeometry& geometry,
+                         const physx::PxGeometry& g,
                          const float density,
                          const float sleepThresh,
                          const int attachedId,
                          bool isKinematic)
 {
     if(isKinematic)
-        this->createAsKinematic(physics, material, t, geometry, density, sleepThresh);
+        this->createAsKinematic(p, m, t, g, density, sleepThresh);
     else
-        this->createAsDynamic(physics, material, t, geometry, density, sleepThresh);
+        this->createAsDynamic(p, m, t, g, density, sleepThresh);
 
     rigidActor->userData = (void*)(size_t)attachedId;
 }
 
+IERigidBody::IERigidBody(const IERigidBody& other) :
+    rigidActor(other.rigidActor),
+    bodyType(other.bodyType)
+{
+
+}
+
 IERigidBody::~IERigidBody()
 {
-    // Manually clean up or let scene clean up
+    rigidActor = nullptr; // Manually clean up or let scene clean up
+}
+
+bool IERigidBody::wakeup(IEPhysicsEngine* engine)
+{
+    if(!rigidActor)
+        return false;
+
+    if(is(BodyType::None) || is(BodyType::Static))
+        return false;
+
+    engine->addActorToScene(rigidActor);
+
+    auto* temp = static_cast<physx::PxRigidDynamic*>(rigidActor);
+    temp->wakeUp();
+
+    return true;
+}
+
+bool IERigidBody::putToSleep(IEPhysicsEngine* engine)
+{
+    if(!rigidActor)
+        return false;
+
+    if(is(BodyType::None) || is(BodyType::Static))
+        return false;
+
+    auto* temp = static_cast<physx::PxRigidDynamic*>(rigidActor);
+    temp->putToSleep();
+
+    engine->removeActorFromScene(rigidActor);
+
+    return true;
+}
+
+void IERigidBody::release(IEPhysicsEngine* engine)
+{
+    engine->releaseActor(rigidActor);
+
     rigidActor = nullptr;
+    bodyType = BodyType::None;
 }
 
 void IERigidBody::createAsStatic(physx::PxPhysics& physics,

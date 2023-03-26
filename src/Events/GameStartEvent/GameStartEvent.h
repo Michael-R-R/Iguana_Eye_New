@@ -4,6 +4,7 @@ class IEGame;
 class IETime;
 class IEInput;
 class IEScriptEngine;
+class IEPhysicsEngine;
 class IERenderEngine;
 class IEScene;
 
@@ -20,6 +21,7 @@ public:
     IETime& getTime() const;
     IEInput& getInput() const;
     IEScriptEngine& getScriptEngine() const;
+    IEPhysicsEngine& getPhysicsEngine() const;
     IERenderEngine& getRenderEngine() const;
     IEScene& getScene() const;
 };

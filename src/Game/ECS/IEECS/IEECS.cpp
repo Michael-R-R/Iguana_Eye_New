@@ -6,7 +6,7 @@
 #include "IEECSHierarchySystem.h"
 #include "IEECSInputSystem.h"
 #include "IEECSScriptSystem.h"
-#include "IEECSPhysicsSystem.h"
+#include "IEECSRigidbody3DSystem.h"
 #include "IEECSTransformSystem.h"
 #include "IEECSCameraSystem.h"
 #include "IEECSMeshSystem.h"
@@ -14,6 +14,9 @@
 #include "IEECSShaderSystem.h"
 #include "IEECSRenderableSystem.h"
 #include "ECSOnUpdateEvent.h"
+
+// TODO test
+#include "IEPhysicsEngine.h"
 
 IEECS::IEECS() :
     IEObject(),
@@ -35,6 +38,20 @@ void IEECS::startup(const GameStartEvent& event)
     {
         i.second->startup(event);
     }
+
+    // TODO test
+    auto& engine = event.getPhysicsEngine();
+    auto* rigidbodySystem = getComponent<IEECSRigidbody3DSystem>("Rigidbody3D");
+
+    IEEntity entity = this->create();
+    const int index = this->attachComponent(entity, "Rigidbody3D");
+
+    IERigidBody rigidbody = IERigidBody(*engine.getPxPhysics(), *engine.getDefaultPxMaterial(),
+                                        physx::PxTransform(0.0f, 10.0f, 0.0f),
+                                        physx::PxBoxGeometry(1.0f, 1.0f, 1.0f),
+                                        100.0f, 0.1f, entity.getId());
+    rigidbodySystem->setRigidbody(index, rigidbody);
+    rigidbodySystem->wakeup(index);
 
     onUpdateEvent = std::make_unique<ECSOnUpdateEvent>(this);
 }
@@ -139,7 +156,7 @@ void IEECS::initSystems()
     auto hierarchySystem = std::make_unique<IEECSHierarchySystem>();
     auto inputSystem = std::make_unique<IEECSInputSystem>();
     auto scriptSystem = std::make_unique<IEECSScriptSystem>();
-    auto physicsSystem = std::make_unique<IEECSPhysicsSystem>();
+    auto rigidbody3dSystem = std::make_unique<IEECSRigidbody3DSystem>();
     auto transformSystem = std::make_unique<IEECSTransformSystem>();
     auto cameraSystem = std::make_unique<IEECSCameraSystem>();
     auto meshSystem = std::make_unique<IEECSMeshSystem>();
@@ -151,7 +168,7 @@ void IEECS::initSystems()
     systems["Hierarchy"] = std::move(hierarchySystem);
     systems["Input"] = std::move(inputSystem);
     systems["Script"] = std::move(scriptSystem);
-    systems["Physics"] = std::move(physicsSystem);
+    systems["Rigidbody3D"] = std::move(rigidbody3dSystem);
     systems["Transform"] = std::move(transformSystem);
     systems["Camera"] = std::move(cameraSystem);
     systems["Mesh"] = std::move(meshSystem);

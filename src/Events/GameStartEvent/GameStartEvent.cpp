@@ -32,6 +32,11 @@ IEScriptEngine& GameStartEvent::getScriptEngine() const
     return game->getIEScriptEngine();
 }
 
+IEPhysicsEngine& GameStartEvent::getPhysicsEngine() const
+{
+    return game->getIEPhysicsEngine();
+}
+
 IERenderEngine& GameStartEvent::getRenderEngine() const
 {
     return game->getIERenderEngine();

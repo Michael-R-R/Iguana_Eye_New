@@ -33,7 +33,13 @@ public:
 
     void startup(const GameStartEvent& event);
     void shutdown();
-
     void onUpdateFrame(const float dt);
+
+    void addActorToScene(physx::PxActor* actor);
+    void removeActorFromScene(physx::PxActor* actor);
+    void releaseActor(physx::PxActor* actor);
+
+    physx::PxPhysics* getPxPhysics() { return pxPhysics; }
+    physx::PxMaterial* getDefaultPxMaterial() { return pxDefaultMaterial; }
 };
 

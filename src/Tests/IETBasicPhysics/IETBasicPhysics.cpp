@@ -206,39 +206,39 @@ void IETBasicPhysics::createEntities(const GameStartEvent& event, const unsigned
     {
         for(int j = -5 + i; j < 5 - i; j++)
         {
-            auto& scene = event.getScene();
-            auto& ecs = scene.getECS();
-            transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");
-            auto* renderableSystem = ecs.getComponent<IEECSRenderableSystem>("Renderable");
+//            auto& scene = event.getScene();
+//            auto& ecs = scene.getECS();
+//            transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");
+//            auto* renderableSystem = ecs.getComponent<IEECSRenderableSystem>("Renderable");
 
-            auto entity = ecs.create();
+//            auto entity = ecs.create();
 
-            const int transIndex = transformSystem->lookUpIndex(entity);
-            transformSystem->setPosition(transIndex, QVector3D(i + 5.0f, 50.0f, 0.0f));
-            transformSystem->setScale(transIndex, QVector3D(1.0f, 1.0f, 1.0f));
+//            const int transIndex = transformSystem->lookUpIndex(entity);
+//            transformSystem->setPosition(transIndex, QVector3D(i + 5.0f, 50.0f, 0.0f));
+//            transformSystem->setScale(transIndex, QVector3D(1.0f, 1.0f, 1.0f));
 
-            const int rendIndex = ecs.attachComponent(entity, "Renderable");
-            renderableSystem->setRenderableId(rendIndex, rendId);
-            renderableSystem->addShown(rendIndex);
-            auto* renderable = renderableSystem->getAttachedRenderable(rendIndex);
-            renderable->appendMat4InstanceValue("aModel", transformSystem->getTransform(transIndex));
+//            const int rendIndex = ecs.attachComponent(entity, "Renderable");
+//            renderableSystem->setRenderableId(rendIndex, rendId);
+//            renderableSystem->addShown(rendIndex);
+//            auto* renderable = renderableSystem->getAttachedRenderable(rendIndex);
+//            renderable->appendMat4InstanceValue("aModel", transformSystem->getTransform(transIndex));
 
-            physx::PxTransform posT(j * 4, i * 4, 0.0f);
-            physx::PxTransform xrotT(physx::PxQuat(qDegreesToRadians(187.0f), physx::PxVec3(1, 0, 0)));
-            physx::PxTransform yrotT(physx::PxQuat(qDegreesToRadians(55.0f), physx::PxVec3(0, 1, 0)));
-            physx::PxTransform zrotT(physx::PxQuat(qDegreesToRadians(55.0f), physx::PxVec3(0, 0, 1)));
-            physx::PxTransform t = posT * (xrotT * yrotT * zrotT);
-            physx::PxBoxGeometry dGeometry = physx::PxBoxGeometry(1.0f, 1.0f, 1.0f);
-            auto dynamicObj = std::make_unique<IERigidBody>(*pxPhysics,
-                                                            *pxMaterial,
-                                                            t, dGeometry,
-                                                            200.0f, 0.1f,
-                                                            entity.getId());
+//            physx::PxTransform posT(j * 4, i * 4, 0.0f);
+//            physx::PxTransform xrotT(physx::PxQuat(qDegreesToRadians(187.0f), physx::PxVec3(1, 0, 0)));
+//            physx::PxTransform yrotT(physx::PxQuat(qDegreesToRadians(55.0f), physx::PxVec3(0, 1, 0)));
+//            physx::PxTransform zrotT(physx::PxQuat(qDegreesToRadians(55.0f), physx::PxVec3(0, 0, 1)));
+//            physx::PxTransform t = posT * (xrotT * yrotT * zrotT);
+//            physx::PxBoxGeometry dGeometry = physx::PxBoxGeometry(1.0f, 1.0f, 1.0f);
+//            auto dynamicObj = std::make_unique<IERigidBody>(*pxPhysics,
+//                                                            *pxMaterial,
+//                                                            t, dGeometry,
+//                                                            200.0f, 0.1f,
+//                                                            entity.getId());
 
-            pxScene->addActor(*dynamicObj->getActor());
+//            pxScene->addActor(*dynamicObj->getActor());
 
-            dynamicBodies.push_back(std::move(dynamicObj));
-            entities.push_back(entity);
+//            dynamicBodies.push_back(std::move(dynamicObj));
+//            entities.push_back(entity);
         }
     }
 }

@@ -65,6 +65,31 @@ void IEPhysicsEngine::onUpdateFrame(const float dt)
     pxScene->fetchResults(true);
 }
 
+void IEPhysicsEngine::addActorToScene(physx::PxActor* actor)
+{
+    if(!actor)
+        return;
+
+    pxScene->addActor(*actor);
+}
+
+void IEPhysicsEngine::removeActorFromScene(physx::PxActor* actor)
+{
+    if(!actor)
+        return;
+
+    pxScene->removeActor(*actor);
+}
+
+void IEPhysicsEngine::releaseActor(physx::PxActor* actor)
+{
+    if(!actor)
+        return;
+
+    pxScene->removeActor(*actor);
+    actor->release();
+}
+
 
 
 

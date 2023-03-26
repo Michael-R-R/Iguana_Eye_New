@@ -4,12 +4,14 @@
 #include "PxRigidStatic.h"
 #include "PxRigidDynamic.h"
 
+class IEPhysicsEngine;
+
 class IERigidBody
 {
 public:
     enum class BodyType
     {
-        Static, Dynamic, Kinematic
+        None, Static, Dynamic, Kinematic
     };
 
 private:
@@ -17,22 +19,30 @@ private:
     BodyType bodyType;
 
 public:
-    IERigidBody(physx::PxPhysics& physics,
-                physx::PxMaterial& material,
+    IERigidBody();
+
+    IERigidBody(physx::PxPhysics& p,
+                physx::PxMaterial& m,
                 const physx::PxTransform& t,
-                const physx::PxGeometry& geometry,
+                const physx::PxGeometry& g,
                 const int attachedId);
 
-    IERigidBody(physx::PxPhysics& physics,
-                physx::PxMaterial& material,
+    IERigidBody(physx::PxPhysics& p,
+                physx::PxMaterial& m,
                 const physx::PxTransform& t,
-                const physx::PxGeometry& geometry,
+                const physx::PxGeometry& g,
                 const float density,
                 const float sleepThresh,
                 const int attachedId,
                 bool isKinematic = false);
 
+    IERigidBody(const IERigidBody& other);
+
     ~IERigidBody();
+
+    bool wakeup(IEPhysicsEngine* engine);
+    bool putToSleep(IEPhysicsEngine* engine);
+    void release(IEPhysicsEngine* engine);
 
     bool is(BodyType type) { return (this->bodyType == type); }
     physx::PxRigidActor* getActor() { return rigidActor; }
