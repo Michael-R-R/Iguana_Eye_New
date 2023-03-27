@@ -212,10 +212,6 @@ INCLUDEPATH += $$PWD/src/Game/Systems/IETime \
 INCLUDEPATH += $$PWD/src/Serialize \
     $$PWD/src/Serialize/Serializable \
 
-INCLUDEPATH += $$PWD/src/Tests \
-    $$PWD/src/Tests/IETCreateRenderable \
-    $$PWD/src/Tests/IETBasicPhysics
-
 INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \
     $$PWD/src/Utility/IEGlslImporter \
@@ -224,3 +220,7 @@ INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEObjImporter \
     $$PWD/src/Utility/IERandomNumber \
     $$PWD/src/Utility/IESerialize \
+
+#INCLUDEPATH += $$PWD/tests \
+#    $$PWD/tests/IETCreateRenderable \
+#    $$PWD/tests/IETBasicPhysics
