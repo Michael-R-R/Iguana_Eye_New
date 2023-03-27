@@ -101,6 +101,7 @@ public:
 
     IEScript* getScript(const int index, const unsigned long long id);
     IEScript* getScript(const int index, const char* name);
+    QVector<const IEScript*> getScriptCollection(const int index);
 
 private:
     void deserializeScripts();

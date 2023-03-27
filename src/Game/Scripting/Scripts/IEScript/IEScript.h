@@ -25,8 +25,8 @@ public:
 
     bool getIsValid() const { return isValid; }
 
-    sol::object value(const char* name);
-    sol::object getFunc(const char* name);
-    sol::object callFunc(const char* name, sol::variadic_args args);
+    sol::object value(const char* name) const;
+    sol::object getFunc(const char* name) const;
+    sol::object callFunc(const char* name, sol::variadic_args args) const;
 };
 

@@ -209,6 +209,24 @@ IEScript* IEECSScriptSystem::getScript(const int index, const char* name)
     return &data.scriptCollection[index][id];
 }
 
+QVector<const IEScript*> IEECSScriptSystem::getScriptCollection(const int index)
+{
+    QVector<const IEScript*> result;
+
+    if(!indexBoundCheck(index))
+        return result;
+
+    QMapIterator<unsigned long long, IEEntityScript> it(data.scriptCollection[index]);
+    while(it.hasNext())
+    {
+        it.next();
+
+        result.push_back(&it.value());
+    }
+
+    return result;
+}
+
 void IEECSScriptSystem::deserializeScripts()
 {
     for(int i = 1; i < entityMap.size(); i++)

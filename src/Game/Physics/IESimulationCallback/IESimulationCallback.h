@@ -4,9 +4,12 @@
 #include "PxPhysicsAPI.h"
 
 class GameStartEvent;
+class IEECSScriptSystem;
 
 class IESimulationCallback : public physx::PxSimulationEventCallback
 {
+    // DOES NOT OWN THESE POINTERS
+    IEECSScriptSystem* scriptSystem;
 
 public:
     IESimulationCallback(const GameStartEvent& event);

@@ -15,9 +15,6 @@
 #include "IEECSRenderableSystem.h"
 #include "ECSOnUpdateEvent.h"
 
-// TODO test
-#include "IEPhysicsEngine.h"
-
 IEECS::IEECS() :
     IEObject(),
     onUpdateEvent(nullptr),
@@ -38,22 +35,6 @@ void IEECS::startup(const GameStartEvent& event)
     {
         i.second->startup(event);
     }
-
-    // TODO test
-    auto& engine = event.getPhysicsEngine();
-    auto* rigidbodySystem = getComponent<IEECSRigidbody3DSystem>("Rigidbody3D");
-
-    IEEntity entity = this->create();
-    const int index = this->attachComponent(entity, "Rigidbody3D");
-
-    IERigidBody rigidbody = IERigidBody(*engine.getPxPhysics(), *engine.getDefaultPxMaterial(),
-                                        physx::PxTransform(0.0f, 10.0f, 0.0f),
-                                        physx::PxBoxGeometry(1.0f, 1.0f, 1.0f),
-                                        100.0f, 0.1f, entity.getId());
-    rigidbodySystem->setRigidbody(index, rigidbody);
-    rigidbodySystem->wakeup(index);
-
-    onUpdateEvent = std::make_unique<ECSOnUpdateEvent>(this);
 }
 
 void IEECS::shutdown()

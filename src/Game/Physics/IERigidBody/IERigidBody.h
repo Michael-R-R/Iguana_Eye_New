@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO figure out how to serialize rigidbody
+
 #include "PxRigidActor.h"
 #include "PxRigidStatic.h"
 #include "PxRigidDynamic.h"
