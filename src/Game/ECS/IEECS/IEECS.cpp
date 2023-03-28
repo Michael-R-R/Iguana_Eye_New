@@ -35,6 +35,8 @@ void IEECS::startup(const GameStartEvent& event)
     {
         i.second->startup(event);
     }
+
+    onUpdateEvent = std::make_unique<ECSOnUpdateEvent>(this);
 }
 
 void IEECS::shutdown()

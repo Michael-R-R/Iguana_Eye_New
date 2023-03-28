@@ -3,6 +3,7 @@
 #include "IEScene.h"
 #include "IEECS.h"
 #include "IEECSScriptSystem.h"
+#include <QDebug>
 
 IESimulationCallback::IESimulationCallback(const GameStartEvent& event)
 {
