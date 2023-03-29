@@ -3,14 +3,20 @@
 
 IEEntityScript::IEEntityScript() :
     IEScript(),
-    startFunc(), updateFunc(), wakeFunc(), sleepFunc(), scriptData()
+    startFunc(), updateFunc(),
+    wakeFunc(), sleepFunc(),
+    onTriggerEnterFunc(), onTriggerLeaveFunc(),
+    scriptData()
 {
 
 }
 
 IEEntityScript::IEEntityScript(const QString& path, const unsigned long long id) :
     IEScript(path, id),
-    startFunc(), updateFunc(), wakeFunc(), sleepFunc(), scriptData()
+    startFunc(), updateFunc(),
+    wakeFunc(), sleepFunc(),
+    onTriggerEnterFunc(), onTriggerLeaveFunc(),
+    scriptData()
 {
 
 }
@@ -32,6 +38,8 @@ bool IEEntityScript::initalize(sol::state& lua)
         updateFunc = env["update"];
         wakeFunc = env["wake"];
         sleepFunc = env["sleep"];
+        onTriggerEnterFunc = env["onTriggerEnter"];
+        onTriggerLeaveFunc = env["onTriggerLeave"];
 
         isValid = true;
     }
@@ -45,24 +53,34 @@ bool IEEntityScript::initalize(sol::state& lua)
     return isValid;
 }
 
-void IEEntityScript::start(const IEEntity entity)
+void IEEntityScript::start(const IEEntity entity) const
 {
     startFunc(entity);
 }
 
-void IEEntityScript::update()
+void IEEntityScript::update() const
 {
     updateFunc();
 }
 
-void IEEntityScript::wake()
+void IEEntityScript::wake() const
 {
     wakeFunc();
 }
 
-void IEEntityScript::sleep()
+void IEEntityScript::sleep() const
 {
     sleepFunc();
+}
+
+void IEEntityScript::onTriggerEnter(const IEEntity& otherEntity) const
+{
+    onTriggerEnterFunc(otherEntity);
+}
+
+void IEEntityScript::onTriggerLeave(const IEEntity& otherEntity) const
+{
+    onTriggerLeaveFunc(otherEntity);
 }
 
 void IEEntityScript::dataFromScript()

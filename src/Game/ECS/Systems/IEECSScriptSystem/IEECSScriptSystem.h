@@ -13,6 +13,8 @@ class IEScriptEngine;
 
 class IEECSScriptSystem : public IEECSSystem
 {
+    Q_OBJECT
+
     struct Data
     {
         QVector<IEEntity> entity;
@@ -101,12 +103,15 @@ public:
 
     IEScript* getScript(const int index, const unsigned long long id);
     IEScript* getScript(const int index, const char* name);
-    QVector<const IEScript*> getScriptCollection(const int index);
 
 private:
     void deserializeScripts();
     void removeAll();
     void removeAll(const int index);
+
+private slots:
+    void callOnTriggerEnter(const IEEntity& triggerEntity, const IEEntity& otherEntity);
+    void callOnTriggerLeave(const IEEntity& triggerEntity, const IEEntity& otherEntity);
 
 public:
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

@@ -22,7 +22,7 @@ IEPhysicsEngine::~IEPhysicsEngine()
 
 }
 
-void IEPhysicsEngine::startup(const GameStartEvent& event)
+void IEPhysicsEngine::startup(const GameStartEvent&)
 {
     pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, defaultAllocatorCallback, defaultErrorCallback);
     if(!pxFoundation)
@@ -33,7 +33,7 @@ void IEPhysicsEngine::startup(const GameStartEvent& event)
     pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, pxToleranceScale, true);
 
     pxCpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
-    simulationCallback = std::make_unique<IESimulationCallback>(event);
+    simulationCallback = std::make_unique<IESimulationCallback>(this);
 
     physx::PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
     sceneDesc.gravity = physx::PxVec3(0.0f, worldGravity, 0.0f);
@@ -43,6 +43,8 @@ void IEPhysicsEngine::startup(const GameStartEvent& event)
 
     pxScene = pxPhysics->createScene(sceneDesc);
     pxDefaultMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
+
+    emit message("Physics Engine Started");
 }
 
 void IEPhysicsEngine::shutdown()
@@ -51,6 +53,8 @@ void IEPhysicsEngine::shutdown()
     pxCpuDispatcher->release();
     pxPhysics->release();
     pxFoundation->release();
+
+    emit message("Physics Engine Shutdowned");
 }
 
 void IEPhysicsEngine::onUpdateFrame(const float dt)

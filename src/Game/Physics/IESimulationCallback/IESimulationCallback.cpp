@@ -1,27 +1,26 @@
 #include "IESimulationCallback.h"
-#include "GameStartEvent.h"
-#include "IEScene.h"
-#include "IEECS.h"
-#include "IEECSScriptSystem.h"
-#include <QDebug>
+#include "IEPhysicsEngine.h"
+#include "IEEntity.h"
 
-IESimulationCallback::IESimulationCallback(const GameStartEvent& event)
+IESimulationCallback::IESimulationCallback(IEPhysicsEngine* engine) :
+    physicsEngine(engine)
 {
-    auto& ecs = event.getScene().getECS();
-    scriptSystem = ecs.getComponent<IEECSScriptSystem>("Script");
+
 }
 
 IESimulationCallback::~IESimulationCallback()
 {
-    scriptSystem = nullptr;
+    physicsEngine = nullptr;
 }
 
 void IESimulationCallback::onWake(physx::PxActor** actors, physx::PxU32 count)
 {
     while(count--)
     {
-        // TODO implement
-        qDebug() << "Wake:" << (int)(size_t)actors[count]->userData;
+        auto* actor = actors[count];
+        const IEEntity entity = IEEntity((int)(size_t)actor->userData);
+
+        emit onWakeRigidbody(entity);
     }
 }
 
@@ -29,8 +28,10 @@ void IESimulationCallback::onSleep(physx::PxActor** actors, physx::PxU32 count)
 {
     while(count--)
     {
-        // TODO implement
-        qDebug() << "Sleep:" << (int)(size_t)actors[count]->userData;
+        auto* actor = actors[count];
+        const IEEntity entity = IEEntity((int)(size_t)actor->userData);
+
+        emit onSleepRigidbody(entity);
     }
 }
 
@@ -43,29 +44,17 @@ void IESimulationCallback::onTrigger(physx::PxTriggerPair* pairs, physx::PxU32 c
         if(current.status & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND)
         {
             const IEEntity triggerEntity = IEEntity((int)(size_t)current.triggerActor->userData);
-            const IEEntity otherEntity = (int)(size_t)current.otherActor->userData;;
+            const IEEntity otherEntity = IEEntity((int)(size_t)current.otherActor->userData);
 
-            const int triggerIndex = scriptSystem->lookUpIndex(triggerEntity);
-            auto scriptCollection = scriptSystem->getScriptCollection(triggerIndex);
-            for(const auto& i : scriptCollection)
-            {
-                sol::function func = i->getFunc("onTriggerEnter");
-                func(otherEntity);
-            }
+            emit onTriggerEnter(triggerEntity, otherEntity);
         }
 
         if(current.status & physx::PxPairFlag::eNOTIFY_TOUCH_LOST)
         {
             const IEEntity triggerEntity = IEEntity((int)(size_t)current.triggerActor->userData);
-            const IEEntity otherEntity = (int)(size_t)current.otherActor->userData;;
+            const IEEntity otherEntity = IEEntity((int)(size_t)current.otherActor->userData);
 
-            const int triggerIndex = scriptSystem->lookUpIndex(triggerEntity);
-            auto scriptCollection = scriptSystem->getScriptCollection(triggerIndex);
-            for(const auto& i : scriptCollection)
-            {
-                sol::function func = i->getFunc("onTriggerLeave");
-                func(otherEntity);
-            }
+            emit onTriggerLeave(triggerEntity, otherEntity);
         }
     }
 }

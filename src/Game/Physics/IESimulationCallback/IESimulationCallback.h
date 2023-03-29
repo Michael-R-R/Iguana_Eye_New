@@ -1,18 +1,21 @@
 #pragma once
 
+#include "IEObject.h"
 #include "PxPhysics.h"
 #include "PxPhysicsAPI.h"
 
-class GameStartEvent;
-class IEECSScriptSystem;
+class IEPhysicsEngine;
+class IEEntity;
 
-class IESimulationCallback : public physx::PxSimulationEventCallback
+class IESimulationCallback : public IEObject, public physx::PxSimulationEventCallback
 {
-    // DOES NOT OWN THESE POINTERS
-    IEECSScriptSystem* scriptSystem;
+    Q_OBJECT
+
+    // DOES NOT OWN THIS POINTER
+    IEPhysicsEngine* physicsEngine;
 
 public:
-    IESimulationCallback(const GameStartEvent& event);
+    IESimulationCallback(IEPhysicsEngine* engine);
     ~IESimulationCallback();
 
     void onWake(physx::PxActor** actors, physx::PxU32 count) override;
@@ -21,5 +24,11 @@ public:
     void onConstraintBreak(physx::PxConstraintInfo*, physx::PxU32) override {}
     void onContact(const physx::PxContactPairHeader&, const physx::PxContactPair*, physx::PxU32) override {}
     void onAdvance(const physx::PxRigidBody* const* , const physx::PxTransform*, const physx::PxU32) override {}
+
+signals:
+    void onWakeRigidbody(const IEEntity& entity);
+    void onSleepRigidbody(const IEEntity& entity);
+    void onTriggerEnter(const IEEntity& triggerEntity, const IEEntity& otherEntity);
+    void onTriggerLeave(const IEEntity& triggerEntity, const IEEntity& otherEntity);
 };
 

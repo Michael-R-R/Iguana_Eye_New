@@ -6,20 +6,22 @@
 
 IEECSRigidbody3DSystem::IEECSRigidbody3DSystem() :
     data(),
-    awakeBodies(), sleepingBodies(),
-    physicsEngine(nullptr)
+    awakeBodies(), sleepingBodies()
 {
     IEECSRigidbody3DSystem::attach(IEEntity(-1));
 }
 
 IEECSRigidbody3DSystem::~IEECSRigidbody3DSystem()
 {
-    physicsEngine = nullptr;
+
 }
 
 void IEECSRigidbody3DSystem::startup(const GameStartEvent& event)
 {
-    physicsEngine = &event.getPhysicsEngine();
+    auto& physicsEngine = event.getPhysicsEngine();
+    auto* simCallback = physicsEngine.getSimulationCallback();
+    connect(simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
+    connect(simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
 }
 
 int IEECSRigidbody3DSystem::attach(const IEEntity entity)
@@ -93,7 +95,6 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
         transformSystem->setPosition(transformIndex, QVector3D(pxPos.x, pxPos.y, pxPos.z));
         transformSystem->setRotation(transformIndex, QVector4D(pxRot.x, pxRot.y, pxRot.z, qRadiansToDegrees(angle)));
 
-        // TODO test
         qDebug() << pxPos.x << pxPos.y << pxPos.z;
     }
 }
@@ -103,7 +104,7 @@ void IEECSRigidbody3DSystem::wakeup(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    if(!data.rigidbody[index].wakeup(physicsEngine))
+    if(!data.rigidbody[index].wakeup())
         return;
 
     sleepingBodies.remove(index);
@@ -115,7 +116,7 @@ void IEECSRigidbody3DSystem::putToSleep(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    if(!data.rigidbody[index].putToSleep(physicsEngine))
+    if(!data.rigidbody[index].putToSleep())
         return;
 
     awakeBodies.remove(index);
@@ -127,7 +128,7 @@ void IEECSRigidbody3DSystem::release(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    data.rigidbody[index].release(physicsEngine);
+    data.rigidbody[index].release();
 
     awakeBodies.remove(index);
     sleepingBodies.remove(index);
@@ -147,6 +148,26 @@ void IEECSRigidbody3DSystem::setRigidbody(const int index, const IERigidBody& va
         return;
 
     data.rigidbody[index] = val;
+}
+
+void IEECSRigidbody3DSystem::activateRigidbody(const IEEntity& entity)
+{
+    const int index = this->lookUpIndex(entity);
+    if(!indexBoundCheck(index))
+        return;
+
+    sleepingBodies.remove(index);
+    awakeBodies.insert(index);
+}
+
+void IEECSRigidbody3DSystem::deactivateRigidbody(const IEEntity& entity)
+{
+    const int index = this->lookUpIndex(entity);
+    if(!indexBoundCheck(index))
+        return;
+
+    awakeBodies.remove(index);
+    sleepingBodies.insert(index);
 }
 
 QDataStream& IEECSRigidbody3DSystem::serialize(QDataStream& out, const Serializable& obj) const

@@ -14,6 +14,8 @@ class IEEntityScript : public IEScript, public Serializable
     sol::function updateFunc;
     sol::function wakeFunc;
     sol::function sleepFunc;
+    sol::function onTriggerEnterFunc;
+    sol::function onTriggerLeaveFunc;
 
     ScriptData scriptData;
 
@@ -28,10 +30,12 @@ public:
     bool operator>(const IEEntityScript& other) { return IEScript::operator>(other); }
 
     bool initalize(sol::state &lua) override;
-    void start(const IEEntity entity);
-    void update();
-    void wake();
-    void sleep();
+    void start(const IEEntity entity) const;
+    void update() const;
+    void wake() const;
+    void sleep() const;
+    void onTriggerEnter(const IEEntity& otherEntity) const;
+    void onTriggerLeave(const IEEntity& otherEntity) const;
 
     void dataFromScript();
     void dataToScript();

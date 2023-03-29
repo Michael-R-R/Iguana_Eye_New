@@ -2,15 +2,17 @@
 
 #include <memory>
 
+#include "IEObject.h"
+#include "IESimulationCallback.h"
 #include "PxPhysics.h"
 #include "PxPhysicsAPI.h"
 
-#include "IESimulationCallback.h"
-
 class GameStartEvent;
 
-class IEPhysicsEngine
+class IEPhysicsEngine : public IEObject
 {
+    Q_OBJECT
+
     physx::PxDefaultAllocator defaultAllocatorCallback;
     physx::PxDefaultErrorCallback defaultErrorCallback;
     physx::PxDefaultCpuDispatcher* pxCpuDispatcher;
@@ -41,5 +43,6 @@ public:
 
     physx::PxPhysics* getPxPhysics() { return pxPhysics; }
     physx::PxMaterial* getDefaultPxMaterial() { return pxDefaultMaterial; }
+    IESimulationCallback* getSimulationCallback() { return &(*simulationCallback); }
 };
 

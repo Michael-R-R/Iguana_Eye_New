@@ -1,18 +1,16 @@
 #pragma once
 
 #include <QVector>
-#include <QMap>
 #include <QSet>
-#include <vector>
 
 #include "IEECSSystem.h"
 #include "IERigidBody.h"
 
-class IEPhysicsEngine;
-
 // TODO finish implementing
 class IEECSRigidbody3DSystem : public IEECSSystem
 {
+    Q_OBJECT
+
     struct Data
     {
         QVector<IEEntity> entity;
@@ -36,9 +34,6 @@ class IEECSRigidbody3DSystem : public IEECSSystem
     QSet<int> awakeBodies;
     QSet<int> sleepingBodies;
 
-    // DOES NOT OWN THIS POINTER
-    IEPhysicsEngine* physicsEngine;
-
 public:
     IEECSRigidbody3DSystem();
     ~IEECSRigidbody3DSystem();
@@ -55,6 +50,11 @@ public:
     const IERigidBody& getRigidbody(const int index) const;
     void setRigidbody(const int index, const IERigidBody& val);
 
+private slots:
+    void activateRigidbody(const IEEntity& entity);
+    void deactivateRigidbody(const IEEntity& entity);
+
+public:
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 };

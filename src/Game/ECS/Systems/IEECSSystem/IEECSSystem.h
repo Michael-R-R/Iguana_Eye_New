@@ -3,13 +3,14 @@
 #include <QMap>
 #include <QString>
 
+#include "IEObject.h"
 #include "Serializable.h"
 #include "IEEntity.h"
 
 class GameStartEvent;
 class ECSOnUpdateEvent;
 
-class IEECSSystem : public Serializable
+class IEECSSystem : public IEObject, public Serializable
 {
 
 protected:

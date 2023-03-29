@@ -6,8 +6,6 @@
 #include "PxRigidStatic.h"
 #include "PxRigidDynamic.h"
 
-class IEPhysicsEngine;
-
 class IERigidBody
 {
 public:
@@ -42,9 +40,9 @@ public:
 
     ~IERigidBody();
 
-    bool wakeup(IEPhysicsEngine* engine);
-    bool putToSleep(IEPhysicsEngine* engine);
-    void release(IEPhysicsEngine* engine);
+    bool wakeup();
+    bool putToSleep();
+    void release();
 
     bool is(BodyType type) { return (this->bodyType == type); }
     physx::PxRigidActor* getActor() { return rigidActor; }

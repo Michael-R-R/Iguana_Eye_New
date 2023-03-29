@@ -1,5 +1,4 @@
 #include "IERigidBody.h"
-#include "IEPhysicsEngine.h"
 #include "physx/extensions/PxSimpleFactory.h"
 
 IERigidBody::IERigidBody() :
@@ -45,10 +44,10 @@ IERigidBody::IERigidBody(const IERigidBody& other) :
 
 IERigidBody::~IERigidBody()
 {
-    rigidActor = nullptr; // Manually clean up or let scene clean up
+    rigidActor = nullptr; // Manually clean up with release() or let scene clean up
 }
 
-bool IERigidBody::wakeup(IEPhysicsEngine* engine)
+bool IERigidBody::wakeup()
 {
     if(!rigidActor)
         return false;
@@ -56,15 +55,13 @@ bool IERigidBody::wakeup(IEPhysicsEngine* engine)
     if(is(BodyType::None) || is(BodyType::Static))
         return false;
 
-    engine->addActorToScene(rigidActor);
-
     auto* temp = static_cast<physx::PxRigidDynamic*>(rigidActor);
     temp->wakeUp();
 
     return true;
 }
 
-bool IERigidBody::putToSleep(IEPhysicsEngine* engine)
+bool IERigidBody::putToSleep()
 {
     if(!rigidActor)
         return false;
@@ -75,15 +72,12 @@ bool IERigidBody::putToSleep(IEPhysicsEngine* engine)
     auto* temp = static_cast<physx::PxRigidDynamic*>(rigidActor);
     temp->putToSleep();
 
-    engine->removeActorFromScene(rigidActor);
-
     return true;
 }
 
-void IERigidBody::release(IEPhysicsEngine* engine)
+void IERigidBody::release()
 {
-    engine->releaseActor(rigidActor);
-
+    rigidActor->release();
     rigidActor = nullptr;
     bodyType = BodyType::None;
 }

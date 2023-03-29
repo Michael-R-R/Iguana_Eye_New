@@ -2,6 +2,7 @@
 #include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 #include "IEScriptEngine.h"
+#include "IEPhysicsEngine.h"
 #include "IEHash.h"
 
 IEECSScriptSystem::IEECSScriptSystem() :
@@ -20,6 +21,11 @@ IEECSScriptSystem::~IEECSScriptSystem()
 void IEECSScriptSystem::startup(const GameStartEvent& event)
 {
     scriptEngine = &event.getScriptEngine();
+
+    auto* physicsEngine = &event.getPhysicsEngine();
+    auto* simCallback = physicsEngine->getSimulationCallback();
+    connect(simCallback, &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
+    connect(simCallback, &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);
 
     initAllScripts();
     deserializeScripts();
@@ -209,24 +215,6 @@ IEScript* IEECSScriptSystem::getScript(const int index, const char* name)
     return &data.scriptCollection[index][id];
 }
 
-QVector<const IEScript*> IEECSScriptSystem::getScriptCollection(const int index)
-{
-    QVector<const IEScript*> result;
-
-    if(!indexBoundCheck(index))
-        return result;
-
-    QMapIterator<unsigned long long, IEEntityScript> it(data.scriptCollection[index]);
-    while(it.hasNext())
-    {
-        it.next();
-
-        result.push_back(&it.value());
-    }
-
-    return result;
-}
-
 void IEECSScriptSystem::deserializeScripts()
 {
     for(int i = 1; i < entityMap.size(); i++)
@@ -252,6 +240,34 @@ void IEECSScriptSystem::removeAll(const int index)
         return;
 
     data.scriptCollection[index].clear();
+}
+
+void IEECSScriptSystem::callOnTriggerEnter(const IEEntity& triggerEntity, const IEEntity& otherEntity)
+{
+    const int triggerIndex = this->lookUpIndex(triggerEntity);
+    if(!indexBoundCheck(triggerIndex))
+        return;
+
+    QMapIterator<unsigned long long, IEEntityScript> it(data.scriptCollection[triggerIndex]);
+    while(it.hasNext())
+    {
+        it.next();
+        it.value().onTriggerEnter(otherEntity);
+    }
+}
+
+void IEECSScriptSystem::callOnTriggerLeave(const IEEntity& triggerEntity, const IEEntity& otherEntity)
+{
+    const int triggerIndex = this->lookUpIndex(triggerEntity);
+    if(!indexBoundCheck(triggerIndex))
+        return;
+
+    QMapIterator<unsigned long long, IEEntityScript> it(data.scriptCollection[triggerIndex]);
+    while(it.hasNext())
+    {
+        it.next();
+        it.value().onTriggerLeave(otherEntity);
+    }
 }
 
 QDataStream& IEECSScriptSystem::serialize(QDataStream& out, const Serializable& obj) const
