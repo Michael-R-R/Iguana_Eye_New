@@ -21,12 +21,16 @@ void IETime::startup(IEGame& game)
     this->setupRenderTimer(game);
     this->startUpdateTimer();
     this->startRenderTimer();
+
+    emit message("IETime Startup Successful");
 }
 
 void IETime::shutdown()
 {
     this->stopUpdateTimer();
     this->stopRenderTimer();
+
+    emit message("IETime Shutdown Successful");
 }
 
 void IETime::startUpdateTimer()

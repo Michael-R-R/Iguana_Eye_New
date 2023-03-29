@@ -2,6 +2,8 @@
 
 #include <QDockWidget>
 
+class AppStartEvent;
+
 class EWindow : public QDockWidget
 {
     Q_OBJECT
@@ -15,14 +17,17 @@ public:
     EWindow(QString title, QWidget* parent = nullptr);
     ~EWindow();
 
+    virtual void startup(const AppStartEvent& event) = 0;
+
     void modifyTitle(const QString& text);
     void setModified(const bool isModified);
     void toggleVisibilty(bool status);
     void setStyleByString(const QString& style);
     void setStyleByFile(const QString& path);
 
-    bool getHasModifications() { return hasModifications; }
-    bool getIsActive() { return isActive; }
+    const QString& getPermTitle() const { return permenentTitle; }
+    bool getHasModifications() const { return hasModifications; }
+    bool getIsActive() const { return isActive; }
 
 protected:
     void showEvent(QShowEvent* event) override;

@@ -24,6 +24,7 @@ void EInput::setupInputContainer()
     inputContainer.addValue("Toggle Updating", InputKey(Qt::ALT, Qt::Key_U));
     inputContainer.addValue("File Explorer", InputKey(Qt::CTRL | Qt::ALT, Qt::Key_F));
     inputContainer.addValue("GLSL Editor", InputKey(Qt::CTRL | Qt::ALT, Qt::Key_G));
+    inputContainer.addValue("Message Log", InputKey(Qt::CTRL | Qt::ALT, Qt::Key_L));
 }
 
 QDataStream& EInput::serialize(QDataStream& out, const Serializable& obj) const

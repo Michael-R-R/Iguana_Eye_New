@@ -15,12 +15,14 @@ IEMeshManager::~IEMeshManager()
 
 void IEMeshManager::startup(const GameStartEvent&)
 {
-    // Not used
+    emit message("IEMeshManager Startup Successful");
 }
 
 void IEMeshManager::shutdown()
 {
     clear();
+
+    emit message("IEMeshManager Shutdown Successful");
 }
 
 bool IEMeshManager::add(const unsigned long long key, std::unique_ptr<IEMesh> value)

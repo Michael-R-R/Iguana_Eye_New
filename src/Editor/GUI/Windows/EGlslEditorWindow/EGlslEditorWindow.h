@@ -3,8 +3,6 @@
 #include "EWindow.h"
 #include "EWGlslEditor.h"
 
-class AppStartEvent;
-
 class EGlslEditorWindow : public EWindow
 {
     Q_OBJECT
@@ -15,6 +13,6 @@ public:
     EGlslEditorWindow(QWidget* parent = nullptr);
     ~EGlslEditorWindow() {}
 
-    void startup(const AppStartEvent& event);
+    void startup(const AppStartEvent& event) override;
 };
 

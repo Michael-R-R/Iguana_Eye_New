@@ -84,9 +84,10 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBeh
 INCLUDEPATH += $$PWD/src/Editor/GUI/Windows \
     $$PWD/src/Editor/GUI/Windows/EApplicationOptionsWindow \
     $$PWD/src/Editor/GUI/Windows/EFileExplorerWindow \
-    $$PWD/src/Editor/GUI/Windows/EWindowManager \
     $$PWD/src/Editor/GUI/Windows/EGlslEditorWindow \
+    $$PWD/src/Editor/GUI/Windows/EMessageLogWindow \
     $$PWD/src/Editor/GUI/Windows/EWindow \
+    $$PWD/src/Editor/GUI/Windows/EWindowManager \
 
 INCLUDEPATH += $$PWD/src/Editor/Input \
     $$PWD/src/Editor/Input/BaseInput \

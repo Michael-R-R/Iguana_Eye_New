@@ -43,6 +43,8 @@ void IERenderEngine::startup(const RenderEngineStartEvent& event)
 
     auto& ecs = scene.getECS();
     cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
+
+    emit message("IERenderEngine Startup Successful");
 }
 
 void IERenderEngine::shutdown()
@@ -52,6 +54,8 @@ void IERenderEngine::shutdown()
     shaderManager = nullptr;
     renderableManager = nullptr;
     cameraManager = nullptr;
+
+    emit message("IERenderEngine Shutdown Successful");
 }
 
 void IERenderEngine::onRenderFrame()

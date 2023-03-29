@@ -4,6 +4,7 @@
 #include "EApplicationOptionsWindow.h"
 #include "EGlslEditorWindow.h"
 #include "EFileExplorerWindow.h"
+#include "EMessageLogWindow.h"
 
 EWindowManager::EWindowManager(QObject* parent) :
     QObject(parent),
@@ -22,6 +23,7 @@ void EWindowManager::startup(const AppStartEvent& event)
     setupOptionsWindow(event);
     setupGlslEditorWindow(event);
     setupFileExplorerWindow(event);
+    setupMessageLogWindow(event);
 }
 
 void EWindowManager::showAll()
@@ -84,37 +86,49 @@ void EWindowManager::clear()
 
 void EWindowManager::setupOptionsWindow(const AppStartEvent& event)
 {
-    auto applicationWindow = event.getAppWindow();
+    auto* applicationWindow = event.getAppWindow();
 
-    auto optionsWindow = new EApplicationOptionsWindow(applicationWindow);
+    auto* optionsWindow = new EApplicationOptionsWindow(applicationWindow);
     optionsWindow->startup(event);
 
-    this->appendWindow("Options", optionsWindow);
+    this->appendWindow(optionsWindow->getPermTitle(), optionsWindow);
 
     applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, optionsWindow);
 }
 
 void EWindowManager::setupGlslEditorWindow(const AppStartEvent& event)
 {
-    auto applicationWindow = event.getAppWindow();
+    auto* applicationWindow = event.getAppWindow();
 
-    auto glslEditorWindow = new EGlslEditorWindow(applicationWindow);
+    auto* glslEditorWindow = new EGlslEditorWindow(applicationWindow);
     glslEditorWindow->startup(event);
 
-    this->appendWindow("GLSL Editor", glslEditorWindow);
+    this->appendWindow(glslEditorWindow->getPermTitle(), glslEditorWindow);
 
     applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, glslEditorWindow);
 }
 
 void EWindowManager::setupFileExplorerWindow(const AppStartEvent& event)
 {
-    auto applicationWindow = event.getAppWindow();
+    auto* applicationWindow = event.getAppWindow();
 
-    auto fileExpWindow = new EFileExplorerWindow(applicationWindow);
-    fileExpWindow->startup();
+    auto* fileExpWindow = new EFileExplorerWindow(applicationWindow);
+    fileExpWindow->startup(event);
 
-    this->appendWindow("File Explorer", fileExpWindow);
+    this->appendWindow(fileExpWindow->getPermTitle(), fileExpWindow);
 
     applicationWindow->addDockWidget(Qt::BottomDockWidgetArea, fileExpWindow);
 
+}
+
+void EWindowManager::setupMessageLogWindow(const AppStartEvent& event)
+{
+    auto applicationWindow = event.getAppWindow();
+
+    auto* messageLogWindow = new EMessageLogWindow(applicationWindow);
+    messageLogWindow->startup(event);
+
+    this->appendWindow(messageLogWindow->getPermTitle(), messageLogWindow);
+
+    applicationWindow->addDockWidget(Qt::BottomDockWidgetArea, messageLogWindow);
 }

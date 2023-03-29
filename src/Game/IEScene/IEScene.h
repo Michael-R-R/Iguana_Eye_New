@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "IEObject.h"
 #include "Serializable.h"
 
 class GameStartEvent;
@@ -12,7 +13,7 @@ class IERenderableManager;
 class IECameraManager;
 class IEECS;
 
-class IEScene : public Serializable
+class IEScene : public IEObject, public Serializable
 {
     std::unique_ptr<IEMeshManager> meshManager;
     std::unique_ptr<IEMaterialManager> materialManager;

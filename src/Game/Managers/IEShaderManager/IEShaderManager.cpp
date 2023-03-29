@@ -16,11 +16,15 @@ IEShaderManager::~IEShaderManager()
 void IEShaderManager::startup(const GameStartEvent&)
 {
     this->buildAllShaders();
+
+    emit message("IEShaderManager Startup Successful");
 }
 
 void IEShaderManager::shutdown()
 {
     clear();
+
+    emit message("IEShaderManager Shutdown Successful");
 }
 
 bool IEShaderManager::add(const unsigned long long key, std::unique_ptr<IEShader> value)

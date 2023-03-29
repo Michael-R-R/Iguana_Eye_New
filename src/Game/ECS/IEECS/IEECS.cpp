@@ -37,11 +37,15 @@ void IEECS::startup(const GameStartEvent& event)
     }
 
     onUpdateEvent = std::make_unique<ECSOnUpdateEvent>(this);
+
+    emit message("IEECS Startup Successful");
 }
 
 void IEECS::shutdown()
 {
     clearSystems();
+
+    emit message("IEECS Shutdown Successful");
 }
 
 void IEECS::onUpdateFrame()

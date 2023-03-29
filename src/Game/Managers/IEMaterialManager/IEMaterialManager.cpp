@@ -16,12 +16,14 @@ IEMaterialManager::~IEMaterialManager()
 
 void IEMaterialManager::startup(const GameStartEvent&)
 {
-    // Not used
+    emit message("IEMaterialManager Startup Successful");
 }
 
 void IEMaterialManager::shutdown()
 {
     clear();
+
+    emit message("IEMaterialManager Shutdown Successful");
 }
 
 bool IEMaterialManager::add(const unsigned long long key, std::unique_ptr<IEMaterial> value)

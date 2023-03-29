@@ -44,7 +44,7 @@ void IEPhysicsEngine::startup(const GameStartEvent&)
     pxScene = pxPhysics->createScene(sceneDesc);
     pxDefaultMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
 
-    emit message("Physics Engine Started");
+    emit message("IEPhysicsEngine Startup Successful");
 }
 
 void IEPhysicsEngine::shutdown()
@@ -54,7 +54,7 @@ void IEPhysicsEngine::shutdown()
     pxPhysics->release();
     pxFoundation->release();
 
-    emit message("Physics Engine Shutdowned");
+    emit message("IEPhysicsEngine Shutdown Successful");
 }
 
 void IEPhysicsEngine::onUpdateFrame(const float dt)

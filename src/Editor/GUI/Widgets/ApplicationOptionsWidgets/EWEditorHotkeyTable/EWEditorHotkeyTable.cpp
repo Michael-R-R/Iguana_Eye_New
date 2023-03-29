@@ -33,5 +33,6 @@ void EWEditorHotkeyTable::setupTables(BaseInput* input)
     windowKeys["Options"] = &input->getConfigKey("Options");
     windowKeys["File Explorer"] = &input->getConfigKey("File Explorer");
     windowKeys["GLSL Editor"] = &input->getConfigKey("GLSL Editor");
+    windowKeys["Message Log"] = &input->getConfigKey("Message Log");
     this->addTable("Window", this->createTable(input, windowKeys));
 }

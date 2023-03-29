@@ -31,6 +31,8 @@ void IEScene::startup(const GameStartEvent& event)
     renderableManager->startup(event);
     cameraManager->startup(event);
     ecs->startup(event);
+
+    emit message("IEScene Startup Successful");
 }
 
 void IEScene::shutdown()
@@ -41,6 +43,8 @@ void IEScene::shutdown()
     shaderManager->shutdown();
     materialManager->shutdown();
     meshManager->shutdown();
+
+    emit message("IEScene Shutdown Successful");
 }
 
 void IEScene::onUpdateFrame()

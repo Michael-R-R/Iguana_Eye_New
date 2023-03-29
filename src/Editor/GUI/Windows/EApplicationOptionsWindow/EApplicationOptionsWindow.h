@@ -18,6 +18,6 @@ public:
     EApplicationOptionsWindow(QWidget* parent = nullptr);
     ~EApplicationOptionsWindow();
 
-    void startup(const AppStartEvent& event);
+    void startup(const AppStartEvent& event) override;
 };
 

@@ -19,11 +19,15 @@ IERenderableManager::~IERenderableManager()
 void IERenderableManager::startup(const GameStartEvent& event)
 {
     this->buildAllRenderables(event);
+
+    emit message("IERenderableManager Startup Successful");
 }
 
 void IERenderableManager::shutdown()
 {
     clear();
+
+    emit message("IERenderableManager Shutdown Successful");
 }
 
 bool IERenderableManager::add(const unsigned long long key, std::unique_ptr<IERenderable> value)
