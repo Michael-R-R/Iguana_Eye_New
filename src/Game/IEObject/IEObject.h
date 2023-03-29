@@ -4,11 +4,13 @@
 
 class IEObject : public QObject
 {
+public:
     enum class MessageType
     {
         Normal, Error
     };
 
+private:
     Q_OBJECT
 
 public:

@@ -81,6 +81,9 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBeh
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour/GlslExpressionHighlight \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour/SyntaxHighlightBehaviour \
 
+INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/MessageLogWidgets \
+    $$PWD/src/Editor/GUI/Widgets/MessageLogWidgets/EWMessageLog \
+
 INCLUDEPATH += $$PWD/src/Editor/GUI/Windows \
     $$PWD/src/Editor/GUI/Windows/EApplicationOptionsWindow \
     $$PWD/src/Editor/GUI/Windows/EFileExplorerWindow \
