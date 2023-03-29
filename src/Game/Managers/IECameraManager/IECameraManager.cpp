@@ -15,14 +15,12 @@ IECameraManager::~IECameraManager()
 
 void IECameraManager::startup(const GameStartEvent&)
 {
-    emit message("IECameraManager Startup Successful");
+
 }
 
 void IECameraManager::shutdown()
 {
     clear();
-
-    emit message("IECameraManager Shutdown Successful");
 }
 
 bool IECameraManager::add(const unsigned long long key, std::unique_ptr<IECamera> value)

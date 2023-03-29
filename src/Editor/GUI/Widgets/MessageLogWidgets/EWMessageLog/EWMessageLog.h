@@ -14,7 +14,9 @@ public:
     EWMessageLog(QWidget* parent = nullptr);
     ~EWMessageLog();
 
-    void insertMessage(const QString& msg, const IEObject::MessageType type);
     void toDisk(const QString& path);
+
+public slots:
+    void insertMessage(const QString& msg, const IEObject::MessageType type);
 };
 

@@ -37,11 +37,9 @@ void IEScriptEngine::startup(const GameStartEvent& event)
     LuaIETime::addToLua(&event.getTime(), gameTable);
     LuaIEInput::addToLua(&event.getInput(), gameTable);
     LuaIEECS::addToLua(&event.getScene().getECS(), lua, gameTable);
-
-    emit message("IEScriptEngine Startup Successful");
 }
 
 void IEScriptEngine::shutdown()
 {
-    emit message("IEScriptEngine Shutdown Successful");
+
 }

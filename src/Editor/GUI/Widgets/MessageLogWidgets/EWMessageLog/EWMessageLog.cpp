@@ -8,6 +8,7 @@ EWMessageLog::EWMessageLog(QWidget* parent) :
     errorFormat()
 {
     this->setFocusPolicy(Qt::FocusPolicy::NoFocus);
+    this->setLineWrapMode(QPlainTextEdit::LineWrapMode::NoWrap);
     this->setReadOnly(true);
 
     normalFormat.setForeground(Qt::black);
@@ -17,6 +18,11 @@ EWMessageLog::EWMessageLog(QWidget* parent) :
 EWMessageLog::~EWMessageLog()
 {
 
+}
+
+void EWMessageLog::toDisk(const QString& path)
+{
+    IEFile::write(path, this->toPlainText());
 }
 
 void EWMessageLog::insertMessage(const QString& msg, const IEObject::MessageType type)
@@ -31,9 +37,4 @@ void EWMessageLog::insertMessage(const QString& msg, const IEObject::MessageType
     case IEObject::MessageType::Error: { logCursor.insertText(QString("%2\n").arg(msg), errorFormat); break; }
     default: { break; }
     }
-}
-
-void EWMessageLog::toDisk(const QString& path)
-{
-    IEFile::write(path, this->toPlainText());
 }
