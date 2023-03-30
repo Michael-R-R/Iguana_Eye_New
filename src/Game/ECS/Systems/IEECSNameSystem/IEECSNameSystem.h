@@ -50,7 +50,7 @@ public:
     void addNameTag(const QString& name);
     void clearNameTag(const QString& name);
     void clearEntityTag(const int index);
-    QVector<IEEntity> getEntityTagList(const QString& name) const;
+    QVector<IEEntity> getEntityTagList(const QString& tagName) const;
 
     unsigned long long getNameKey(const int index) const;
     unsigned long long getTagKey(const int index) const;

@@ -29,7 +29,7 @@ public:
     bool operator<(const IEEntityScript& other) { return IEScript::operator<(other); }
     bool operator>(const IEEntityScript& other) { return IEScript::operator>(other); }
 
-    bool initalize(sol::state &lua) override;
+    bool initalize(sol::state& lua) override;
     void start(const IEEntity entity) const;
     void update() const;
     void wake() const;

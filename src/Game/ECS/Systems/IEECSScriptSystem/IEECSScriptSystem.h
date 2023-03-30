@@ -74,9 +74,6 @@ class IEECSScriptSystem : public IEECSSystem
 
     Data data;
 
-    // DOES NOT OWN THIS POINTER
-    IEScriptEngine* scriptEngine;
-
 public:
     IEECSScriptSystem();
     ~IEECSScriptSystem();
@@ -86,9 +83,9 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
-    void initAllScripts();
+    void initAllScripts(sol::state& lua);
     void startAllScripts();
-    bool initalizeScript(const int index, const unsigned long long id);
+    bool initalizeScript(const int index, const unsigned long long id, sol::state& lua);
     void startScript(const int index, const unsigned long long id);
     void wakeScript(const int index, const unsigned long long id);
     void sleepScript(const int index, const unsigned long long id);

@@ -1,6 +1,7 @@
 #include "ESceneStartup.h"
 #include "AppStartEvent.h"
 #include "IEGame.h"
+#include "IEScriptEngine.h"
 #include "IEScene.h"
 #include "IEECS.h"
 #include "IEECSInputSystem.h"
@@ -86,6 +87,7 @@ void ESceneStartup::buildGridRenderable(const AppStartEvent& event)
 
 void ESceneStartup::buildCameraEntity(const AppStartEvent& event)
 {
+    auto& scriptEngine = event.getGame()->getIEScriptEngine();
     auto& scene = event.getGame()->getIEScene();
     auto& ecs = scene.getECS();
     auto* inputSystem = ecs.getComponent<IEECSInputSystem>("Input");
@@ -103,7 +105,7 @@ void ESceneStartup::buildCameraEntity(const AppStartEvent& event)
     const int scriptIndex = ecs.attachComponent(entity, "Script");
     const unsigned long long scriptId = IEHash::Compute("perspController");
     scriptSystem->addScript(scriptIndex, IEEntityScript("./resources/scripts/editor/perspController.lua", scriptId));
-    scriptSystem->initalizeScript(scriptIndex, scriptId);
+    scriptSystem->initalizeScript(scriptIndex, scriptId, scriptEngine.getLua());
     scriptSystem->startScript(scriptIndex, scriptId);
 
     const int transformIndex = transformSystem->lookUpIndex(entity);

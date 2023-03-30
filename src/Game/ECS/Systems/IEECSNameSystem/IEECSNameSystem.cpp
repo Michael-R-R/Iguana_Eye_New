@@ -116,9 +116,9 @@ void IEECSNameSystem::clearEntityTag(const int index)
     data.tagIndex[index] = -1;
 }
 
-QVector<IEEntity> IEECSNameSystem::getEntityTagList(const QString& name) const
+QVector<IEEntity> IEECSNameSystem::getEntityTagList(const QString& tagName) const
 {
-    const unsigned long long hash = IEHash::Compute(name);
+    const unsigned long long hash = IEHash::Compute(tagName);
     if(!tagEntityMap.contains(hash))
         return QVector<IEEntity>();
 

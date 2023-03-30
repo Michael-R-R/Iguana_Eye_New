@@ -7,7 +7,7 @@
 
 IEECSScriptSystem::IEECSScriptSystem() :
     IEECSSystem(),
-    data(), scriptEngine(nullptr)
+    data()
 {
     IEECSScriptSystem::attach(IEEntity(-1));
 }
@@ -15,19 +15,18 @@ IEECSScriptSystem::IEECSScriptSystem() :
 IEECSScriptSystem::~IEECSScriptSystem()
 {
     removeAll();
-    scriptEngine = nullptr;
 }
 
 void IEECSScriptSystem::startup(const GameStartEvent& event)
 {
-    scriptEngine = &event.getScriptEngine();
-
+    auto& scriptEngine = event.getScriptEngine();
     auto* physicsEngine = &event.getPhysicsEngine();
     auto* simCallback = physicsEngine->getSimulationCallback();
+
     connect(simCallback, &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
     connect(simCallback, &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);
 
-    initAllScripts();
+    initAllScripts(scriptEngine.getLua());
     deserializeScripts();
 }
 
@@ -87,13 +86,13 @@ void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent*)
     }
 }
 
-void IEECSScriptSystem::initAllScripts()
+void IEECSScriptSystem::initAllScripts(sol::state& lua)
 {
     for(int i = 1; i < entityMap.size(); i++)
     {
         foreach(auto& script, data.scriptCollection[i])
         {
-            initalizeScript(i, script.getId());
+            initalizeScript(i, script.getId(), lua);
         }
     }
 }
@@ -109,12 +108,12 @@ void IEECSScriptSystem::startAllScripts()
     }
 }
 
-bool IEECSScriptSystem::initalizeScript(const int index, const unsigned long long id)
+bool IEECSScriptSystem::initalizeScript(const int index, const unsigned long long id, sol::state& lua)
 {
     if(!hasScript(index, id))
         return false;
 
-    return data.scriptCollection[index][id].initalize(scriptEngine->getLua());
+    return data.scriptCollection[index][id].initalize(lua);
 }
 
 void IEECSScriptSystem::startScript(const int index, const unsigned long long id)
