@@ -7,8 +7,6 @@ class IEMeshManager;
 class IEMaterialManager;
 class IEShaderManager;
 class IERenderableManager;
-class IECameraManager;
-class IEECSCameraSystem;
 class IEMesh;
 class IEMaterial;
 class IEShader;
@@ -22,8 +20,6 @@ class IERenderEngine : public IEObject
     const IEMaterialManager* materialManager;
     const IEShaderManager* shaderManager;
     const IERenderableManager* renderableManager;
-    const IECameraManager* cameraManager;
-    const IEECSCameraSystem* cameraSystem;
 
 public:
     IERenderEngine();
@@ -32,7 +28,7 @@ public:
     void startup(const RenderEngineStartEvent& event);
     void shutdown();
 
-    void onRenderFrame();
+    void onRenderFrame(IECamera* camera);
 
 private:
     void prepareShader(IEShader& shader);

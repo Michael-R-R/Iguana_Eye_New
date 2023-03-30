@@ -67,6 +67,6 @@ void IEGamePlayState::onUpdateFrame()
 void IEGamePlayState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    renderEngine.onRenderFrame();
+    renderEngine.onRenderFrame(cameraSystem->getActiveCamera());
     time.processDeltaTime();
 }

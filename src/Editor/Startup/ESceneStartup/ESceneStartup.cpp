@@ -1,19 +1,13 @@
 #include "ESceneStartup.h"
 #include "AppStartEvent.h"
 #include "IEGame.h"
-#include "IEScriptEngine.h"
 #include "IEScene.h"
 #include "IEECS.h"
 #include "IEECSInputSystem.h"
-#include "IEECSScriptSystem.h"
 #include "IEECSTransformSystem.h"
-#include "IEECSCameraSystem.h"
-#include "IEEntityScript.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
-#include "IECameraManager.h"
-#include "EDefaultCamera.h"
 #include "EDefaultMaterial.h"
 #include "EGridRenderable.h"
 #include "IEHash.h"
@@ -22,24 +16,9 @@
 
 void ESceneStartup::startup(const AppStartEvent& event)
 {
-    addDefaultCamera(event);
     addDefaultMaterial(event);
     addDefaultShader(event);
     buildGridRenderable(event);
-    buildCameraEntity(event);
-}
-
-void ESceneStartup::addDefaultCamera(const AppStartEvent& event)
-{
-    auto& scene = event.getGame()->getIEScene();
-    auto& cameraManager = scene.getCameraManager();
-
-    QString path = "./resources/cameras/editor/default.iecam";
-    unsigned long long id = IEHash::Compute(path);
-    auto camera = std::make_unique<EDefaultCamera>(path, id);
-
-    cameraManager.setDefaultResourceId(id);
-    cameraManager.add(id, std::move(camera));
 }
 
 void ESceneStartup::addDefaultMaterial(const AppStartEvent& event)
@@ -83,36 +62,4 @@ void ESceneStartup::buildGridRenderable(const AppStartEvent& event)
     gridRenderable->setup(meshManager, materialManager, shaderManager);
 
     renderableManager.add(id, std::move(gridRenderable));
-}
-
-void ESceneStartup::buildCameraEntity(const AppStartEvent& event)
-{
-    auto& scriptEngine = event.getGame()->getIEScriptEngine();
-    auto& scene = event.getGame()->getIEScene();
-    auto& ecs = scene.getECS();
-    auto* inputSystem = ecs.getComponent<IEECSInputSystem>("Input");
-    auto* scriptSystem = ecs.getComponent<IEECSScriptSystem>("Script");
-    auto* transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");
-    auto* cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
-    auto& cameraManager = scene.getCameraManager();
-
-    const unsigned long long cameraId = cameraManager.getDefaultResourceId();
-
-    IEEntity entity = ecs.create();
-    const int inputIndex = ecs.attachComponent(entity, "Input");
-    inputSystem->setHasInput(inputIndex, true);
-
-    const int scriptIndex = ecs.attachComponent(entity, "Script");
-    const unsigned long long scriptId = IEHash::Compute("perspController");
-    scriptSystem->addScript(scriptIndex, IEEntityScript("./resources/scripts/editor/perspController.lua", scriptId));
-    scriptSystem->initalizeScript(scriptIndex, scriptId, scriptEngine.getLua());
-    scriptSystem->startScript(scriptIndex, scriptId);
-
-    const int transformIndex = transformSystem->lookUpIndex(entity);
-    transformSystem->setPosition(transformIndex, QVector3D(0.0f, 15.0f, 20.0f));
-    transformSystem->setRotation(transformIndex, QVector4D(0.0f, 0.0f, -1.0f, 0.0f));
-
-    const int cameraIndex = ecs.attachComponent(entity, "Camera");
-    cameraSystem->setCameraId(cameraIndex, cameraId);
-    cameraSystem->setActiveIndex(cameraIndex);
 }

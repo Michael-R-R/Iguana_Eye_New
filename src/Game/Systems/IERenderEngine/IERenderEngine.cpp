@@ -9,15 +9,12 @@
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
-#include "IEECS.h"
-#include "IEECSCameraSystem.h"
 #include "IECamera.h"
 
 IERenderEngine::IERenderEngine() :
     IEObject(),
     meshManager(nullptr), materialManager(nullptr),
-    shaderManager(nullptr), renderableManager(nullptr),
-    cameraManager(nullptr), cameraSystem(nullptr)
+    shaderManager(nullptr), renderableManager(nullptr)
 {
 
 }
@@ -28,8 +25,6 @@ IERenderEngine::~IERenderEngine()
     materialManager = nullptr;
     shaderManager = nullptr;
     renderableManager = nullptr;
-    cameraManager = nullptr;
-    cameraSystem = nullptr;
 }
 
 void IERenderEngine::startup(const RenderEngineStartEvent& event)
@@ -39,10 +34,6 @@ void IERenderEngine::startup(const RenderEngineStartEvent& event)
     materialManager = &scene.getMaterialManager();
     shaderManager = &scene.getShaderManager();
     renderableManager = &scene.getRenderableManager();
-    cameraManager = &scene.getCameraManager();
-
-    auto& ecs = scene.getECS();
-    cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
 }
 
 void IERenderEngine::shutdown()
@@ -51,12 +42,12 @@ void IERenderEngine::shutdown()
     materialManager = nullptr;
     shaderManager = nullptr;
     renderableManager = nullptr;
-    cameraManager = nullptr;
 }
 
-void IERenderEngine::onRenderFrame()
+void IERenderEngine::onRenderFrame(IECamera* camera)
 {
-    auto* camera = cameraSystem->getActiveCamera();
+    if(!camera)
+        return;
 
     const auto* renderables = renderableManager->getResources();
     for(auto& i : *renderables)

@@ -101,9 +101,10 @@ IEEntity IEECSCameraSystem::getActiveEntity() const
 
 IECamera* IEECSCameraSystem::getActiveCamera() const
 {
-    auto id = (indexBoundCheck(activeIndex)) ? data.cameraId[activeIndex] : cameraManager->getDefaultResourceId();
+    if(!indexBoundCheck(activeIndex))
+        return nullptr;
 
-    return cameraManager->value(id);
+    return cameraManager->value(data.cameraId[activeIndex]);
 }
 
 IECamera* IEECSCameraSystem::getAttachedCamera(const int index) const

@@ -1,39 +1,29 @@
 #include "IEGameStopState.h"
 #include "IETime.h"
 #include "IEGame.h"
-#include "IEScene.h"
-#include "IEECS.h"
 #include "IERenderEngine.h"
-#include "IEECSTransformSystem.h"
-#include "IEECSCameraSystem.h"
-#include "ECSOnUpdateEvent.h"
+#include "EDefaultCamera.h"
 
 IEGameStopState::IEGameStopState(IEGame& game) :
     glFunc(nullptr),
     glExtraFunc(nullptr),
     time(game.getIETime()),
     renderEngine(game.getIERenderEngine()),
-    transformSystem(nullptr),
-    cameraSystem(nullptr),
-    ecsUpdateEvent(nullptr)
+    camera(std::make_unique<EDefaultCamera>())
 {
 
 }
 
 IEGameStopState::~IEGameStopState()
 {
-
+    glFunc = nullptr;
+    glExtraFunc = nullptr;
 }
 
 void IEGameStopState::enter(IEGame& game)
 {
     glFunc = game.getGlFunc();
     glExtraFunc = game.getGlExtraFunc();
-
-    auto& ecs = game.getIEScene().getECS();
-    transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");
-    cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
-    ecsUpdateEvent = std::make_unique<ECSOnUpdateEvent>(&ecs);
 }
 
 void IEGameStopState::exit(IEGame&)
@@ -43,13 +33,12 @@ void IEGameStopState::exit(IEGame&)
 
 void IEGameStopState::onUpdateFrame()
 {
-    transformSystem->onUpdateFrame(&(*ecsUpdateEvent));
-    cameraSystem->onUpdateFrame(&(*ecsUpdateEvent));
+    // TODO update the custom camera for stop state
 }
 
 void IEGameStopState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    renderEngine.onRenderFrame();
+    renderEngine.onRenderFrame(&(*camera)); // TODO need to pass a editor camera
     time.processDeltaTime();
 }

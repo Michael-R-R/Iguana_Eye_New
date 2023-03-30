@@ -8,9 +8,7 @@ class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
 class IETime;
 class IERenderEngine;
-class IEECSTransformSystem;
-class IEECSCameraSystem;
-class ECSOnUpdateEvent;
+class EDefaultCamera;
 
 class IEGameStopState : public IEGameState
 {
@@ -18,9 +16,7 @@ class IEGameStopState : public IEGameState
     QOpenGLExtraFunctions* glExtraFunc;
     IETime& time;
     IERenderEngine& renderEngine;
-    IEECSTransformSystem* transformSystem;
-    IEECSCameraSystem* cameraSystem;
-    std::unique_ptr<ECSOnUpdateEvent> ecsUpdateEvent;
+    std::unique_ptr<EDefaultCamera> camera;
 
 public:
     IEGameStopState(IEGame& game);
