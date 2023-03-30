@@ -1,5 +1,5 @@
 #include "IEGame.h"
-#include "IEGameState.h"
+#include "IEGameStopState.h"
 #include "ApplicationProperties.h"
 #include "GameStartEvent.h"
 #include "RenderEngineStartEvent.h"
@@ -12,9 +12,6 @@
 #include "IEECS.h"
 #include "IEECSCameraSystem.h"
 
-// TODO test
-#include "IEGamePlayState.h"
-
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(std::make_unique<QSurfaceFormat>()),
@@ -25,7 +22,7 @@ IEGame::IEGame(QWidget* parent) :
     physicsEngine(std::make_unique<IEPhysicsEngine>()),
     renderEngine(std::make_unique<IERenderEngine>()),
     scene(std::make_unique<IEScene>()),
-    state(nullptr)
+    state(std::make_unique<IEGameStopState>(*this))
 {
     this->setFocusPolicy(Qt::StrongFocus);
 
@@ -81,13 +78,10 @@ void IEGame::startup()
 {
     this->makeCurrent();
 
-    // TODO test
-    state = std::move(std::make_unique<IEGamePlayState>(*this));
-    state->enter(*this);
-
     GameStartEvent gameStartEvent(this);
     RenderEngineStartEvent renderStartEvent(*scene);
 
+    state->enter(*this);
     scriptEngine->startup(gameStartEvent);
     physicsEngine->startup(gameStartEvent);
     scene->startup(gameStartEvent);
@@ -120,12 +114,12 @@ void IEGame::setState(std::unique_ptr<IEGameState> val)
 
 void IEGame::onUpdateFrame()
 {
-    state->onUpdateFrame(*this);
+    state->onUpdateFrame();
 }
 
 void IEGame::onRenderFrame()
 {
-    state->onRenderFrame(*this);
+    state->onRenderFrame();
 }
 
 QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const

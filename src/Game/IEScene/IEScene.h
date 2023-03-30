@@ -29,8 +29,6 @@ public:
     void startup(const GameStartEvent& event);
     void shutdown();
 
-    void onUpdateFrame();
-
     IEMeshManager& getMeshManager() const { return *meshManager; }
     IEMaterialManager& getMaterialManager() const { return *materialManager; }
     IEShaderManager& getShaderManager() const { return *shaderManager; }

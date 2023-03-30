@@ -10,15 +10,13 @@
 class GameStartEvent;
 class IEEntityManager;
 class IEECSSystem;
-class ECSOnUpdateEvent;
 
 class IEECS : public IEObject, public Serializable
 {
     Q_OBJECT
 
-    std::unique_ptr<ECSOnUpdateEvent> onUpdateEvent;
-    std::unique_ptr<IEEntityManager> entityManager;
     std::map<QString, std::unique_ptr<IEECSSystem>> systems;
+    std::unique_ptr<IEEntityManager> entityManager;
 
 public:
     IEECS();
@@ -26,8 +24,6 @@ public:
 
     void startup(const GameStartEvent& event);
     void shutdown();
-
-    void onUpdateFrame();
 
     IEEntity create();
     void remove(const IEEntity entity);

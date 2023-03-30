@@ -94,8 +94,6 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
         const int transformIndex = transformSystem->lookUpIndex(data.entity[i]);
         transformSystem->setPosition(transformIndex, QVector3D(pxPos.x, pxPos.y, pxPos.z));
         transformSystem->setRotation(transformIndex, QVector4D(pxRot.x, pxRot.y, pxRot.z, qRadiansToDegrees(angle)));
-
-        qDebug() << pxPos.x << pxPos.y << pxPos.z;
     }
 }
 

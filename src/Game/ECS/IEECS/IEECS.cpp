@@ -13,13 +13,11 @@
 #include "IEECSMaterialSystem.h"
 #include "IEECSShaderSystem.h"
 #include "IEECSRenderableSystem.h"
-#include "ECSOnUpdateEvent.h"
 
 IEECS::IEECS() :
     IEObject(),
-    onUpdateEvent(nullptr),
-    entityManager(std::make_unique<IEEntityManager>()),
-    systems()
+    systems(),
+    entityManager(std::make_unique<IEEntityManager>())
 {
     initSystems();
 }
@@ -35,21 +33,11 @@ void IEECS::startup(const GameStartEvent& event)
     {
         i.second->startup(event);
     }
-
-    onUpdateEvent = std::make_unique<ECSOnUpdateEvent>(this);
 }
 
 void IEECS::shutdown()
 {
     clearSystems();
-}
-
-void IEECS::onUpdateFrame()
-{
-    for(auto& i : systems)
-    {
-        i.second->onUpdateFrame(&(*onUpdateEvent));
-    }
 }
 
 IEEntity IEECS::create()

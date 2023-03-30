@@ -11,7 +11,7 @@ public:
 
     virtual void enter(IEGame& game) = 0;
     virtual void exit(IEGame& game) = 0;
-    virtual void onUpdateFrame(IEGame& game) = 0;
-    virtual void onRenderFrame(IEGame& game) = 0;
+    virtual void onUpdateFrame() = 0;
+    virtual void onRenderFrame() = 0;
 };
 

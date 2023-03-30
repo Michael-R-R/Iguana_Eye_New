@@ -43,11 +43,6 @@ void IEScene::shutdown()
     meshManager->shutdown();
 }
 
-void IEScene::onUpdateFrame()
-{
-    ecs->onUpdateFrame();
-}
-
 QDataStream& IEScene::serialize(QDataStream& out, const Serializable& obj) const
 {
     const auto& scene = static_cast<const IEScene&>(obj);
