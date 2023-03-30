@@ -11,8 +11,6 @@ void LuaIEECSCameraSystem::addToLua(sol::state& lua)
                                         "lookUpIndex", &IEECSCameraSystem::lookUpIndex,
                                         "getActiveIndex", &IEECSCameraSystem::getActiveIndex,
                                         "setActiveIndex", &IEECSCameraSystem::setActiveIndex,
-                                        "getHasDirtyProj", &IEECSCameraSystem::getHasDirtyProj,
-                                        "setHasDirtyProj", &IEECSCameraSystem::setHasDirtyProj,
                                         "getActiveCamera", &IEECSCameraSystem::getActiveCamera,
                                         "getAttachedCamera", &IEECSCameraSystem::getAttachedCamera,
                                         "getCameraId", &IEECSCameraSystem::getCameraId,

@@ -47,5 +47,5 @@ void IEGameStopState::onRenderFrame()
 
 void IEGameStopState::onResize(const float w, const float h)
 {
-    camera->resize(w, h);
+    camera->updateProjection(w, h);
 }

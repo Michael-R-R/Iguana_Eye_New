@@ -22,7 +22,7 @@ void ECamera::update(IEInput& input, const float dt)
     updateView(position, rotation);
 }
 
-void ECamera::resize(const float w, const float h)
+void ECamera::updateProjection(const float w, const float h)
 {
     projection.setToIdentity();
     projection.perspective(fov, (w / h), nearPlane, farPlane);
@@ -96,4 +96,28 @@ void ECamera::calcModelMatrix()
     transform.setToIdentity();
     transform.translate(position);
     transform.rotate(0.0f, rotation.x(), rotation.y(), rotation.z());
+}
+
+QDataStream& ECamera::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const ECamera& camera = static_cast<const ECamera&>(obj);
+
+    IECamera::serialize(out, obj);
+
+    out << camera.position << camera.rotation << camera.transform
+        << camera.lastX << camera.lastY << camera.yaw << camera.pitch;
+
+    return out;
+}
+
+QDataStream& ECamera::deserialize(QDataStream& in, Serializable& obj)
+{
+    ECamera& camera = static_cast<ECamera&>(obj);
+
+    IECamera::deserialize(in, obj);
+
+    in >> camera.position >> camera.rotation >> camera.transform
+       >> camera.lastX >> camera.lastY >> camera.yaw >> camera.pitch;
+
+    return in;
 }

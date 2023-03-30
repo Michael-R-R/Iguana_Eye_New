@@ -24,49 +24,14 @@ class IEECSScriptSystem : public IEECSSystem
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entity << data.sleepingScripts << data.awakenedScripts;
-
-            out << (int)data.scriptCollection.size();
-
-            for(int i = 1; i < data.scriptCollection.size(); i++)
-            {
-                out << (int)data.scriptCollection[i].size();
-
-                QMapIterator<unsigned long long, IEEntityScript> it(data.scriptCollection[i]);
-                while(it.hasNext())
-                {
-                    it.next();
-                    out << it.key() << it.value();
-                }
-            }
+            out << data.entity << data.scriptCollection << data.sleepingScripts << data.awakenedScripts;
 
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entity >> data.sleepingScripts >> data.awakenedScripts;
-
-            int size = 0;
-            in >> size;
-
-            for(int i = 1; i < size; i++)
-            {
-                int collectionSize = 0;
-                in >> collectionSize;
-
-                data.scriptCollection.append(QMap<unsigned long long, IEEntityScript>());
-
-                for(int j = 0; j < collectionSize; j++)
-                {
-                    unsigned long long key = 0;
-                    IEEntityScript value;
-
-                    in >> key >> value;
-
-                    data.scriptCollection[i][key] = value;
-                }
-            }
+            in >> data.entity >> data.scriptCollection >> data.sleepingScripts >> data.awakenedScripts;
 
             return in;
         }

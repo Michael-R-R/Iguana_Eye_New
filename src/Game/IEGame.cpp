@@ -12,6 +12,9 @@
 #include "IEECS.h"
 #include "IEECSCameraSystem.h"
 
+// TODO test
+#include "IEGamePlayState.h"
+
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(std::make_unique<QSurfaceFormat>()),
@@ -22,7 +25,7 @@ IEGame::IEGame(QWidget* parent) :
     physicsEngine(std::make_unique<IEPhysicsEngine>()),
     renderEngine(std::make_unique<IERenderEngine>()),
     scene(std::make_unique<IEScene>()),
-    state(std::make_unique<IEGameStopState>(*this))
+    state(std::make_unique<IEGamePlayState>(*this))
 {
     this->setFocusPolicy(Qt::StrongFocus);
 

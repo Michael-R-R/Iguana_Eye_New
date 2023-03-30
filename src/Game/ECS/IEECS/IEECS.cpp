@@ -14,6 +14,13 @@
 #include "IEECSShaderSystem.h"
 #include "IEECSRenderableSystem.h"
 
+// TODO test
+#include "IEScene.h"
+#include "IECameraManager.h"
+#include "IECamera.h"
+#include "IEScriptEngine.h"
+#include "IECameraScript.h"
+
 IEECS::IEECS() :
     IEObject(),
     systems(),
@@ -33,6 +40,20 @@ void IEECS::startup(const GameStartEvent& event)
     {
         i.second->startup(event);
     }
+
+    // TODO test
+    auto& cameraManager = event.getScene().getCameraManager();
+    cameraManager.add(1, std::move(std::make_unique<IECamera>("", 1)));
+    auto& scriptEngine = event.getScriptEngine();
+    auto* cameraSystem = this->getComponent<IEECSCameraSystem>("Camera");
+    const IEEntity entity = this->create();
+    const int cameraIndex = this->attachComponent(entity, "Camera");
+    cameraSystem->setActiveIndex(cameraIndex);
+    cameraSystem->setCameraId(cameraIndex, 1);
+    cameraSystem->setScript(cameraIndex, IECameraScript("./resources/scripts/game/perspController.lua", 1));
+    cameraSystem->initalizeScript(cameraIndex, scriptEngine.getLua());
+    cameraSystem->startScript(cameraIndex);
+    const int inputIndex = this->attachComponent(entity, "Input");
 }
 
 void IEECS::shutdown()

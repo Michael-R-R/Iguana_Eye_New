@@ -207,6 +207,7 @@ INCLUDEPATH += $$PWD/src/Game/Scripting/API/LuaCommonType \
     $$PWD/src/Game/Scripting/API/LuaCommonType/LuaMat4Wrapper \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/Scripts \
+    $$PWD/src/Game/Scripting/Scripts/IECameraScript \
     $$PWD/src/Game/Scripting/Scripts/IEEntityScript \
     $$PWD/src/Game/Scripting/Scripts/IEScript \
     $$PWD/src/Game/Scripting/Scripts/ScriptData \

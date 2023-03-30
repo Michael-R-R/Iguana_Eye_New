@@ -26,11 +26,15 @@ public:
     ~ECamera();
 
     void update(IEInput& input, const float dt);
-    void resize(const float w, const float h);
+    void updateProjection(const float w, const float h);
 
 private:
     void updateMovement(IEInput& input, const float dt);
     void updateRotation(IEInput& input, const float dt);
     void calcModelMatrix();
+
+public:
+    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };
 

@@ -5,6 +5,7 @@
 #include <QMap>
 
 #include "IEECSSystem.h"
+#include "IECameraScript.h"
 
 class GameStartEvent;
 class ECSOnUpdateEvent;
@@ -17,16 +18,17 @@ class IEECSCameraSystem : public IEECSSystem
     {
         QVector<IEEntity> entity;
         QVector<unsigned long long> cameraId;
+        QVector<IECameraScript> cameraScript;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entity << data.cameraId;
+            out << data.entity << data.cameraId << data.cameraScript;
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entity >> data.cameraId;
+            in >> data.entity >> data.cameraId >> data.cameraScript;
             return in;
         }
     };
@@ -34,7 +36,6 @@ class IEECSCameraSystem : public IEECSSystem
     Data data;
 
     int activeIndex;
-    bool hasDirtyProjection;
 
     // DOES NOT OWN THIS POINTER
     IECameraManager* cameraManager;
@@ -48,16 +49,23 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
+    void initalizeAllScripts(sol::state& lua);
+    void startAllScripts();
+
+    bool initalizeScript(const int index, sol::state& lua);
+    void startScript(const int index);
+
     int getActiveIndex() const;
-    bool getHasDirtyProj() const;
     IEEntity getActiveEntity() const;
     IECamera* getActiveCamera() const;
     IECamera* getAttachedCamera(const int index) const;
     void setActiveIndex(const int val);
-    void setHasDirtyProj(const bool val);
 
     unsigned long long getCameraId(const int index) const;
+    IECameraScript* getScript(const int index);
+
     void setCameraId(const int index, const unsigned long long val);
+    void setScript(const int index, const IECameraScript& val);
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
     QDataStream& deserialize(QDataStream &in, Serializable &obj) override;

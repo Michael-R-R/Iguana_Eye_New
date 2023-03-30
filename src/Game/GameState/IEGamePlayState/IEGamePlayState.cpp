@@ -73,5 +73,24 @@ void IEGamePlayState::onRenderFrame()
 
 void IEGamePlayState::onResize(const float w, const float h)
 {
+    const int index = cameraSystem->getActiveIndex();
+    IECamera* camera = cameraSystem->getActiveCamera();
+    IECameraScript* script = cameraSystem->getScript(index);
+    if(!camera || !script)
+        return;
 
+    script->updateProjection(camera, w, h);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

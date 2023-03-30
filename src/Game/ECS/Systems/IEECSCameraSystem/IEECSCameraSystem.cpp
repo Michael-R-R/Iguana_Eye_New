@@ -3,12 +3,12 @@
 #include "ECSOnUpdateEvent.h"
 #include "IEScene.h"
 #include "IECameraManager.h"
+#include "IEScriptEngine.h"
 #include "IEECSTransformSystem.h"
 
 IEECSCameraSystem::IEECSCameraSystem() :
     data(),
     activeIndex(-1),
-    hasDirtyProjection(true),
     cameraManager(nullptr)
 {
     IEECSCameraSystem::attach(IEEntity(-1));
@@ -22,6 +22,9 @@ IEECSCameraSystem::~IEECSCameraSystem()
 void IEECSCameraSystem::startup(const GameStartEvent& event)
 {
     cameraManager = &event.getScene().getCameraManager();
+
+    auto& scriptEngine = event.getScriptEngine();
+    initalizeAllScripts(scriptEngine.getLua());
 }
 
 int IEECSCameraSystem::attach(const IEEntity entity)
@@ -35,6 +38,7 @@ int IEECSCameraSystem::attach(const IEEntity entity)
 
     data.entity.append(entity);
     data.cameraId.append(0);
+    data.cameraScript.append(IECameraScript{});
 
     return index;
 }
@@ -54,9 +58,11 @@ bool IEECSCameraSystem::detach(const IEEntity entity)
 
     data.entity[indexToRemove] = data.entity[lastIndex];
     data.cameraId[indexToRemove] = data.cameraId[lastIndex];
+    data.cameraScript[indexToRemove] = data.cameraScript[lastIndex];
 
     data.entity.removeLast();
     data.cameraId.removeLast();
+    data.cameraScript.removeLast();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);
@@ -72,6 +78,8 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     auto& activeEntity = data.entity[activeIndex];
     auto& activeId = data.cameraId[activeIndex];
 
+    data.cameraScript[activeIndex].update();
+
     auto transformSystem = event->getTransform();
     int transformIndex = transformSystem->lookUpIndex(activeEntity);
     auto& pos = transformSystem->getPosition(transformIndex);
@@ -81,14 +89,41 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     activeCamera->updateView(pos, rot.toVector3D());
 }
 
+void IEECSCameraSystem::initalizeAllScripts(sol::state& lua)
+{
+    for(int i = 1; i < entityMap.size(); i++)
+    {
+        data.cameraScript[i].initalize(lua);
+    }
+}
+
+void IEECSCameraSystem::startAllScripts()
+{
+    for(int i = 1; i < entityMap.size(); i++)
+    {
+        data.cameraScript[i].start(data.entity[i]);
+    }
+}
+
+bool IEECSCameraSystem::initalizeScript(const int index, sol::state& lua)
+{
+    if(!indexBoundCheck(index))
+        return false;
+
+    return data.cameraScript[index].initalize(lua);
+}
+
+void IEECSCameraSystem::startScript(const int index)
+{
+    if(!indexBoundCheck(index))
+        return;
+
+    data.cameraScript[index].start(data.entity[index]);
+}
+
 int IEECSCameraSystem::getActiveIndex() const
 {
     return activeIndex;
-}
-
-bool IEECSCameraSystem::getHasDirtyProj() const
-{
-    return hasDirtyProjection;
 }
 
 IEEntity IEECSCameraSystem::getActiveEntity() const
@@ -118,12 +153,6 @@ IECamera* IEECSCameraSystem::getAttachedCamera(const int index) const
 void IEECSCameraSystem::setActiveIndex(const int val)
 {
     activeIndex = val;
-    hasDirtyProjection = true;
-}
-
-void IEECSCameraSystem::setHasDirtyProj(const bool val)
-{
-    hasDirtyProjection = val;
 }
 
 unsigned long long IEECSCameraSystem::getCameraId(const int index) const
@@ -134,12 +163,28 @@ unsigned long long IEECSCameraSystem::getCameraId(const int index) const
     return data.cameraId[index];
 }
 
+IECameraScript* IEECSCameraSystem::getScript(const int index)
+{
+    if(!indexBoundCheck(index))
+        return nullptr;
+
+    return &data.cameraScript[index];
+}
+
 void IEECSCameraSystem::setCameraId(const int index, const unsigned long long val)
 {
     if(!indexBoundCheck(index))
         return;
 
     data.cameraId[index] = val;
+}
+
+void IEECSCameraSystem::setScript(const int index, const IECameraScript& val)
+{
+    if(!indexBoundCheck(index))
+        return;
+
+    data.cameraScript[index] = val;
 }
 
 QDataStream& IEECSCameraSystem::serialize(QDataStream& out, const Serializable& obj) const
