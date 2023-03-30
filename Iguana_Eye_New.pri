@@ -147,6 +147,11 @@ INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
     $$PWD/src/Game/ECS/Systems/IEECSSystem \
     $$PWD/src/Game/ECS/Systems/IEECSTransformSystem \
 
+INCLUDEPATH += $$PWD/src/Game/GameState \
+    $$PWD/src/Game/GameState/IEGamePlayState \
+    $$PWD/src/Game/GameState/IEGameState \
+    $$PWD/src/Game/GameState/IEGameStateType \
+
 INCLUDEPATH += $$PWD/src/Game/IEGraphics \
     $$PWD/src/Game/IEGraphics/IEBuffer \
     $$PWD/src/Game/IEGraphics/IEVertexBufferContainer \

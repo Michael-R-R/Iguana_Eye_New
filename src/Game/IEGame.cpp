@@ -1,4 +1,5 @@
 #include "IEGame.h"
+#include "IEGameState.h"
 #include "ApplicationProperties.h"
 #include "GameStartEvent.h"
 #include "RenderEngineStartEvent.h"
@@ -11,6 +12,9 @@
 #include "IEECS.h"
 #include "IEECSCameraSystem.h"
 
+// TODO test
+#include "IEGamePlayState.h"
+
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(std::make_unique<QSurfaceFormat>()),
@@ -20,7 +24,8 @@ IEGame::IEGame(QWidget* parent) :
     scriptEngine(std::make_unique<IEScriptEngine>()),
     physicsEngine(std::make_unique<IEPhysicsEngine>()),
     renderEngine(std::make_unique<IERenderEngine>()),
-    scene(std::make_unique<IEScene>())
+    scene(std::make_unique<IEScene>()),
+    state(nullptr)
 {
     this->setFocusPolicy(Qt::StrongFocus);
 
@@ -76,6 +81,10 @@ void IEGame::startup()
 {
     this->makeCurrent();
 
+    // TODO test
+    state = std::move(std::make_unique<IEGamePlayState>(*this));
+    state->enter(*this);
+
     GameStartEvent gameStartEvent(this);
     RenderEngineStartEvent renderStartEvent(*scene);
 
@@ -99,17 +108,24 @@ void IEGame::shutdown()
     scriptEngine->shutdown();
 }
 
+void IEGame::setState(std::unique_ptr<IEGameState> val)
+{
+    if(!val)
+        return;
+
+    state->exit(*this);
+    state = std::move(val);
+    state->enter(*this);
+}
+
 void IEGame::onUpdateFrame()
 {
-    physicsEngine->onUpdateFrame(time->getDeltaTime());
-    scene->onUpdateFrame();
+    state->onUpdateFrame(*this);
 }
 
 void IEGame::onRenderFrame()
 {
-    glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    renderEngine->onRenderFrame();
-    time->processDeltaTime();
+    state->onRenderFrame(*this);
 }
 
 QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const

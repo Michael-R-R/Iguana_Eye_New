@@ -14,6 +14,7 @@ class IEScriptEngine;
 class IEPhysicsEngine;
 class IERenderEngine;
 class IEScene;
+class IEGameState;
 
 class IEGame : public QOpenGLWidget, public Serializable
 {
@@ -29,6 +30,8 @@ class IEGame : public QOpenGLWidget, public Serializable
     std::unique_ptr<IEPhysicsEngine> physicsEngine;
     std::unique_ptr<IERenderEngine> renderEngine;
     std::unique_ptr<IEScene> scene;
+
+    std::unique_ptr<IEGameState> state;
 
 public:
     IEGame(QWidget* parent = nullptr);
@@ -49,6 +52,10 @@ public:
     IEPhysicsEngine& getIEPhysicsEngine() const { return *physicsEngine; }
     IERenderEngine& getIERenderEngine() const { return *renderEngine; }
     IEScene& getIEScene() const { return *scene; }
+    QOpenGLFunctions* getGlFunc() { return glFunc; }
+    QOpenGLExtraFunctions* getGlExtraFunc() { return glExtraFunc; }
+
+    void setState(std::unique_ptr<IEGameState> val);
 
 public slots:
     void onUpdateFrame();
