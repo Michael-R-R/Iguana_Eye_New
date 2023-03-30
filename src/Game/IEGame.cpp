@@ -69,9 +69,8 @@ void IEGame::resizeGL(int w, int h)
 
     glFunc->glViewport(0, 0, w, h);
 
-    auto& ecs = scene->getECS();
-    auto* cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
-    cameraSystem->setHasDirtyProj(true);
+    if(state)
+        state->onResize((float)w, (float)h);
 }
 
 void IEGame::startup()

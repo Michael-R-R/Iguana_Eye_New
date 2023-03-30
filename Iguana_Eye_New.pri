@@ -104,7 +104,7 @@ INCLUDEPATH += $$PWD/src/Editor/Startup \
     $$PWD/src/Editor/Startup/ESceneStartup \
 
 INCLUDEPATH += $$PWD/src/Editor/Startup/Cameras \
-    $$PWD/src/Editor/Startup/Cameras/EDefaultCamera \
+    $$PWD/src/Editor/Startup/Cameras/ECamera \
 
 INCLUDEPATH += $$PWD/src/Editor/Startup/Materials \
     $$PWD/src/Editor/Startup/Materials/EDefaultMaterial \

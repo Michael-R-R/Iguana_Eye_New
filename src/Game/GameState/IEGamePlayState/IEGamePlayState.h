@@ -36,5 +36,6 @@ public:
     void exit(IEGame& game) override;
     void onUpdateFrame() override;
     void onRenderFrame() override;
+    void onResize(const float w, const float h) override;
 };
 

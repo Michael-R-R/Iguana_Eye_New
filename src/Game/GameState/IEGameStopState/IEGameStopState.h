@@ -7,16 +7,18 @@
 class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
 class IETime;
+class IEInput;
 class IERenderEngine;
-class EDefaultCamera;
+class ECamera;
 
 class IEGameStopState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
     IETime& time;
+    IEInput& input;
     IERenderEngine& renderEngine;
-    std::unique_ptr<EDefaultCamera> camera;
+    std::unique_ptr<ECamera> camera;
 
 public:
     IEGameStopState(IEGame& game);
@@ -26,5 +28,6 @@ public:
     void exit(IEGame& game) override;
     void onUpdateFrame() override;
     void onRenderFrame() override;
+    void onResize(const float w, const float h) override;
 };
 

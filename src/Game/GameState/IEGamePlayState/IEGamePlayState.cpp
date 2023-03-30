@@ -70,3 +70,8 @@ void IEGamePlayState::onRenderFrame()
     renderEngine.onRenderFrame(cameraSystem->getActiveCamera());
     time.processDeltaTime();
 }
+
+void IEGamePlayState::onResize(const float w, const float h)
+{
+
+}
