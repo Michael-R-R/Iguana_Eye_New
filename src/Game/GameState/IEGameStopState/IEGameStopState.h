@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <QVector2D>
 
 #include "IEGameState.h"
 

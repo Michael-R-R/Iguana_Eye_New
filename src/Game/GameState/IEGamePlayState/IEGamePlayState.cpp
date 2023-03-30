@@ -1,6 +1,8 @@
 #include "IEGamePlayState.h"
+#include "ApplicationProperties.h"
 #include "IEGame.h"
 #include "IETime.h"
+#include "IEInput.h"
 #include "IEScene.h"
 #include "IEECS.h"
 #include "IEPhysicsEngine.h"
@@ -15,6 +17,7 @@ IEGamePlayState::IEGamePlayState(IEGame& game) :
     glFunc(nullptr),
     glExtraFunc(nullptr),
     time(game.getIETime()),
+    input(game.getIEInput()),
     physicsEngine(game.getIEPhysicsEngine()),
     renderEngine(game.getIERenderEngine()),
     scriptSystem(nullptr),
@@ -43,16 +46,12 @@ void IEGamePlayState::enter(IEGame& game)
     cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
     ecsUpdateEvent = std::make_unique<ECSOnUpdateEvent>(&ecs);
 
-    // Serialize everything to temp file
-
-    // Set game camera as active
+    IEGameState::onResize(ApplicationProperties::viewportDimensions);
 }
 
 void IEGamePlayState::exit(IEGame&)
 {
-    // Deserialize everything back from temp file
 
-    // Set editor camera as active
 }
 
 void IEGamePlayState::onUpdateFrame()

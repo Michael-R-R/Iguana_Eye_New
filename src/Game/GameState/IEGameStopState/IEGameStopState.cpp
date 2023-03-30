@@ -1,4 +1,5 @@
 #include "IEGameStopState.h"
+#include "ApplicationProperties.h"
 #include "IEGame.h"
 #include "IETime.h"
 #include "IEInput.h"
@@ -26,6 +27,8 @@ void IEGameStopState::enter(IEGame& game)
 {
     glFunc = game.getGlFunc();
     glExtraFunc = game.getGlExtraFunc();
+
+    IEGameState::onResize(ApplicationProperties::viewportDimensions);
 }
 
 void IEGameStopState::exit(IEGame&)
@@ -41,7 +44,7 @@ void IEGameStopState::onUpdateFrame()
 void IEGameStopState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    renderEngine.onRenderFrame(&(*camera)); // TODO need to pass a editor camera
+    renderEngine.onRenderFrame(&(*camera));
     time.processDeltaTime();
 }
 

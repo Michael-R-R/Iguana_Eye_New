@@ -1,12 +1,14 @@
 #pragma once
 
 #include <memory>
+#include <QVector2D>
 
 #include "IEGameState.h"
 
 class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
 class IETime;
+class IEInput;
 class IEPhysicsEngine;
 class IERenderEngine;
 class IEECSScriptSystem;
@@ -20,6 +22,7 @@ class IEGamePlayState : public IEGameState
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
     IETime& time;
+    IEInput& input;
     IEPhysicsEngine& physicsEngine;
     IERenderEngine& renderEngine;
     IEECSScriptSystem* scriptSystem;
