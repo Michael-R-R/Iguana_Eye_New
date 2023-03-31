@@ -7,7 +7,6 @@
 #include "Serializable.h"
 #include "IEEntity.h"
 
-class GameStartEvent;
 class ECSOnUpdateEvent;
 
 class IEECSSystem : public IEObject, public Serializable
@@ -20,7 +19,6 @@ public:
     IEECSSystem();
     ~IEECSSystem();
 
-    virtual void startup(const GameStartEvent& event) = 0;
     virtual int attach(const IEEntity entity) = 0;
     virtual bool detach(const IEEntity entity) = 0;
     virtual void onUpdateFrame(ECSOnUpdateEvent* event) = 0;

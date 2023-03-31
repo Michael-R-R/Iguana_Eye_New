@@ -1,5 +1,5 @@
 #include "IEECS.h"
-#include "GameStartEvent.h"
+#include "IEGame.h"
 #include "IEEntityManager.h"
 #include "IEECSSystem.h"
 #include "IEECSNameSystem.h"
@@ -14,32 +14,17 @@
 #include "IEECSShaderSystem.h"
 #include "IEECSRenderableSystem.h"
 
-IEECS::IEECS() :
+IEECS::IEECS(IEGame& game) :
     IEObject(),
     systems(),
     entityManager(std::make_unique<IEEntityManager>())
 {
-
+    initSystems(game);
 }
 
 IEECS::~IEECS()
 {
 
-}
-
-void IEECS::startup(const GameStartEvent& event)
-{
-    initSystems();
-
-    for(auto& i : systems)
-    {
-        i.second->startup(event);
-    }
-}
-
-void IEECS::shutdown()
-{
-    clearSystems();
 }
 
 IEEntity IEECS::create()
@@ -123,19 +108,19 @@ void IEECS::clearSystems()
     systems.clear();
 }
 
-void IEECS::initSystems()
+void IEECS::initSystems(IEGame& game)
 {
     auto nameSystem = std::make_unique<IEECSNameSystem>();
     auto hierarchySystem = std::make_unique<IEECSHierarchySystem>();
     auto inputSystem = std::make_unique<IEECSInputSystem>();
-    auto scriptSystem = std::make_unique<IEECSScriptSystem>();
-    auto rigidbody3dSystem = std::make_unique<IEECSRigidbody3DSystem>();
-    auto transformSystem = std::make_unique<IEECSTransformSystem>();
-    auto cameraSystem = std::make_unique<IEECSCameraSystem>();
-    auto meshSystem = std::make_unique<IEECSMeshSystem>();
-    auto materialSystem = std::make_unique<IEECSMaterialSystem>();
-    auto shaderSystem = std::make_unique<IEECSShaderSystem>();
-    auto renderableSystem = std::make_unique<IEECSRenderableSystem>();
+    auto scriptSystem = std::make_unique<IEECSScriptSystem>(game);
+    auto rigidbody3dSystem = std::make_unique<IEECSRigidbody3DSystem>(game);
+    auto transformSystem = std::make_unique<IEECSTransformSystem>(game);
+    auto cameraSystem = std::make_unique<IEECSCameraSystem>(game);
+    auto meshSystem = std::make_unique<IEECSMeshSystem>(game);
+    auto materialSystem = std::make_unique<IEECSMaterialSystem>(game);
+    auto shaderSystem = std::make_unique<IEECSShaderSystem>(game);
+    auto renderableSystem = std::make_unique<IEECSRenderableSystem>(game);
 
     systems["Name"] = std::move(nameSystem);
     systems["Hierarchy"] = std::move(hierarchySystem);

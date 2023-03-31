@@ -1,5 +1,4 @@
 #include "IECameraManager.h"
-#include "GameStartEvent.h"
 #include "IESerialize.h"
 
 IECameraManager::IECameraManager() :
@@ -11,16 +10,6 @@ IECameraManager::IECameraManager() :
 IECameraManager::~IECameraManager()
 {
 
-}
-
-void IECameraManager::startup(const GameStartEvent&)
-{
-
-}
-
-void IECameraManager::shutdown()
-{
-    clear();
 }
 
 bool IECameraManager::add(const unsigned long long key, std::unique_ptr<IECamera> value)

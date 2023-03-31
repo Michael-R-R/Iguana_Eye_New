@@ -4,26 +4,22 @@
 #include "Serializable.h"
 #include "IERenderable.h"
 
-class GameStartEvent;
+class IEShaderManager;
 class IEShader;
 
 class IERenderableManager : public IEResourceManager<IERenderable>, public Serializable
 {
     Q_OBJECT
 
-public:
-    IERenderableManager();
-    ~IERenderableManager();
+    IEShaderManager& shaderManager;
 
-    void startup(const GameStartEvent& event) override;
-    void shutdown() override;
+public:
+    IERenderableManager(IEShaderManager& manager);
+    ~IERenderableManager();
 
     bool add(const unsigned long long key, std::unique_ptr<IERenderable> value) override;
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
-
-private:
-    void buildAllRenderables(const GameStartEvent& event);
 
 signals:
     void added(const unsigned long long key, const QString& path);

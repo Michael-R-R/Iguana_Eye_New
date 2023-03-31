@@ -1,6 +1,5 @@
 #include "IEScriptEngine.h"
 #include "IEGame.h"
-#include "IEScene.h"
 #include "LuaEnum.h"
 #include "LuaCommonType.h"
 #include "LuaUtility.h"
@@ -26,7 +25,7 @@ IEScriptEngine::IEScriptEngine(IEGame& game) :
     LuaApplication::addToLua(gameTable);
     LuaIETime::addToLua(&game.getIETime(), gameTable);
     LuaIEInput::addToLua(&game.getIEInput(), gameTable);
-    LuaIEECS::addToLua(&game.getIEScene().getECS(), lua, gameTable);
+    LuaIEECS::addToLua(&game.getECS(), lua, gameTable);
 }
 
 IEScriptEngine::~IEScriptEngine()

@@ -5,10 +5,10 @@
 
 #include "IEECSSystem.h"
 
-class GameStartEvent;
-class ECSOnUpdateEvent;
+class IEGame;
 class IEShaderManager;
 class IEShader;
+class ECSOnUpdateEvent;
 
 class IEECSShaderSystem : public IEECSSystem
 {
@@ -32,14 +32,12 @@ class IEECSShaderSystem : public IEECSSystem
 
     Data data;
 
-    // DOES NOT OWN THIS POINTER
-    IEShaderManager* shaderManager;
+    IEShaderManager& shaderManager;
 
 public:
-    IEECSShaderSystem();
+    IEECSShaderSystem(IEGame& game);
     ~IEECSShaderSystem();
 
-    void startup(const GameStartEvent& event) override;
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;

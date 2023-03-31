@@ -1,27 +1,25 @@
 #include "IEECSRigidbody3DSystem.h"
-#include "GameStartEvent.h"
-#include "ECSOnUpdateEvent.h"
+#include "IEGame.h"
 #include "IEPhysicsEngine.h"
+#include "IESimulationCallback.h"
 #include "IEECSTransformSystem.h"
+#include "ECSOnUpdateEvent.h"
 
-IEECSRigidbody3DSystem::IEECSRigidbody3DSystem() :
+IEECSRigidbody3DSystem::IEECSRigidbody3DSystem(IEGame& game) :
     data(),
     awakeBodies(), sleepingBodies()
 {
     IEECSRigidbody3DSystem::attach(IEEntity(-1));
+
+    auto& physicsEngine = game.getIEPhysicsEngine();
+    auto* simCallback = physicsEngine.getSimulationCallback();
+    connect(simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
+    connect(simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
 }
 
 IEECSRigidbody3DSystem::~IEECSRigidbody3DSystem()
 {
 
-}
-
-void IEECSRigidbody3DSystem::startup(const GameStartEvent& event)
-{
-    auto& physicsEngine = event.getPhysicsEngine();
-    auto* simCallback = physicsEngine.getSimulationCallback();
-    connect(simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
-    connect(simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
 }
 
 int IEECSRigidbody3DSystem::attach(const IEEntity entity)

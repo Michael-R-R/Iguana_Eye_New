@@ -121,7 +121,6 @@ INCLUDEPATH += $$PWD/src/Editor/Startup/Shaders \
 INCLUDEPATH += $$PWD/src/Events \
     $$PWD/src/Events/AppStartEvent \
     $$PWD/src/Events/ECSOnUpdateEvent \
-    $$PWD/src/Events/GameStartEvent \
 
 INCLUDEPATH += $$PWD/src/Game \
     $$PWD/src/Game/IEObject \

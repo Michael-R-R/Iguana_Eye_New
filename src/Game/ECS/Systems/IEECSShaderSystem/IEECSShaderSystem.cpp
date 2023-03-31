@@ -1,25 +1,20 @@
 #include "IEECSShaderSystem.h"
-#include "GameStartEvent.h"
-#include "ECSOnUpdateEvent.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEShaderManager.h"
+#include "ECSOnUpdateEvent.h"
 
-IEECSShaderSystem::IEECSShaderSystem() :
+IEECSShaderSystem::IEECSShaderSystem(IEGame& game) :
     IEECSSystem(),
     data(),
-    shaderManager(nullptr)
+    shaderManager(game.getIEScene().getShaderManager())
 {
     IEECSShaderSystem::attach(IEEntity(-1));
 }
 
 IEECSShaderSystem::~IEECSShaderSystem()
 {
-    shaderManager = nullptr;
-}
 
-void IEECSShaderSystem::startup(const GameStartEvent& event)
-{
-    shaderManager = &event.getScene().getShaderManager();
 }
 
 int IEECSShaderSystem::attach(const IEEntity entity)
@@ -101,7 +96,7 @@ IEShader* IEECSShaderSystem::getAttachedShader(const int index) const
     if(!indexBoundCheck(index))
         return nullptr;
 
-    return shaderManager->value(data.shaderId[index]);
+    return shaderManager.value(data.shaderId[index]);
 }
 
 unsigned long long IEECSShaderSystem::getShaderId(const int index) const

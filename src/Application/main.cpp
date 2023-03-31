@@ -9,9 +9,10 @@ int main(int argc, char *argv[])
     QApplication application(argc, argv);
     ApplicationWindow window;
 
+    window.startup();
     window.show();
-    int execVal = application.exec();
+    const int val = application.exec();
     window.shutdown();
 
-    return execVal;
+    return val;
 }

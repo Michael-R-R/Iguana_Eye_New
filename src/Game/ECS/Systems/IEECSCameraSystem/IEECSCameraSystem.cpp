@@ -1,30 +1,21 @@
 #include "IEECSCameraSystem.h"
-#include "GameStartEvent.h"
-#include "ECSOnUpdateEvent.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IECameraManager.h"
-#include "IEScriptEngine.h"
 #include "IEECSTransformSystem.h"
+#include "ECSOnUpdateEvent.h"
 
-IEECSCameraSystem::IEECSCameraSystem() :
+IEECSCameraSystem::IEECSCameraSystem(IEGame& game) :
     data(),
     activeIndex(-1),
-    cameraManager(nullptr)
+    cameraManager(game.getIEScene().getCameraManager())
 {
     IEECSCameraSystem::attach(IEEntity(-1));
 }
 
 IEECSCameraSystem::~IEECSCameraSystem()
 {
-    cameraManager = nullptr;
-}
 
-void IEECSCameraSystem::startup(const GameStartEvent& event)
-{
-    cameraManager = &event.getScene().getCameraManager();
-
-    auto& scriptEngine = event.getScriptEngine();
-    initalizeAllScripts(scriptEngine.getLua());
 }
 
 int IEECSCameraSystem::attach(const IEEntity entity)
@@ -85,7 +76,7 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     auto& pos = transformSystem->getPosition(transformIndex);
     auto& rot = transformSystem->getRotation(transformIndex);
 
-    IECamera* activeCamera = cameraManager->value(activeId);
+    IECamera* activeCamera = cameraManager.value(activeId);
     activeCamera->updateView(pos, rot.toVector3D());
 }
 
@@ -139,7 +130,7 @@ IECamera* IEECSCameraSystem::getActiveCamera() const
     if(!indexBoundCheck(activeIndex))
         return nullptr;
 
-    return cameraManager->value(data.cameraId[activeIndex]);
+    return cameraManager.value(data.cameraId[activeIndex]);
 }
 
 IECamera* IEECSCameraSystem::getAttachedCamera(const int index) const
@@ -147,7 +138,7 @@ IECamera* IEECSCameraSystem::getAttachedCamera(const int index) const
     if(!indexBoundCheck(index))
         return nullptr;
 
-    return cameraManager->value(data.cameraId[index]);
+    return cameraManager.value(data.cameraId[index]);
 }
 
 void IEECSCameraSystem::setActiveIndex(const int val)

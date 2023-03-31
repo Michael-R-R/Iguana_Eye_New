@@ -7,10 +7,10 @@
 #include "IEECSSystem.h"
 #include "IECameraScript.h"
 
-class GameStartEvent;
-class ECSOnUpdateEvent;
+class IEGame;
 class IECameraManager;
 class IECamera;
+class ECSOnUpdateEvent;
 
 class IEECSCameraSystem : public IEECSSystem
 {
@@ -37,14 +37,12 @@ class IEECSCameraSystem : public IEECSSystem
 
     int activeIndex;
 
-    // DOES NOT OWN THIS POINTER
-    IECameraManager* cameraManager;
+    IECameraManager& cameraManager;
 
 public:
-    IEECSCameraSystem();
+    IEECSCameraSystem(IEGame& game);
     ~IEECSCameraSystem();
 
-    void startup(const GameStartEvent& event) override;
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;

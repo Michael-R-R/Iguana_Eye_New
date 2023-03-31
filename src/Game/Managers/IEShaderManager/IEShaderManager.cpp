@@ -13,16 +13,6 @@ IEShaderManager::~IEShaderManager()
 
 }
 
-void IEShaderManager::startup(const GameStartEvent&)
-{
-    this->buildAllShaders();
-}
-
-void IEShaderManager::shutdown()
-{
-    clear();
-}
-
 bool IEShaderManager::add(const unsigned long long key, std::unique_ptr<IEShader> value)
 {
     if(!value || doesExist(key))
@@ -94,6 +84,7 @@ QDataStream& IEShaderManager::serialize(QDataStream& out, const Serializable& ob
 QDataStream& IEShaderManager::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& manager = static_cast<IEShaderManager&>(obj);
+    manager.clear();
 
     int size = 0;
     in >> size;
@@ -115,6 +106,7 @@ QDataStream& IEShaderManager::deserialize(QDataStream& in, Serializable& obj)
         if(!IEGlslImporter::importGlsl(path, *shader))
             continue;
 
+        shader->build();
         manager.add(id, std::move(shader));
     }
 

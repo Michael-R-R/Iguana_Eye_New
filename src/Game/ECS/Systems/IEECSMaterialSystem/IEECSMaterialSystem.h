@@ -5,10 +5,10 @@
 
 #include "IEECSSystem.h"
 
-class GameStartEvent;
-class ECSOnUpdateEvent;
+class IEGame;
 class IEMaterialManager;
 class IEMaterial;
+class ECSOnUpdateEvent;
 
 class IEECSMaterialSystem : public IEECSSystem
 {
@@ -32,14 +32,12 @@ class IEECSMaterialSystem : public IEECSSystem
 
     Data data;
 
-    // DOES NOT OWN THIS POINTER
-    IEMaterialManager* materialManager;
+    IEMaterialManager& materialManager;
 
 public:
-    IEECSMaterialSystem();
+    IEECSMaterialSystem(IEGame& game);
     ~IEECSMaterialSystem();
 
-    void startup(const GameStartEvent& event) override;
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;

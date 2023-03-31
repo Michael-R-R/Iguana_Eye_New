@@ -1,5 +1,4 @@
 #include "IEECSHierarchySystem.h"
-#include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 
 IEECSHierarchySystem::IEECSHierarchySystem() :
@@ -12,11 +11,6 @@ IEECSHierarchySystem::IEECSHierarchySystem() :
 IEECSHierarchySystem::~IEECSHierarchySystem()
 {
 
-}
-
-void IEECSHierarchySystem::startup(const GameStartEvent&)
-{
-    // Not used
 }
 
 int IEECSHierarchySystem::attach(const IEEntity entity)

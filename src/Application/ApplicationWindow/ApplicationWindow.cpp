@@ -19,14 +19,29 @@ ApplicationWindow::ApplicationWindow(QWidget *parent) :
     savePath("")
 {
     ui->setupUi(this);
-
-    initEditor();
-    initGame();
 }
 
 ApplicationWindow::~ApplicationWindow()
 {
     delete ui;
+}
+
+void ApplicationWindow::startup()
+{
+    game = std::make_unique<IEGame>(this);
+    connect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
+    this->setCentralWidget(&(*game));
+}
+
+void ApplicationWindow::shutdown()
+{
+    #ifdef EDITOR_ENABLED
+    editor->shutdown();
+    editor.reset();
+    #endif
+
+    game->shutdown();
+    game.reset();
 }
 
 void ApplicationWindow::modifyTitle(const QString& text)
@@ -53,42 +68,16 @@ void ApplicationWindow::setModified(const bool isModified)
     this->setWindowTitle(tempTitle);
 }
 
-void ApplicationWindow::shutdown()
+void ApplicationWindow::initalize()
 {
-    #ifdef EDITOR_ENABLED
-    editor->shutdown();
-    #endif
-
-    game->shutdown();
-}
-
-void ApplicationWindow::startup()
-{
-    game->startup();
+    disconnect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
     game->setState(std::make_unique<IEGameStopState>());
+    game->startup();
 
-    #ifdef EDITOR_ENABLED
-    AppStartEvent startEvent(this, *editor, *game);
-    editor->startup(startEvent);
-    #endif
-
-    disconnect(&(*game), &IEGame::initialized, this, &ApplicationWindow::startup);
-}
-
-void ApplicationWindow::initGame()
-{
-    game = std::make_unique<IEGame>(this);
-
-    connect(&(*game), &IEGame::initialized, this, &ApplicationWindow::startup);
-
-    this->setCentralWidget(&(*game));
-}
-
-void ApplicationWindow::initEditor()
-{
     #ifdef EDITOR_ENABLED
     clearActions();
     editor = std::make_unique<Editor>(this);
+    editor->startup(AppStartEvent(this, *editor, *game));
     #endif
 }
 
@@ -106,15 +95,8 @@ void ApplicationWindow::clearActions()
 
 void ApplicationWindow::newFile()
 {
-    #ifdef EDITOR_ENABLED
-    editor->shutdown();
-    editor.reset();
-    initEditor();
-    #endif
-
-    game->shutdown();
-    game.reset();
-    initGame();
+    this->shutdown();
+    this->startup();
 }
 
 bool ApplicationWindow::saveToFile(const QString& path)
@@ -124,7 +106,18 @@ bool ApplicationWindow::saveToFile(const QString& path)
 
 bool ApplicationWindow::openFromFile(const QString& path)
 {
-    newFile();
+    game->shutdown();
 
-    return IESerialize::read<IEGame>(path, &(*game));
+    if(!IESerialize::read<IEGame>(path, &(*game)))
+            return false;
+
+    game->startup();
+
+    #ifdef EDITOR_ENABLED
+    clearActions();
+    editor = std::make_unique<Editor>(this);
+    editor->startup(AppStartEvent(this, *editor, *game));
+    #endif
+
+    return true;
 }

@@ -44,7 +44,7 @@ void IEGamePlayState::enter(IEGame& game)
     physicsEngine = &game.getIEPhysicsEngine();
     renderEngine = &game.getIERenderEngine();
 
-    auto& ecs = game.getIEScene().getECS();
+    auto& ecs = game.getECS();
     scriptSystem = ecs.getComponent<IEECSScriptSystem>("Script");
     rigidbody3dSystem = ecs.getComponent<IEECSRigidbody3DSystem>("Rigidbody3D");
     transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");

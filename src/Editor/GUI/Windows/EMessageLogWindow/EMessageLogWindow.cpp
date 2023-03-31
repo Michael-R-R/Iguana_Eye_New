@@ -34,11 +34,11 @@ void EMessageLogWindow::startup(const AppStartEvent& event)
     connect(&game->getIEScriptEngine(), &IEScriptEngine::message, messageLog, &EWMessageLog::insertMessage);
     connect(&game->getIEPhysicsEngine(), &IEPhysicsEngine::message, messageLog, &EWMessageLog::insertMessage);
     connect(&game->getIERenderEngine(), &IERenderEngine::message, messageLog, &EWMessageLog::insertMessage);
+    connect(&game->getECS(), &IEECS::message, messageLog, &EWMessageLog::insertMessage);
     connect(&scene, &IEScene::message, messageLog, &EWMessageLog::insertMessage);
     connect(&scene.getMeshManager(), &IEMeshManager::message, messageLog, &EWMessageLog::insertMessage);
     connect(&scene.getMaterialManager(), &IEMaterialManager::message, messageLog, &EWMessageLog::insertMessage);
     connect(&scene.getShaderManager(), &IEShaderManager::message, messageLog, &EWMessageLog::insertMessage);
     connect(&scene.getRenderableManager(), &IERenderableManager::message, messageLog, &EWMessageLog::insertMessage);
     connect(&scene.getCameraManager(), &IECameraManager::message, messageLog, &EWMessageLog::insertMessage);
-    connect(&scene.getECS(), &IEECS::message, messageLog, &EWMessageLog::insertMessage);
 }

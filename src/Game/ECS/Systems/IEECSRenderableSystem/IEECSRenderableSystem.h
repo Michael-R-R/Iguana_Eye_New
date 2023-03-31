@@ -10,10 +10,10 @@
 
 #include "IEECSSystem.h"
 
-class GameStartEvent;
-class ECSOnUpdateEvent;
+class IEGame;
 class IERenderableManager;
 class IERenderable;
+class ECSOnUpdateEvent;
 
 class IEECSRenderableSystem : public IEECSSystem
 {
@@ -57,14 +57,12 @@ class IEECSRenderableSystem : public IEECSSystem
     QMap<unsigned long long, QMap<IEEntity, int>> hiddenEntityMap;
     QMap<unsigned long long, QVector<IEEntity>> hiddenEntityList;
 
-    // DOES NOT OWN THIS POINTER
-    IERenderableManager* renderableManager;
+    IERenderableManager& renderableManager;
 
 public:
-    IEECSRenderableSystem();
+    IEECSRenderableSystem(IEGame& game);
     ~IEECSRenderableSystem();
 
-    void startup(const GameStartEvent& event) override;
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;

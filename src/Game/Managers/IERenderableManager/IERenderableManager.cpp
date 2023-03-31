@@ -1,12 +1,11 @@
 #include "IERenderableManager.h"
-#include "GameStartEvent.h"
-#include "IEScene.h"
 #include "IEShaderManager.h"
 #include "IESerialize.h"
 #include "IEFile.h"
 
-IERenderableManager::IERenderableManager() :
-    IEResourceManager()
+IERenderableManager::IERenderableManager(IEShaderManager& manager) :
+    IEResourceManager(),
+    shaderManager(manager)
 {
 
 }
@@ -14,16 +13,6 @@ IERenderableManager::IERenderableManager() :
 IERenderableManager::~IERenderableManager()
 {
 
-}
-
-void IERenderableManager::startup(const GameStartEvent& event)
-{
-    this->buildAllRenderables(event);
-}
-
-void IERenderableManager::shutdown()
-{
-    clear();
 }
 
 bool IERenderableManager::add(const unsigned long long key, std::unique_ptr<IERenderable> value)
@@ -65,22 +54,6 @@ bool IERenderableManager::changeKey(const unsigned long long oldKey, const unsig
     return true;
 }
 
-void IERenderableManager::buildAllRenderables(const GameStartEvent& event)
-{
-    auto& shaderManager = event.getScene().getShaderManager();
-
-    for(auto& i : resources)
-    {
-        auto& renderable = *i.second;
-
-        auto* shader = shaderManager.value(renderable.getShaderId());
-        if(!shader)
-            continue;
-
-        renderable.build(*shader);
-    }
-}
-
 QDataStream& IERenderableManager::serialize(QDataStream& out, const Serializable& obj) const
 {
     const auto& manager = static_cast<const IERenderableManager&>(obj);
@@ -89,7 +62,7 @@ QDataStream& IERenderableManager::serialize(QDataStream& out, const Serializable
 
     for(auto& i : manager.resources)
     {
-        auto& renderable = *i.second;
+        IERenderable& renderable = *i.second;
 
         out << renderable.getType();
 
@@ -114,6 +87,7 @@ QDataStream& IERenderableManager::serialize(QDataStream& out, const Serializable
 QDataStream& IERenderableManager::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& manager = static_cast<IERenderableManager&>(obj);
+    manager.clear();
 
     int size = 0;
     in >> size;
@@ -133,6 +107,9 @@ QDataStream& IERenderableManager::deserialize(QDataStream& in, Serializable& obj
         auto renderable = std::make_unique<IERenderable>();
         if(!IESerialize::read<IERenderable>(filePath, &(*renderable)))
             continue;
+
+        IEShader* shader = manager.shaderManager.value(renderable->getShaderId());
+        renderable->build(*shader);
 
         manager.add(renderable->getId(), std::move(renderable));
     }

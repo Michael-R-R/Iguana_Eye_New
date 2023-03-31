@@ -5,8 +5,6 @@
 
 #include "IEObject.h"
 
-class GameStartEvent;
-
 template <class T>
 class IEResourceManager : public IEObject
 {
@@ -27,8 +25,6 @@ public:
 
     }
 
-    virtual void startup(const GameStartEvent& event) = 0;
-    virtual void shutdown() = 0;
     virtual bool add(const unsigned long long key, std::unique_ptr<T> value) = 0;
     virtual bool remove(const unsigned long long key) = 0;
     virtual bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) = 0;

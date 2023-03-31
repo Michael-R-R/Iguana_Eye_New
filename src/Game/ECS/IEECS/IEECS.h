@@ -7,7 +7,7 @@
 #include "Serializable.h"
 #include "IEEntity.h"
 
-class GameStartEvent;
+class IEGame;
 class IEEntityManager;
 class IEECSSystem;
 
@@ -19,11 +19,8 @@ class IEECS : public IEObject, public Serializable
     std::unique_ptr<IEEntityManager> entityManager;
 
 public:
-    IEECS();
+    IEECS(IEGame& game);
     ~IEECS();
-
-    void startup(const GameStartEvent& event);
-    void shutdown();
 
     IEEntity create();
     void remove(const IEEntity entity);
@@ -35,7 +32,7 @@ public:
     void clearSystems();
 
 private:
-    void initSystems();
+    void initSystems(IEGame& game);
 
 signals:
     void entityCreated(const IEEntity& entity);

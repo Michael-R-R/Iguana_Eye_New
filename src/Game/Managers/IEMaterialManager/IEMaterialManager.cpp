@@ -14,15 +14,6 @@ IEMaterialManager::~IEMaterialManager()
 
 }
 
-void IEMaterialManager::startup(const GameStartEvent&)
-{
-}
-
-void IEMaterialManager::shutdown()
-{
-    clear();
-}
-
 bool IEMaterialManager::add(const unsigned long long key, std::unique_ptr<IEMaterial> value)
 {
     if(!value || doesExist(key))
@@ -70,7 +61,7 @@ QDataStream& IEMaterialManager::serialize(QDataStream& out, const Serializable& 
 
     for(auto& i : manager.resources)
     {
-        auto& material = *i.second;
+        IEMaterial& material = *i.second;
 
         out << material.getType();
 
@@ -95,6 +86,7 @@ QDataStream& IEMaterialManager::serialize(QDataStream& out, const Serializable& 
 QDataStream& IEMaterialManager::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& manager = static_cast<IEMaterialManager&>(obj);
+    manager.clear();
 
     int size = 0;
     in >> size;

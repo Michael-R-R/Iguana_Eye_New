@@ -6,6 +6,8 @@
 #include "IEECSSystem.h"
 #include "IERigidBody.h"
 
+class IEGame;
+
 // TODO finish implementing
 class IEECSRigidbody3DSystem : public IEECSSystem
 {
@@ -35,10 +37,9 @@ class IEECSRigidbody3DSystem : public IEECSSystem
     QSet<int> sleepingBodies;
 
 public:
-    IEECSRigidbody3DSystem();
+    IEECSRigidbody3DSystem(IEGame& game);
     ~IEECSRigidbody3DSystem();
 
-    void startup(const GameStartEvent& event) override;
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;

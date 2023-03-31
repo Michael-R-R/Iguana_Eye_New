@@ -1,25 +1,20 @@
 #include "IEECSMaterialSystem.h"
-#include "GameStartEvent.h"
-#include "ECSOnUpdateEvent.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEMaterialManager.h"
+#include "ECSOnUpdateEvent.h"
 
-IEECSMaterialSystem::IEECSMaterialSystem() :
+IEECSMaterialSystem::IEECSMaterialSystem(IEGame& game) :
     IEECSSystem(),
     data(),
-    materialManager(nullptr)
+    materialManager(game.getIEScene().getMaterialManager())
 {
     IEECSMaterialSystem::attach(IEEntity(-1));
 }
 
 IEECSMaterialSystem::~IEECSMaterialSystem()
 {
-    materialManager = nullptr;
-}
 
-void IEECSMaterialSystem::startup(const GameStartEvent& event)
-{
-    materialManager = &event.getScene().getMaterialManager();
 }
 
 int IEECSMaterialSystem::attach(const IEEntity entity)
@@ -101,7 +96,7 @@ IEMaterial* IEECSMaterialSystem::getAttachedMaterial(const int index)
     if(!indexBoundCheck(index))
         return nullptr;
 
-    return materialManager->value(data.materialId[index]);
+    return materialManager.value(data.materialId[index]);
 }
 
 unsigned long long IEECSMaterialSystem::getMaterialId(const int index)

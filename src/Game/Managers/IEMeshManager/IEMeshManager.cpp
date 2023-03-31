@@ -13,16 +13,6 @@ IEMeshManager::~IEMeshManager()
 
 }
 
-void IEMeshManager::startup(const GameStartEvent&)
-{
-
-}
-
-void IEMeshManager::shutdown()
-{
-    clear();
-}
-
 bool IEMeshManager::add(const unsigned long long key, std::unique_ptr<IEMesh> value)
 {
     if(!value || doesExist(key))
@@ -70,7 +60,7 @@ QDataStream& IEMeshManager::serialize(QDataStream& out, const Serializable& obj)
 
     for(auto& i : manager.resources)
     {
-        auto& mesh = *i.second;
+        IEMesh& mesh = *i.second;
 
         out << mesh.getType();
 
@@ -86,6 +76,7 @@ QDataStream& IEMeshManager::serialize(QDataStream& out, const Serializable& obj)
 QDataStream& IEMeshManager::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& manager = static_cast<IEMeshManager&>(obj);
+    manager.clear();
 
     int size = 0;
     in >> size;

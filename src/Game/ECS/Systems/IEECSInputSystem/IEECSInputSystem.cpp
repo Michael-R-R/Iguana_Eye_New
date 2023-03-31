@@ -1,5 +1,4 @@
 #include "IEECSInputSystem.h"
-#include "GameStartEvent.h"
 #include "ECSOnUpdateEvent.h"
 
 IEECSInputSystem::IEECSInputSystem() :
@@ -12,11 +11,6 @@ IEECSInputSystem::IEECSInputSystem() :
 IEECSInputSystem::~IEECSInputSystem()
 {
 
-}
-
-void IEECSInputSystem::startup(const GameStartEvent&)
-{
-    // Not used
 }
 
 int IEECSInputSystem::attach(const IEEntity entity)

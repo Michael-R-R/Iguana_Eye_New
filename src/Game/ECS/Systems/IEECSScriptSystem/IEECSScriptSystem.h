@@ -7,9 +7,8 @@
 #include "IEECSSystem.h"
 #include "IEEntityScript.h"
 
-class GameStartEvent;
+class IEGame;
 class ECSOnUpdateEvent;
-class IEScriptEngine;
 
 class IEECSScriptSystem : public IEECSSystem
 {
@@ -40,10 +39,9 @@ class IEECSScriptSystem : public IEECSSystem
     Data data;
 
 public:
-    IEECSScriptSystem();
+    IEECSScriptSystem(IEGame& game);
     ~IEECSScriptSystem();
 
-    void startup(const GameStartEvent& event) override;
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;

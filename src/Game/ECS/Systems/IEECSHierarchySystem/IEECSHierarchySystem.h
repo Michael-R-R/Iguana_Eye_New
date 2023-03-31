@@ -5,7 +5,6 @@
 
 #include "IEECSSystem.h"
 
-class GameStartEvent;
 class ECSOnUpdateEvent;
 
 class IEECSHierarchySystem : public IEECSSystem
@@ -35,7 +34,6 @@ public:
     IEECSHierarchySystem();
     ~IEECSHierarchySystem();
 
-    void startup(const GameStartEvent& event) override;
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;

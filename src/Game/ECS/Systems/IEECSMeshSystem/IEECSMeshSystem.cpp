@@ -1,25 +1,20 @@
 #include "IEECSMeshSystem.h"
-#include "GameStartEvent.h"
-#include "ECSOnUpdateEvent.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEMeshManager.h"
+#include "ECSOnUpdateEvent.h"
 
-IEECSMeshSystem::IEECSMeshSystem() :
+IEECSMeshSystem::IEECSMeshSystem(IEGame& game) :
     IEECSSystem(),
     data(),
-    meshManager(nullptr)
+    meshManager(game.getIEScene().getMeshManager())
 {
     IEECSMeshSystem::attach(IEEntity(-1));
 }
 
 IEECSMeshSystem::~IEECSMeshSystem()
 {
-    meshManager = nullptr;
-}
 
-void IEECSMeshSystem::startup(const GameStartEvent& event)
-{
-    meshManager = &event.getScene().getMeshManager();
 }
 
 int IEECSMeshSystem::attach(const IEEntity entity)
@@ -101,7 +96,7 @@ IEMesh* IEECSMeshSystem::getAttachedMesh(const int index)
     if(!indexBoundCheck(index))
         return nullptr;
 
-    return meshManager->value(data.meshId[index]);
+    return meshManager.value(data.meshId[index]);
 }
 
 unsigned long long IEECSMeshSystem::getMeshId(const int index)

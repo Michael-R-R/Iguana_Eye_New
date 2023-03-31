@@ -5,7 +5,7 @@
 
 #include "IEECSSystem.h"
 
-class GameStartEvent;
+class IEGame;
 class ECSOnUpdateEvent;
 class IEMeshManager;
 class IEMesh;
@@ -32,14 +32,12 @@ class IEECSMeshSystem : public IEECSSystem
 
     Data data;
 
-    // DOES NOT OWN THIS POINTER
-    IEMeshManager* meshManager;
+    IEMeshManager& meshManager;
 
 public:
-    IEECSMeshSystem();
+    IEECSMeshSystem(IEGame& game);
     ~IEECSMeshSystem();
 
-    void startup(const GameStartEvent& event) override;
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;

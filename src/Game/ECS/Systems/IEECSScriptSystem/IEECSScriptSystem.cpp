@@ -1,33 +1,25 @@
 #include "IEECSScriptSystem.h"
-#include "GameStartEvent.h"
-#include "ECSOnUpdateEvent.h"
-#include "IEScriptEngine.h"
+#include "IEGame.h"
 #include "IEPhysicsEngine.h"
+#include "IESimulationCallback.h"
+#include "ECSOnUpdateEvent.h"
 #include "IEHash.h"
 
-IEECSScriptSystem::IEECSScriptSystem() :
+IEECSScriptSystem::IEECSScriptSystem(IEGame& game) :
     IEECSSystem(),
     data()
 {
     IEECSScriptSystem::attach(IEEntity(-1));
+
+    auto& physicsEngine = game.getIEPhysicsEngine();
+    auto* simCallback = physicsEngine.getSimulationCallback();
+    connect(simCallback, &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
+    connect(simCallback, &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);
 }
 
 IEECSScriptSystem::~IEECSScriptSystem()
 {
-    removeAll();
-}
 
-void IEECSScriptSystem::startup(const GameStartEvent& event)
-{
-    auto& scriptEngine = event.getScriptEngine();
-    auto* physicsEngine = &event.getPhysicsEngine();
-    auto* simCallback = physicsEngine->getSimulationCallback();
-
-    connect(simCallback, &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
-    connect(simCallback, &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);
-
-    initAllScripts(scriptEngine.getLua());
-    deserializeScripts();
 }
 
 int IEECSScriptSystem::attach(const IEEntity entity)

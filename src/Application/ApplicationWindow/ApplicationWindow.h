@@ -29,18 +29,16 @@ public:
     ApplicationWindow(QWidget *parent = nullptr);
     ~ApplicationWindow();
 
+    void startup();
+    void shutdown();
+
     void modifyTitle(const QString& text);
     void setModified(const bool isModified);
 
-    void shutdown();
-
-private slots:
-    void startup();
-
 private:
-    void initGame();
-    void initEditor();
+    void initalize();
     void clearActions();
+    void deserialize(const QString& path);
 
 public slots:
     void newFile();

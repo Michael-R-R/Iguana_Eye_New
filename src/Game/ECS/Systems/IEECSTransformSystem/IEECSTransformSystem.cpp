@@ -1,29 +1,23 @@
 #include "IEECSTransformSystem.h"
-#include "GameStartEvent.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IERenderableManager.h"
-#include "ECSOnUpdateEvent.h"
 #include "IEECSHierarchySystem.h"
 #include "IEECSRenderableSystem.h"
+#include "ECSOnUpdateEvent.h"
 
-IEECSTransformSystem::IEECSTransformSystem() :
+IEECSTransformSystem::IEECSTransformSystem(IEGame& game) :
     IEECSSystem(),
     data(),
     dirtyParentIndices(),
-    renderableManager(nullptr)
+    renderableManager(game.getIEScene().getRenderableManager())
 {
     IEECSTransformSystem::attach(IEEntity(-1));
 }
 
 IEECSTransformSystem::~IEECSTransformSystem()
 {
-    renderableManager = nullptr;
-}
 
-void IEECSTransformSystem::startup(const GameStartEvent& event)
-{
-    auto& scene = event.getScene();
-    renderableManager = &scene.getRenderableManager();
 }
 
 int IEECSTransformSystem::attach(const IEEntity entity)
@@ -90,7 +84,7 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
             const IEEntity& childEntity = data.entity[j];
             const int childIndex = renderableSystem->lookUpIndex(childEntity);
             const unsigned long long renderableId = renderableSystem->getRenderableId(childIndex);
-            auto* renderable = renderableManager->value(renderableId);
+            auto* renderable = renderableManager.value(renderableId);
             if(!renderable)
                 continue;
 
@@ -102,7 +96,7 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
         const IEEntity& parentEntity = data.entity[i];
         const int parentIndex = renderableSystem->lookUpIndex(parentEntity);
         const unsigned long long renderableId = renderableSystem->getRenderableId(parentIndex);
-        auto* renderable = renderableManager->value(renderableId);
+        auto* renderable = renderableManager.value(renderableId);
         if(!renderable)
             continue;
 

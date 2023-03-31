@@ -1,7 +1,4 @@
 #include "IEGame.h"
-#include "IEGameState.h"
-#include "ApplicationProperties.h"
-#include "GameStartEvent.h"
 #include "IETime.h"
 #include "IEInput.h"
 #include "IEScriptEngine.h"
@@ -9,7 +6,8 @@
 #include "IERenderEngine.h"
 #include "IEScene.h"
 #include "IEECS.h"
-#include "IEECSCameraSystem.h"
+#include "IEGameState.h"
+#include "ApplicationProperties.h"
 
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
@@ -17,8 +15,9 @@ IEGame::IEGame(QWidget* parent) :
     glFunc(nullptr), glExtraFunc(nullptr),
     time(std::make_unique<IETime>(16, 16, *this)),
     input(std::make_unique<IEInput>(this)),
-    scene(std::make_unique<IEScene>()),
     physicsEngine(std::make_unique<IEPhysicsEngine>()),
+    scene(std::make_unique<IEScene>()),
+    ecs(std::make_unique<IEECS>(*this)),
     scriptEngine(std::make_unique<IEScriptEngine>(*this)),
     renderEngine(std::make_unique<IERenderEngine>(*scene)),
     state(nullptr)
@@ -75,22 +74,14 @@ void IEGame::resizeGL(int w, int h)
 
 void IEGame::startup()
 {
-    this->makeCurrent();
-
-    GameStartEvent gameStartEvent(this);
-
-    scene->startup(gameStartEvent);
     time->startup();
-
     this->setFocus();
 }
 
 void IEGame::shutdown()
 {
     this->makeCurrent();
-
     time->shutdown();
-    scene->shutdown();
 }
 
 void IEGame::setState(std::unique_ptr<IEGameState> val)
@@ -125,7 +116,7 @@ QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const
 {
     const IEGame& game = static_cast<const IEGame&>(obj);
 
-    out << *game.time << *game.input << *game.scene;
+    out << *game.time << *game.input << *game.scene << *game.ecs;
 
     return out;
 }
@@ -134,7 +125,7 @@ QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
 {
     IEGame& game = static_cast<IEGame&>(obj);
 
-    in >> *game.time >> *game.input >> *game.scene;
+    in >> *game.time >> *game.input >> *game.scene >> *game.ecs;
 
     return in;
 }
