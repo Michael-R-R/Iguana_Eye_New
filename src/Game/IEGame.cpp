@@ -14,9 +14,9 @@
 
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
-    format(std::make_unique<QSurfaceFormat>()),
+    format(),
     glFunc(nullptr), glExtraFunc(nullptr),
-    time(std::make_unique<IETime>(16, 16)),
+    time(std::make_unique<IETime>(16, 16, *this)),
     input(std::make_unique<IEInput>(this)),
     scriptEngine(std::make_unique<IEScriptEngine>()),
     physicsEngine(std::make_unique<IEPhysicsEngine>()),
@@ -26,12 +26,13 @@ IEGame::IEGame(QWidget* parent) :
 {
     this->setFocusPolicy(Qt::StrongFocus);
 
-    format->setVersion(4, 3);
-    format->setProfile(QSurfaceFormat::CoreProfile);
-    format->setSwapBehavior(QSurfaceFormat::DoubleBuffer);
-    format->setSwapInterval(1);
-    format->setSamples(16);
-    this->setFormat(*format); // must be set before window is shown
+    format.setVersion(4, 3);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setSwapBehavior(QSurfaceFormat::DoubleBuffer);
+    format.setSwapInterval(1);
+    format.setSamples(16);
+    this->setFormat(format); // must be set before window is shown
+    this->setUpdateBehavior(UpdateBehavior::PartialUpdate);
 }
 
 IEGame::~IEGame()
@@ -60,7 +61,7 @@ void IEGame::initializeGL()
 
 void IEGame::paintGL()
 {
-    onRenderFrame();
+    state->onRenderFrame();
 }
 
 void IEGame::resizeGL(int w, int h)
@@ -84,7 +85,7 @@ void IEGame::startup()
     physicsEngine->startup(gameStartEvent);
     scene->startup(gameStartEvent);
     renderEngine->startup(renderStartEvent);
-    time->startup(*this);
+    time->startup();
 
     this->setFocus();
 }
@@ -125,7 +126,7 @@ void IEGame::onUpdateFrame()
 
 void IEGame::onRenderFrame()
 {
-    state->onRenderFrame();
+    this->update();
 }
 
 QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const

@@ -21,10 +21,10 @@ class IETime : public IEObject, public Serializable
     DeltaTime dt;
 
 public:
-    IETime(const int msUpdate, const int msRender);
+    IETime(const int msUpdate, const int msRender, IEGame& game);
     ~IETime();
 
-    void startup(IEGame& game);
+    void startup();
     void shutdown();
 
     void startUpdateTimer();

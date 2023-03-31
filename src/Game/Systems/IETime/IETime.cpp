@@ -1,13 +1,14 @@
 #include "IETime.h"
 #include "IEGame.h"
 
-IETime::IETime(const int msUpdate, const int msRender) :
+IETime::IETime(const int msUpdate, const int msRender, IEGame& game) :
     updateTimer(this),
     renderTimer(this),
     updateRefresh(msUpdate), renderRefresh(msRender),
     dt()
 {
-
+    this->setupUpdateTimer(game);
+    this->setupRenderTimer(game);
 }
 
 IETime::~IETime()
@@ -15,10 +16,8 @@ IETime::~IETime()
 
 }
 
-void IETime::startup(IEGame& game)
+void IETime::startup()
 {
-    this->setupUpdateTimer(game);
-    this->setupRenderTimer(game);
     this->startUpdateTimer();
     this->startRenderTimer();
 }
@@ -54,13 +53,13 @@ void IETime::stopRenderTimer()
 void IETime::setupUpdateTimer(IEGame& game)
 {
     updateTimer.setTimerType(Qt::PreciseTimer);
-    connect(&updateTimer, &QTimer::timeout, this, [&game]() { game.onUpdateFrame(); });
+    connect(&updateTimer, &QTimer::timeout, &game, &IEGame::onUpdateFrame);
 }
 
 void IETime::setupRenderTimer(IEGame& game)
 {
     renderTimer.setTimerType(Qt::PreciseTimer);
-    connect(&renderTimer, &QTimer::timeout, this, [&game]() { game.update(); });
+    connect(&renderTimer, &QTimer::timeout, &game, &IEGame::onRenderFrame);
 }
 
 QDataStream& IETime::serialize(QDataStream& out, const Serializable& obj) const

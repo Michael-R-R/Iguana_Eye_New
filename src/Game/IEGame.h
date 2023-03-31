@@ -20,7 +20,7 @@ class IEGame : public QOpenGLWidget, public Serializable
 {
     Q_OBJECT
 
-    std::unique_ptr<QSurfaceFormat> format;
+    QSurfaceFormat format;
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
 
@@ -59,8 +59,6 @@ public:
 
 public slots:
     void onUpdateFrame();
-
-private:
     void onRenderFrame();
 
 signals:
