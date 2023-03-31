@@ -33,8 +33,6 @@ public:
     IEPhysicsEngine();
     ~IEPhysicsEngine();
 
-    void startup(const GameStartEvent& event);
-    void shutdown();
     void onUpdateFrame(const float dt);
 
     void addActorToScene(physx::PxActor* actor);

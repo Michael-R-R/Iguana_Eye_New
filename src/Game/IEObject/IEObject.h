@@ -4,14 +4,13 @@
 
 class IEObject : public QObject
 {
+    Q_OBJECT
+
 public:
     enum class MessageType
     {
         Normal, Error
     };
-
-private:
-    Q_OBJECT
 
 public:
     IEObject(QObject* parent = nullptr);

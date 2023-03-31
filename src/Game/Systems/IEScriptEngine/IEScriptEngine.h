@@ -5,18 +5,15 @@
 
 #include "IEObject.h"
 
-class GameStartEvent;
+class IEGame;
 
 class IEScriptEngine : public IEObject
 {
     sol::state lua;
 
 public:
-    IEScriptEngine();
+    IEScriptEngine(IEGame& game);
     ~IEScriptEngine();
-
-    void startup(const GameStartEvent& event);
-    void shutdown();
 
     sol::state& getLua() { return lua; }
 };

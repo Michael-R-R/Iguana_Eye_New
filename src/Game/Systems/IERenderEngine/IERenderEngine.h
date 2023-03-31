@@ -2,7 +2,7 @@
 
 #include "IEObject.h"
 
-class RenderEngineStartEvent;
+class IEScene;
 class IEMeshManager;
 class IEMaterialManager;
 class IEShaderManager;
@@ -22,11 +22,8 @@ class IERenderEngine : public IEObject
     const IERenderableManager* renderableManager;
 
 public:
-    IERenderEngine();
+    IERenderEngine(IEScene& scene);
     ~IERenderEngine();
-
-    void startup(const RenderEngineStartEvent& event);
-    void shutdown();
 
     void onRenderFrame(IECamera* camera);
 

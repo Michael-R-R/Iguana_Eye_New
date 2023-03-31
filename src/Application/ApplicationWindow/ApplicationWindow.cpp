@@ -108,10 +108,12 @@ void ApplicationWindow::newFile()
 {
     #ifdef EDITOR_ENABLED
     editor->shutdown();
+    editor.reset();
     initEditor();
     #endif
 
     game->shutdown();
+    game.reset();
     initGame();
 }
 

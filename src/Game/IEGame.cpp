@@ -2,7 +2,6 @@
 #include "IEGameState.h"
 #include "ApplicationProperties.h"
 #include "GameStartEvent.h"
-#include "RenderEngineStartEvent.h"
 #include "IETime.h"
 #include "IEInput.h"
 #include "IEScriptEngine.h"
@@ -18,10 +17,10 @@ IEGame::IEGame(QWidget* parent) :
     glFunc(nullptr), glExtraFunc(nullptr),
     time(std::make_unique<IETime>(16, 16, *this)),
     input(std::make_unique<IEInput>(this)),
-    scriptEngine(std::make_unique<IEScriptEngine>()),
-    physicsEngine(std::make_unique<IEPhysicsEngine>()),
-    renderEngine(std::make_unique<IERenderEngine>()),
     scene(std::make_unique<IEScene>()),
+    physicsEngine(std::make_unique<IEPhysicsEngine>()),
+    scriptEngine(std::make_unique<IEScriptEngine>(*this)),
+    renderEngine(std::make_unique<IERenderEngine>(*scene)),
     state(nullptr)
 {
     this->setFocusPolicy(Qt::StrongFocus);
@@ -79,12 +78,8 @@ void IEGame::startup()
     this->makeCurrent();
 
     GameStartEvent gameStartEvent(this);
-    RenderEngineStartEvent renderStartEvent(*scene);
 
-    scriptEngine->startup(gameStartEvent);
-    physicsEngine->startup(gameStartEvent);
     scene->startup(gameStartEvent);
-    renderEngine->startup(renderStartEvent);
     time->startup();
 
     this->setFocus();
@@ -95,10 +90,7 @@ void IEGame::shutdown()
     this->makeCurrent();
 
     time->shutdown();
-    renderEngine->shutdown();
     scene->shutdown();
-    physicsEngine->shutdown();
-    scriptEngine->shutdown();
 }
 
 void IEGame::setState(std::unique_ptr<IEGameState> val)

@@ -14,16 +14,6 @@ IEPhysicsEngine::IEPhysicsEngine() :
     accumulator(0.0f),
     stepSize(1.0f / 60.0f)
 {
-
-}
-
-IEPhysicsEngine::~IEPhysicsEngine()
-{
-
-}
-
-void IEPhysicsEngine::startup(const GameStartEvent&)
-{
     pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, defaultAllocatorCallback, defaultErrorCallback);
     if(!pxFoundation)
         throw("PxCreateFoundation failed");
@@ -45,7 +35,7 @@ void IEPhysicsEngine::startup(const GameStartEvent&)
     pxDefaultMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
 }
 
-void IEPhysicsEngine::shutdown()
+IEPhysicsEngine::~IEPhysicsEngine()
 {
     pxScene->release();
     pxCpuDispatcher->release();

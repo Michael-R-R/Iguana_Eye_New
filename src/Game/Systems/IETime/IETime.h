@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QTimer>
-#include <QDataStream>
 
 #include "IEObject.h"
 #include "Serializable.h"

@@ -122,7 +122,6 @@ INCLUDEPATH += $$PWD/src/Events \
     $$PWD/src/Events/AppStartEvent \
     $$PWD/src/Events/ECSOnUpdateEvent \
     $$PWD/src/Events/GameStartEvent \
-    $$PWD/src/Events/RenderEngineStartEvent \
 
 INCLUDEPATH += $$PWD/src/Game \
     $$PWD/src/Game/IEObject \

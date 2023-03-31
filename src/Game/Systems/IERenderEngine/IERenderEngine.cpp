@@ -3,7 +3,6 @@
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLContext>
 #include <QMatrix4x4>
-#include "RenderEngineStartEvent.h"
 #include "IEScene.h"
 #include "IEMeshManager.h"
 #include "IEMaterialManager.h"
@@ -11,32 +10,18 @@
 #include "IERenderableManager.h"
 #include "IECamera.h"
 
-IERenderEngine::IERenderEngine() :
+IERenderEngine::IERenderEngine(IEScene& scene) :
     IEObject(),
     meshManager(nullptr), materialManager(nullptr),
     shaderManager(nullptr), renderableManager(nullptr)
 {
-
-}
-
-IERenderEngine::~IERenderEngine()
-{
-    meshManager = nullptr;
-    materialManager = nullptr;
-    shaderManager = nullptr;
-    renderableManager = nullptr;
-}
-
-void IERenderEngine::startup(const RenderEngineStartEvent& event)
-{
-    auto& scene = event.getScene();
     meshManager = &scene.getMeshManager();
     materialManager = &scene.getMaterialManager();
     shaderManager = &scene.getShaderManager();
     renderableManager = &scene.getRenderableManager();
 }
 
-void IERenderEngine::shutdown()
+IERenderEngine::~IERenderEngine()
 {
     meshManager = nullptr;
     materialManager = nullptr;

@@ -26,10 +26,10 @@ class IEGame : public QOpenGLWidget, public Serializable
 
     std::unique_ptr<IETime> time;
     std::unique_ptr<IEInput> input;
-    std::unique_ptr<IEScriptEngine> scriptEngine;
-    std::unique_ptr<IEPhysicsEngine> physicsEngine;
-    std::unique_ptr<IERenderEngine> renderEngine;
     std::unique_ptr<IEScene> scene;
+    std::unique_ptr<IEPhysicsEngine> physicsEngine;
+    std::unique_ptr<IEScriptEngine> scriptEngine;
+    std::unique_ptr<IERenderEngine> renderEngine;
 
     std::unique_ptr<IEGameState> state;
 

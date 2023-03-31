@@ -1,5 +1,5 @@
 #include "IEScriptEngine.h"
-#include "GameStartEvent.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "LuaEnum.h"
 #include "LuaCommonType.h"
@@ -9,19 +9,9 @@
 #include "LuaIEInput.h"
 #include "LuaIEECS.h"
 
-IEScriptEngine::IEScriptEngine() :
+IEScriptEngine::IEScriptEngine(IEGame& game) :
     IEObject(),
     lua()
-{
-
-}
-
-IEScriptEngine::~IEScriptEngine()
-{
-
-}
-
-void IEScriptEngine::startup(const GameStartEvent& event)
 {
     lua.open_libraries(sol::lib::base, sol::lib::math);
 
@@ -34,12 +24,12 @@ void IEScriptEngine::startup(const GameStartEvent& event)
     LuaEnum::addToLua(enumTable);
     LuaUtility::addToLua(utilTable);
     LuaApplication::addToLua(gameTable);
-    LuaIETime::addToLua(&event.getTime(), gameTable);
-    LuaIEInput::addToLua(&event.getInput(), gameTable);
-    LuaIEECS::addToLua(&event.getScene().getECS(), lua, gameTable);
+    LuaIETime::addToLua(&game.getIETime(), gameTable);
+    LuaIEInput::addToLua(&game.getIEInput(), gameTable);
+    LuaIEECS::addToLua(&game.getIEScene().getECS(), lua, gameTable);
 }
 
-void IEScriptEngine::shutdown()
+IEScriptEngine::~IEScriptEngine()
 {
 
 }
