@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <QVector2D>
 
 #include "IEGameState.h"
 
@@ -16,13 +15,13 @@ class IEGameStopState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
-    IETime& time;
-    IEInput& input;
-    IERenderEngine& renderEngine;
+    IETime* time;
+    IEInput* input;
+    IERenderEngine* renderEngine;
     std::unique_ptr<ECamera> camera;
 
 public:
-    IEGameStopState(IEGame& game);
+    IEGameStopState();
     ~IEGameStopState();
 
     void enter(IEGame& game) override;

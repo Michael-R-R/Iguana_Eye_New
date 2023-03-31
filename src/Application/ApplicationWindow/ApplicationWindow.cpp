@@ -2,6 +2,7 @@
 #include "ui_ApplicationWindow.h"
 #include "IESerialize.h"
 #include "IEGame.h"
+#include "IEGameStopState.h"
 
 #ifdef EDITOR_ENABLED
 #include "AppStartEvent.h"
@@ -64,6 +65,7 @@ void ApplicationWindow::shutdown()
 void ApplicationWindow::startup()
 {
     game->startup();
+    game->setState(std::make_unique<IEGameStopState>());
 
     #ifdef EDITOR_ENABLED
     AppStartEvent startEvent(this, *editor, *game);

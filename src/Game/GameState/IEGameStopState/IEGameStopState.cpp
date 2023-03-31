@@ -6,12 +6,12 @@
 #include "IERenderEngine.h"
 #include "ECamera.h"
 
-IEGameStopState::IEGameStopState(IEGame& game) :
+IEGameStopState::IEGameStopState() :
     glFunc(nullptr),
     glExtraFunc(nullptr),
-    time(game.getIETime()),
-    input(game.getIEInput()),
-    renderEngine(game.getIERenderEngine()),
+    time(nullptr),
+    input(nullptr),
+    renderEngine(nullptr),
     camera(std::make_unique<ECamera>())
 {
 
@@ -28,6 +28,10 @@ void IEGameStopState::enter(IEGame& game)
     glFunc = game.getGlFunc();
     glExtraFunc = game.getGlExtraFunc();
 
+    time = &game.getIETime();
+    input = &game.getIEInput();
+    renderEngine = &game.getIERenderEngine();
+
     IEGameState::onResize(ApplicationProperties::viewportDimensions);
 }
 
@@ -38,14 +42,14 @@ void IEGameStopState::exit(IEGame&)
 
 void IEGameStopState::onUpdateFrame()
 {
-    camera->update(input, time.getDeltaTime());
+    camera->update(*input, time->getDeltaTime());
 }
 
 void IEGameStopState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    renderEngine.onRenderFrame(&(*camera));
-    time.processDeltaTime();
+    renderEngine->onRenderFrame(&(*camera));
+    time->processDeltaTime();
 }
 
 void IEGameStopState::onResize(const float w, const float h)

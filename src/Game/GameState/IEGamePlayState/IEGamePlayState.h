@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <QVector2D>
 
 #include "IEGameState.h"
 
@@ -21,10 +20,10 @@ class IEGamePlayState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
-    IETime& time;
-    IEInput& input;
-    IEPhysicsEngine& physicsEngine;
-    IERenderEngine& renderEngine;
+    IETime* time;
+    IEInput* input;
+    IEPhysicsEngine* physicsEngine;
+    IERenderEngine* renderEngine;
     IEECSScriptSystem* scriptSystem;
     IEECSRigidbody3DSystem* rigidbody3dSystem;
     IEECSTransformSystem* transformSystem;
@@ -32,7 +31,7 @@ class IEGamePlayState : public IEGameState
     std::unique_ptr<ECSOnUpdateEvent> ecsUpdateEvent;
 
 public:
-    IEGamePlayState(IEGame& game);
+    IEGamePlayState();
     ~IEGamePlayState();
 
     void enter(IEGame& game) override;

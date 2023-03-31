@@ -1,5 +1,5 @@
 #include "IEGame.h"
-#include "IEGameStopState.h"
+#include "IEGameState.h"
 #include "ApplicationProperties.h"
 #include "GameStartEvent.h"
 #include "RenderEngineStartEvent.h"
@@ -22,7 +22,7 @@ IEGame::IEGame(QWidget* parent) :
     physicsEngine(std::make_unique<IEPhysicsEngine>()),
     renderEngine(std::make_unique<IERenderEngine>()),
     scene(std::make_unique<IEScene>()),
-    state(std::make_unique<IEGameStopState>(*this))
+    state(nullptr)
 {
     this->setFocusPolicy(Qt::StrongFocus);
 
@@ -80,7 +80,6 @@ void IEGame::startup()
     GameStartEvent gameStartEvent(this);
     RenderEngineStartEvent renderStartEvent(*scene);
 
-    state->enter(*this);
     scriptEngine->startup(gameStartEvent);
     physicsEngine->startup(gameStartEvent);
     scene->startup(gameStartEvent);
@@ -106,9 +105,17 @@ void IEGame::setState(std::unique_ptr<IEGameState> val)
     if(!val)
         return;
 
-    state->exit(*this);
-    state = std::move(val);
-    state->enter(*this);
+    if(state)
+    {
+        state->exit(*this);
+        state = std::move(val);
+        state->enter(*this);
+    }
+    else
+    {
+        state = std::move(val);
+        state->enter(*this);
+    }
 }
 
 void IEGame::onUpdateFrame()

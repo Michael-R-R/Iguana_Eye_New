@@ -13,13 +13,13 @@
 #include "IEECSCameraSystem.h"
 #include "ECSOnUpdateEvent.h"
 
-IEGamePlayState::IEGamePlayState(IEGame& game) :
+IEGamePlayState::IEGamePlayState() :
     glFunc(nullptr),
     glExtraFunc(nullptr),
-    time(game.getIETime()),
-    input(game.getIEInput()),
-    physicsEngine(game.getIEPhysicsEngine()),
-    renderEngine(game.getIERenderEngine()),
+    time(nullptr),
+    input(nullptr),
+    physicsEngine(nullptr),
+    renderEngine(nullptr),
     scriptSystem(nullptr),
     rigidbody3dSystem(nullptr),
     transformSystem(nullptr),
@@ -39,6 +39,11 @@ void IEGamePlayState::enter(IEGame& game)
     glFunc = game.getGlFunc();
     glExtraFunc = game.getGlExtraFunc();
 
+    time = &game.getIETime();
+    input = &game.getIEInput();
+    physicsEngine = &game.getIEPhysicsEngine();
+    renderEngine = &game.getIERenderEngine();
+
     auto& ecs = game.getIEScene().getECS();
     scriptSystem = ecs.getComponent<IEECSScriptSystem>("Script");
     rigidbody3dSystem = ecs.getComponent<IEECSRigidbody3DSystem>("Rigidbody3D");
@@ -56,7 +61,7 @@ void IEGamePlayState::exit(IEGame&)
 
 void IEGamePlayState::onUpdateFrame()
 {
-    physicsEngine.onUpdateFrame(time.getDeltaTime());
+    physicsEngine->onUpdateFrame(time->getDeltaTime());
     scriptSystem->onUpdateFrame(&(*ecsUpdateEvent));
     rigidbody3dSystem->onUpdateFrame(&(*ecsUpdateEvent));
     transformSystem->onUpdateFrame(&(*ecsUpdateEvent));
@@ -66,8 +71,8 @@ void IEGamePlayState::onUpdateFrame()
 void IEGamePlayState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    renderEngine.onRenderFrame(cameraSystem->getActiveCamera());
-    time.processDeltaTime();
+    renderEngine->onRenderFrame(cameraSystem->getActiveCamera());
+    time->processDeltaTime();
 }
 
 void IEGamePlayState::onResize(const float w, const float h)
