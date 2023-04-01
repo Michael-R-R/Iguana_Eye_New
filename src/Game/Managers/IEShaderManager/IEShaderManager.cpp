@@ -1,5 +1,4 @@
 #include "IEShaderManager.h"
-#include "GameStartEvent.h"
 #include "IEGlslImporter.h"
 
 IEShaderManager::IEShaderManager() :

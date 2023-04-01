@@ -38,9 +38,13 @@ public:
     void addActorToScene(physx::PxActor* actor);
     void removeActorFromScene(physx::PxActor* actor);
     void releaseActor(physx::PxActor* actor);
+    void reset();
 
     physx::PxPhysics* getPxPhysics() { return pxPhysics; }
     physx::PxMaterial* getDefaultPxMaterial() { return pxDefaultMaterial; }
     IESimulationCallback* getSimulationCallback() { return &(*simulationCallback); }
+
+private:
+    void setup();
 };
 

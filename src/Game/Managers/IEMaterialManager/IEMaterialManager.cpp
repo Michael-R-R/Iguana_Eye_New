@@ -1,5 +1,4 @@
 #include "IEMaterialManager.h"
-#include "GameStartEvent.h"
 #include "IEFile.h"
 #include "IESerialize.h"
 
@@ -107,7 +106,8 @@ QDataStream& IEMaterialManager::deserialize(QDataStream& in, Serializable& obj)
         if(!IESerialize::read<IEMaterial>(filePath, &(*material)))
             continue;
 
-        manager.add(material->getId(), std::move(material));
+        auto id = material->getId();
+        manager.add(id, std::move(material));
     }
 
     return in;

@@ -74,14 +74,22 @@ void IEGame::resizeGL(int w, int h)
 
 void IEGame::startup()
 {
+    this->makeCurrent();
     time->startup();
-    this->setFocus();
 }
 
 void IEGame::shutdown()
 {
     this->makeCurrent();
     time->shutdown();
+}
+
+void IEGame::reset()
+{
+    this->makeCurrent();
+    time->shutdown();
+    physicsEngine->reset();
+    scriptEngine->reset(*this);
 }
 
 void IEGame::setState(std::unique_ptr<IEGameState> val)

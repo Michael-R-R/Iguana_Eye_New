@@ -2,13 +2,13 @@
 
 #include <memory>
 
-class GameStartEvent;
+class IEGame;
 
 class IETCreateRenderable
 {
 
 public:
-    IETCreateRenderable(const GameStartEvent& event);
+    IETCreateRenderable(IEGame& game);
     ~IETCreateRenderable();
 };
 

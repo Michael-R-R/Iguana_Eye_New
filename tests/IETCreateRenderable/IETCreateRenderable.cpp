@@ -1,5 +1,4 @@
 #include "IETCreateRenderable.h"
-#include "GameStartEvent.h"
 #include "IEGame.h"
 #include "IEScene.h"
 #include "IEMeshManager.h"
@@ -16,9 +15,9 @@
 #include "IEGlslImporter.h"
 #include "IEHash.h"
 
-IETCreateRenderable::IETCreateRenderable(const GameStartEvent& event)
+IETCreateRenderable::IETCreateRenderable(IEGame& game)
 {
-    auto& scene = event.getScene();
+    auto& scene = game.getIEScene();
     auto& meshManager = scene.getMeshManager();
     auto& materialManager = scene.getMaterialManager();
     auto& shaderManager = scene.getShaderManager();
@@ -27,13 +26,13 @@ IETCreateRenderable::IETCreateRenderable(const GameStartEvent& event)
     QString path = "./resources/meshes/tests/cube.obj";
     unsigned long long meshId = IEHash::Compute(path);
     auto mesh = std::make_unique<IEMesh>(path, meshId);
-    mesh->setType(IEResource::Type::Editor);
+    mesh->setType(IEResource::Type::Game);
     IEObjImporter::importMesh(path, *mesh);
 
     path = "./resources/materials/tests/mat.iemat";
     unsigned long long materialId = IEHash::Compute(path);
     auto material = std::make_unique<IEMaterial>(path, materialId);
-    material->setType(IEResource::Type::Editor);
+    material->setType(IEResource::Type::Game);
     IEUniform uniform;
     uniform.add("uColor", QColor(0, 0, 255, 255));
     material->setUniformData(uniform);
@@ -41,7 +40,7 @@ IETCreateRenderable::IETCreateRenderable(const GameStartEvent& event)
     path = "./resources/shaders/tests/instanced_renderable.glsl";
     unsigned long long shaderId = IEHash::Compute(path);
     auto shader = std::make_unique<IEShader>(path, shaderId);
-    shader->setType(IEResource::Type::Editor);
+    shader->setType(IEResource::Type::Game);
     IEGlslImporter::importGlsl(path, *shader);
     shader->build();
 
@@ -51,7 +50,7 @@ IETCreateRenderable::IETCreateRenderable(const GameStartEvent& event)
                                                      meshId,
                                                      materialId,
                                                      shaderId);
-    renderable->setType(IEResource::Type::Editor);
+    renderable->setType(IEResource::Type::Game);
     renderable->setDrawType(GL_TRIANGLES);
     renderable->setRenderType(IERenderable::RenderType::I_Index);
 

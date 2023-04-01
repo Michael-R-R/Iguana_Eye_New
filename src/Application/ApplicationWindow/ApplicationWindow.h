@@ -35,17 +35,15 @@ public:
     void modifyTitle(const QString& text);
     void setModified(const bool isModified);
 
+    const QString& getSavePath() const { return savePath; }
+    void setSavePath(const QString val) { savePath = val; }
+
 private:
     void initalize();
     void clearActions();
-    void deserialize(const QString& path);
 
 public slots:
     void newFile();
     bool saveToFile(const QString& path);
     bool openFromFile(const QString& path);
-
-public:
-    const QString& getSavePath() const { return savePath; }
-    void setSavePath(const QString val) { savePath = val; }
 };

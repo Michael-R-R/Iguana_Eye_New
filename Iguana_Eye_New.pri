@@ -230,6 +230,6 @@ INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IERandomNumber \
     $$PWD/src/Utility/IESerialize \
 
-#INCLUDEPATH += $$PWD/tests \
-#    $$PWD/tests/IETCreateRenderable \
+INCLUDEPATH += $$PWD/tests \
+    $$PWD/tests/IETCreateRenderable \
 #    $$PWD/tests/IETBasicPhysics

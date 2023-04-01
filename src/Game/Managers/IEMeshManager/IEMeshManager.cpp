@@ -1,5 +1,4 @@
 #include "IEMeshManager.h"
-#include "GameStartEvent.h"
 #include "IEObjImporter.h"
 
 IEMeshManager::IEMeshManager() :

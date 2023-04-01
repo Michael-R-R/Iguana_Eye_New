@@ -14,25 +14,7 @@ IEPhysicsEngine::IEPhysicsEngine() :
     accumulator(0.0f),
     stepSize(1.0f / 60.0f)
 {
-    pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, defaultAllocatorCallback, defaultErrorCallback);
-    if(!pxFoundation)
-        throw("PxCreateFoundation failed");
-
-    pxToleranceScale.length = 100;
-    pxToleranceScale.speed = 981;
-    pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, pxToleranceScale, true);
-
-    pxCpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
-    simulationCallback = std::make_unique<IESimulationCallback>(this);
-
-    physx::PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
-    sceneDesc.gravity = physx::PxVec3(0.0f, worldGravity, 0.0f);
-    sceneDesc.cpuDispatcher = pxCpuDispatcher;
-    sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
-    sceneDesc.simulationEventCallback = &(*simulationCallback);
-
-    pxScene = pxPhysics->createScene(sceneDesc);
-    pxDefaultMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
+    setup();
 }
 
 IEPhysicsEngine::~IEPhysicsEngine()
@@ -78,6 +60,39 @@ void IEPhysicsEngine::releaseActor(physx::PxActor* actor)
 
     pxScene->removeActor(*actor);
     actor->release();
+}
+
+void IEPhysicsEngine::reset()
+{
+    pxScene->release();
+    pxCpuDispatcher->release();
+    pxPhysics->release();
+    pxFoundation->release();
+
+    setup();
+}
+
+void IEPhysicsEngine::setup()
+{
+    pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, defaultAllocatorCallback, defaultErrorCallback);
+    if(!pxFoundation)
+        throw("PxCreateFoundation failed");
+
+    pxToleranceScale.length = 100;
+    pxToleranceScale.speed = 981;
+    pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, pxToleranceScale, true);
+
+    pxCpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
+    simulationCallback = std::make_unique<IESimulationCallback>(this);
+
+    physx::PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
+    sceneDesc.gravity = physx::PxVec3(0.0f, worldGravity, 0.0f);
+    sceneDesc.cpuDispatcher = pxCpuDispatcher;
+    sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
+    sceneDesc.simulationEventCallback = &(*simulationCallback);
+
+    pxScene = pxPhysics->createScene(sceneDesc);
+    pxDefaultMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
 }
 
 

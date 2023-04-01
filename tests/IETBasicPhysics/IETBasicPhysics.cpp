@@ -1,6 +1,5 @@
 #include "IETBasicPhysics.h"
 #include "ApplicationProperties.h"
-#include "GameStartEvent.h"
 #include "IEGame.h"
 #include "IEInput.h"
 #include "IEScene.h"
@@ -76,7 +75,7 @@ IETBasicPhysics::~IETBasicPhysics()
 
 }
 
-void IETBasicPhysics::startup(const GameStartEvent& event)
+void IETBasicPhysics::startup(IEGame& game)
 {
     pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, defaultAllocatorCallback, defaultErrorCallback);
     if(!pxFoundation)
@@ -97,10 +96,9 @@ void IETBasicPhysics::startup(const GameStartEvent& event)
     pxMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
 
     createGround();
-    createRenderable(event);
-    game = &event.getGame();
-    input = &event.getInput();
-    cameraManager = &event.getScene().getCameraManager();
+    createRenderable(game);
+    input = &game.getIEInput();
+    cameraManager = &game.getIEScene().getCameraManager();
 }
 
 void IETBasicPhysics::shutdown()
@@ -142,9 +140,9 @@ void IETBasicPhysics::createGround()
     boxColliders.push_back(std::move(obj2));
 }
 
-void IETBasicPhysics::createRenderable(const GameStartEvent& event)
+void IETBasicPhysics::createRenderable(IEGame& game)
 {
-    auto& scene = event.getScene();
+    auto& scene = game.getIEScene();
     auto& meshManager = scene.getMeshManager();
     auto& materialManager = scene.getMaterialManager();
     auto& shaderManager = scene.getShaderManager();
@@ -197,17 +195,16 @@ void IETBasicPhysics::createRenderable(const GameStartEvent& event)
     shaderManager.add(shaderId, std::move(shader));
     renderableManager.add(renderableId, std::move(renderable));
 
-    createEntities(event, renderableId);
+    createEntities(game, renderableId);
 }
 
-void IETBasicPhysics::createEntities(const GameStartEvent& event, const unsigned long long rendId)
+void IETBasicPhysics::createEntities(IEGame& game, const unsigned long long rendId)
 {
     for(int i = 1; i < 10; i++)
     {
         for(int j = -5 + i; j < 5 - i; j++)
         {
-            auto& scene = event.getScene();
-            auto& ecs = scene.getECS();
+            auto& ecs = game.getECS();
             transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");
             auto* renderableSystem = ecs.getComponent<IEECSRenderableSystem>("Renderable");
 

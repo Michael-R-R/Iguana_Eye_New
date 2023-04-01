@@ -97,7 +97,8 @@ QDataStream& IECameraManager::deserialize(QDataStream& in, Serializable& obj)
         if(!IESerialize::read<IECamera>(filePath, &(*camera)))
             continue;
 
-        manager.add(camera->getId(), std::move(camera));
+        auto id = camera->getId();
+        manager.add(id, std::move(camera));
     }
 
     return in;

@@ -12,6 +12,23 @@ IEScriptEngine::IEScriptEngine(IEGame& game) :
     IEObject(),
     lua()
 {
+    setup(game);
+}
+
+IEScriptEngine::~IEScriptEngine()
+{
+
+}
+
+void IEScriptEngine::reset(IEGame& game)
+{
+    lua = sol::state();
+
+    setup(game);
+}
+
+void IEScriptEngine::setup(IEGame& game)
+{
     lua.open_libraries(sol::lib::base, sol::lib::math);
 
     // Create namespaces
@@ -26,9 +43,4 @@ IEScriptEngine::IEScriptEngine(IEGame& game) :
     LuaIETime::addToLua(&game.getIETime(), gameTable);
     LuaIEInput::addToLua(&game.getIEInput(), gameTable);
     LuaIEECS::addToLua(&game.getECS(), lua, gameTable);
-}
-
-IEScriptEngine::~IEScriptEngine()
-{
-
 }

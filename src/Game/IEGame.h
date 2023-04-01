@@ -47,6 +47,7 @@ protected:
 public:
     void startup();
     void shutdown();
+    void reset();
 
     IETime& getIETime() { return *time; }
     IEInput& getIEInput() const { return *input; }

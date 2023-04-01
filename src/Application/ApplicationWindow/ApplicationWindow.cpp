@@ -36,6 +36,7 @@ void ApplicationWindow::startup()
 void ApplicationWindow::shutdown()
 {
     #ifdef EDITOR_ENABLED
+    clearActions();
     editor->shutdown();
     editor.reset();
     #endif
@@ -75,7 +76,6 @@ void ApplicationWindow::initalize()
     game->startup();
 
     #ifdef EDITOR_ENABLED
-    clearActions();
     editor = std::make_unique<Editor>(this);
     editor->startup(AppStartEvent(this, *editor, *game));
     #endif
@@ -106,11 +106,9 @@ bool ApplicationWindow::saveToFile(const QString& path)
 
 bool ApplicationWindow::openFromFile(const QString& path)
 {
-    game->shutdown();
-
+    game->reset();
     if(!IESerialize::read<IEGame>(path, &(*game)))
             return false;
-
     game->startup();
 
     #ifdef EDITOR_ENABLED

@@ -111,7 +111,8 @@ QDataStream& IERenderableManager::deserialize(QDataStream& in, Serializable& obj
         IEShader* shader = manager.shaderManager.value(renderable->getShaderId());
         renderable->build(*shader);
 
-        manager.add(renderable->getId(), std::move(renderable));
+        auto id = renderable->getId();
+        manager.add(id, std::move(renderable));
     }
 
     return in;

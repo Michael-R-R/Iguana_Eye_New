@@ -11,7 +11,6 @@
 #include <QMatrix4x4>
 #include <vector>
 
-class GameStartEvent;
 class IEGame;
 class IEInput;
 class IECameraManager;
@@ -61,14 +60,14 @@ public:
     IETBasicPhysics();
     ~IETBasicPhysics();
 
-    void startup(const GameStartEvent& event);
+    void startup(IEGame& game);
     void shutdown();
     void simulate(const float dt);
 
 private:
     void createGround();
-    void createRenderable(const GameStartEvent& event);
-    void createEntities(const GameStartEvent& event, const unsigned long long rendId);
+    void createRenderable(IEGame& game);
+    void createEntities(IEGame& game, const unsigned long long rendId);
     void updateEntities();
     QVector3D scrPosToWorldRay();
     void castRay();

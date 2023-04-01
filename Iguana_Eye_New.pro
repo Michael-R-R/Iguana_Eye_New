@@ -13,6 +13,9 @@ RESOURCES += $$files(resources/*.qrc, true)
 FORMS += $$files(forms/*.ui, true)
 UI_DIR += $$PWD/forms/headers
 
+SOURCES += $$files(tests/*.cpp, true)
+HEADERS += $$files(tests/*.h, true)
+
 CONFIG(debug, debug|release)
 {
     LIBS += -L$$PWD/required/libs/Assimp/ -lassimp-vc142-mtd
