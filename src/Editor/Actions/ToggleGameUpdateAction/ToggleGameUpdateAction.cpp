@@ -2,7 +2,7 @@
 #include "IETime.h"
 
 ToggleGameUpdateAction::ToggleGameUpdateAction(InputKey& shortcut, IETime& time, QObject* parent) :
-    MenuAction("Update", shortcut, parent)
+    BaseAction("Update", shortcut, parent)
 {
     this->setCheckable(true);
     this->setChecked(true);

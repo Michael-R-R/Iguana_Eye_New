@@ -1,11 +1,11 @@
 #pragma once
 
-#include "MenuAction.h"
+#include "BaseAction.h"
 
 class EWGlslEditor;
 class IEShaderManager;
 
-class SaveShaderAction : public MenuAction
+class SaveShaderAction : public BaseAction
 {
     bool isShaderActive;
 

@@ -3,7 +3,7 @@
 #include "ApplicationWindow.h"
 
 SaveGameFileAction::SaveGameFileAction(ApplicationWindow* window, InputKey& shortcut, QObject* parent) :
-    MenuAction("Save File", shortcut, parent)
+    BaseAction("Save File", shortcut, parent)
 {
     connect(this, &SaveGameFileAction::triggered, window, [this, window]()
     {

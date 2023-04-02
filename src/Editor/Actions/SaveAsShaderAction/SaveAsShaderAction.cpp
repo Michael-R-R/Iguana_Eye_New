@@ -8,7 +8,7 @@
 
 SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
                                        InputKey& shortcut, QObject* parent) :
-    MenuAction("Save As", shortcut, parent)
+    BaseAction("Save As", shortcut, parent)
 {
     this->setEnabled(false);
 

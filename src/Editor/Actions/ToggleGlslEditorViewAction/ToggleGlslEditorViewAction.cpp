@@ -2,9 +2,9 @@
 #include "EWGlslEditor.h"
 
 ToggleGlslEditorViewAction::ToggleGlslEditorViewAction(EWGlslEditor* editor, InputKey& shortcut, QObject* parent) :
-    MenuAction("Vertical/Horizontal", shortcut, parent)
+    BaseAction("Vertical/Horizontal", shortcut, parent)
 {
-    connect(this, &MenuAction::triggered, this, [editor]()
+    connect(this, &BaseAction::triggered, this, [editor]()
     {
         editor->changeView();
     });

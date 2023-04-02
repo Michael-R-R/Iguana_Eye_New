@@ -5,6 +5,7 @@
 #include "IEInput.h"
 #include "IERenderEngine.h"
 #include "ECamera.h"
+#include "IESerialize.h"
 
 IEGameStopState::IEGameStopState() :
     glFunc(nullptr),
@@ -25,6 +26,9 @@ IEGameStopState::~IEGameStopState()
 
 void IEGameStopState::enter(IEGame& game)
 {
+    IESerialize::read<IEGame>("./resources/temp/game/game.iedat", &game);
+    IESerialize::read<ECamera>("./resources/temp/editor/camera.iecam", &(*camera));
+
     glFunc = game.getGlFunc();
     glExtraFunc = game.getGlExtraFunc();
 
@@ -37,7 +41,7 @@ void IEGameStopState::enter(IEGame& game)
 
 void IEGameStopState::exit(IEGame&)
 {
-
+    IESerialize::write<ECamera>("./resources/temp/editor/camera.iecam", &(*camera));
 }
 
 void IEGameStopState::onUpdateFrame()

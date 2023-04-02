@@ -7,7 +7,7 @@
 
 NewShaderAction::NewShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
                                  InputKey& shortcut, QObject* parent) :
-    MenuAction("New", shortcut, parent)
+    BaseAction("New", shortcut, parent)
 {
     connect(this, &NewShaderAction::triggered, this, [editor, &shaderManager]()
     {

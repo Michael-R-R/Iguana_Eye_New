@@ -10,7 +10,7 @@ INCLUDEPATH += $$PWD/src/Editor \
 
 INCLUDEPATH += $$PWD/src/Editor/Actions \
     $$PWD/src/Editor/Actions/CompileShaderAction \
-    $$PWD/src/Editor/Actions/MenuAction \
+    $$PWD/src/Editor/Actions/BaseAction \
     $$PWD/src/Editor/Actions/NewGameFileAction \
     $$PWD/src/Editor/Actions/NewShaderAction \
     $$PWD/src/Editor/Actions/OpenGameFileAction \
@@ -21,7 +21,9 @@ INCLUDEPATH += $$PWD/src/Editor/Actions \
     $$PWD/src/Editor/Actions/SaveGameFileAction \
     $$PWD/src/Editor/Actions/SaveShaderAction \
     $$PWD/src/Editor/Actions/ToggleEditorUiAction \
+    $$PWD/src/Editor/Actions/ToggleGamePlayAction \
     $$PWD/src/Editor/Actions/ToggleGameRenderAction \
+    $$PWD/src/Editor/Actions/ToggleGameStopAction \
     $$PWD/src/Editor/Actions/ToggleGameUpdateAction \
     $$PWD/src/Editor/Actions/ToggleGlslEditorViewAction \
     $$PWD/src/Editor/Actions/ToggleWindowAction \

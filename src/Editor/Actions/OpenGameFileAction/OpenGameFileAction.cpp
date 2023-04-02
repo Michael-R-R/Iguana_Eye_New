@@ -4,7 +4,7 @@
 #include <QMessageBox>
 
 OpenGameFileAction::OpenGameFileAction(ApplicationWindow* window, InputKey& shortcut, QObject* parent) :
-    MenuAction("Open File", shortcut, parent)
+    BaseAction("Open File", shortcut, parent)
 {
     connect(this, &OpenGameFileAction::triggered, window, [this, window]()
     {

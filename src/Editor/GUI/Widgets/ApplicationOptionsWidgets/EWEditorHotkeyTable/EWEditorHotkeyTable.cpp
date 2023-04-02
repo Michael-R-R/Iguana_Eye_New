@@ -25,8 +25,8 @@ void EWEditorHotkeyTable::setupTables(BaseInput* input)
     this->addTable("Application", this->createTable(input, applicationKeys));
 
     QMap<QString, InputKey*> gameKeys;
-    gameKeys["Toggle Rendering"] = &input->getConfigKey("Toggle Rendering");
-    gameKeys["Toggle Updating"] = &input->getConfigKey("Toggle Updating");
+    gameKeys["Toggle Play"] = &input->getConfigKey("Toggle Play");
+    gameKeys["Toggle Stop"] = &input->getConfigKey("Toggle Stop");
     this->addTable("Game", this->createTable(input, gameKeys));
 
     QMap<QString, InputKey*> windowKeys;

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "MenuAction.h"
+#include "BaseAction.h"
 
 class ApplicationWindow;
 
-class NewGameFileAction : public MenuAction
+class NewGameFileAction : public BaseAction
 {
 
 public:

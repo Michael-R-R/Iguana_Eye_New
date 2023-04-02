@@ -5,7 +5,7 @@ ToggleWindowAction::ToggleWindowAction(const QString& title,
                                        InputKey& shortcut,
                                        EWindow* window,
                                        QObject* parent) :
-    MenuAction(title, shortcut, parent)
+    BaseAction(title, shortcut, parent)
 {
     connect(this, &QAction::triggered, this, [this, window]()
     {

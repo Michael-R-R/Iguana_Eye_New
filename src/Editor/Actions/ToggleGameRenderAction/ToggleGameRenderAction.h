@@ -1,10 +1,10 @@
 #pragma once
 
-#include "MenuAction.h"
+#include "BaseAction.h"
 
 class IETime;
 
-class ToggleGameRenderAction : public MenuAction
+class ToggleGameRenderAction : public BaseAction
 {
 
 public:

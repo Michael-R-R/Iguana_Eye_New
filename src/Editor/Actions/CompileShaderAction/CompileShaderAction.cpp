@@ -4,7 +4,7 @@
 
 CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, IEShaderManager& manager,
                                          InputKey& shortcut, QObject* parent) :
-    MenuAction("Compile", shortcut, parent)
+    BaseAction("Compile", shortcut, parent)
 {
     this->setEnabled(false);
 

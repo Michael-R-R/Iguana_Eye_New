@@ -1,10 +1,10 @@
 #pragma once
 
-#include "MenuAction.h"
+#include "BaseAction.h"
 
 class EWGlslEditor;
 
-class ToggleGlslEditorViewAction : public MenuAction
+class ToggleGlslEditorViewAction : public BaseAction
 {
 
 public:

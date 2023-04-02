@@ -1,6 +1,6 @@
-#include "MenuAction.h"
+#include "BaseAction.h"
 
-MenuAction::MenuAction(QString title, InputKey& shortcut, QObject* parent) :
+BaseAction::BaseAction(QString title, InputKey& shortcut, QObject* parent) :
     QAction(title, parent)
 {
     this->setShortcut(shortcut.getKeySequence());
@@ -11,7 +11,7 @@ MenuAction::MenuAction(QString title, InputKey& shortcut, QObject* parent) :
     });
 }
 
-MenuAction::~MenuAction()
+BaseAction::~BaseAction()
 {
 
 }

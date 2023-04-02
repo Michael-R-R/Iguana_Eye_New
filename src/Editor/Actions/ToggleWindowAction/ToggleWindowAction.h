@@ -1,10 +1,10 @@
 #pragma once
 
-#include <MenuAction.h>
+#include <BaseAction.h>
 
 class EWindow;
 
-class ToggleWindowAction : public MenuAction
+class ToggleWindowAction : public BaseAction
 {
 
 public:

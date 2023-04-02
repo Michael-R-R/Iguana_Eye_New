@@ -2,7 +2,7 @@
 #include "IETime.h"
 
 ToggleGameRenderAction::ToggleGameRenderAction(InputKey& shortcut, IETime& time, QObject* parent) :
-    MenuAction("Render", shortcut, parent)
+    BaseAction("Render", shortcut, parent)
 {
     this->setCheckable(true);
     this->setChecked(true);

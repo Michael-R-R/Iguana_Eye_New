@@ -2,9 +2,9 @@
 
 #include <QAction>
 
-#include "MenuAction.h"
+#include "BaseAction.h"
 
-class QuitAppAction : public MenuAction
+class QuitAppAction : public BaseAction
 {
 
 public:

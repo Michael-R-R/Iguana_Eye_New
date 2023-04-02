@@ -12,6 +12,7 @@
 #include "IEECSTransformSystem.h"
 #include "IEECSCameraSystem.h"
 #include "ECSOnUpdateEvent.h"
+#include "IESerialize.h"
 
 IEGamePlayState::IEGamePlayState() :
     glFunc(nullptr),
@@ -36,6 +37,8 @@ IEGamePlayState::~IEGamePlayState()
 
 void IEGamePlayState::enter(IEGame& game)
 {
+    IESerialize::write<IEGame>("./resources/temp/game/game.iedat", &game);
+
     glFunc = game.getGlFunc();
     glExtraFunc = game.getGlExtraFunc();
 

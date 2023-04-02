@@ -1,11 +1,11 @@
 #pragma once
 
-#include "MenuAction.h"
+#include "BaseAction.h"
 
 class EWGlslEditor;
 class IEShaderManager;
 
-class SaveAsShaderAction : public MenuAction
+class SaveAsShaderAction : public BaseAction
 {
 public:
     SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,

@@ -2,7 +2,7 @@
 #include <QApplication>
 
 QuitAppAction::QuitAppAction(InputKey& shortcut, QObject* parent) :
-    MenuAction("Quit", shortcut, parent)
+    BaseAction("Quit", shortcut, parent)
 {
     connect(this, &QAction::triggered, this, [this]()
     {

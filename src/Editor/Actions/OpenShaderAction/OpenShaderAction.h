@@ -1,10 +1,10 @@
 #pragma once
 
-#include "MenuAction.h"
+#include "BaseAction.h"
 
 class IEShaderManager;
 
-class OpenShaderAction : public MenuAction
+class OpenShaderAction : public BaseAction
 {
 
 public:

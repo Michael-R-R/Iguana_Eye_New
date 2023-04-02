@@ -7,7 +7,7 @@
 
 OpenShaderAction::OpenShaderAction(IEShaderManager& shaderManager,
                                    InputKey& shortcut, QObject* parent) :
-    MenuAction("Open", shortcut, parent)
+    BaseAction("Open", shortcut, parent)
 {
     connect(this, &OpenShaderAction::triggered, this, [&shaderManager]()
     {

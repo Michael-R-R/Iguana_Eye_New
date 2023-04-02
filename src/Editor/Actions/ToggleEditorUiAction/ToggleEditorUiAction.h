@@ -1,10 +1,10 @@
 #pragma once
 
-#include <MenuAction.h>
+#include <BaseAction.h>
 
 class EGUI;
 
-class ToggleEditorUiAction : public MenuAction
+class ToggleEditorUiAction : public BaseAction
 {
     bool status;
 

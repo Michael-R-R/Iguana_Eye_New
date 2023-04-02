@@ -3,9 +3,9 @@
 #include <QMessageBox>
 
 NewGameFileAction::NewGameFileAction(ApplicationWindow* window, InputKey& shortcut, QObject* parent) :
-    MenuAction("New File", shortcut, parent)
+    BaseAction("New File", shortcut, parent)
 {
-    connect(this, &MenuAction::triggered, this, [window]()
+    connect(this, &BaseAction::triggered, this, [window]()
     {
         // Ask to save file before opening a new file
         QString savePath = window->getSavePath();

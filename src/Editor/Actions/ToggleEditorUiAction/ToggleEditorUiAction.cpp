@@ -2,7 +2,7 @@
 #include "EGUI.h"
 
 ToggleEditorUiAction::ToggleEditorUiAction(InputKey& shortcut, EGUI* ui, QObject* parent) :
-    MenuAction("Toggle Ui", shortcut, parent),
+    BaseAction("Toggle Ui", shortcut, parent),
     status(true)
 {
     connect(this, &QAction::triggered, this, [this, ui]()
