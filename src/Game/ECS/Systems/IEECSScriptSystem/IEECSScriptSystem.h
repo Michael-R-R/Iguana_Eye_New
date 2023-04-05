@@ -54,6 +54,7 @@ public:
     void sleepScript(const int index, const unsigned long long id);
     void clearSleepingScripts();
     void clearAwakenScripts();
+    void resetScripts(sol::state& lua);
 
     void addScript(const int index, const IEEntityScript& script);
     void removeScript(const int index, const unsigned long long id);

@@ -6,6 +6,7 @@
 
 class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
+class IEGame;
 class IETime;
 class IEInput;
 class IERenderEngine;
@@ -22,6 +23,7 @@ class IEGameStopState : public IEGameState
 
 public:
     IEGameStopState();
+    IEGameStopState(IEGame& game);
     ~IEGameStopState();
 
     void enter(IEGame& game) override;

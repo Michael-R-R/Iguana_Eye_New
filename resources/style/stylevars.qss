@@ -1,0 +1,10 @@
+@zeroColor = rgb(0, 0, 0)
+@zeroColorA = rgba(0, 0, 0, 0%)
+@lighterGray = rgb(144, 144, 144)
+@lighterGrayA = rgba(144, 144, 144, 30%)
+@lightGray = rgb(40, 40, 40)
+@darkGray = rgb(32, 32, 32)
+@darkerGray = rgb(28, 28, 28)
+@lighterGraySelected = rgba(100, 100, 100, 60%)
+@lightGrayHover = rgba(50, 50, 50, 20%)
+@disabledColor = rgb(108, 108, 108);

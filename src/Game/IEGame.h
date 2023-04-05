@@ -47,7 +47,8 @@ protected:
 public:
     void startup();
     void shutdown();
-    void reset();
+    void resetSystems();
+    void setState(std::unique_ptr<IEGameState> val);
 
     IETime& getIETime() { return *time; }
     IEInput& getIEInput() const { return *input; }
@@ -59,8 +60,6 @@ public:
     QOpenGLFunctions* getGlFunc() { return glFunc; }
     QOpenGLExtraFunctions* getGlExtraFunc() { return glExtraFunc; }
 
-    void setState(std::unique_ptr<IEGameState> val);
-
 public slots:
     void onUpdateFrame();
     void onRenderFrame();
@@ -71,4 +70,6 @@ public:
 
 signals:
     void initialized();
+    void onUpdateDone();
+    void onRenderDone();
 };

@@ -75,7 +75,6 @@ void IEGamePlayState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     renderEngine->onRenderFrame(cameraSystem->getActiveCamera());
-    time->processDeltaTime();
 }
 
 void IEGamePlayState::onResize(const float w, const float h)

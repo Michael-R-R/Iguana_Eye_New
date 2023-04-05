@@ -1,14 +1,17 @@
-#include "ApplicationWindow.h"
-
 #include <QApplication>
 #include <QCoreApplication>
+
+#include "ApplicationWindow.h"
+#include "IEStyleSheet.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
-    QApplication application(argc, argv);
-    ApplicationWindow window;
 
+    QApplication application(argc, argv);
+    IEStyleSheet::setStyle(&application, "./resources/style/stylevars.qss", "./resources/style/stylesheet.qss");
+
+    ApplicationWindow window;
     window.startup();
     window.show();
     const int val = application.exec();

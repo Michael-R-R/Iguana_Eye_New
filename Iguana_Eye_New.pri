@@ -231,6 +231,7 @@ INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEObjImporter \
     $$PWD/src/Utility/IERandomNumber \
     $$PWD/src/Utility/IESerialize \
+    $$PWD/src/Utility/IEStyleSheet \
 
 INCLUDEPATH += $$PWD/tests \
     $$PWD/tests/IETCreateRenderable \

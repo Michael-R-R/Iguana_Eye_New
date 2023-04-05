@@ -155,6 +155,13 @@ void IEECSScriptSystem::clearAwakenScripts()
     }
 }
 
+void IEECSScriptSystem::resetScripts(sol::state& lua)
+{
+    clearSleepingScripts();
+    clearAwakenScripts();
+    initAllScripts(lua);
+}
+
 void IEECSScriptSystem::addScript(const int index, const IEEntityScript& script)
 {
     if(hasScript(index, script.getId()))
