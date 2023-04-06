@@ -1,22 +1,20 @@
 #include "ApplicationWindow.h"
 #include "ui_ApplicationWindow.h"
-#include "IESerialize.h"
-#include "IEGame.h"
-#include "IEGameStopState.h"
-
-#ifdef EDITOR_ENABLED
 #include "AppStartEvent.h"
 #include "Editor.h"
-#endif
+#include "IEGame.h"
+#include "IEGameStopState.h"
+#include "IESerialize.h"
 
-ApplicationWindow::ApplicationWindow(QWidget *parent) :
+ApplicationWindow::ApplicationWindow(bool buildEditor, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ApplicationWindow),
     game(nullptr),
     editor(nullptr),
     permenentTitle("Iguana Eye"),
     tempTitle(permenentTitle),
-    savePath("")
+    savePath(""),
+    doBuildEditor(buildEditor)
 {
     ui->setupUi(this);
 }
@@ -35,11 +33,12 @@ void ApplicationWindow::startup()
 
 void ApplicationWindow::shutdown()
 {
-    #ifdef EDITOR_ENABLED
-    clearActions();
-    editor->shutdown();
-    editor = nullptr;
-    #endif
+    if(doBuildEditor)
+    {
+        clearActions();
+        editor->shutdown();
+        editor = nullptr;
+    }
 
     game->shutdown();
     game = nullptr;
@@ -72,13 +71,18 @@ void ApplicationWindow::setModified(const bool isModified)
 void ApplicationWindow::initalize()
 {
     disconnect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
-    game->stop(false);
     game->startup();
 
-    #ifdef EDITOR_ENABLED
-    editor = std::make_unique<Editor>(this);
-    editor->startup(AppStartEvent(this, *editor, *game));
-    #endif
+    if(doBuildEditor)
+    {
+        game->stop(false);
+        editor = std::make_unique<Editor>(this);
+        editor->startup(AppStartEvent(this, *editor, *game));
+    }
+    else
+    {
+        game->play();
+    }
 }
 
 void ApplicationWindow::clearActions()
@@ -111,11 +115,12 @@ bool ApplicationWindow::openFromFile(const QString& path)
     if(!IESerialize::read<IEGame>(path, &(*game)))
             return false;
 
-    #ifdef EDITOR_ENABLED
-    clearActions();
-    editor = std::make_unique<Editor>(this);
-    editor->startup(AppStartEvent(this, *editor, *game));
-    #endif
+    if(doBuildEditor)
+    {
+        clearActions();
+        editor = std::make_unique<Editor>(this);
+        editor->startup(AppStartEvent(this, *editor, *game));
+    }
 
     return true;
 }

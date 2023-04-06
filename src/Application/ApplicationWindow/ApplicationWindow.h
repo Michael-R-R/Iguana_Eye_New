@@ -3,8 +3,6 @@
 #include <QMainWindow>
 #include <memory>
 
-#include "PreprocessDirectives.h"
-
 class IEGame;
 class Editor;
 
@@ -25,8 +23,10 @@ class ApplicationWindow : public QMainWindow
     QString tempTitle;
     QString savePath;
 
+    bool doBuildEditor;
+
 public:
-    ApplicationWindow(QWidget *parent = nullptr);
+    ApplicationWindow(bool buildEditor, QWidget *parent = nullptr);
     ~ApplicationWindow();
 
     void startup();
