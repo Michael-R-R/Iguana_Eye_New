@@ -45,18 +45,17 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
+    void play(IEGame& game) override;
+    void stop(IEGame& game) override;
 
-    void initAllScripts(sol::state& lua);
-    void startAllScripts();
     bool initalizeScript(const int index, const unsigned long long id, sol::state& lua);
     void startScript(const int index, const unsigned long long id);
     void wakeScript(const int index, const unsigned long long id);
     void sleepScript(const int index, const unsigned long long id);
     void clearSleepingScripts();
     void clearAwakenScripts();
-    void resetScripts(sol::state& lua);
 
-    void addScript(const int index, const IEEntityScript& script);
+    void attachScript(const int index, const IEEntityScript& script);
     void removeScript(const int index, const unsigned long long id);
 
     bool hasScript(const int index, const unsigned long long id);

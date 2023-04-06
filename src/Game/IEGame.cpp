@@ -102,10 +102,6 @@ void IEGame::stop(bool doCallEnter)
 {
     this->makeCurrent();
 
-    physicsEngine->stop();
-    scriptEngine->stop(*this);
-    ecs->stop(*this);
-
     if(doCallEnter)
     {
         if(state)
@@ -119,6 +115,10 @@ void IEGame::stop(bool doCallEnter)
             state->exit(*this);
         state = std::make_unique<IEGameStopState>(*this);
     }
+
+    physicsEngine->stop();
+    scriptEngine->stop(*this);
+    ecs->stop(*this);
 }
 
 void IEGame::onUpdateFrame()

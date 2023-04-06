@@ -1,5 +1,6 @@
 #include "IEECSScriptSystem.h"
 #include "IEGame.h"
+#include "IEScriptEngine.h"
 #include "IEPhysicsEngine.h"
 #include "IESimulationCallback.h"
 #include "ECSOnUpdateEvent.h"
@@ -78,26 +79,25 @@ void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent*)
     }
 }
 
-void IEECSScriptSystem::initAllScripts(sol::state& lua)
+void IEECSScriptSystem::play(IEGame& game)
 {
+    auto& scriptEngine = game.getIEScriptEngine();
+    auto& lua = scriptEngine.getLua();
+
     for(int i = 1; i < entityMap.size(); i++)
     {
         foreach(auto& script, data.scriptCollection[i])
         {
-            initalizeScript(i, script.getId(), lua);
+            this->initalizeScript(i, script.getId(), lua);
+            this->startScript(i, script.getId());
         }
     }
 }
 
-void IEECSScriptSystem::startAllScripts()
+void IEECSScriptSystem::stop(IEGame&)
 {
-    for(int i = 1; i < entityMap.size(); i++)
-    {
-        foreach(auto& script, data.scriptCollection[i])
-        {
-            startScript(i, script.getId());
-        }
-    }
+    clearSleepingScripts();
+    clearAwakenScripts();
 }
 
 bool IEECSScriptSystem::initalizeScript(const int index, const unsigned long long id, sol::state& lua)
@@ -155,14 +155,7 @@ void IEECSScriptSystem::clearAwakenScripts()
     }
 }
 
-void IEECSScriptSystem::resetScripts(sol::state& lua)
-{
-    clearSleepingScripts();
-    clearAwakenScripts();
-    initAllScripts(lua);
-}
-
-void IEECSScriptSystem::addScript(const int index, const IEEntityScript& script)
+void IEECSScriptSystem::attachScript(const int index, const IEEntityScript& script)
 {
     if(hasScript(index, script.getId()))
         return;
@@ -282,6 +275,8 @@ QDataStream& IEECSScriptSystem::deserialize(QDataStream& in, Serializable& obj)
     auto& system = static_cast<IEECSScriptSystem&>(obj);
 
     in >> system.entityMap >> system.data;
+
+    system.deserializeScripts();
 
     return in;
 }

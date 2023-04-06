@@ -66,7 +66,7 @@ void IEGamePlayState::onResize(const float w, const float h)
 {
     const int index = cameraSystem->getActiveIndex();
     IECamera* camera = cameraSystem->getActiveCamera();
-    IECameraScript* script = cameraSystem->getScript(index);
+    const IECameraScript* script = cameraSystem->getScript(index);
     if(!camera || !script)
         return;
 
