@@ -41,8 +41,7 @@ IEGameStopState::~IEGameStopState()
 void IEGameStopState::enter(IEGame& game)
 {
     game.makeCurrent();
-    IESerialize::read<IEGame>("./resources/temp/game/game.iedat", &game);
-    IESerialize::read<ECamera>("./resources/temp/editor/camera.iecam", &(*eCamera));
+    deserializeGameStates(game);
 
     eRenderEngine = std::make_unique<ERenderEngine>();
 
@@ -58,8 +57,7 @@ void IEGameStopState::enter(IEGame& game)
 
 void IEGameStopState::exit(IEGame& game)
 {
-    IESerialize::write<IEGame>("./resources/temp/game/game.iedat", &game);
-    IESerialize::write<ECamera>("./resources/temp/editor/camera.iecam", &(*eCamera));
+    serializeGameStates(game);
 }
 
 void IEGameStopState::onUpdateFrame()
@@ -77,4 +75,14 @@ void IEGameStopState::onRenderFrame()
 void IEGameStopState::onResize(const float w, const float h)
 {
     eCamera->updateProjection(w, h);
+}
+
+void IEGameStopState::serializeGameStates(IEGame& game)
+{
+    IESerialize::write<ECamera>("./resources/temp/editor/camera.iecam", &(*eCamera));
+}
+
+void IEGameStopState::deserializeGameStates(IEGame& game)
+{
+    IESerialize::read<ECamera>("./resources/temp/editor/camera.iecam", &(*eCamera));
 }

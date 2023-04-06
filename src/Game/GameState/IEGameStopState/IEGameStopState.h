@@ -33,5 +33,9 @@ public:
     void onUpdateFrame() override;
     void onRenderFrame() override;
     void onResize(const float w, const float h) override;
+
+private:
+    void serializeGameStates(IEGame& game);
+    void deserializeGameStates(IEGame& game);
 };
 
