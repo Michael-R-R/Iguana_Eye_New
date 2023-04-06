@@ -1,10 +1,8 @@
 #include "EGridMesh.h"
 
-EGridMesh::EGridMesh(const unsigned long long id) :
-    IEMesh("", id)
+EGridMesh::EGridMesh() :
+    IEMesh("", 0)
 {
-    this->setType(Type::Editor);
-
     positionVertices =
     {
         QVector3D(1.0f, 1.0f, 0.0),
@@ -13,5 +11,10 @@ EGridMesh::EGridMesh(const unsigned long long id) :
         QVector3D(-1.0f, -1.0f, 0.0),
         QVector3D(1.0f, 1.0f, 0.0),
         QVector3D(1.0f, -1.0f, 0.0)
-    };
+        };
+}
+
+EGridMesh::~EGridMesh()
+{
+
 }

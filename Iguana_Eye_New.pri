@@ -6,6 +6,9 @@ INCLUDEPATH += $$PWD/src/Application \
     $$PWD/src/Application/ApplicationProperties \
     $$PWD/src/Application/ApplicationWindow \
 
+INCLUDEPATH += $$PWD/src/Common \
+    $$PWD/src/Common/IEObject \
+
 INCLUDEPATH += $$PWD/src/Editor \
 
 INCLUDEPATH += $$PWD/src/Editor/Actions \
@@ -101,9 +104,11 @@ INCLUDEPATH += $$PWD/src/Editor/Input \
     $$PWD/src/Editor/Input/InputKey \
     $$PWD/src/Editor/Input/InputContainer \
 
+INCLUDEPATH += $$PWD/src/Editor/Renderer \
+    $$PWD/src/Editor/Renderer/ERenderEngine \
+
 INCLUDEPATH += $$PWD/src/Editor/Startup \
     $$PWD/src/Editor/Startup/EActionStartup \
-    $$PWD/src/Editor/Startup/ESceneStartup \
 
 INCLUDEPATH += $$PWD/src/Editor/Startup/Cameras \
     $$PWD/src/Editor/Startup/Cameras/ECamera \
@@ -125,7 +130,6 @@ INCLUDEPATH += $$PWD/src/Events \
     $$PWD/src/Events/ECSOnUpdateEvent \
 
 INCLUDEPATH += $$PWD/src/Game \
-    $$PWD/src/Game/IEObject \
     $$PWD/src/Game/IEScene \
 
 INCLUDEPATH += $$PWD/src/Game/ECS \
@@ -153,20 +157,12 @@ INCLUDEPATH += $$PWD/src/Game/GameState \
     $$PWD/src/Game/GameState/IEGameStateType \
     $$PWD/src/Game/GameState/IEGameStopState \
 
-INCLUDEPATH += $$PWD/src/Game/IEGraphics \
-    $$PWD/src/Game/IEGraphics/IEBuffer \
-    $$PWD/src/Game/IEGraphics/IEVertexBufferContainer \
-    $$PWD/src/Game/IEGraphics/IEIndexBuffer \
-    $$PWD/src/Game/IEGraphics/IEUniform \
-    $$PWD/src/Game/IEGraphics/IEVertexBuffer \
-
-INCLUDEPATH += $$PWD/src/Game/IEResources \
-    $$PWD/src/Game/IEResources/IECamera \
-    $$PWD/src/Game/IEResources/IEMaterial \
-    $$PWD/src/Game/IEResources/IEMesh \
-    $$PWD/src/Game/IEResources/IERenderable \
-    $$PWD/src/Game/IEResources/IEResource \
-    $$PWD/src/Game/IEResources/IEShader \
+INCLUDEPATH += $$PWD/src/Game/Graphics \
+    $$PWD/src/Game/Graphics/IEBuffer \
+    $$PWD/src/Game/Graphics/IEVertexBufferContainer \
+    $$PWD/src/Game/Graphics/IEIndexBuffer \
+    $$PWD/src/Game/Graphics/IEUniform \
+    $$PWD/src/Game/Graphics/IEVertexBuffer \
 
 INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IECameraManager \
@@ -178,10 +174,17 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
 
 INCLUDEPATH += $$PWD/src/Game/Physics \
     $$PWD/src/Game/Physics/IEBaseCollider \
-    $$PWD/src/Game/Physics/IEBoxCollider \   
-    $$PWD/src/Game/Physics/IEPhysicsEngine \
+    $$PWD/src/Game/Physics/IEBoxCollider \
     $$PWD/src/Game/Physics/IERigidBody \
     $$PWD/src/Game/Physics/IESimulationCallback \
+
+INCLUDEPATH += $$PWD/src/Game/Resources \
+    $$PWD/src/Game/Resources/IECamera \
+    $$PWD/src/Game/Resources/IEMaterial \
+    $$PWD/src/Game/Resources/IEMesh \
+    $$PWD/src/Game/Resources/IERenderable \
+    $$PWD/src/Game/Resources/IEResource \
+    $$PWD/src/Game/Resources/IEShader \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting \
 
@@ -216,6 +219,7 @@ INCLUDEPATH += $$PWD/src/Game/Systems \
     $$PWD/src/Game/Systems/IEInput \
     $$PWD/src/Game/Systems/IERenderEngine \
     $$PWD/src/Game/Systems/IEScriptEngine \
+    $$PWD/src/Game/Systems/IEPhysicsEngine \
 
 INCLUDEPATH += $$PWD/src/Game/Systems/IETime \
     $$PWD/src/Game/Systems/IETime/DeltaTime

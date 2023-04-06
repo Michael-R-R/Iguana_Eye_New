@@ -4,6 +4,7 @@
 #include "IETime.h"
 #include "IEInput.h"
 #include "IERenderEngine.h"
+#include "ERenderEngine.h"
 #include "ECamera.h"
 #include "IESerialize.h"
 
@@ -12,8 +13,9 @@ IEGameStopState::IEGameStopState() :
     glExtraFunc(nullptr),
     time(nullptr),
     input(nullptr),
-    renderEngine(nullptr),
-    camera(std::make_unique<ECamera>())
+    gRenderEngine(nullptr),
+    eRenderEngine(nullptr),
+    eCamera(std::make_unique<ECamera>())
 {
 
 }
@@ -23,8 +25,9 @@ IEGameStopState::IEGameStopState(IEGame& game) :
     glExtraFunc(game.getGlExtraFunc()),
     time(&game.getIETime()),
     input(&game.getIEInput()),
-    renderEngine(&game.getIERenderEngine()),
-    camera(std::make_unique<ECamera>())
+    gRenderEngine(&game.getIERenderEngine()),
+    eRenderEngine(std::make_unique<ERenderEngine>()),
+    eCamera(std::make_unique<ECamera>())
 {
 
 }
@@ -37,35 +40,41 @@ IEGameStopState::~IEGameStopState()
 
 void IEGameStopState::enter(IEGame& game)
 {
-    game.resetSystems();
-    IESerialize::read<ECamera>("./resources/temp/editor/camera.iecam", &(*camera));
-    IEGameState::onResize(ApplicationProperties::viewportDimensions);
+    game.makeCurrent();
+    IESerialize::read<IEGame>("./resources/temp/game/game.iedat", &game);
+    IESerialize::read<ECamera>("./resources/temp/editor/camera.iecam", &(*eCamera));
+
+    eRenderEngine = std::make_unique<ERenderEngine>();
 
     glFunc = game.getGlFunc();
     glExtraFunc = game.getGlExtraFunc();
 
     time = &game.getIETime();
     input = &game.getIEInput();
-    renderEngine = &game.getIERenderEngine();
+    gRenderEngine = &game.getIERenderEngine();
+
+    IEGameState::onResize(ApplicationProperties::viewportDimensions);
 }
 
-void IEGameStopState::exit(IEGame&)
+void IEGameStopState::exit(IEGame& game)
 {
-    IESerialize::write<ECamera>("./resources/temp/editor/camera.iecam", &(*camera));
+    IESerialize::write<IEGame>("./resources/temp/game/game.iedat", &game);
+    IESerialize::write<ECamera>("./resources/temp/editor/camera.iecam", &(*eCamera));
 }
 
 void IEGameStopState::onUpdateFrame()
 {
-    camera->update(*input, time->getDeltaTime());
+    eCamera->update(*input, time->getDeltaTime());
 }
 
 void IEGameStopState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    renderEngine->onRenderFrame(&(*camera));
+    gRenderEngine->onRenderFrame(&(*eCamera));
+    eRenderEngine->onRenderFrame(glExtraFunc, &(*eCamera));
 }
 
 void IEGameStopState::onResize(const float w, const float h)
 {
-    camera->updateProjection(w, h);
+    eCamera->updateProjection(w, h);
 }

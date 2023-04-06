@@ -1,13 +1,15 @@
 #include "Editor.h"
 #include "AppStartEvent.h"
+#include "EInput.h"
+#include "EGUI.h"
+#include "EWOpenGLViewportDropZone.h"
 #include "EActionStartup.h"
-#include "ESceneStartup.h"
 
 Editor::Editor(QObject* parent) :
     QObject(parent),
     input(new EInput(this)),
     ui(new EGUI(this)),
-    gameFileDropZone(new EWOpenGLViewportDropZone())
+    viewportDropZone(new EWOpenGLViewportDropZone())
 {
 
 }
@@ -21,15 +23,14 @@ void Editor::startup(const AppStartEvent& event)
 {
     // *** DO NOT REORDER *** //
     ui->startup(event);
-    gameFileDropZone->startup(event);
+    viewportDropZone->startup(event);
 
     EActionStartup::startup(event);
-    ESceneStartup::startup(event);
 }
 
 void Editor::shutdown()
 {
-    delete gameFileDropZone;
+    delete viewportDropZone;
     delete ui;
     delete input;
 }

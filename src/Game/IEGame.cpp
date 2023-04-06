@@ -7,7 +7,6 @@
 #include "IEScene.h"
 #include "IEECS.h"
 #include "IEGameState.h"
-#include "IEGameStopState.h"
 #include "ApplicationProperties.h"
 
 IEGame::IEGame(QWidget* parent) :
@@ -61,7 +60,6 @@ void IEGame::initializeGL()
 void IEGame::paintGL()
 {
     state->onRenderFrame();
-    emit onRenderDone();
     time->processDeltaTime();
 }
 
@@ -78,7 +76,6 @@ void IEGame::resizeGL(int w, int h)
 void IEGame::startup()
 {
     this->makeCurrent();
-    state = std::make_unique<IEGameStopState>(*this);
     time->startup();
 }
 
@@ -90,23 +87,26 @@ void IEGame::shutdown()
 
 void IEGame::resetSystems()
 {
-    this->makeCurrent();
     physicsEngine->reset();
     scriptEngine->reset(*this);
 }
 
-void IEGame::setState(std::unique_ptr<IEGameState> val)
+void IEGame::setState(std::unique_ptr<IEGameState> val, const bool callEnter)
 {
     if(!val)
         return;
 
-    if(state)
+    if(!callEnter)
+    {
+        state = std::move(val);
+    }
+    else if(state)
     {
         state->exit(*this);
         state = std::move(val);
         state->enter(*this);
     }
-    else
+    else if(!state)
     {
         state = std::move(val);
         state->enter(*this);
@@ -116,7 +116,6 @@ void IEGame::setState(std::unique_ptr<IEGameState> val)
 void IEGame::onUpdateFrame()
 {
     state->onUpdateFrame();
-    emit onUpdateDone();
 }
 
 void IEGame::onRenderFrame()
@@ -136,12 +135,10 @@ QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const
 QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
 {
     IEGame& game = static_cast<IEGame&>(obj);
-    game.shutdown();
+    game.makeCurrent();
     game.resetSystems();
 
     in >> *game.time >> *game.input >> *game.scene >> *game.ecs;
-
-    game.startup();
 
     return in;
 }

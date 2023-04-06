@@ -2,6 +2,8 @@
 #include "AppStartEvent.h"
 #include "ApplicationWindow.h"
 #include "Editor.h"
+#include "EGUI.h"
+#include "EInput.h"
 #include "NewGameFileAction.h"
 #include "OpenGameFileAction.h"
 #include "SaveGameFileAction.h"

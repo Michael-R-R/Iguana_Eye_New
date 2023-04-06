@@ -36,9 +36,7 @@ void IEShader::build()
     if(this->shaders().size() > 0)
         this->removeAllShaders();
 
-    if(this->programId() < 1)
-        this->create();
-
+    this->create();
     this->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexSource);
     this->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentSource);
     this->link();

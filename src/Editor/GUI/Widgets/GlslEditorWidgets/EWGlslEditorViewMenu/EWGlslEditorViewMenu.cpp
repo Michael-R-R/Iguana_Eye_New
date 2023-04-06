@@ -1,6 +1,7 @@
 #include "EWGlslEditorViewMenu.h"
 #include "AppStartEvent.h"
 #include "Editor.h"
+#include "EInput.h"
 #include "EWGlslEditor.h"
 #include "ToggleGlslEditorViewAction.h"
 

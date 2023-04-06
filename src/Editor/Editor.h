@@ -2,11 +2,10 @@
 
 #include <QObject>
 
-#include "EInput.h"
-#include "EGUI.h"
-#include "EWOpenGLViewportDropZone.h"
-
 class AppStartEvent;
+class EInput;
+class EGUI;
+class EWOpenGLViewportDropZone;
 
 class Editor : public QObject
 {
@@ -14,7 +13,7 @@ class Editor : public QObject
 
     EInput* input;
     EGUI* ui;
-    EWOpenGLViewportDropZone* gameFileDropZone;
+    EWOpenGLViewportDropZone* viewportDropZone;
 
 public:
     Editor(QObject* parent = nullptr);

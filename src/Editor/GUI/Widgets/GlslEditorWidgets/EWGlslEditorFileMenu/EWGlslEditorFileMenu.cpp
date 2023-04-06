@@ -4,6 +4,7 @@
 #include "IEGame.h"
 #include "IEScene.h"
 #include "Editor.h"
+#include "EInput.h"
 #include "NewShaderAction.h"
 #include "OpenShaderAction.h"
 #include "SaveShaderAction.h"

@@ -1,20 +1,27 @@
 #pragma once
 
-#include "IERenderable.h"
+class EGridMesh;
+class EGridShader;
+class QVector3D;
+class QOpenGLVertexArrayObject;
+class QOpenGLExtraFunctions;
+class IECamera;
 
-class IEMeshManager;
-class IEMaterialManager;
-class IEShaderManager;
+template<class T>
+class IEVertexBuffer;
 
-class EGridRenderable : public IERenderable
+class EGridRenderable
 {
+    EGridMesh* gridMesh;
+    EGridShader* gridShader;
+    QOpenGLVertexArrayObject* vao;
+    IEVertexBuffer<QVector3D>* posBuffer;
 
 public:
-    EGridRenderable(const unsigned long long id);
-    ~EGridRenderable() {}
+    EGridRenderable();
+    ~EGridRenderable();
 
-    void setup(IEMeshManager& meshManager,
-               IEMaterialManager& materialManager,
-               IEShaderManager& shaderManager);
+    void setup();
+    void draw(QOpenGLExtraFunctions* glFunc, IECamera* camera);
 };
 

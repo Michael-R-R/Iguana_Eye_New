@@ -48,7 +48,7 @@ public:
     void startup();
     void shutdown();
     void resetSystems();
-    void setState(std::unique_ptr<IEGameState> val);
+    void setState(std::unique_ptr<IEGameState> val, const bool callEnter = true);
 
     IETime& getIETime() { return *time; }
     IEInput& getIEInput() const { return *input; }
@@ -70,6 +70,4 @@ public:
 
 signals:
     void initialized();
-    void onUpdateDone();
-    void onRenderDone();
 };

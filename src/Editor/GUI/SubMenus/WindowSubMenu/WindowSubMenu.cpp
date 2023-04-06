@@ -2,6 +2,8 @@
 #include "AppStartEvent.h"
 #include "ToggleWindowAction.h"
 #include "Editor.h"
+#include "EGUI.h"
+#include "EInput.h"
 
 WindowSubMenu::WindowSubMenu(QWidget* parent) :
     SubMenu("Window", parent)

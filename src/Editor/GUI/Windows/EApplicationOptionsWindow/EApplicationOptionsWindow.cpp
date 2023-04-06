@@ -5,6 +5,7 @@
 #include "IEGame.h"
 #include "BaseInput.h"
 #include "IEInput.h"
+#include "EInput.h"
 
 EApplicationOptionsWindow::EApplicationOptionsWindow(QWidget* parent) :
     EWindow("Options", parent),

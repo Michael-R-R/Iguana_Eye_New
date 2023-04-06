@@ -1,44 +1,54 @@
 #include "EGridRenderable.h"
-#include "IEHash.h"
-#include "IEMeshManager.h"
-#include "IEMaterialManager.h"
-#include "IEShaderManager.h"
 #include "EGridMesh.h"
-#include "EDefaultMaterial.h"
 #include "EGridShader.h"
+#include "IEVertexBuffer.h"
+#include "IECamera.h"
+#include <QVector3D>
+#include <QOpenGLVertexArrayObject>
+#include <QOpenGLExtraFunctions>
 
-EGridRenderable::EGridRenderable(const unsigned long long id) :
-    IERenderable("", id, 0, 0, 0)
+EGridRenderable::EGridRenderable() :
+    gridMesh(new EGridMesh),
+    gridShader(new EGridShader),
+    vao(new QOpenGLVertexArrayObject),
+    posBuffer(new IEVertexBuffer<QVector3D>(gridMesh->getPosVertices(), 12, 3, 0, 0, 0))
 {
-    this->setType(Type::Editor);
-    this->setRenderType(RenderType::Vertex);
-    this->setDrawType(GL_TRIANGLES);
+    setup();
 }
 
-void EGridRenderable::setup(IEMeshManager& meshManager,
-                            IEMaterialManager& materialManager,
-                            IEShaderManager& shaderManager)
+EGridRenderable::~EGridRenderable()
 {
-    unsigned long long meshId = IEHash::Compute("EGridMesh");
-    std::unique_ptr<EGridMesh> mesh = std::make_unique<EGridMesh>(meshId);
+    vao->destroy();
 
-    unsigned long long materialId = IEHash::Compute("EGridMaterial");
-    std::unique_ptr<EDefaultMaterial> material = std::make_unique<EDefaultMaterial>("", materialId);
-    material->setType(Type::Editor);
+    delete gridMesh;
+    delete gridShader;
+    delete vao;
+    delete posBuffer;
+}
 
-    unsigned long long shaderId = IEHash::Compute("EGridShader");
-    std::unique_ptr<EGridShader> shader = std::make_unique<EGridShader>(shaderId);
-    shader->build();
+void EGridRenderable::setup()
+{
+    gridShader->build();
+    vao->create();
 
-    this->setMeshId(meshId);
-    this->setMaterialId(materialId);
-    this->setShaderId(shaderId);
+    gridShader->bind();
+    vao->bind();
+    posBuffer->build(gridShader->attributeLocation("aPos"));
 
-    auto posBuffer = std::make_unique<IEVertexBuffer<QVector3D>>(mesh->getPosVertices(), 12, 3, 0, 0, 0);
-    this->addVec3Buffer("aPos", std::move(posBuffer));
-    this->build(*shader);
+    gridShader->release();
+    vao->release();
+    posBuffer->release();
+}
 
-    meshManager.add(meshId, std::move(mesh));
-    materialManager.add(materialId, std::move(material));
-    shaderManager.add(shaderId, std::move(shader));
+void EGridRenderable::draw(QOpenGLExtraFunctions* glFunc, IECamera* camera)
+{
+    gridShader->bind();
+    vao->bind();
+
+    gridShader->setUniformValue("uViewProjection", camera->getViewProjection());
+
+    glFunc->glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    gridShader->release();
+    vao->release();
 }

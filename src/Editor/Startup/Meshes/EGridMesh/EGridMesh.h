@@ -6,8 +6,7 @@ class EGridMesh : public IEMesh
 {
 
 public:
-    EGridMesh(const unsigned long long id);
-    ~EGridMesh() {}
-
+    EGridMesh();
+    ~EGridMesh();
 };
 

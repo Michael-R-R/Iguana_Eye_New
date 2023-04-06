@@ -3,6 +3,7 @@
 #include "ToggleGameStopAction.h"
 #include "AppStartEvent.h"
 #include "Editor.h"
+#include "EInput.h"
 #include "IEGame.h"
 
 GameSubMenu::GameSubMenu(QWidget* parent) :

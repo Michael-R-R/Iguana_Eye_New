@@ -2,6 +2,7 @@
 #include "AppStartEvent.h"
 #include "ApplicationWindow.h"
 #include "Editor.h"
+#include "EInput.h"
 #include "ToggleEditorUiAction.h"
 
 void EActionStartup::startup(const AppStartEvent& event)

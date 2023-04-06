@@ -1,10 +1,13 @@
 #include "EGridShader.h"
 #include "IEGlslImporter.h"
 
-EGridShader::EGridShader(const unsigned long long id) :
-    IEShader("", id)
+EGridShader::EGridShader() :
+    IEShader("", 0)
 {
-    this->setType(Type::Editor);
-
     IEGlslImporter::importGlsl("./resources/shaders/editor/persp_grid.glsl", *this);
+}
+
+EGridShader::~EGridShader()
+{
+
 }

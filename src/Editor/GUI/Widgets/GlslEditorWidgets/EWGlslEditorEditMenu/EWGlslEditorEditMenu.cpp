@@ -3,6 +3,7 @@
 #include "IEGame.h"
 #include "IEScene.h"
 #include "Editor.h"
+#include "EInput.h"
 #include "EWGlslEditor.h"
 #include "CompileShaderAction.h"
 
