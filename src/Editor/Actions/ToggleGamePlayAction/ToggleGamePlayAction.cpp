@@ -1,5 +1,4 @@
 #include "ToggleGamePlayAction.h"
-#include "IEGamePlayState.h"
 #include "IEGame.h"
 
 ToggleGamePlayAction::ToggleGamePlayAction(IEGame& game, InputKey& shortcut, QObject* parent) :
@@ -7,8 +6,7 @@ ToggleGamePlayAction::ToggleGamePlayAction(IEGame& game, InputKey& shortcut, QOb
 {
     connect(this, &ToggleGamePlayAction::triggered, this, [&game]()
     {
-        auto playState = std::make_unique<IEGamePlayState>();
-        game.setState(std::move(playState));
+        game.play();
     });
 }
 

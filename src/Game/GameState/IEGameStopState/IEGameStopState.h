@@ -24,7 +24,6 @@ class IEGameStopState : public IEGameState
     std::unique_ptr<ECamera> eCamera;
 
 public:
-    IEGameStopState();
     IEGameStopState(IEGame& game);
     ~IEGameStopState();
 

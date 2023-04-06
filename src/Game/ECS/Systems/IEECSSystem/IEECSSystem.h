@@ -7,11 +7,11 @@
 #include "Serializable.h"
 #include "IEEntity.h"
 
+class IEGame;
 class ECSOnUpdateEvent;
 
 class IEECSSystem : public IEObject, public Serializable
 {
-
 protected:
     QMap<IEEntity, int> entityMap; // Entity, index
 
@@ -22,6 +22,8 @@ public:
     virtual int attach(const IEEntity entity) = 0;
     virtual bool detach(const IEEntity entity) = 0;
     virtual void onUpdateFrame(ECSOnUpdateEvent* event) = 0;
+    virtual void play(IEGame&) {}
+    virtual void stop(IEGame&) {}
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 

@@ -1,11 +1,5 @@
 #include "IEBoxRigidBody.h"
 
-IEBoxRigidBody::IEBoxRigidBody() :
-    IERigidBody()
-{
-
-}
-
 IEBoxRigidBody::IEBoxRigidBody(physx::PxPhysics* p, physx::PxMaterial* m) :
     IERigidBody(p, m, RigidbodyType::None, RigidbodyShape::Box, 0)
 {

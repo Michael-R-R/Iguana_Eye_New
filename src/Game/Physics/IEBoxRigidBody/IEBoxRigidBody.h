@@ -7,7 +7,6 @@ class IEBoxRigidBody : public IERigidBody
     float extentX, extentY, extentZ;
 
 public:
-    IEBoxRigidBody();
     IEBoxRigidBody(physx::PxPhysics* p,
                    physx::PxMaterial* m);
     IEBoxRigidBody(physx::PxPhysics* p,

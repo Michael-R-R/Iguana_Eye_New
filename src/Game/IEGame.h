@@ -47,8 +47,8 @@ protected:
 public:
     void startup();
     void shutdown();
-    void resetSystems();
-    void setState(std::unique_ptr<IEGameState> val, const bool callEnter = true);
+    void play();
+    void stop(bool doCallEnter = true);
 
     IETime& getIETime() { return *time; }
     IEInput& getIEInput() const { return *input; }

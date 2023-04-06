@@ -9,18 +9,6 @@
 #include "ECamera.h"
 #include "IESerialize.h"
 
-IEGameStopState::IEGameStopState() :
-    glFunc(nullptr),
-    glExtraFunc(nullptr),
-    time(nullptr),
-    input(nullptr),
-    gRenderEngine(nullptr),
-    eRenderEngine(nullptr),
-    eCamera(std::make_unique<ECamera>())
-{
-
-}
-
 IEGameStopState::IEGameStopState(IEGame& game) :
     glFunc(game.getGlFunc()),
     glExtraFunc(game.getGlExtraFunc()),
@@ -35,23 +23,12 @@ IEGameStopState::IEGameStopState(IEGame& game) :
 
 IEGameStopState::~IEGameStopState()
 {
-    glFunc = nullptr;
-    glExtraFunc = nullptr;
+
 }
 
 void IEGameStopState::enter(IEGame& game)
 {
-    game.makeCurrent();
     deserializeGameStates(game);
-
-    eRenderEngine = std::make_unique<ERenderEngine>();
-
-    glFunc = game.getGlFunc();
-    glExtraFunc = game.getGlExtraFunc();
-
-    time = &game.getIETime();
-    input = &game.getIEInput();
-    gRenderEngine = &game.getIERenderEngine();
 
     IEGameState::onResize(ApplicationProperties::viewportDimensions);
 }
@@ -86,7 +63,6 @@ void IEGameStopState::serializeGameStates(IEGame& game)
 
 void IEGameStopState::deserializeGameStates(IEGame& game)
 {
-    game.resetSystems();
     IESerialize::read<IEECS>("./resources/temp/backup/ecs.iedat", &game.getECS());
     IESerialize::read<ECamera>("./resources/temp/backup/camera.iedat", &(*eCamera));
 }

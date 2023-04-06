@@ -1,4 +1,6 @@
 #include "IEGame.h"
+#include "IEGamePlayState.h"
+#include "IEGameStopState.h"
 #include "IETime.h"
 #include "IEInput.h"
 #include "IEScriptEngine.h"
@@ -6,7 +8,6 @@
 #include "IERenderEngine.h"
 #include "IEScene.h"
 #include "IEECS.h"
-#include "IEGameState.h"
 #include "ApplicationProperties.h"
 
 IEGame::IEGame(QWidget* parent) :
@@ -85,31 +86,38 @@ void IEGame::shutdown()
     time->shutdown();
 }
 
-void IEGame::resetSystems()
+void IEGame::play()
 {
-    physicsEngine->reset();
-    scriptEngine->reset(*this);
+    this->makeCurrent();
+
+    ecs->play(*this);
+
+    if(state)
+        state->exit(*this);
+    state = std::make_unique<IEGamePlayState>(*this);
+    state->enter(*this);
 }
 
-void IEGame::setState(std::unique_ptr<IEGameState> val, const bool callEnter)
+void IEGame::stop(bool doCallEnter)
 {
-    if(!val)
-        return;
+    this->makeCurrent();
 
-    if(!callEnter)
+    physicsEngine->stop();
+    scriptEngine->stop(*this);
+    ecs->stop(*this);
+
+    if(doCallEnter)
     {
-        state = std::move(val);
-    }
-    else if(state)
-    {
-        state->exit(*this);
-        state = std::move(val);
+        if(state)
+            state->exit(*this);
+        state = std::make_unique<IEGameStopState>(*this);
         state->enter(*this);
     }
-    else if(!state)
+    else
     {
-        state = std::move(val);
-        state->enter(*this);
+        if(state)
+            state->exit(*this);
+        state = std::make_unique<IEGameStopState>(*this);
     }
 }
 
@@ -135,8 +143,6 @@ QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const
 QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
 {
     IEGame& game = static_cast<IEGame&>(obj);
-    game.makeCurrent();
-    game.resetSystems();
 
     in >> *game.time >> *game.input >> *game.scene >> *game.ecs;
 

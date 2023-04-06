@@ -22,6 +22,9 @@ public:
     IEECS(IEGame& game);
     ~IEECS();
 
+    void play(IEGame& game);
+    void stop(IEGame& game);
+
     IEEntity create();
     void remove(const IEEntity entity);
     int attachComponent(const IEEntity entity, const QString& component);

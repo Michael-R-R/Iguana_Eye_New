@@ -38,7 +38,7 @@ public:
     void addActorToScene(physx::PxActor* actor);
     void removeActorFromScene(physx::PxActor* actor);
     void releaseActor(physx::PxActor* actor);
-    void reset();
+    void stop();
 
     physx::PxPhysics* getPxPhysics() const { return pxPhysics; }
     physx::PxMaterial* getDefaultPxMaterial() const { return pxDefaultMaterial; }

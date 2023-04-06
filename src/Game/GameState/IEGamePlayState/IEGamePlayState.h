@@ -11,6 +11,7 @@ class IEInput;
 class IEPhysicsEngine;
 class IERenderEngine;
 class IEECSScriptSystem;
+class IEECS;
 class IEECSRigidbody3DSystem;
 class IEECSTransformSystem;
 class IEECSCameraSystem;
@@ -24,6 +25,7 @@ class IEGamePlayState : public IEGameState
     IEInput* input;
     IEPhysicsEngine* physicsEngine;
     IERenderEngine* renderEngine;
+    IEECS* ecs;
     IEECSScriptSystem* scriptSystem;
     IEECSRigidbody3DSystem* rigidbody3dSystem;
     IEECSTransformSystem* transformSystem;
@@ -31,7 +33,7 @@ class IEGamePlayState : public IEGameState
     std::unique_ptr<ECSOnUpdateEvent> ecsUpdateEvent;
 
 public:
-    IEGamePlayState();
+    IEGamePlayState(IEGame& game);
     ~IEGamePlayState();
 
     void enter(IEGame& game) override;

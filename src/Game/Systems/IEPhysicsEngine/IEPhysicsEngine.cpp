@@ -62,14 +62,16 @@ void IEPhysicsEngine::releaseActor(physx::PxActor* actor)
     actor->release();
 }
 
-void IEPhysicsEngine::reset()
+void IEPhysicsEngine::stop()
 {
     pxScene->release();
-    pxCpuDispatcher->release();
-    pxPhysics->release();
-    pxFoundation->release();
 
-    setup();
+    physx::PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
+    sceneDesc.gravity = physx::PxVec3(0.0f, worldGravity, 0.0f);
+    sceneDesc.cpuDispatcher = pxCpuDispatcher;
+    sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
+    sceneDesc.simulationEventCallback = &(*simulationCallback);
+    pxScene = pxPhysics->createScene(sceneDesc);
 }
 
 void IEPhysicsEngine::setup()

@@ -27,6 +27,22 @@ IEECS::~IEECS()
 
 }
 
+void IEECS::play(IEGame& game)
+{
+    for(auto& i : systems)
+    {
+        i.second->play(game);
+    }
+}
+
+void IEECS::stop(IEGame& game)
+{
+    for(auto& i : systems)
+    {
+        i.second->stop(game);
+    }
+}
+
 IEEntity IEECS::create()
 {
     IEEntity entity = entityManager->create();

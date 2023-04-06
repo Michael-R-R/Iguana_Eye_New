@@ -72,7 +72,7 @@ void ApplicationWindow::setModified(const bool isModified)
 void ApplicationWindow::initalize()
 {
     disconnect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
-    game->setState(std::move(std::make_unique<IEGameStopState>(*game)), false);
+    game->stop(false);
     game->startup();
 
     #ifdef EDITOR_ENABLED
@@ -107,7 +107,7 @@ bool ApplicationWindow::saveToFile(const QString& path)
 bool ApplicationWindow::openFromFile(const QString& path)
 {
     game->makeCurrent();
-    game->setState(std::move(std::make_unique<IEGameStopState>(*game)), false);
+    game->stop(false);
     if(!IESerialize::read<IEGame>(path, &(*game)))
             return false;
 

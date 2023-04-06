@@ -20,7 +20,7 @@ IEScriptEngine::~IEScriptEngine()
 
 }
 
-void IEScriptEngine::reset(IEGame& game)
+void IEScriptEngine::stop(IEGame& game)
 {
     lua = sol::state();
 

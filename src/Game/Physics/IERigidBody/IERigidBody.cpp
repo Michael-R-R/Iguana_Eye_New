@@ -27,10 +27,9 @@ IERigidBody::IERigidBody(physx::PxPhysics* p,
 }
 
 IERigidBody::IERigidBody(const IERigidBody& other) :
-    physics(other.physics),
-    material(other.material),
-    rigidActor(other.rigidActor),
-    rigidbodyType(other.rigidbodyType)
+    physics(other.physics), material(other.material), rigidActor(other.rigidActor),
+    rigidbodyType(other.rigidbodyType), rigidbodyShape(other.rigidbodyShape),
+    attachedId(other.attachedId), density(other.density), sleepThreshold(other.sleepThreshold)
 {
 
 }
@@ -47,7 +46,7 @@ bool IERigidBody::wakeup()
     if(!rigidActor)
         return false;
 
-    if(is(RigidbodyType::None) || is(RigidbodyType::Static))
+    if(!is(RigidbodyType::Dynamic) || !is(RigidbodyType::Kinematic))
         return false;
 
     auto* temp = static_cast<physx::PxRigidDynamic*>(rigidActor);
@@ -61,7 +60,7 @@ bool IERigidBody::putToSleep()
     if(!rigidActor)
         return false;
 
-    if(is(RigidbodyType::None) || is(RigidbodyType::Static))
+    if(!is(RigidbodyType::Dynamic) || !is(RigidbodyType::Kinematic))
         return false;
 
     auto* temp = static_cast<physx::PxRigidDynamic*>(rigidActor);
@@ -77,6 +76,7 @@ void IERigidBody::release()
     material = nullptr;
     rigidActor = nullptr;
     rigidbodyType = RigidbodyType::None;
+    rigidbodyShape = RigidbodyShape::None;
 }
 
 void IERigidBody::createAsStatic(const physx::PxTransform& t,

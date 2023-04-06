@@ -15,18 +15,19 @@
 #include "ECSOnUpdateEvent.h"
 #include "IESerialize.h"
 
-IEGamePlayState::IEGamePlayState() :
-    glFunc(nullptr),
-    glExtraFunc(nullptr),
-    time(nullptr),
-    input(nullptr),
-    physicsEngine(nullptr),
-    renderEngine(nullptr),
-    scriptSystem(nullptr),
-    rigidbody3dSystem(nullptr),
-    transformSystem(nullptr),
-    cameraSystem(nullptr),
-    ecsUpdateEvent(nullptr)
+IEGamePlayState::IEGamePlayState(IEGame& game) :
+    glFunc(game.getGlFunc()),
+    glExtraFunc(game.getGlExtraFunc()),
+    time(&game.getIETime()),
+    input(&game.getIEInput()),
+    physicsEngine(&game.getIEPhysicsEngine()),
+    renderEngine(&game.getIERenderEngine()),
+    ecs(&game.getECS()),
+    scriptSystem(ecs->getComponent<IEECSScriptSystem>("Script")),
+    rigidbody3dSystem(ecs->getComponent<IEECSRigidbody3DSystem>("Rigidbody3D")),
+    transformSystem(ecs->getComponent<IEECSTransformSystem>("Transform")),
+    cameraSystem(ecs->getComponent<IEECSCameraSystem>("Camera")),
+    ecsUpdateEvent(std::make_unique<ECSOnUpdateEvent>(ecs))
 {
 
 }
@@ -36,27 +37,8 @@ IEGamePlayState::~IEGamePlayState()
 
 }
 
-void IEGamePlayState::enter(IEGame& game)
+void IEGamePlayState::enter(IEGame&)
 {
-    glFunc = game.getGlFunc();
-    glExtraFunc = game.getGlExtraFunc();
-
-    time = &game.getIETime();
-    input = &game.getIEInput();
-    physicsEngine = &game.getIEPhysicsEngine();
-    renderEngine = &game.getIERenderEngine();
-
-    auto& ecs = game.getECS();
-    scriptSystem = ecs.getComponent<IEECSScriptSystem>("Script");
-    rigidbody3dSystem = ecs.getComponent<IEECSRigidbody3DSystem>("Rigidbody3D");
-    transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");
-    cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
-    ecsUpdateEvent = std::make_unique<ECSOnUpdateEvent>(&ecs);
-
-    // TODO test
-    auto* rigidbodySystem = ecs.getComponent<IEECSRigidbody3DSystem>("Rigidbody3D");
-    rigidbodySystem->play();
-
     IEGameState::onResize(ApplicationProperties::viewportDimensions);
 }
 

@@ -40,7 +40,6 @@ public:
                 const float d = 0.0f,
                 const float st = 0.0f);
     IERigidBody(const IERigidBody& other);
-
     ~IERigidBody();
 
     virtual void create(const physx::PxTransform& t) = 0;

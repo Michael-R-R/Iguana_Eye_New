@@ -15,7 +15,7 @@ public:
     IEScriptEngine(IEGame& game);
     ~IEScriptEngine();
 
-    void reset(IEGame& game);
+    void stop(IEGame& game);
 
     sol::state& getLua() { return lua; }
 
