@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+#include <vector>
 #include <QVector>
 #include <QSet>
 
@@ -7,8 +9,8 @@
 #include "IERigidBody.h"
 
 class IEGame;
+class IEPhysicsEngine;
 
-// TODO finish implementing
 class IEECSRigidbody3DSystem : public IEECSSystem
 {
     Q_OBJECT
@@ -16,17 +18,19 @@ class IEECSRigidbody3DSystem : public IEECSSystem
     struct Data
     {
         QVector<IEEntity> entity;
-        QVector<IERigidBody> rigidbody;
+        std::vector<std::unique_ptr<IERigidBody>> rigidbody;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
             out << data.entity;
+
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
             in >> data.entity;
+
             return in;
         }
     };
@@ -36,6 +40,9 @@ class IEECSRigidbody3DSystem : public IEECSSystem
     QSet<int> awakeBodies;
     QSet<int> sleepingBodies;
 
+    // DOES NOT OWN THIS POINTER
+    IEPhysicsEngine* engine;
+
 public:
     IEECSRigidbody3DSystem(IEGame& game);
     ~IEECSRigidbody3DSystem();
@@ -44,12 +51,15 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
+    void play();
+    void stop();
+
     void wakeup(const int index);
     void putToSleep(const int index);
     void release(const int index);
 
-    const IERigidBody& getRigidbody(const int index) const;
-    void setRigidbody(const int index, const IERigidBody& val);
+    IERigidBody* getRigidbody(const int index) const;
+    void setRigidbody(const int index, const std::unique_ptr<IERigidBody> val);
 
 private slots:
     void activateRigidbody(const IEEntity& entity);

@@ -4,15 +4,17 @@
 #include "IESimulationCallback.h"
 #include "IEECSTransformSystem.h"
 #include "ECSOnUpdateEvent.h"
+#include "IEBoxRigidBody.h"
 
 IEECSRigidbody3DSystem::IEECSRigidbody3DSystem(IEGame& game) :
     data(),
-    awakeBodies(), sleepingBodies()
+    awakeBodies(),
+    sleepingBodies()
 {
     IEECSRigidbody3DSystem::attach(IEEntity(-1));
 
-    auto& physicsEngine = game.getIEPhysicsEngine();
-    auto* simCallback = physicsEngine.getSimulationCallback();
+    engine = &game.getIEPhysicsEngine();
+    auto* simCallback = engine->getSimulationCallback();
     connect(simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
     connect(simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
 }
@@ -32,7 +34,7 @@ int IEECSRigidbody3DSystem::attach(const IEEntity entity)
     entityMap[entity] = index;
 
     data.entity.push_back(entity);
-    data.rigidbody.push_back(IERigidBody());
+    data.rigidbody.push_back(nullptr);
 
     return index;
 }
@@ -50,10 +52,10 @@ bool IEECSRigidbody3DSystem::detach(const IEEntity entity)
     this->release(indexToRemove);
 
     data.entity[indexToRemove] = data.entity[lastIndex];
-    data.rigidbody[indexToRemove] = data.rigidbody[lastIndex];
+    data.rigidbody[indexToRemove] = std::move(data.rigidbody[lastIndex]);
 
     data.entity.removeLast();
-    data.rigidbody.removeLast();
+    data.rigidbody.pop_back();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);
@@ -79,11 +81,13 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
 
     for(const auto& i : awakeBodies)
     {
-        IERigidBody& rigidbody = data.rigidbody[i];
+        if(!data.rigidbody[i])
+            continue;
 
-        physx::PxTransform pxTransform = rigidbody.getActor()->getGlobalPose();
-        physx::PxVec3 pxPos = pxTransform.p;
-        physx::PxQuat pxQuat = pxTransform.q;
+        IERigidBody& rigidbody = *data.rigidbody[i];
+
+        physx::PxVec3 pxPos = rigidbody.getGlobalPos();
+        physx::PxQuat pxQuat = rigidbody.getGlobalQuat();
 
         float angle = 0.0f;
         physx::PxVec3 pxRot;
@@ -92,7 +96,24 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
         const int transformIndex = transformSystem->lookUpIndex(data.entity[i]);
         transformSystem->setPosition(transformIndex, QVector3D(pxPos.x, pxPos.y, pxPos.z));
         transformSystem->setRotation(transformIndex, QVector4D(pxRot.x, pxRot.y, pxRot.z, qRadiansToDegrees(angle)));
+
+        qDebug() << pxPos.x << pxPos.y << pxPos.z;
     }
+}
+
+void IEECSRigidbody3DSystem::play()
+{
+    for(int i = 1; i < data.rigidbody.size(); i++)
+    {
+        awakeBodies.insert(i);
+        engine->addActorToScene(data.rigidbody[i]->getActor());
+    }
+}
+
+void IEECSRigidbody3DSystem::stop()
+{
+    sleepingBodies.clear();
+    awakeBodies.clear();
 }
 
 void IEECSRigidbody3DSystem::wakeup(const int index)
@@ -100,7 +121,7 @@ void IEECSRigidbody3DSystem::wakeup(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    if(!data.rigidbody[index].wakeup())
+    if(!data.rigidbody[index]->wakeup())
         return;
 
     sleepingBodies.remove(index);
@@ -112,7 +133,7 @@ void IEECSRigidbody3DSystem::putToSleep(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    if(!data.rigidbody[index].putToSleep())
+    if(!data.rigidbody[index]->putToSleep())
         return;
 
     awakeBodies.remove(index);
@@ -124,26 +145,26 @@ void IEECSRigidbody3DSystem::release(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    data.rigidbody[index].release();
+    data.rigidbody[index]->release();
 
     awakeBodies.remove(index);
     sleepingBodies.remove(index);
 }
 
-const IERigidBody& IEECSRigidbody3DSystem::getRigidbody(const int index) const
+IERigidBody* IEECSRigidbody3DSystem::getRigidbody(const int index) const
 {
     if(!indexBoundCheck(index))
-        return data.rigidbody[0];
+        return nullptr;
 
-    return data.rigidbody[index];
+    return &(*data.rigidbody[index]);
 }
 
-void IEECSRigidbody3DSystem::setRigidbody(const int index, const IERigidBody& val)
+void IEECSRigidbody3DSystem::setRigidbody(const int index, std::unique_ptr<IERigidBody> val)
 {
     if(!indexBoundCheck(index))
         return;
 
-    data.rigidbody[index] = val;
+    data.rigidbody[index] = std::move(val);
 }
 
 void IEECSRigidbody3DSystem::activateRigidbody(const IEEntity& entity)
@@ -172,6 +193,20 @@ QDataStream& IEECSRigidbody3DSystem::serialize(QDataStream& out, const Serializa
 
     out << system.entityMap << system.data;
 
+    out << (int)system.data.rigidbody.size();
+
+    for(int i = 1; i < system.data.rigidbody.size(); i++)
+    {
+        auto& rigidBody = *system.data.rigidbody[i];
+
+        out << rigidBody.getRigidbodyShape() << rigidBody;
+
+        physx::PxVec3 p = rigidBody.getGlobalPos();
+        physx::PxQuat q = rigidBody.getGlobalQuat();
+        out << p.x << p.y << p.z;
+        out << q.x << q.y << q.z << q.w;
+    }
+
     return out;
 }
 
@@ -179,7 +214,49 @@ QDataStream& IEECSRigidbody3DSystem::deserialize(QDataStream& in, Serializable& 
 {
     auto& system = static_cast<IEECSRigidbody3DSystem&>(obj);
 
+    system.data.rigidbody.clear();
+    system.data.rigidbody.push_back(nullptr);
+
     in >> system.entityMap >> system.data;
+
+    int size = 0;
+    in >> size;
+
+    IERigidBody::RigidbodyShape shape;
+    std::unique_ptr<IERigidBody> rigidbody = nullptr;
+    auto* pxPhysics = system.engine->getPxPhysics();
+    auto* pxMaterial = system.engine->getDefaultPxMaterial();
+
+    for(int i = 1; i < size; i++)
+    {
+        in >> shape;
+
+        switch(shape)
+        {
+        case IERigidBody::RigidbodyShape::None: { break; }
+        case IERigidBody::RigidbodyShape::Box: { rigidbody = std::make_unique<IEBoxRigidBody>(pxPhysics, pxMaterial); break; }
+        case IERigidBody::RigidbodyShape::Sphere: { break; }
+        case IERigidBody::RigidbodyShape::Capsule: { break; }
+        default: { break; }
+        }
+
+        in >> *rigidbody;
+
+        float px = 0.0f, py = 0.0f, pz = 0.0f;
+        float qx = 0.0f, qy = 0.0f, qz = 0.0f, qw = 0.0f;
+
+        in >> px >> py >> pz;
+        in >> qx >> qy >> qz >> qw;
+
+        physx::PxTransform p(px, py, pz);
+        physx::PxTransform q(physx::PxQuat(qx, qy, qz, qw));
+        physx::PxTransform t = p * q;
+
+        rigidbody->create(t);
+
+        system.data.rigidbody.push_back(std::move(rigidbody));
+    }
+
 
     return in;
 }

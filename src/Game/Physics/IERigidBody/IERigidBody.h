@@ -1,73 +1,75 @@
 #pragma once
 
-// TODO figure out how to serialize rigidbody
-
+#include "Serializable.h"
 #include "PxRigidActor.h"
 #include "PxRigidStatic.h"
 #include "PxRigidDynamic.h"
 
-class IERigidBody
+class IERigidBody : public Serializable
 {
 public:
-    enum class BodyType
+    enum class RigidbodyType
     {
         None, Static, Dynamic, Kinematic
     };
 
-private:
+    enum class RigidbodyShape
+    {
+        None, Box, Sphere, Capsule
+    };
+
+protected:
+    // DOES NOT OWN THESE POINTERS
+    physx::PxPhysics* physics;
+    physx::PxMaterial* material;
     physx::PxRigidActor* rigidActor;
-    BodyType bodyType;
+
+    RigidbodyType rigidbodyType;
+    RigidbodyShape rigidbodyShape;
+    int attachedId;
+    float density;
+    float sleepThreshold;
 
 public:
     IERigidBody();
-
-    IERigidBody(physx::PxPhysics& p,
-                physx::PxMaterial& m,
-                const physx::PxTransform& t,
-                const physx::PxGeometry& g,
-                const int attachedId);
-
-    IERigidBody(physx::PxPhysics& p,
-                physx::PxMaterial& m,
-                const physx::PxTransform& t,
-                const physx::PxGeometry& g,
-                const float density,
-                const float sleepThresh,
-                const int attachedId,
-                bool isKinematic = false);
-
+    IERigidBody(physx::PxPhysics* p,
+                physx::PxMaterial* m,
+                RigidbodyType type,
+                RigidbodyShape shape,
+                const int id,
+                const float d = 0.0f,
+                const float st = 0.0f);
     IERigidBody(const IERigidBody& other);
 
     ~IERigidBody();
+
+    virtual void create(const physx::PxTransform& t) = 0;
 
     bool wakeup();
     bool putToSleep();
     void release();
 
-    bool is(BodyType type) { return (this->bodyType == type); }
-    physx::PxRigidActor* getActor() { return rigidActor; }
-    physx::PxRigidStatic* getStatic() { return static_cast<physx::PxRigidStatic*>(rigidActor); }
-    physx::PxRigidDynamic* getDynamic() { return static_cast<physx::PxRigidDynamic*>(rigidActor); }
-    BodyType getBodyType() { return bodyType; }
+    bool is(RigidbodyType type) const { return (this->rigidbodyType == type); }
+    physx::PxRigidActor* getActor() const { return rigidActor; }
+    physx::PxRigidStatic* getStatic() const { return static_cast<physx::PxRigidStatic*>(rigidActor); }
+    physx::PxRigidDynamic* getDynamic() const { return static_cast<physx::PxRigidDynamic*>(rigidActor); }
+    physx::PxVec3 getGlobalPos() const { return rigidActor->getGlobalPose().p; }
+    physx::PxQuat getGlobalQuat() const { return rigidActor->getGlobalPose().q; }
+    RigidbodyType getRigidbodyType() const { return rigidbodyType; }
+    RigidbodyShape getRigidbodyShape() const { return rigidbodyShape; }
 
-private:
-    void createAsStatic(physx::PxPhysics& physics,
-                        physx::PxMaterial& material,
-                        const physx::PxTransform& t,
+protected:
+    void createAsStatic(const physx::PxTransform& t,
                         const physx::PxGeometry& geometry);
 
-    void createAsDynamic(physx::PxPhysics& physics,
-                         physx::PxMaterial& material,
-                         const physx::PxTransform& t,
-                         const physx::PxGeometry& geometry,
-                         const float density,
-                         const float sleepThresh);
+    void createAsDynamic(const physx::PxTransform& t,
+                         const physx::PxGeometry& geometry);
 
-    void createAsKinematic(physx::PxPhysics& physics,
-                           physx::PxMaterial& material,
-                           const physx::PxTransform& t,
-                           const physx::PxGeometry& geometry,
-                           const float density,
-                           const float sleepThresh);
+    void createAsKinematic(const physx::PxTransform& t,
+                           const physx::PxGeometry& geometry);
+
+public:
+    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 };
 

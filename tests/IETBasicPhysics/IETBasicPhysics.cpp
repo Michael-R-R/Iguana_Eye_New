@@ -21,6 +21,7 @@
 #include "IEObjImporter.h"
 #include "IEGlslImporter.h"
 #include "IEHash.h"
+#include "IEBoxRigidBody.h"
 
 void ContactReportCallback::onWake(physx::PxActor** actors, physx::PxU32 count)
 {
@@ -225,12 +226,13 @@ void IETBasicPhysics::createEntities(IEGame& game, const unsigned long long rend
             physx::PxTransform yrotT(physx::PxQuat(qDegreesToRadians(55.0f), physx::PxVec3(0, 1, 0)));
             physx::PxTransform zrotT(physx::PxQuat(qDegreesToRadians(55.0f), physx::PxVec3(0, 0, 1)));
             physx::PxTransform t = posT * (xrotT * yrotT * zrotT);
-            physx::PxBoxGeometry dGeometry = physx::PxBoxGeometry(1.0f, 1.0f, 1.0f);
-            auto dynamicObj = std::make_unique<IERigidBody>(*pxPhysics,
-                                                            *pxMaterial,
-                                                            t, dGeometry,
-                                                            200.0f, 0.1f,
-                                                            entity.getId());
+            auto dynamicObj = std::make_unique<IEBoxRigidBody>(pxPhysics,
+                                                               pxMaterial,
+                                                               IERigidBody::RigidbodyType::Dynamic,
+                                                               entity.getId(),
+                                                               1.0f, 1.0f, 1.0f,
+                                                               100.0f, 0.1f);
+            dynamicObj->create(t);
 
             pxScene->addActor(*dynamicObj->getActor());
 
@@ -244,7 +246,7 @@ void IETBasicPhysics::updateEntities()
 {
     for(int i = 0; i < dynamicBodies.size(); i++)
     {
-        if(dynamicBodies[i]->getBodyType() == IERigidBody::BodyType::Static)
+        if(dynamicBodies[i]->getRigidbodyType() == IERigidBody::RigidbodyType::Static)
             continue;
 
         physx::PxVec3 pos = dynamicBodies[i]->getActor()->getGlobalPose().p;

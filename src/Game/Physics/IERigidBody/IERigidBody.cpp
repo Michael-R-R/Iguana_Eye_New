@@ -2,48 +2,43 @@
 #include "physx/extensions/PxSimpleFactory.h"
 
 IERigidBody::IERigidBody() :
+    physics(nullptr),
+    material(nullptr),
     rigidActor(nullptr),
-    bodyType(BodyType::None)
+    rigidbodyType(RigidbodyType::None),
+    rigidbodyShape(RigidbodyShape::None),
+    attachedId(0), density(0.0f), sleepThreshold(0.0f)
 {
 
 }
 
-IERigidBody::IERigidBody(physx::PxPhysics& p,
-                         physx::PxMaterial& m,
-                         const physx::PxTransform& t,
-                         const physx::PxGeometry& g,
-                         const int attachedId)
+IERigidBody::IERigidBody(physx::PxPhysics* p,
+                         physx::PxMaterial* m,
+                         RigidbodyType type,
+                         RigidbodyShape shape,
+                         const int id,
+                         const float d,
+                         const float st) :
+    physics(p), material(m), rigidActor(nullptr),
+    rigidbodyType(type), rigidbodyShape(shape),
+    attachedId(id), density(d), sleepThreshold(st)
 {
-    this->createAsStatic(p, m, t, g);
-    rigidActor->userData = (void*)(size_t)attachedId;
-}
 
-IERigidBody::IERigidBody(physx::PxPhysics& p,
-                         physx::PxMaterial& m,
-                         const physx::PxTransform& t,
-                         const physx::PxGeometry& g,
-                         const float density,
-                         const float sleepThresh,
-                         const int attachedId,
-                         bool isKinematic)
-{
-    if(isKinematic)
-        this->createAsKinematic(p, m, t, g, density, sleepThresh);
-    else
-        this->createAsDynamic(p, m, t, g, density, sleepThresh);
-
-    rigidActor->userData = (void*)(size_t)attachedId;
 }
 
 IERigidBody::IERigidBody(const IERigidBody& other) :
+    physics(other.physics),
+    material(other.material),
     rigidActor(other.rigidActor),
-    bodyType(other.bodyType)
+    rigidbodyType(other.rigidbodyType)
 {
 
 }
 
 IERigidBody::~IERigidBody()
 {
+    physics = nullptr;
+    material = nullptr;
     rigidActor = nullptr; // Manually clean up with release() or let scene clean up
 }
 
@@ -52,7 +47,7 @@ bool IERigidBody::wakeup()
     if(!rigidActor)
         return false;
 
-    if(is(BodyType::None) || is(BodyType::Static))
+    if(is(RigidbodyType::None) || is(RigidbodyType::Static))
         return false;
 
     auto* temp = static_cast<physx::PxRigidDynamic*>(rigidActor);
@@ -66,7 +61,7 @@ bool IERigidBody::putToSleep()
     if(!rigidActor)
         return false;
 
-    if(is(BodyType::None) || is(BodyType::Static))
+    if(is(RigidbodyType::None) || is(RigidbodyType::Static))
         return false;
 
     auto* temp = static_cast<physx::PxRigidDynamic*>(rigidActor);
@@ -78,51 +73,64 @@ bool IERigidBody::putToSleep()
 void IERigidBody::release()
 {
     rigidActor->release();
+    physics = nullptr;
+    material = nullptr;
     rigidActor = nullptr;
-    bodyType = BodyType::None;
+    rigidbodyType = RigidbodyType::None;
 }
 
-void IERigidBody::createAsStatic(physx::PxPhysics& physics,
-                                 physx::PxMaterial& material,
-                                 const physx::PxTransform& t,
+void IERigidBody::createAsStatic(const physx::PxTransform& t,
                                  const physx::PxGeometry& geometry)
 {
-    auto* actor = physx::PxCreateStatic(physics, t, geometry, material);
+    auto* actor = physx::PxCreateStatic(*physics, t, geometry, *material);
 
     rigidActor = actor;
-    bodyType = BodyType::Static;
+    rigidActor->userData = (void*)(size_t)attachedId;
+    rigidbodyType = RigidbodyType::Static;
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, false);
 }
 
-void IERigidBody::createAsDynamic(physx::PxPhysics& physics,
-                                  physx::PxMaterial& material,
-                                  const physx::PxTransform& t,
-                                  const physx::PxGeometry& geometry,
-                                  const float density,
-                                  const float sleepThresh)
+void IERigidBody::createAsDynamic(const physx::PxTransform& t,
+                                  const physx::PxGeometry& geometry)
 {
-    auto* actor = physx::PxCreateDynamic(physics, t, geometry, material, density);
-    actor->setSleepThreshold(sleepThresh);
+    auto* actor = physx::PxCreateDynamic(*physics, t, geometry, *material, density);
+    actor->setSleepThreshold(sleepThreshold);
 
     rigidActor = actor;
-    bodyType = BodyType::Dynamic;
+    rigidActor->userData = (void*)(size_t)attachedId;
+    rigidbodyType = RigidbodyType::Dynamic;
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
 }
 
-void IERigidBody::createAsKinematic(physx::PxPhysics& physics,
-                                    physx::PxMaterial& material,
-                                    const physx::PxTransform& t,
-                                    const physx::PxGeometry& geometry,
-                                    const float density,
-                                    const float sleepThresh)
+void IERigidBody::createAsKinematic(const physx::PxTransform& t,
+                                    const physx::PxGeometry& geometry)
 {
-    auto* actor = physx::PxCreateKinematic(physics, t, geometry, material, density);
-    actor->setSleepThreshold(sleepThresh);
+    auto* actor = physx::PxCreateKinematic(*physics, t, geometry, *material, density);
+    actor->setSleepThreshold(sleepThreshold);
 
     rigidActor = actor;
-    bodyType = BodyType::Kinematic;
+    rigidActor->userData = (void*)(size_t)attachedId;
+    rigidbodyType = RigidbodyType::Kinematic;
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
+}
+
+QDataStream& IERigidBody::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const IERigidBody& body = static_cast<const IERigidBody&>(obj);
+
+    out << body.rigidbodyType << body.attachedId << body.density << body.sleepThreshold;
+
+    return out;
+}
+
+QDataStream& IERigidBody::deserialize(QDataStream& in, Serializable& obj)
+{
+    IERigidBody& body = static_cast<IERigidBody&>(obj);
+
+    in >> body.rigidbodyType >> body.attachedId >> body.density >> body.sleepThreshold;
+
+    return in;
 }

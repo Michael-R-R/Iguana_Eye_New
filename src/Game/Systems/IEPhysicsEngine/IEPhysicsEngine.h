@@ -40,9 +40,9 @@ public:
     void releaseActor(physx::PxActor* actor);
     void reset();
 
-    physx::PxPhysics* getPxPhysics() { return pxPhysics; }
-    physx::PxMaterial* getDefaultPxMaterial() { return pxDefaultMaterial; }
-    IESimulationCallback* getSimulationCallback() { return &(*simulationCallback); }
+    physx::PxPhysics* getPxPhysics() const { return pxPhysics; }
+    physx::PxMaterial* getDefaultPxMaterial() const { return pxDefaultMaterial; }
+    IESimulationCallback* getSimulationCallback() const { return &(*simulationCallback); }
 
 private:
     void setup();

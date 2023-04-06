@@ -9,6 +9,7 @@
 #include "IERenderEngine.h"
 #include "IEECSScriptSystem.h"
 #include "IEECSRigidbody3DSystem.h"
+#include "IEECSRigidbody3DSystem.h"
 #include "IEECSTransformSystem.h"
 #include "IEECSCameraSystem.h"
 #include "ECSOnUpdateEvent.h"
@@ -37,8 +38,6 @@ IEGamePlayState::~IEGamePlayState()
 
 void IEGamePlayState::enter(IEGame& game)
 {
-    IESerialize::write<IEGame>("./resources/temp/game/game.iedat", &game);
-
     glFunc = game.getGlFunc();
     glExtraFunc = game.getGlExtraFunc();
 
@@ -53,6 +52,10 @@ void IEGamePlayState::enter(IEGame& game)
     transformSystem = ecs.getComponent<IEECSTransformSystem>("Transform");
     cameraSystem = ecs.getComponent<IEECSCameraSystem>("Camera");
     ecsUpdateEvent = std::make_unique<ECSOnUpdateEvent>(&ecs);
+
+    // TODO test
+    auto* rigidbodySystem = ecs.getComponent<IEECSRigidbody3DSystem>("Rigidbody3D");
+    rigidbodySystem->play();
 
     IEGameState::onResize(ApplicationProperties::viewportDimensions);
 }

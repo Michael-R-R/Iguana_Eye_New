@@ -1,6 +1,7 @@
 #include "IEGameStopState.h"
 #include "ApplicationProperties.h"
 #include "IEGame.h"
+#include "IEECS.h"
 #include "IETime.h"
 #include "IEInput.h"
 #include "IERenderEngine.h"
@@ -79,10 +80,13 @@ void IEGameStopState::onResize(const float w, const float h)
 
 void IEGameStopState::serializeGameStates(IEGame& game)
 {
-    IESerialize::write<ECamera>("./resources/temp/editor/camera.iecam", &(*eCamera));
+    IESerialize::write<IEECS>("./resources/temp/backup/ecs.iedat", &game.getECS());
+    IESerialize::write<ECamera>("./resources/temp/backup/camera.iedat", &(*eCamera));
 }
 
 void IEGameStopState::deserializeGameStates(IEGame& game)
 {
-    IESerialize::read<ECamera>("./resources/temp/editor/camera.iecam", &(*eCamera));
+    game.resetSystems();
+    IESerialize::read<IEECS>("./resources/temp/backup/ecs.iedat", &game.getECS());
+    IESerialize::read<ECamera>("./resources/temp/backup/camera.iedat", &(*eCamera));
 }
