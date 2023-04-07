@@ -3,19 +3,23 @@
 #include <sol/sol.hpp>
 #include <memory>
 
-#include "IEObject.h"
+#include "IEGameSystem.h"
 
-class IEGame;
-
-class IEScriptEngine : public IEObject
+class IEScriptEngine : public IEGameSystem
 {
+    IEScriptEngine();
+    static IEScriptEngine mInstance;
+
     sol::state lua;
 
 public:
-    IEScriptEngine(IEGame& game);
+    static IEScriptEngine& instance();
     ~IEScriptEngine();
 
-    void stop(IEGame& game);
+    void startup(IEGame& game) override;
+    void shutdown(IEGame& game) override;
+    void initalize(IEGame& game) override;
+    void reset(IEGame& game) override;
 
     sol::state& getLua() { return lua; }
 

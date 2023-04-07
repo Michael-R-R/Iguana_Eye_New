@@ -1,5 +1,4 @@
 #include "IERenderEngine.h"
-#include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
 #include <QOpenGLContext>
 #include <QMatrix4x4>
@@ -10,13 +9,35 @@
 #include "IERenderableManager.h"
 #include "IECamera.h"
 
-IERenderEngine::IERenderEngine() :
-    IEObject()
+IERenderEngine IERenderEngine::mInstance;
+IERenderEngine& IERenderEngine::instance() { return mInstance; }
+
+IERenderEngine::IERenderEngine()
 {
 
 }
 
 IERenderEngine::~IERenderEngine()
+{
+
+}
+
+void IERenderEngine::startup(IEGame&)
+{
+
+}
+
+void IERenderEngine::shutdown(IEGame&)
+{
+
+}
+
+void IERenderEngine::initalize(IEGame&)
+{
+
+}
+
+void IERenderEngine::reset(IEGame&)
 {
 
 }

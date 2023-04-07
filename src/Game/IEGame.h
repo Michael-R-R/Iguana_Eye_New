@@ -7,8 +7,6 @@
 #include "Serializable.h"
 
 class ApplicationWindow;
-class IEScriptEngine;
-class IERenderEngine;
 class IEGameState;
 
 class IEGame : public QOpenGLWidget, public Serializable
@@ -18,9 +16,6 @@ class IEGame : public QOpenGLWidget, public Serializable
     QSurfaceFormat format;
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
-
-    std::unique_ptr<IEScriptEngine> scriptEngine;
-    std::unique_ptr<IERenderEngine> renderEngine;
 
     std::unique_ptr<IEGameState> state;
 
@@ -40,8 +35,6 @@ public:
     void reset();
     void changeState(std::unique_ptr<IEGameState> val);
 
-    IEScriptEngine& getIEScriptEngine() const { return *scriptEngine; }
-    IERenderEngine& getIERenderEngine() const { return *renderEngine; }
     QOpenGLFunctions* getGlFunc() { return glFunc; }
     QOpenGLExtraFunctions* getGlExtraFunc() { return glExtraFunc; }
 

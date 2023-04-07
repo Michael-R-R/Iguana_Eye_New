@@ -15,7 +15,6 @@
 IEGameStopState::IEGameStopState(IEGame& game) :
     glFunc(game.getGlFunc()),
     glExtraFunc(game.getGlExtraFunc()),
-    gRenderEngine(&game.getIERenderEngine()),
     eRenderEngine(nullptr),
     eCamera(nullptr)
 {
@@ -52,7 +51,7 @@ void IEGameStopState::onUpdateFrame()
 void IEGameStopState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    gRenderEngine->onRenderFrame(&(*eCamera));
+    IERenderEngine::instance().onRenderFrame(&(*eCamera));
     eRenderEngine->onRenderFrame(glExtraFunc, &(*eCamera));
 }
 

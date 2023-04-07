@@ -2,8 +2,6 @@
 #include "ApplicationProperties.h"
 #include "IEGame.h"
 #include "IETime.h"
-#include "IEInput.h"
-#include "IEScene.h"
 #include "IEECS.h"
 #include "IEPhysicsEngine.h"
 #include "IERenderEngine.h"
@@ -13,12 +11,10 @@
 #include "IEECSTransformSystem.h"
 #include "IEECSCameraSystem.h"
 #include "ECSOnUpdateEvent.h"
-#include "IESerialize.h"
 
 IEGamePlayState::IEGamePlayState(IEGame& game) :
     glFunc(game.getGlFunc()),
     glExtraFunc(game.getGlExtraFunc()),
-    renderEngine(&game.getIERenderEngine()),
     scriptSystem(IEECS::instance().getComponent<IEECSScriptSystem>("Script")),
     rigidbody3dSystem(IEECS::instance().getComponent<IEECSRigidbody3DSystem>("Rigidbody3D")),
     transformSystem(IEECS::instance().getComponent<IEECSTransformSystem>("Transform")),
@@ -57,7 +53,9 @@ void IEGamePlayState::onUpdateFrame()
 void IEGamePlayState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    renderEngine->onRenderFrame(cameraSystem->getActiveCamera());
+
+    auto* camera = cameraSystem->getActiveCamera();
+    IERenderEngine::instance().onRenderFrame(camera);
 }
 
 void IEGamePlayState::onResize(const float w, const float h)

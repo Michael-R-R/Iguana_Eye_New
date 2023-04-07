@@ -3,7 +3,10 @@
 #include "IEECSNameSystem.h"
 #include "IEECSHierarchySystem.h"
 #include "IEECSInputSystem.h"
+#include "IEECSScriptSystem.h"
+#include "IEECSRigidbody3DSystem.h"
 #include "IEECSTransformSystem.h"
+#include "IEECSCameraSystem.h"
 #include "IEECSMeshSystem.h"
 #include "IEECSMaterialSystem.h"
 #include "IEECSShaderSystem.h"
@@ -17,7 +20,10 @@ ECSOnUpdateEvent::ECSOnUpdateEvent(IEECS* ecs) :
     name = ecs->getComponent<IEECSNameSystem>("Name");
     hierarchy = ecs->getComponent<IEECSHierarchySystem>("Hierarchy");
     input = ecs->getComponent<IEECSInputSystem>("Input");
+    script = ecs->getComponent<IEECSScriptSystem>("Script");
+    rigidbody3d = ecs->getComponent<IEECSRigidbody3DSystem>("Rigidbody3D");
     transform = ecs->getComponent<IEECSTransformSystem>("Transform");
+    camera = ecs->getComponent<IEECSCameraSystem>("Camera");
     mesh = ecs->getComponent<IEECSMeshSystem>("Mesh");
     material = ecs->getComponent<IEECSMaterialSystem>("Material");
     shader = ecs->getComponent<IEECSShaderSystem>("Shader");
@@ -26,14 +32,7 @@ ECSOnUpdateEvent::ECSOnUpdateEvent(IEECS* ecs) :
 
 ECSOnUpdateEvent::~ECSOnUpdateEvent()
 {
-    name = nullptr;
-    hierarchy = nullptr;
-    input = nullptr;
-    transform = nullptr;
-    mesh = nullptr;
-    material = nullptr;
-    shader = nullptr;
-    renderable = nullptr;
+
 }
 
 IEECSNameSystem* ECSOnUpdateEvent::getName() const
@@ -51,9 +50,24 @@ IEECSInputSystem* ECSOnUpdateEvent::getInput() const
     return input;
 }
 
+IEECSScriptSystem* ECSOnUpdateEvent::getScript() const
+{
+    return script;
+}
+
+IEECSRigidbody3DSystem* ECSOnUpdateEvent::getRigidbody3D() const
+{
+    return rigidbody3d;
+}
+
 IEECSTransformSystem* ECSOnUpdateEvent::getTransform() const
 {
     return transform;
+}
+
+IEECSCameraSystem* ECSOnUpdateEvent::getCamera() const
+{
+    return camera;
 }
 
 IEECSMeshSystem* ECSOnUpdateEvent::getMesh() const

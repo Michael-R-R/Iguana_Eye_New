@@ -82,9 +82,9 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     activeCamera->updateView(pos, rot.toVector3D());
 }
 
-void IEECSCameraSystem::play(IEGame& game)
+void IEECSCameraSystem::play(IEGame&)
 {
-    auto& scriptEngine = game.getIEScriptEngine();
+    auto& scriptEngine = IEScriptEngine::instance();
     auto& lua = scriptEngine.getLua();
 
     for(int i = 1; i < entityMap.size(); i++)

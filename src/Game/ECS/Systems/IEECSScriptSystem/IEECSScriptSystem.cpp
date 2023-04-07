@@ -79,9 +79,9 @@ void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent*)
     }
 }
 
-void IEECSScriptSystem::play(IEGame& game)
+void IEECSScriptSystem::play(IEGame&)
 {
-    auto& scriptEngine = game.getIEScriptEngine();
+    auto& scriptEngine = IEScriptEngine::instance();
     auto& lua = scriptEngine.getLua();
 
     for(int i = 1; i < entityMap.size(); i++)

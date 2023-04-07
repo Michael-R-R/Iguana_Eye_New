@@ -1,6 +1,6 @@
 #pragma once
 
-#include "IEObject.h"
+#include "IEGameSystem.h"
 
 class IEMesh;
 class IEMaterial;
@@ -8,12 +8,19 @@ class IEShader;
 class IERenderable;
 class IECamera;
 
-class IERenderEngine : public IEObject
+class IERenderEngine : public IEGameSystem
 {
+    IERenderEngine();
+    static IERenderEngine mInstance;
 
 public:
-    IERenderEngine();
+    static IERenderEngine& instance();
     ~IERenderEngine();
+
+    void startup(IEGame& game) override;
+    void shutdown(IEGame& game) override;
+    void initalize(IEGame& game) override;
+    void reset(IEGame& game) override;
 
     void onRenderFrame(IECamera* camera);
 

@@ -12,9 +12,8 @@
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(),
-    glFunc(nullptr), glExtraFunc(nullptr),
-    scriptEngine(std::make_unique<IEScriptEngine>(*this)),
-    renderEngine(std::make_unique<IERenderEngine>()),
+    glFunc(nullptr),
+    glExtraFunc(nullptr),
     state(nullptr)
 {
     this->setFocusPolicy(Qt::StrongFocus);
@@ -70,10 +69,12 @@ void IEGame::resizeGL(int w, int h)
 void IEGame::startup()
 {
     this->makeCurrent();
+    IERenderEngine::instance().startup(*this);
     IEPhysicsEngine::instance().startup(*this);
     IEScene::instance().startup(*this);
     IEECS::instance().startup(*this);
     IEInput::instance().startup(*this);
+    IEScriptEngine::instance().startup(*this);
     IETime::instance().startup(*this);
 }
 
@@ -81,10 +82,12 @@ void IEGame::shutdown()
 {
     this->makeCurrent();
     IETime::instance().shutdown(*this);
+    IEScriptEngine::instance().shutdown(*this);
     IEInput::instance().shutdown(*this);
     IEECS::instance().shutdown(*this);
     IEScene::instance().shutdown(*this);
     IEPhysicsEngine::instance().shutdown(*this);
+    IERenderEngine::instance().shutdown(*this);
 }
 
 void IEGame::initalize()
@@ -95,7 +98,7 @@ void IEGame::initalize()
 void IEGame::reset()
 {
     IEPhysicsEngine::instance().reset(*this);
-    scriptEngine->stop(*this);
+    IEScriptEngine::instance().reset(*this);
     IEECS::instance().reset(*this);
 }
 
