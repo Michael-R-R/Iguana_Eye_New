@@ -79,7 +79,7 @@ class IEECSRigidbody3DSystem : public IEECSSystem
     QSet<int> sleepingBodies;
 
 public:
-    IEECSRigidbody3DSystem(IEGame& game);
+    IEECSRigidbody3DSystem();
     ~IEECSRigidbody3DSystem();
 
     int attach(const IEEntity entity) override;

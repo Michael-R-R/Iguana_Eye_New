@@ -10,8 +10,6 @@
 
 #include "IEECSSystem.h"
 
-class IEGame;
-class IERenderableManager;
 class IERenderable;
 class ECSOnUpdateEvent;
 
@@ -57,10 +55,8 @@ class IEECSRenderableSystem : public IEECSSystem
     QMap<unsigned long long, QMap<IEEntity, int>> hiddenEntityMap;
     QMap<unsigned long long, QVector<IEEntity>> hiddenEntityList;
 
-    IERenderableManager& renderableManager;
-
 public:
-    IEECSRenderableSystem(IEGame& game);
+    IEECSRenderableSystem();
     ~IEECSRenderableSystem();
 
     int attach(const IEEntity entity) override;

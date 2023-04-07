@@ -5,7 +5,6 @@
 
 #include "IEECSSystem.h"
 
-class IEGame;
 class IEMaterialManager;
 class IEMaterial;
 class ECSOnUpdateEvent;
@@ -32,10 +31,8 @@ class IEECSMaterialSystem : public IEECSSystem
 
     Data data;
 
-    IEMaterialManager& materialManager;
-
 public:
-    IEECSMaterialSystem(IEGame& game);
+    IEECSMaterialSystem();
     ~IEECSMaterialSystem();
 
     int attach(const IEEntity entity) override;

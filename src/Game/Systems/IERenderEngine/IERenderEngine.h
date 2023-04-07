@@ -2,11 +2,6 @@
 
 #include "IEObject.h"
 
-class IEScene;
-class IEMeshManager;
-class IEMaterialManager;
-class IEShaderManager;
-class IERenderableManager;
 class IEMesh;
 class IEMaterial;
 class IEShader;
@@ -15,14 +10,9 @@ class IECamera;
 
 class IERenderEngine : public IEObject
 {
-     // Does not own these pointers
-    const IEMeshManager* meshManager;
-    const IEMaterialManager* materialManager;
-    const IEShaderManager* shaderManager;
-    const IERenderableManager* renderableManager;
 
 public:
-    IERenderEngine(IEScene& scene);
+    IERenderEngine();
     ~IERenderEngine();
 
     void onRenderFrame(IECamera* camera);

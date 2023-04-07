@@ -1,7 +1,6 @@
 #include "BaseInput.h"
 
-BaseInput::BaseInput(QObject* parent) :
-    IEObject(parent),
+BaseInput::BaseInput() :
     inputContainer()
 {
 
@@ -30,22 +29,4 @@ InputKey& BaseInput::getConfigKey(const char* key)
 bool BaseInput::doesExist(const int mod, const int key) const
 {
     return inputContainer.doesExist(mod, key);
-}
-
-QDataStream& BaseInput::serialize(QDataStream& out, const Serializable& obj) const
-{
-    const auto& input = static_cast<const BaseInput&>(obj);
-
-    out << input.inputContainer;
-
-    return out;
-}
-
-QDataStream& BaseInput::deserialize(QDataStream& in, Serializable& obj)
-{
-    auto& input = static_cast<BaseInput&>(obj);
-
-    in >> input.inputContainer;
-
-    return in;
 }

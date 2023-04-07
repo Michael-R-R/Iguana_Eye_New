@@ -19,7 +19,7 @@ EWGlslEditorFileMenu::EWGlslEditorFileMenu(QWidget* parent) :
 void EWGlslEditorFileMenu::startup(const AppStartEvent& event, EWGlslEditor* editor)
 {
     auto* input = event.getEditor()->getInput();
-    auto& shaderManager = event.getGame()->getIEScene().getShaderManager();
+    auto& shaderManager = IEScene::instance().getShaderManager();
 
     appendAction("New Shader", new NewShaderAction(editor, shaderManager, input->getConfigKey(""), this));
     appendAction("Open Shader", new OpenShaderAction(shaderManager, input->getConfigKey(""), this));

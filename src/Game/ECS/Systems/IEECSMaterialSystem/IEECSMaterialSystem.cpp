@@ -1,13 +1,11 @@
 #include "IEECSMaterialSystem.h"
-#include "IEGame.h"
 #include "IEScene.h"
 #include "IEMaterialManager.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSMaterialSystem::IEECSMaterialSystem(IEGame& game) :
+IEECSMaterialSystem::IEECSMaterialSystem() :
     IEECSSystem(),
-    data(),
-    materialManager(game.getIEScene().getMaterialManager())
+    data()
 {
     IEECSMaterialSystem::attach(IEEntity(-1));
 }
@@ -95,6 +93,8 @@ IEMaterial* IEECSMaterialSystem::getAttachedMaterial(const int index)
 {
     if(!indexBoundCheck(index))
         return nullptr;
+
+    auto& materialManager = IEScene::instance().getMaterialManager();
 
     return materialManager.value(data.materialId[index]);
 }

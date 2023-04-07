@@ -7,11 +7,8 @@
 #include "Serializable.h"
 
 class ApplicationWindow;
-class IETime;
-class IEInput;
 class IEScriptEngine;
 class IERenderEngine;
-class IEScene;
 class IEECS;
 class IEGameState;
 
@@ -23,9 +20,6 @@ class IEGame : public QOpenGLWidget, public Serializable
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
 
-    std::unique_ptr<IETime> time;
-    std::unique_ptr<IEInput> input;
-    std::unique_ptr<IEScene> scene;
     std::unique_ptr<IEECS> ecs;
     std::unique_ptr<IEScriptEngine> scriptEngine;
     std::unique_ptr<IERenderEngine> renderEngine;
@@ -44,13 +38,12 @@ protected:
 public:
     void startup();
     void shutdown();
+    void initalize();
+    void reset();
     void changeState(std::unique_ptr<IEGameState> val);
 
-    IETime& getIETime() { return *time; }
-    IEInput& getIEInput() const { return *input; }
     IEScriptEngine& getIEScriptEngine() const { return *scriptEngine; }
     IERenderEngine& getIERenderEngine() const { return *renderEngine; }
-    IEScene& getIEScene() const { return *scene; }
     IEECS& getECS() const { return *ecs; }
     QOpenGLFunctions* getGlFunc() { return glFunc; }
     QOpenGLExtraFunctions* getGlExtraFunc() { return glExtraFunc; }

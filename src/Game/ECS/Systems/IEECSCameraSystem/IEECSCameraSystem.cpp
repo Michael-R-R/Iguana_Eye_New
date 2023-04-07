@@ -6,10 +6,9 @@
 #include "IEECSTransformSystem.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSCameraSystem::IEECSCameraSystem(IEGame& game) :
+IEECSCameraSystem::IEECSCameraSystem() :
     data(),
-    activeIndex(-1),
-    cameraManager(game.getIEScene().getCameraManager())
+    activeIndex(-1)
 {
     IEECSCameraSystem::attach(IEEntity(-1));
 }
@@ -77,6 +76,8 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     auto& pos = transformSystem->getPosition(transformIndex);
     auto& rot = transformSystem->getRotation(transformIndex);
 
+    auto& cameraManager = IEScene::instance().getCameraManager();
+
     IECamera* activeCamera = cameraManager.value(activeId);
     activeCamera->updateView(pos, rot.toVector3D());
 }
@@ -111,6 +112,8 @@ IECamera* IEECSCameraSystem::getActiveCamera() const
     if(!indexBoundCheck(activeIndex))
         return nullptr;
 
+    auto& cameraManager = IEScene::instance().getCameraManager();
+
     return cameraManager.value(data.cameraId[activeIndex]);
 }
 
@@ -118,6 +121,8 @@ IECamera* IEECSCameraSystem::getAttachedCamera(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
+
+    auto& cameraManager = IEScene::instance().getCameraManager();
 
     return cameraManager.value(data.cameraId[index]);
 }

@@ -1,14 +1,16 @@
 #include "IETime.h"
 #include "IEGame.h"
 
-IETime::IETime(const int msUpdate, const int msRender, IEGame& game) :
+IETime IETime::mInstance;
+IETime& IETime::instance() { return mInstance; }
+
+IETime::IETime() :
     updateTimer(this),
     renderTimer(this),
-    updateRefresh(msUpdate), renderRefresh(msRender),
+    updateRefresh(16), renderRefresh(16),
     dt()
 {
-    this->setupUpdateTimer(game);
-    this->setupRenderTimer(game);
+
 }
 
 IETime::~IETime()
@@ -16,16 +18,33 @@ IETime::~IETime()
 
 }
 
-void IETime::startup()
+void IETime::startup(IEGame& game)
 {
+    this->setupUpdateTimer(game);
+    this->setupRenderTimer(game);
+
     this->startUpdateTimer();
     this->startRenderTimer();
 }
 
-void IETime::shutdown()
+void IETime::shutdown(IEGame& game)
 {
+    disconnect(&updateTimer, &QTimer::timeout, &game, &IEGame::onUpdateFrame);
+    disconnect(&renderTimer, &QTimer::timeout, &game, &IEGame::onRenderFrame);
+
     this->stopUpdateTimer();
     this->stopRenderTimer();
+}
+
+void IETime::initalize(IEGame&)
+{
+
+}
+
+void IETime::reset(IEGame& game)
+{
+    shutdown(game);
+    startup(game);
 }
 
 void IETime::startUpdateTimer()

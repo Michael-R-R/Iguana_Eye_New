@@ -15,8 +15,6 @@
 IEGameStopState::IEGameStopState(IEGame& game) :
     glFunc(game.getGlFunc()),
     glExtraFunc(game.getGlExtraFunc()),
-    time(&game.getIETime()),
-    input(&game.getIEInput()),
     gRenderEngine(&game.getIERenderEngine()),
     eRenderEngine(nullptr),
     eCamera(nullptr)
@@ -46,7 +44,9 @@ void IEGameStopState::exit(IEGame& game)
 
 void IEGameStopState::onUpdateFrame()
 {
-    eCamera->update(*input, time->getDeltaTime());
+    const float dt = IETime::instance().getDeltaTime();
+
+    eCamera->update(IEInput::instance(), dt);
 }
 
 void IEGameStopState::onRenderFrame()

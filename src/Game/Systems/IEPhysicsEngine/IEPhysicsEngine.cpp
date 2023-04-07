@@ -25,7 +25,7 @@ IEPhysicsEngine::IEPhysicsEngine() :
 
 }
 
-void IEPhysicsEngine::startup()
+void IEPhysicsEngine::startup(IEGame&)
 {
     pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, defaultAllocatorCallback, defaultErrorCallback);
     if(!pxFoundation)
@@ -48,7 +48,7 @@ void IEPhysicsEngine::startup()
     pxDefaultMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
 }
 
-void IEPhysicsEngine::shutdown()
+void IEPhysicsEngine::shutdown(IEGame&)
 {
     pxScene->release();
     pxCpuDispatcher->release();
@@ -56,10 +56,15 @@ void IEPhysicsEngine::shutdown()
     pxFoundation->release();
 }
 
-void IEPhysicsEngine::reset()
+void IEPhysicsEngine::initalize(IEGame&)
 {
-    shutdown();
-    startup();
+
+}
+
+void IEPhysicsEngine::reset(IEGame& game)
+{
+    shutdown(game);
+    startup(game);
 }
 
 void IEPhysicsEngine::onUpdateFrame(const float dt)

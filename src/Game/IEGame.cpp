@@ -13,12 +13,9 @@ IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(),
     glFunc(nullptr), glExtraFunc(nullptr),
-    time(std::make_unique<IETime>(16, 16, *this)),
-    input(std::make_unique<IEInput>(this)),
-    scene(std::make_unique<IEScene>()),
-    ecs(std::make_unique<IEECS>(*this)),
+    ecs(std::make_unique<IEECS>()),
     scriptEngine(std::make_unique<IEScriptEngine>(*this)),
-    renderEngine(std::make_unique<IERenderEngine>(*scene)),
+    renderEngine(std::make_unique<IERenderEngine>()),
     state(nullptr)
 {
     this->setFocusPolicy(Qt::StrongFocus);
@@ -59,31 +56,46 @@ void IEGame::initializeGL()
 void IEGame::paintGL()
 {
     state->onRenderFrame();
-    time->processDeltaTime();
+    IETime::instance().processDeltaTime();
 }
 
 void IEGame::resizeGL(int w, int h)
 {
-    ApplicationProperties::viewportDimensions = QVector2D(w, h);
-
     glFunc->glViewport(0, 0, w, h);
 
-    if(state)
-        state->onResize((float)w, (float)h);
+    ApplicationProperties::viewportDimensions = QVector2D(w, h);
+
+    if(state) { state->onResize((float)w, (float)h); }
 }
 
 void IEGame::startup()
 {
     this->makeCurrent();
-    IEPhysicsEngine::instance().startup();
-    time->startup();
+    IEPhysicsEngine::instance().startup(*this);
+    IEScene::instance().startup(*this);
+    IEInput::instance().startup(*this);
+    IETime::instance().startup(*this);
 }
 
 void IEGame::shutdown()
 {
     this->makeCurrent();
-    time->shutdown();
-    IEPhysicsEngine::instance().shutdown();
+    IETime::instance().shutdown(*this);
+    IEInput::instance().shutdown(*this);
+    IEScene::instance().shutdown(*this);
+    IEPhysicsEngine::instance().shutdown(*this);
+}
+
+void IEGame::initalize()
+{
+    ecs->play(*this);
+}
+
+void IEGame::reset()
+{
+    IEPhysicsEngine::instance().reset(*this);
+    scriptEngine->stop(*this);
+    ecs->stop(*this);
 }
 
 void IEGame::changeState(std::unique_ptr<IEGameState> val)
@@ -110,7 +122,10 @@ QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const
 {
     const IEGame& game = static_cast<const IEGame&>(obj);
 
-    out << *game.time << *game.input << *game.scene << *game.ecs;
+    out << IETime::instance()
+        << IEInput::instance()
+        << IEScene::instance()
+        << *game.ecs;
 
     return out;
 }
@@ -119,7 +134,10 @@ QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
 {
     IEGame& game = static_cast<IEGame&>(obj);
 
-    in >> *game.time >> *game.input >> *game.scene >> *game.ecs;
+    in >> IETime::instance()
+       >> IEInput::instance()
+       >> IEScene::instance()
+       >> *game.ecs;
 
     return in;
 }

@@ -1,12 +1,11 @@
 #pragma once
 
 #include "IEResourceManager.h"
-#include "Serializable.h"
 #include "IEMaterial.h"
 
 class GameStartEvent;
 
-class IEMaterialManager: public IEResourceManager<IEMaterial>, public Serializable
+class IEMaterialManager: public IEResourceManager<IEMaterial>
 {
     Q_OBJECT
 

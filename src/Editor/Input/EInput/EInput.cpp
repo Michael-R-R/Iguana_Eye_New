@@ -1,7 +1,7 @@
 #include "EInput.h"
 
 EInput::EInput(QObject* parent) :
-    BaseInput(parent)
+    QObject(parent)
 {
     EInput::setupInputContainer();
 }
@@ -25,14 +25,4 @@ void EInput::setupInputContainer()
     inputContainer.addValue("File Explorer", InputKey(Qt::CTRL | Qt::ALT, Qt::Key_F));
     inputContainer.addValue("GLSL Editor", InputKey(Qt::CTRL | Qt::ALT, Qt::Key_G));
     inputContainer.addValue("Message Log", InputKey(Qt::CTRL | Qt::ALT, Qt::Key_L));
-}
-
-QDataStream& EInput::serialize(QDataStream& out, const Serializable& obj) const
-{
-    return BaseInput::serialize(out, obj);
-}
-
-QDataStream& EInput::deserialize(QDataStream& in, Serializable& obj)
-{
-    return BaseInput::deserialize(in, obj);
 }

@@ -2,15 +2,13 @@
 
 #include <QTimer>
 
-#include "IEObject.h"
-#include "Serializable.h"
+#include "IEGameSystem.h"
 #include "DeltaTime.h"
 
-class IEGame;
-
-class IETime : public IEObject, public Serializable
+class IETime : public IEGameSystem
 {
-    Q_OBJECT
+    IETime();
+    static IETime mInstance;
 
     QTimer updateTimer;
     QTimer renderTimer;
@@ -20,11 +18,13 @@ class IETime : public IEObject, public Serializable
     DeltaTime dt;
 
 public:
-    IETime(const int msUpdate, const int msRender, IEGame& game);
+    static IETime& instance();
     ~IETime();
 
-    void startup();
-    void shutdown();
+    void startup(IEGame& game) override;
+    void shutdown(IEGame& game) override;
+    void initalize(IEGame& game) override;
+    void reset(IEGame& game) override;
 
     void startUpdateTimer();
     void startRenderTimer();

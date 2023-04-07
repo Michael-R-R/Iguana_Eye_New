@@ -1,12 +1,11 @@
 #pragma once
 
 #include "IEResourceManager.h"
-#include "Serializable.h"
 #include "IEShader.h"
 
 class GameStartEvent;
 
-class IEShaderManager : public IEResourceManager<IEShader>, public Serializable
+class IEShaderManager : public IEResourceManager<IEShader>
 {
     Q_OBJECT
 

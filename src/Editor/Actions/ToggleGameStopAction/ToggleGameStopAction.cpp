@@ -10,10 +10,7 @@ ToggleGameStopAction::ToggleGameStopAction(IEGame& game, InputKey& shortcut, QOb
 {
     connect(this, &ToggleGameStopAction::triggered, this, [&game]()
     {
-        IEPhysicsEngine::instance().reset();
-        game.getIEScriptEngine().stop(game);
-        game.getECS().stop(game);
-
+        game.reset();
         game.changeState(std::move(std::make_unique<IEGameStopState>(game)));
     });
 }

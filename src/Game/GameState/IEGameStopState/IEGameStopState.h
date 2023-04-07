@@ -7,8 +7,6 @@
 class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
 class IEGame;
-class IETime;
-class IEInput;
 class IERenderEngine;
 class ERenderEngine;
 class ECamera;
@@ -17,8 +15,6 @@ class IEGameStopState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
-    IETime* time;
-    IEInput* input;
     IERenderEngine* gRenderEngine;
     std::unique_ptr<ERenderEngine> eRenderEngine;
     std::unique_ptr<ECamera> eCamera;

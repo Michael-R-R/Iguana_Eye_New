@@ -4,13 +4,12 @@
 #include <QString>
 
 #include "IEObject.h"
-#include "Serializable.h"
 #include "IEEntity.h"
 
 class IEGame;
 class ECSOnUpdateEvent;
 
-class IEECSSystem : public IEObject, public Serializable
+class IEECSSystem : public IEObject
 {
 protected:
     QMap<IEEntity, int> entityMap; // Entity, index

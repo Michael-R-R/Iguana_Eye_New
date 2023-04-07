@@ -15,9 +15,9 @@
 #include "IEGlslImporter.h"
 #include "IEHash.h"
 
-IETCreateRenderable::IETCreateRenderable(IEGame& game)
+IETCreateRenderable::IETCreateRenderable()
 {
-    auto& scene = game.getIEScene();
+    auto& scene = IEScene::instance();
     auto& meshManager = scene.getMeshManager();
     auto& materialManager = scene.getMaterialManager();
     auto& shaderManager = scene.getShaderManager();

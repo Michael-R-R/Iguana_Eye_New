@@ -1,13 +1,12 @@
 #pragma once
 
 #include "IEResourceManager.h"
-#include "Serializable.h"
 #include "IERenderable.h"
 
 class IEShaderManager;
 class IEShader;
 
-class IERenderableManager : public IEResourceManager<IERenderable>, public Serializable
+class IERenderableManager : public IEResourceManager<IERenderable>
 {
     Q_OBJECT
 

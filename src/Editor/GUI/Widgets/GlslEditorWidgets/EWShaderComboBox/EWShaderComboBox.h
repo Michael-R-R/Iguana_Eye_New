@@ -12,9 +12,6 @@ class EWShaderComboBox : public QComboBox
 {
     Q_OBJECT
 
-    // Does not own this pointers
-    IEShaderManager* shaderManager;
-
     QVector<unsigned long long> fullIdList;
 
     ShaderComboBoxContextMenu* contextMenu;
@@ -29,7 +26,7 @@ public:
     unsigned long long getSelectedId();
 
 private:
-    void initialBuild(const IEShaderManager* shaderManager);
+    void initialBuild(IEShaderManager* shaderManager);
     bool indexBoundCheck(const int index);
     bool doesExist(const unsigned long long key);
 

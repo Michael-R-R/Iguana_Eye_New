@@ -34,9 +34,10 @@ public:
     static IEPhysicsEngine& instance();
     ~IEPhysicsEngine();
 
-    void startup() override;
-    void shutdown() override;
-    void reset() override;
+    void startup(IEGame& game) override;
+    void shutdown(IEGame& game) override;
+    void initalize(IEGame& game) override;
+    void reset(IEGame& game) override;
 
     void onUpdateFrame(const float dt);
 

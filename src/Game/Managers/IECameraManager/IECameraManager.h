@@ -1,10 +1,9 @@
 #pragma once
 
 #include "IEResourceManager.h"
-#include "Serializable.h"
 #include "IECamera.h"
 
-class IECameraManager : public IEResourceManager<IECamera>, public Serializable
+class IECameraManager : public IEResourceManager<IECamera>
 {
     Q_OBJECT
 

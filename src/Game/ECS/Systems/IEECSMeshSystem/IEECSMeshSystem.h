@@ -5,9 +5,7 @@
 
 #include "IEECSSystem.h"
 
-class IEGame;
 class ECSOnUpdateEvent;
-class IEMeshManager;
 class IEMesh;
 
 class IEECSMeshSystem : public IEECSSystem
@@ -32,10 +30,8 @@ class IEECSMeshSystem : public IEECSSystem
 
     Data data;
 
-    IEMeshManager& meshManager;
-
 public:
-    IEECSMeshSystem(IEGame& game);
+    IEECSMeshSystem();
     ~IEECSMeshSystem();
 
     int attach(const IEEntity entity) override;

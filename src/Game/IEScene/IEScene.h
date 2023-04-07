@@ -2,8 +2,7 @@
 
 #include <memory>
 
-#include "IEObject.h"
-#include "Serializable.h"
+#include "IEGameSystem.h"
 
 class IEMeshManager;
 class IEMaterialManager;
@@ -11,8 +10,11 @@ class IEShaderManager;
 class IERenderableManager;
 class IECameraManager;
 
-class IEScene : public IEObject, public Serializable
+class IEScene : public IEGameSystem
 {
+    IEScene();
+    static IEScene mInstance;
+
     std::unique_ptr<IEMeshManager> meshManager;
     std::unique_ptr<IEMaterialManager> materialManager;
     std::unique_ptr<IEShaderManager> shaderManager;
@@ -20,8 +22,13 @@ class IEScene : public IEObject, public Serializable
     std::unique_ptr<IECameraManager> cameraManager;
 
 public:
-    IEScene();
+    static IEScene& instance();
     ~IEScene();
+
+    void startup(IEGame& game) override;
+    void shutdown(IEGame& game) override;
+    void initalize(IEGame& game) override;
+    void reset(IEGame& game) override;
 
     IEMeshManager& getMeshManager() const { return *meshManager; }
     IEMaterialManager& getMaterialManager() const { return *materialManager; }

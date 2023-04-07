@@ -5,12 +5,15 @@
 #include "IERenderableManager.h"
 #include "IECameraManager.h"
 
+IEScene IEScene::mInstance;
+IEScene& IEScene::instance() { return mInstance; }
+
 IEScene::IEScene() :
-    meshManager(std::make_unique<IEMeshManager>()),
-    materialManager(std::make_unique<IEMaterialManager>()),
-    shaderManager(std::make_unique<IEShaderManager>()),
-    renderableManager(std::make_unique<IERenderableManager>(*shaderManager)),
-    cameraManager(std::make_unique<IECameraManager>())
+    meshManager(nullptr),
+    materialManager(nullptr),
+    shaderManager(nullptr),
+    renderableManager(nullptr),
+    cameraManager(nullptr)
 {
 
 }
@@ -18,6 +21,35 @@ IEScene::IEScene() :
 IEScene::~IEScene()
 {
 
+}
+
+void IEScene::startup(IEGame&)
+{
+    meshManager = std::make_unique<IEMeshManager>();
+    materialManager = std::make_unique<IEMaterialManager>();
+    shaderManager = std::make_unique<IEShaderManager>();
+    renderableManager = std::make_unique<IERenderableManager>(*shaderManager);
+    cameraManager = std::make_unique<IECameraManager>();
+}
+
+void IEScene::shutdown(IEGame&)
+{
+    meshManager = nullptr;
+    materialManager = nullptr;
+    shaderManager = nullptr;
+    renderableManager = nullptr;
+    cameraManager = nullptr;
+}
+
+void IEScene::initalize(IEGame&)
+{
+
+}
+
+void IEScene::reset(IEGame& game)
+{
+    shutdown(game);
+    startup(game);
 }
 
 QDataStream& IEScene::serialize(QDataStream& out, const Serializable& obj) const
@@ -45,3 +77,4 @@ QDataStream& IEScene::deserialize(QDataStream& in, Serializable& obj)
 
     return in;
 }
+

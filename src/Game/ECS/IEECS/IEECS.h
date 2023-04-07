@@ -4,14 +4,13 @@
 #include <memory>
 
 #include "IEObject.h"
-#include "Serializable.h"
 #include "IEEntity.h"
 
 class IEGame;
 class IEEntityManager;
 class IEECSSystem;
 
-class IEECS : public IEObject, public Serializable
+class IEECS : public IEObject
 {
     Q_OBJECT
 
@@ -19,7 +18,7 @@ class IEECS : public IEObject, public Serializable
     std::unique_ptr<IEEntityManager> entityManager;
 
 public:
-    IEECS(IEGame& game);
+    IEECS();
     ~IEECS();
 
     void play(IEGame& game);
@@ -35,7 +34,7 @@ public:
     void clearSystems();
 
 private:
-    void initSystems(IEGame& game);
+    void initSystems();
 
 signals:
     void entityCreated(const IEEntity& entity);

@@ -1,13 +1,11 @@
 #include "IEECSShaderSystem.h"
-#include "IEGame.h"
 #include "IEScene.h"
 #include "IEShaderManager.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSShaderSystem::IEECSShaderSystem(IEGame& game) :
+IEECSShaderSystem::IEECSShaderSystem() :
     IEECSSystem(),
-    data(),
-    shaderManager(game.getIEScene().getShaderManager())
+    data()
 {
     IEECSShaderSystem::attach(IEEntity(-1));
 }
@@ -95,6 +93,8 @@ IEShader* IEECSShaderSystem::getAttachedShader(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
+
+    auto& shaderManager = IEScene::instance().getShaderManager();
 
     return shaderManager.value(data.shaderId[index]);
 }

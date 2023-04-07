@@ -10,3 +10,14 @@ IEObject::~IEObject()
 {
 
 }
+
+
+QDataStream& IEObject::serialize(QDataStream& out, const Serializable&) const
+{
+    return out;
+}
+
+QDataStream& IEObject::deserialize(QDataStream& in, Serializable&)
+{
+    return in;
+}

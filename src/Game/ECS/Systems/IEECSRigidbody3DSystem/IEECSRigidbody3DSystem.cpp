@@ -4,7 +4,7 @@
 #include "IEECSTransformSystem.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSRigidbody3DSystem::IEECSRigidbody3DSystem(IEGame& game) :
+IEECSRigidbody3DSystem::IEECSRigidbody3DSystem() :
     data(),
     awakeBodies(),
     sleepingBodies()

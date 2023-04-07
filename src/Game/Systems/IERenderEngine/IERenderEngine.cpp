@@ -10,23 +10,15 @@
 #include "IERenderableManager.h"
 #include "IECamera.h"
 
-IERenderEngine::IERenderEngine(IEScene& scene) :
-    IEObject(),
-    meshManager(nullptr), materialManager(nullptr),
-    shaderManager(nullptr), renderableManager(nullptr)
+IERenderEngine::IERenderEngine() :
+    IEObject()
 {
-    meshManager = &scene.getMeshManager();
-    materialManager = &scene.getMaterialManager();
-    shaderManager = &scene.getShaderManager();
-    renderableManager = &scene.getRenderableManager();
+
 }
 
 IERenderEngine::~IERenderEngine()
 {
-    meshManager = nullptr;
-    materialManager = nullptr;
-    shaderManager = nullptr;
-    renderableManager = nullptr;
+
 }
 
 void IERenderEngine::onRenderFrame(IECamera* camera)
@@ -34,12 +26,17 @@ void IERenderEngine::onRenderFrame(IECamera* camera)
     if(!camera)
         return;
 
-    const auto* renderables = renderableManager->getResources();
+    auto& meshManager = IEScene::instance().getMeshManager();
+    auto& materialManager = IEScene::instance().getMaterialManager();;
+    auto& shaderManager = IEScene::instance().getShaderManager();;
+    auto& renderableManager = IEScene::instance().getRenderableManager();;
+
+    const auto* renderables = renderableManager.getResources();
     for(auto& i : *renderables)
     {
-        auto* mesh = meshManager->value(i.second->getMeshId());
-        auto* material = materialManager->value(i.second->getMaterialId());
-        auto* shader = shaderManager->value(i.second->getShaderId());
+        auto* mesh = meshManager.value(i.second->getMeshId());
+        auto* material = materialManager.value(i.second->getMaterialId());
+        auto* shader = shaderManager.value(i.second->getShaderId());
         if(!mesh || !material || !shader)
             continue;
 

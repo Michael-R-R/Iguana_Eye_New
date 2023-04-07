@@ -10,7 +10,6 @@
 
 EWShaderComboBox::EWShaderComboBox(QWidget* parent) :
     QComboBox(parent),
-    shaderManager(nullptr),
     fullIdList(),
     contextMenu(new ShaderComboBoxContextMenu(this))
 {
@@ -25,7 +24,7 @@ EWShaderComboBox::EWShaderComboBox(QWidget* parent) :
 
 EWShaderComboBox::~EWShaderComboBox()
 {
-    shaderManager = nullptr;
+
 }
 
 bool EWShaderComboBox::eventFilter(QObject*, QEvent* event)
@@ -37,19 +36,19 @@ bool EWShaderComboBox::eventFilter(QObject*, QEvent* event)
     return false;
 }
 
-void EWShaderComboBox::startup(const AppStartEvent& event)
+void EWShaderComboBox::startup(const AppStartEvent&)
 {
-    shaderManager = &event.getGame()->getIEScene().getShaderManager();
+    auto& shaderManager = IEScene::instance().getShaderManager();
 
-    this->initialBuild(shaderManager);
+    this->initialBuild(&shaderManager);
 
-    connect(shaderManager, &IEShaderManager::added, this, &EWShaderComboBox::addShader);
-    connect(shaderManager, &IEShaderManager::removed, this, &EWShaderComboBox::removeShader);
-    connect(shaderManager, &IEShaderManager::keyChanged, this, &EWShaderComboBox::changeShaderKey);
+    connect(&shaderManager, &IEShaderManager::added, this, &EWShaderComboBox::addShader);
+    connect(&shaderManager, &IEShaderManager::removed, this, &EWShaderComboBox::removeShader);
+    connect(&shaderManager, &IEShaderManager::keyChanged, this, &EWShaderComboBox::changeShaderKey);
 
     this->setCurrentIndex(0);
 
-    contextMenu->startup(shaderManager);
+    contextMenu->startup(&shaderManager);
 }
 
 void EWShaderComboBox::selectShader(const unsigned long long key)
@@ -66,7 +65,7 @@ unsigned long long EWShaderComboBox::getSelectedId()
     return fullIdList[this->currentIndex()];
 }
 
-void EWShaderComboBox::initialBuild(const IEShaderManager* shaderManager)
+void EWShaderComboBox::initialBuild(IEShaderManager* shaderManager)
 {
     const auto* resources = shaderManager->getResources();
     for(auto& i : *resources)
@@ -100,7 +99,9 @@ void EWShaderComboBox::currentShaderChanged(int index)
 
     auto resourceId = fullIdList[index];
 
-    auto* shader = shaderManager->value(resourceId);
+    auto& shaderManager = IEScene::instance().getShaderManager();
+
+    auto* shader = shaderManager.value(resourceId);
     if(!shader)
     {
         emit cleared();
@@ -150,7 +151,9 @@ void EWShaderComboBox::changeShaderKey(const unsigned long long oldKey, const un
 
     fullIdList[index] = newKey;
 
-    auto* shader = shaderManager->value(newKey);
+    auto& shaderManager = IEScene::instance().getShaderManager();
+
+    auto* shader = shaderManager.value(newKey);
     QString extractedName = IEFile::extractName(shader->getFilePath());
 
     this->setItemText(index, extractedName);

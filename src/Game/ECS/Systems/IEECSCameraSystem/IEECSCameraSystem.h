@@ -7,8 +7,6 @@
 #include "IEECSSystem.h"
 #include "IECameraScript.h"
 
-class IEGame;
-class IECameraManager;
 class IECamera;
 class ECSOnUpdateEvent;
 
@@ -37,10 +35,8 @@ class IEECSCameraSystem : public IEECSSystem
 
     int activeIndex;
 
-    IECameraManager& cameraManager;
-
 public:
-    IEECSCameraSystem(IEGame& game);
+    IEECSCameraSystem();
     ~IEECSCameraSystem();
 
     int attach(const IEEntity entity) override;

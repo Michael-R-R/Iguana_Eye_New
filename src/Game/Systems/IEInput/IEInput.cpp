@@ -1,15 +1,40 @@
 #include "IEInput.h"
+#include "IEGame.h"
 
-IEInput::IEInput(QWidget* hostWidget) :
-    BaseInput(),
-    inputCapture(std::make_unique<InputCapture>(hostWidget))
+IEInput IEInput::mInstance;
+IEInput& IEInput::instance() { return mInstance; }
+
+IEInput::IEInput() :
+    inputCapture(nullptr)
 {
-    IEInput::setupInputContainer();
+
 }
 
 IEInput::~IEInput()
 {
 
+}
+
+void IEInput::startup(IEGame& game)
+{
+    inputCapture = std::make_unique<InputCapture>(&game);
+    setupInputContainer();
+}
+
+void IEInput::shutdown(IEGame&)
+{
+    inputCapture = nullptr;
+}
+
+void IEInput::initalize(IEGame&)
+{
+
+}
+
+void IEInput::reset(IEGame& game)
+{
+    shutdown(game);
+    startup(game);
 }
 
 bool IEInput::isPressed(const InputKey& key)
@@ -50,10 +75,18 @@ void IEInput::setupInputContainer()
 
 QDataStream& IEInput::serialize(QDataStream& out, const Serializable& obj) const
 {
-    return BaseInput::serialize(out, obj);
+    const IEInput& input = static_cast<const IEInput&>(obj);
+
+    out << input.inputContainer;
+
+    return out;
 }
 
 QDataStream& IEInput::deserialize(QDataStream& in, Serializable& obj)
 {
-    return BaseInput::deserialize(in, obj);
+    IEInput& input = static_cast<IEInput&>(obj);
+
+    in >> input.inputContainer;
+
+    return in;
 }

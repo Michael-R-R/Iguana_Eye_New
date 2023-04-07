@@ -1,12 +1,11 @@
 #pragma once
 
 #include "IEResourceManager.h"
-#include "Serializable.h"
 #include "IEMesh.h"
 
 class GameStartEvent;
 
-class IEMeshManager : public IEResourceManager<IEMesh>, public Serializable
+class IEMeshManager : public IEResourceManager<IEMesh>
 {
     Q_OBJECT
 

@@ -1,7 +1,5 @@
 #include "StatusBar.h"
 #include "AppStartEvent.h"
-#include "IEGame.h"
-#include "IETime.h"
 
 StatusBar::StatusBar(QWidget* parent) :
     QStatusBar(parent)
@@ -14,9 +12,7 @@ StatusBar::~StatusBar()
 
 }
 
-void StatusBar::setupIEObjectConnections(const AppStartEvent& event)
+void StatusBar::setupIEObjectConnections(const AppStartEvent&)
 {
-    auto& time = event.getGame()->getIETime();
 
-    connect(&time, &IETime::message, this, [this](const QString msg) { this->showMessage(msg); });
 }

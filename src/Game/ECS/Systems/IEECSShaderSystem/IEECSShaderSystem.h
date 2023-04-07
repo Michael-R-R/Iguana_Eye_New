@@ -5,8 +5,6 @@
 
 #include "IEECSSystem.h"
 
-class IEGame;
-class IEShaderManager;
 class IEShader;
 class ECSOnUpdateEvent;
 
@@ -32,10 +30,8 @@ class IEECSShaderSystem : public IEECSSystem
 
     Data data;
 
-    IEShaderManager& shaderManager;
-
 public:
-    IEECSShaderSystem(IEGame& game);
+    IEECSShaderSystem();
     ~IEECSShaderSystem();
 
     int attach(const IEEntity entity) override;

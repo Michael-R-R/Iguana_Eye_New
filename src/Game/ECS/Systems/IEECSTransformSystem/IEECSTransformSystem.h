@@ -10,7 +10,6 @@
 #include "IEECSSystem.h"
 
 class IEGame;
-class IERenderableManager;
 class IEECSHierarchySystem;
 class ECSOnUpdateEvent;
 
@@ -43,10 +42,8 @@ class IEECSTransformSystem : public IEECSSystem
 
     QSet<int> dirtyParentIndices;
 
-    IERenderableManager& renderableManager;
-
 public:
-    IEECSTransformSystem(IEGame& game);
+    IEECSTransformSystem();
     ~IEECSTransformSystem();
 
     int attach(const IEEntity entity) override;

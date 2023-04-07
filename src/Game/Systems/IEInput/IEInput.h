@@ -1,18 +1,27 @@
 #pragma once
 
+#include "IEGameSystem.h"
 #include "BaseInput.h"
 #include "InputContainer.h"
 #include "InputCapture.h"
 
 class QWidget;
 
-class IEInput : public BaseInput
+class IEInput : public IEGameSystem, public BaseInput
 {
+    IEInput();
+    static IEInput mInstance;
+
     std::unique_ptr<InputCapture> inputCapture;
 
 public:
-    IEInput(QWidget* hostWidget);
+    static IEInput& instance();
     ~IEInput();
+
+    void startup(IEGame& game) override;
+    void shutdown(IEGame& game) override;
+    void initalize(IEGame& game) override;
+    void reset(IEGame& game) override;
 
     bool isPressed(const InputKey& key);
     bool isPressed(const char* keyName);
