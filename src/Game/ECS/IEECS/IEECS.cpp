@@ -14,12 +14,14 @@
 #include "IEECSShaderSystem.h"
 #include "IEECSRenderableSystem.h"
 
+IEECS IEECS::mInstance;
+IEECS& IEECS::instance() { return mInstance; }
+
 IEECS::IEECS() :
-    IEObject(),
     systems(),
-    entityManager(std::make_unique<IEEntityManager>())
+    entityManager(nullptr)
 {
-    initSystems();
+
 }
 
 IEECS::~IEECS()
@@ -27,7 +29,19 @@ IEECS::~IEECS()
 
 }
 
-void IEECS::play(IEGame& game)
+void IEECS::startup(IEGame&)
+{
+    entityManager = std::make_unique<IEEntityManager>();
+    initSystems();
+}
+
+void IEECS::shutdown(IEGame&)
+{
+    entityManager = nullptr;
+    clearSystems();
+}
+
+void IEECS::initalize(IEGame& game)
 {
     for(auto& i : systems)
     {
@@ -35,7 +49,7 @@ void IEECS::play(IEGame& game)
     }
 }
 
-void IEECS::stop(IEGame& game)
+void IEECS::reset(IEGame& game)
 {
     for(auto& i : systems)
     {

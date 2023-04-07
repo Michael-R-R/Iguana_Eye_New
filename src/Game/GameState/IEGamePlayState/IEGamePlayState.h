@@ -9,7 +9,6 @@ class QOpenGLExtraFunctions;
 class IEPhysicsEngine;
 class IERenderEngine;
 class IEECSScriptSystem;
-class IEECS;
 class IEECSRigidbody3DSystem;
 class IEECSTransformSystem;
 class IEECSCameraSystem;
@@ -21,7 +20,6 @@ class IEGamePlayState : public IEGameState
     QOpenGLExtraFunctions* glExtraFunc;
     IEPhysicsEngine* physicsEngine;
     IERenderEngine* renderEngine;
-    IEECS* ecs;
     IEECSScriptSystem* scriptSystem;
     IEECSRigidbody3DSystem* rigidbody3dSystem;
     IEECSTransformSystem* transformSystem;

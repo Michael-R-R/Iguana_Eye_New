@@ -9,7 +9,6 @@
 class ApplicationWindow;
 class IEScriptEngine;
 class IERenderEngine;
-class IEECS;
 class IEGameState;
 
 class IEGame : public QOpenGLWidget, public Serializable
@@ -20,7 +19,6 @@ class IEGame : public QOpenGLWidget, public Serializable
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
 
-    std::unique_ptr<IEECS> ecs;
     std::unique_ptr<IEScriptEngine> scriptEngine;
     std::unique_ptr<IERenderEngine> renderEngine;
 
@@ -44,7 +42,6 @@ public:
 
     IEScriptEngine& getIEScriptEngine() const { return *scriptEngine; }
     IERenderEngine& getIERenderEngine() const { return *renderEngine; }
-    IEECS& getECS() const { return *ecs; }
     QOpenGLFunctions* getGlFunc() { return glFunc; }
     QOpenGLExtraFunctions* getGlExtraFunc() { return glExtraFunc; }
 

@@ -3,26 +3,31 @@
 #include <map>
 #include <memory>
 
-#include "IEObject.h"
+#include "IEGameSystem.h"
 #include "IEEntity.h"
 
 class IEGame;
 class IEEntityManager;
 class IEECSSystem;
 
-class IEECS : public IEObject
+class IEECS : public IEGameSystem
 {
     Q_OBJECT
+
+    IEECS();
+    static IEECS mInstance;
 
     std::map<QString, std::unique_ptr<IEECSSystem>> systems;
     std::unique_ptr<IEEntityManager> entityManager;
 
 public:
-    IEECS();
+    static IEECS& instance();
     ~IEECS();
 
-    void play(IEGame& game);
-    void stop(IEGame& game);
+    void startup(IEGame& game) override;
+    void shutdown(IEGame& game) override;
+    void initalize(IEGame& game) override;
+    void reset(IEGame& game) override;
 
     IEEntity create();
     void remove(const IEEntity entity);

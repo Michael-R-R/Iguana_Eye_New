@@ -19,12 +19,11 @@ IEGamePlayState::IEGamePlayState(IEGame& game) :
     glFunc(game.getGlFunc()),
     glExtraFunc(game.getGlExtraFunc()),
     renderEngine(&game.getIERenderEngine()),
-    ecs(&game.getECS()),
-    scriptSystem(ecs->getComponent<IEECSScriptSystem>("Script")),
-    rigidbody3dSystem(ecs->getComponent<IEECSRigidbody3DSystem>("Rigidbody3D")),
-    transformSystem(ecs->getComponent<IEECSTransformSystem>("Transform")),
-    cameraSystem(ecs->getComponent<IEECSCameraSystem>("Camera")),
-    ecsUpdateEvent(std::make_unique<ECSOnUpdateEvent>(ecs))
+    scriptSystem(IEECS::instance().getComponent<IEECSScriptSystem>("Script")),
+    rigidbody3dSystem(IEECS::instance().getComponent<IEECSRigidbody3DSystem>("Rigidbody3D")),
+    transformSystem(IEECS::instance().getComponent<IEECSTransformSystem>("Transform")),
+    cameraSystem(IEECS::instance().getComponent<IEECSCameraSystem>("Camera")),
+    ecsUpdateEvent(std::make_unique<ECSOnUpdateEvent>(&IEECS::instance()))
 {
 
 }

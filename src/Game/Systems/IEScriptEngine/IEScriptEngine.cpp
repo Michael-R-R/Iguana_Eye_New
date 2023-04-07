@@ -2,6 +2,7 @@
 #include "IEGame.h"
 #include "IETime.h"
 #include "IEInput.h"
+#include "IEECS.h"
 #include "LuaEnum.h"
 #include "LuaCommonType.h"
 #include "LuaUtility.h"
@@ -29,7 +30,7 @@ void IEScriptEngine::stop(IEGame& game)
     setup(game);
 }
 
-void IEScriptEngine::setup(IEGame& game)
+void IEScriptEngine::setup(IEGame&)
 {
     lua.open_libraries(sol::lib::base, sol::lib::math);
 
@@ -44,5 +45,5 @@ void IEScriptEngine::setup(IEGame& game)
     LuaApplication::addToLua(gameTable);
     LuaIETime::addToLua(&IETime::instance(), gameTable);
     LuaIEInput::addToLua(&IEInput::instance(), gameTable);
-    LuaIEECS::addToLua(&game.getECS(), lua, gameTable);
+    LuaIEECS::addToLua(&IEECS::instance(), lua, gameTable);
 }
