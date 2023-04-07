@@ -411,7 +411,7 @@ QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) 
     const auto& renderable = static_cast<const IERenderable&>(obj);
 
     out << renderable.filePath << renderable.id
-        << renderable.type << renderable.renderType
+        << renderable.renderType
         << renderable.drawMode << renderable.meshId
         << renderable.materialId << renderable.shaderId
         << *renderable.indexBuffer << *renderable.vec2BufferContainer
@@ -428,7 +428,7 @@ QDataStream& IERenderable::deserialize(QDataStream& in, Serializable& obj)
     auto& renderable = static_cast<IERenderable&>(obj);
 
     in >> renderable.filePath >> renderable.id
-       >> renderable.type >> renderable.renderType
+       >> renderable.renderType
        >> renderable.drawMode >> renderable.meshId
        >> renderable.materialId >> renderable.shaderId
        >> *renderable.indexBuffer >> *renderable.vec2BufferContainer

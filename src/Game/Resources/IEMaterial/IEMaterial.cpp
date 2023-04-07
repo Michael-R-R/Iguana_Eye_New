@@ -47,7 +47,6 @@ QDataStream& IEMaterial::serialize(QDataStream& out, const Serializable& obj) co
 
     out << material.filePath
         << material.id
-        << material.type
         << material.uniformData
         << material.objectColor
         << material.atlasTexId
@@ -66,7 +65,6 @@ QDataStream& IEMaterial::deserialize(QDataStream& in, Serializable& obj)
 
     in >> material.filePath
        >> material.id
-       >> material.type
        >> material.uniformData
        >> material.objectColor
        >> material.atlasTexId

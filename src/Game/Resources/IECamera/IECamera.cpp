@@ -44,7 +44,7 @@ QDataStream& IECamera::serialize(QDataStream& out, const Serializable& obj) cons
 {
     const auto& camera = static_cast<const IECamera&>(obj);
 
-    out << camera.filePath << camera.id << camera.type
+    out << camera.filePath << camera.id
         << camera.projection << camera.view
         << camera.up << camera.nearPlane
         << camera.farPlane << camera.fov
@@ -57,7 +57,7 @@ QDataStream& IECamera::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& camera = static_cast<IECamera&>(obj);
 
-    in >> camera.filePath >> camera.id >> camera.type
+    in >> camera.filePath >> camera.id
        >> camera.projection >> camera.view
        >> camera.up >> camera.nearPlane
        >> camera.farPlane >> camera.fov

@@ -85,8 +85,8 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
-    void play(IEGame& game) override;
-    void stop(IEGame& game) override;
+    void initalize() override;
+    void reset() override;
 
     void wakeup(const int index);
     void putToSleep(const int index);

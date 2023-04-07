@@ -3,17 +3,14 @@
 #include "IEResourceManager.h"
 #include "IERenderable.h"
 
-class IEShaderManager;
 class IEShader;
 
 class IERenderableManager : public IEResourceManager<IERenderable>
 {
     Q_OBJECT
 
-    IEShaderManager& shaderManager;
-
 public:
-    IERenderableManager(IEShaderManager& manager);
+    IERenderableManager();
     ~IERenderableManager();
 
     bool add(const unsigned long long key, std::unique_ptr<IERenderable> value) override;

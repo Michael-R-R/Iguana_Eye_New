@@ -72,9 +72,6 @@ void EWShaderComboBox::initialBuild(IEShaderManager* shaderManager)
     {
         auto& shader = *i.second;
 
-        if(shader.getType() != IEResource::Type::Game)
-            continue;
-
         this->addShader(shader.getId(), shader.getFilePath());
     }
 }

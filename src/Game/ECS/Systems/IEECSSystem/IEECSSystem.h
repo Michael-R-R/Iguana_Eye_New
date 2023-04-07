@@ -21,8 +21,8 @@ public:
     virtual int attach(const IEEntity entity) = 0;
     virtual bool detach(const IEEntity entity) = 0;
     virtual void onUpdateFrame(ECSOnUpdateEvent* event) = 0;
-    virtual void play(IEGame&) {}
-    virtual void stop(IEGame&) {}
+    virtual void initalize() {}
+    virtual void reset() {}
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 

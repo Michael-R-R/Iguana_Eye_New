@@ -79,7 +79,7 @@ void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent*)
     }
 }
 
-void IEECSScriptSystem::play(IEGame&)
+void IEECSScriptSystem::initalize()
 {
     auto& scriptEngine = IEScriptEngine::instance();
     auto& lua = scriptEngine.getLua();
@@ -94,7 +94,7 @@ void IEECSScriptSystem::play(IEGame&)
     }
 }
 
-void IEECSScriptSystem::stop(IEGame&)
+void IEECSScriptSystem::reset()
 {
     clearSleepingScripts();
     clearAwakenScripts();

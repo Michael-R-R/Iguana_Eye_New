@@ -41,19 +41,19 @@ void IEECS::shutdown(IEGame&)
     clearSystems();
 }
 
-void IEECS::initalize(IEGame& game)
+void IEECS::initalize(IEGame&)
 {
     for(auto& i : systems)
     {
-        i.second->play(game);
+        i.second->initalize();
     }
 }
 
-void IEECS::reset(IEGame& game)
+void IEECS::reset(IEGame&)
 {
     for(auto& i : systems)
     {
-        i.second->stop(game);
+        i.second->reset();
     }
 }
 

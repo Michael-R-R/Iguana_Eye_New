@@ -17,8 +17,7 @@ bool IEShaderManager::add(const unsigned long long key, std::unique_ptr<IEShader
     if(!value || doesExist(key))
         return false;
 
-    if(value->getType() == IEResource::Type::Game)
-        emit added(key, value->getFilePath());
+    emit added(key, value->getFilePath());
 
     resources[key] = std::move(value);
 
@@ -69,11 +68,6 @@ QDataStream& IEShaderManager::serialize(QDataStream& out, const Serializable& ob
     {
         auto& shader = *i.second;
 
-        out << shader.getType();
-
-        if(shader.getType() != IEResource::Type::Game)
-            continue;
-
         out << shader.getFilePath() << shader.getId();
     }
 
@@ -88,17 +82,11 @@ QDataStream& IEShaderManager::deserialize(QDataStream& in, Serializable& obj)
     int size = 0;
     in >> size;
 
-    IEResource::Type type;
     QString path = "";
     unsigned long long id = 0;
 
     for(int i = 0; i < size; i++)
     {
-        in >> type;
-
-        if(type != IEResource::Type::Game)
-            continue;
-
         in >> path >> id;
 
         auto shader = std::make_unique<IEShader>(path, id);

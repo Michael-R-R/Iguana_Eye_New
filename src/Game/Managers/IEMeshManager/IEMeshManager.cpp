@@ -17,8 +17,7 @@ bool IEMeshManager::add(const unsigned long long key, std::unique_ptr<IEMesh> va
     if(!value || doesExist(key))
         return false;
 
-    if(value->getType() == IEResource::Type::Game)
-        emit added(key, value->getFilePath());
+    emit added(key, value->getFilePath());
 
     resources[key] = std::move(value);
 
@@ -61,11 +60,6 @@ QDataStream& IEMeshManager::serialize(QDataStream& out, const Serializable& obj)
     {
         IEMesh& mesh = *i.second;
 
-        out << mesh.getType();
-
-        if(mesh.getType() != IEResource::Type::Game)
-            continue;
-
         out << mesh.getFilePath() << mesh.getId();
     }
 
@@ -80,17 +74,11 @@ QDataStream& IEMeshManager::deserialize(QDataStream& in, Serializable& obj)
     int size = 0;
     in >> size;
 
-    IEResource::Type type;
     QString path = "";
     unsigned long long id = 0;
 
     for(int i = 0; i < size; i++)
     {
-        in >> type;
-
-        if(type != IEResource::Type::Game)
-            continue;
-
         in >> path >> id;
 
         auto mesh = std::make_unique<IEMesh>(path, id);

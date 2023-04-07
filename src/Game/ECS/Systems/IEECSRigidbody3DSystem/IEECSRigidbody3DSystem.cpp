@@ -99,7 +99,7 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     }
 }
 
-void IEECSRigidbody3DSystem::play(IEGame&)
+void IEECSRigidbody3DSystem::initalize()
 {
     auto& engine = IEPhysicsEngine::instance();
 
@@ -110,7 +110,7 @@ void IEECSRigidbody3DSystem::play(IEGame&)
     }
 }
 
-void IEECSRigidbody3DSystem::stop(IEGame&)
+void IEECSRigidbody3DSystem::reset()
 {
     sleepingBodies.clear();
     awakeBodies.clear();

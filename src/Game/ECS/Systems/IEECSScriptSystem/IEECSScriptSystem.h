@@ -45,8 +45,8 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
-    void play(IEGame& game) override;
-    void stop(IEGame& game) override;
+    void initalize() override;
+    void reset() override;
 
     bool initalizeScript(const int index, const unsigned long long id, sol::state& lua);
     void startScript(const int index, const unsigned long long id);

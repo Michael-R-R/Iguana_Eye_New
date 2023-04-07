@@ -28,7 +28,7 @@ void IEScene::startup(IEGame&)
     meshManager = std::make_unique<IEMeshManager>();
     materialManager = std::make_unique<IEMaterialManager>();
     shaderManager = std::make_unique<IEShaderManager>();
-    renderableManager = std::make_unique<IERenderableManager>(*shaderManager);
+    renderableManager = std::make_unique<IERenderableManager>();
     cameraManager = std::make_unique<IECameraManager>();
 }
 

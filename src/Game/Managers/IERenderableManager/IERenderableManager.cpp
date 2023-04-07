@@ -1,11 +1,11 @@
 #include "IERenderableManager.h"
+#include "IEScene.h"
 #include "IEShaderManager.h"
 #include "IESerialize.h"
 #include "IEFile.h"
 
-IERenderableManager::IERenderableManager(IEShaderManager& manager) :
-    IEResourceManager(),
-    shaderManager(manager)
+IERenderableManager::IERenderableManager() :
+    IEResourceManager()
 {
 
 }
@@ -20,8 +20,7 @@ bool IERenderableManager::add(const unsigned long long key, std::unique_ptr<IERe
     if(!value || doesExist(key))
         return false;
 
-    if(value->getType() == IEResource::Type::Game)
-        emit added(key, value->getFilePath());
+    emit added(key, value->getFilePath());
 
     resources[key] = std::move(value);
 
@@ -64,11 +63,6 @@ QDataStream& IERenderableManager::serialize(QDataStream& out, const Serializable
     {
         IERenderable& renderable = *i.second;
 
-        out << renderable.getType();
-
-        if(renderable.getType() != IEResource::Type::Game)
-            continue;
-
         if(renderable.getIsEdited())
         {
             if(!IEFile::doesPathExist(renderable.getFilePath()))
@@ -92,23 +86,18 @@ QDataStream& IERenderableManager::deserialize(QDataStream& in, Serializable& obj
     int size = 0;
     in >> size;
 
-    IEResource::Type type;
     QString filePath = "";
 
     for(int i = 0; i < size; i++)
     {
-        in >> type;
-
-        if(type != IEResource::Type::Game)
-            continue;
-
         in >> filePath;
 
         auto renderable = std::make_unique<IERenderable>();
         if(!IESerialize::read<IERenderable>(filePath, &(*renderable)))
             continue;
 
-        IEShader* shader = manager.shaderManager.value(renderable->getShaderId());
+        auto& shaderManager = IEScene::instance().getShaderManager();
+        IEShader* shader = shaderManager.value(renderable->getShaderId());
         renderable->build(*shader);
 
         auto id = renderable->getId();

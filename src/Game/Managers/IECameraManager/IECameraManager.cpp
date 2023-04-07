@@ -17,8 +17,7 @@ bool IECameraManager::add(const unsigned long long key, std::unique_ptr<IECamera
     if(!value || doesExist(key))
         return false;
 
-    if(value->getType() == IEResource::Type::Game)
-        emit added(key, value->getFilePath());
+    emit added(key, value->getFilePath());
 
     resources[key] = std::move(value);
 
@@ -61,11 +60,6 @@ QDataStream& IECameraManager::serialize(QDataStream& out, const Serializable& ob
     {
         auto& camera = *i.second;
 
-        out << camera.getType();
-
-        if(camera.getType() != IEResource::Type::Game)
-            continue;
-
         out << camera.getFilePath();
 
         IESerialize::write<IECamera>(camera.getFilePath(), &camera);
@@ -81,16 +75,10 @@ QDataStream& IECameraManager::deserialize(QDataStream& in, Serializable& obj)
     int size = 0;
     in >> size;
 
-    IEResource::Type type;
     QString filePath = "";
 
     for(int i = 0; i < size; i++)
     {
-        in >> type;
-
-        if(type != IEResource::Type::Game)
-            continue;
-
         in >> filePath;
 
         auto camera = std::make_unique<IECamera>();

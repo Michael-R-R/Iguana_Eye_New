@@ -105,7 +105,7 @@ QDataStream& IEEntityScript::serialize(QDataStream& out, const Serializable& obj
 
     const_cast<IEEntityScript&>(script).dataFromScript();
 
-    out << script.filePath << script.id << script.type << script.scriptData;
+    out << script.filePath << script.id << script.scriptData;
 
     return out;
 }
@@ -114,7 +114,7 @@ QDataStream& IEEntityScript::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& script = static_cast<IEEntityScript&>(obj);
 
-    in >> script.filePath >> script.id >> script.type >> script.scriptData;
+    in >> script.filePath >> script.id >> script.scriptData;
 
     return in;
 }

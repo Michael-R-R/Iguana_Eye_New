@@ -42,7 +42,7 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
-    void play(IEGame& game) override;
+    void initalize() override;
 
     int getActiveIndex() const;
     IEEntity getActiveEntity() const;

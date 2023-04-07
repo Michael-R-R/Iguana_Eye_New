@@ -18,8 +18,7 @@ bool IEMaterialManager::add(const unsigned long long key, std::unique_ptr<IEMate
     if(!value || doesExist(key))
         return false;
 
-    if(value->getType() == IEResource::Type::Game)
-        emit added(key, value->getFilePath());
+    emit added(key, value->getFilePath());
 
     resources[key] = std::move(value);
 
@@ -62,11 +61,6 @@ QDataStream& IEMaterialManager::serialize(QDataStream& out, const Serializable& 
     {
         IEMaterial& material = *i.second;
 
-        out << material.getType();
-
-        if(material.getType() != IEResource::Type::Game)
-            continue;
-
         if(material.getIsEdited())
         {
             if(!IEFile::doesPathExist(material.getFilePath()))
@@ -90,16 +84,10 @@ QDataStream& IEMaterialManager::deserialize(QDataStream& in, Serializable& obj)
     int size = 0;
     in >> size;
 
-    IEResource::Type type;
     QString filePath = "";
 
     for(int i = 0; i < size; i++)
     {
-        in >> type;
-
-        if(type != IEResource::Type::Game)
-            continue;
-
         in >> filePath;
 
         auto material = std::make_unique<IEMaterial>();
