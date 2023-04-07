@@ -1,6 +1,5 @@
 #include "IEGame.h"
-#include "IEGamePlayState.h"
-#include "IEGameStopState.h"
+#include "IEGameState.h"
 #include "IETime.h"
 #include "IEInput.h"
 #include "IEScriptEngine.h"
@@ -16,7 +15,6 @@ IEGame::IEGame(QWidget* parent) :
     glFunc(nullptr), glExtraFunc(nullptr),
     time(std::make_unique<IETime>(16, 16, *this)),
     input(std::make_unique<IEInput>(this)),
-    physicsEngine(std::make_unique<IEPhysicsEngine>()),
     scene(std::make_unique<IEScene>()),
     ecs(std::make_unique<IEECS>(*this)),
     scriptEngine(std::make_unique<IEScriptEngine>(*this)),
@@ -77,6 +75,7 @@ void IEGame::resizeGL(int w, int h)
 void IEGame::startup()
 {
     this->makeCurrent();
+    IEPhysicsEngine::instance().startup();
     time->startup();
 }
 
@@ -84,41 +83,17 @@ void IEGame::shutdown()
 {
     this->makeCurrent();
     time->shutdown();
+    IEPhysicsEngine::instance().shutdown();
 }
 
-void IEGame::play()
+void IEGame::changeState(std::unique_ptr<IEGameState> val)
 {
     this->makeCurrent();
-
-    ecs->play(*this);
 
     if(state)
         state->exit(*this);
-    state = std::make_unique<IEGamePlayState>(*this);
+    state = std::move(val);
     state->enter(*this);
-}
-
-void IEGame::stop(bool doCallEnter)
-{
-    this->makeCurrent();
-
-    if(doCallEnter)
-    {
-        if(state)
-            state->exit(*this);
-        state = std::make_unique<IEGameStopState>(*this);
-        state->enter(*this);
-    }
-    else
-    {
-        if(state)
-            state->exit(*this);
-        state = std::make_unique<IEGameStopState>(*this);
-    }
-
-    physicsEngine->stop();
-    scriptEngine->stop(*this);
-    ecs->stop(*this);
 }
 
 void IEGame::onUpdateFrame()

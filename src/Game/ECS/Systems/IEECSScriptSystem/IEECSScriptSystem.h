@@ -39,7 +39,7 @@ class IEECSScriptSystem : public IEECSSystem
     Data data;
 
 public:
-    IEECSScriptSystem(IEGame& game);
+    IEECSScriptSystem();
     ~IEECSScriptSystem();
 
     int attach(const IEEntity entity) override;

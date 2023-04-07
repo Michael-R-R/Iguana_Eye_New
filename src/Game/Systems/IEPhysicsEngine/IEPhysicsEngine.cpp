@@ -1,5 +1,13 @@
 #include "IEPhysicsEngine.h"
 
+IEPhysicsEngine IEPhysicsEngine::mInstance;
+IEPhysicsEngine& IEPhysicsEngine::instance() { return mInstance; }
+
+IEPhysicsEngine::~IEPhysicsEngine()
+{
+
+}
+
 IEPhysicsEngine::IEPhysicsEngine() :
     defaultAllocatorCallback(),
     defaultErrorCallback(),
@@ -14,15 +22,44 @@ IEPhysicsEngine::IEPhysicsEngine() :
     accumulator(0.0f),
     stepSize(1.0f / 60.0f)
 {
-    setup();
+
 }
 
-IEPhysicsEngine::~IEPhysicsEngine()
+void IEPhysicsEngine::startup()
+{
+    pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, defaultAllocatorCallback, defaultErrorCallback);
+    if(!pxFoundation)
+        throw("PxCreateFoundation failed");
+
+    pxToleranceScale.length = 100;
+    pxToleranceScale.speed = 981;
+    pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, pxToleranceScale, true);
+
+    pxCpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
+    simulationCallback = std::make_unique<IESimulationCallback>(this);
+
+    physx::PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
+    sceneDesc.gravity = physx::PxVec3(0.0f, worldGravity, 0.0f);
+    sceneDesc.cpuDispatcher = pxCpuDispatcher;
+    sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
+    sceneDesc.simulationEventCallback = &(*simulationCallback);
+
+    pxScene = pxPhysics->createScene(sceneDesc);
+    pxDefaultMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
+}
+
+void IEPhysicsEngine::shutdown()
 {
     pxScene->release();
     pxCpuDispatcher->release();
     pxPhysics->release();
     pxFoundation->release();
+}
+
+void IEPhysicsEngine::reset()
+{
+    shutdown();
+    startup();
 }
 
 void IEPhysicsEngine::onUpdateFrame(const float dt)
@@ -61,55 +98,3 @@ void IEPhysicsEngine::releaseActor(physx::PxActor* actor)
     pxScene->removeActor(*actor);
     actor->release();
 }
-
-void IEPhysicsEngine::stop()
-{
-    pxScene->release();
-
-    physx::PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
-    sceneDesc.gravity = physx::PxVec3(0.0f, worldGravity, 0.0f);
-    sceneDesc.cpuDispatcher = pxCpuDispatcher;
-    sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
-    sceneDesc.simulationEventCallback = &(*simulationCallback);
-    pxScene = pxPhysics->createScene(sceneDesc);
-}
-
-void IEPhysicsEngine::setup()
-{
-    pxFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, defaultAllocatorCallback, defaultErrorCallback);
-    if(!pxFoundation)
-        throw("PxCreateFoundation failed");
-
-    pxToleranceScale.length = 100;
-    pxToleranceScale.speed = 981;
-    pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, pxToleranceScale, true);
-
-    pxCpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
-    simulationCallback = std::make_unique<IESimulationCallback>(this);
-
-    physx::PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
-    sceneDesc.gravity = physx::PxVec3(0.0f, worldGravity, 0.0f);
-    sceneDesc.cpuDispatcher = pxCpuDispatcher;
-    sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
-    sceneDesc.simulationEventCallback = &(*simulationCallback);
-
-    pxScene = pxPhysics->createScene(sceneDesc);
-    pxDefaultMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

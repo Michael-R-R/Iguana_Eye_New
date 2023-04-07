@@ -129,7 +129,7 @@ void IEECS::initSystems(IEGame& game)
     auto nameSystem = std::make_unique<IEECSNameSystem>();
     auto hierarchySystem = std::make_unique<IEECSHierarchySystem>();
     auto inputSystem = std::make_unique<IEECSInputSystem>();
-    auto scriptSystem = std::make_unique<IEECSScriptSystem>(game);
+    auto scriptSystem = std::make_unique<IEECSScriptSystem>();
     auto rigidbody3dSystem = std::make_unique<IEECSRigidbody3DSystem>(game);
     auto transformSystem = std::make_unique<IEECSTransformSystem>(game);
     auto cameraSystem = std::make_unique<IEECSCameraSystem>(game);

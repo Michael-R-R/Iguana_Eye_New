@@ -6,9 +6,9 @@
 #include <QSet>
 
 #include "IEECSSystem.h"
-#include "IEPhysicsEngine.h"
 #include "IERigidBody.h"
 #include "IEBoxRigidBody.h"
+#include "IEPhysicsEngine.h"
 
 class IEGame;
 
@@ -21,22 +21,16 @@ class IEECSRigidbody3DSystem : public IEECSSystem
         QVector<IEEntity> entity;
         std::vector<std::unique_ptr<IERigidBody>> rigidbody;
 
-        IEPhysicsEngine* engine;
-
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
             out << data.entity << (int)data.rigidbody.size();
 
-            for(int i = 1; i < data.rigidbody.size(); i++)
+            for(int i = 0; i < data.rigidbody.size(); i++)
             {
-                auto* rigidBody = &(*data.rigidbody[i]);
-
-                out << rigidBody->getRigidbodyShape() << *rigidBody;
-
-                physx::PxVec3 p = rigidBody->getGlobalPos();
-                physx::PxQuat q = rigidBody->getGlobalQuat();
-                out << p.x << p.y << p.z;
-                out << q.x << q.y << q.z << q.w;
+                if(!data.rigidbody[i])
+                    out << IERigidBody::RigidbodyShape::None;
+                else
+                    out << data.rigidbody[i]->getRigidbodyShape() << *data.rigidbody[i];
             }
 
             return out;
@@ -44,45 +38,33 @@ class IEECSRigidbody3DSystem : public IEECSSystem
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entity;
-
             int size = 0;
-            in >> size;
+
+            data.rigidbody.clear();
+
+            in >> data.entity >> size;
 
             IERigidBody::RigidbodyShape shape;
             std::unique_ptr<IERigidBody> rigidbody = nullptr;
-            auto* pxPhysics = data.engine->getPxPhysics();
-            auto* pxMaterial = data.engine->getDefaultPxMaterial();
+            auto& engine = IEPhysicsEngine::instance();
+            auto* pxPhysics = engine.getPxPhysics();
+            auto* pxMaterial = engine.getDefaultPxMaterial();
 
-            data.rigidbody.clear();
-            data.rigidbody.push_back(nullptr);
-
-            for(int i = 1; i < size; i++)
+            for(int i = 0; i < size; i++)
             {
                 in >> shape;
 
                 switch(shape)
                 {
-                case IERigidBody::RigidbodyShape::None: { break; }
+                case IERigidBody::RigidbodyShape::None: { rigidbody = nullptr; break; }
                 case IERigidBody::RigidbodyShape::Box: { rigidbody = std::make_unique<IEBoxRigidBody>(pxPhysics, pxMaterial); break; }
                 case IERigidBody::RigidbodyShape::Sphere: { break; }
                 case IERigidBody::RigidbodyShape::Capsule: { break; }
-                default: { break; }
+                default: { rigidbody = nullptr; break; }
                 }
 
-                in >> *rigidbody;
-
-                float px = 0.0f, py = 0.0f, pz = 0.0f;
-                float qx = 0.0f, qy = 0.0f, qz = 0.0f, qw = 0.0f;
-
-                in >> px >> py >> pz;
-                in >> qx >> qy >> qz >> qw;
-
-                physx::PxTransform p(px, py, pz);
-                physx::PxTransform q(physx::PxQuat(qx, qy, qz, qw));
-                physx::PxTransform t = p * q;
-
-                rigidbody->create(t);
+                if(rigidbody)
+                    in >> *rigidbody;
 
                 data.rigidbody.push_back(std::move(rigidbody));
             }

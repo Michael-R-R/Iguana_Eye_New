@@ -3,7 +3,6 @@
 #include "IEGame.h"
 #include "IETime.h"
 #include "IEScriptEngine.h"
-#include "IEPhysicsEngine.h"
 #include "IERenderEngine.h"
 #include "IEScene.h"
 #include "IEMeshManager.h"
@@ -32,7 +31,6 @@ void EMessageLogWindow::startup(const AppStartEvent& event)
 
     connect(&game->getIETime(), &IETime::message, messageLog, &EWMessageLog::insertMessage);
     connect(&game->getIEScriptEngine(), &IEScriptEngine::message, messageLog, &EWMessageLog::insertMessage);
-    connect(&game->getIEPhysicsEngine(), &IEPhysicsEngine::message, messageLog, &EWMessageLog::insertMessage);
     connect(&game->getIERenderEngine(), &IERenderEngine::message, messageLog, &EWMessageLog::insertMessage);
     connect(&game->getECS(), &IEECS::message, messageLog, &EWMessageLog::insertMessage);
     connect(&scene, &IEScene::message, messageLog, &EWMessageLog::insertMessage);

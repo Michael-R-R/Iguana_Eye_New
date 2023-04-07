@@ -11,8 +11,8 @@ IEECSRigidbody3DSystem::IEECSRigidbody3DSystem(IEGame& game) :
 {
     IEECSRigidbody3DSystem::attach(IEEntity(-1));
 
-    data.engine = &game.getIEPhysicsEngine();
-    auto* simCallback = data.engine->getSimulationCallback();
+    auto& engine = IEPhysicsEngine::instance();
+    auto* simCallback = engine.getSimulationCallback();
     connect(simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
     connect(simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
 }
@@ -99,9 +99,9 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     }
 }
 
-void IEECSRigidbody3DSystem::play(IEGame& game)
+void IEECSRigidbody3DSystem::play(IEGame&)
 {
-    auto& engine = game.getIEPhysicsEngine();
+    auto& engine = IEPhysicsEngine::instance();
 
     for(int i = 1; i < data.rigidbody.size(); i++)
     {

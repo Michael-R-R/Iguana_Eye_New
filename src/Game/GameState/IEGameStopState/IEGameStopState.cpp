@@ -1,12 +1,15 @@
 #include "IEGameStopState.h"
 #include "ApplicationProperties.h"
 #include "IEGame.h"
+#include "IEPhysicsEngine.h"
+#include "IEScriptEngine.h"
 #include "IEECS.h"
 #include "IETime.h"
 #include "IEInput.h"
 #include "IERenderEngine.h"
 #include "ERenderEngine.h"
 #include "ECamera.h"
+#include "IEFile.h"
 #include "IESerialize.h"
 
 IEGameStopState::IEGameStopState(IEGame& game) :
@@ -15,8 +18,8 @@ IEGameStopState::IEGameStopState(IEGame& game) :
     time(&game.getIETime()),
     input(&game.getIEInput()),
     gRenderEngine(&game.getIERenderEngine()),
-    eRenderEngine(std::make_unique<ERenderEngine>()),
-    eCamera(std::make_unique<ECamera>())
+    eRenderEngine(nullptr),
+    eCamera(nullptr)
 {
 
 }
@@ -28,6 +31,9 @@ IEGameStopState::~IEGameStopState()
 
 void IEGameStopState::enter(IEGame& game)
 {
+    eRenderEngine = std::make_unique<ERenderEngine>();
+    eCamera = std::make_unique<ECamera>();
+
     deserializeGameStates(game);
 
     IEGameState::onResize(ApplicationProperties::viewportDimensions);
@@ -65,4 +71,6 @@ void IEGameStopState::deserializeGameStates(IEGame& game)
 {
     IESerialize::read<IEECS>("./resources/temp/backup/ecs.iedat", &game.getECS());
     IESerialize::read<ECamera>("./resources/temp/backup/camera.iedat", &(*eCamera));
+
+    IEFile::removeAllFiles("./resources/temp/backup/");
 }

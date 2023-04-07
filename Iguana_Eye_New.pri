@@ -217,6 +217,7 @@ INCLUDEPATH += $$PWD/src/Game/Scripting/Scripts \
     $$PWD/src/Game/Scripting/Scripts/ScriptData \
 
 INCLUDEPATH += $$PWD/src/Game/Systems \
+    $$PWD/src/Game/Systems/IEGameSystem \
     $$PWD/src/Game/Systems/IEInput \
     $$PWD/src/Game/Systems/IERenderEngine \
     $$PWD/src/Game/Systems/IEScriptEngine \

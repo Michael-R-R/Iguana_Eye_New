@@ -20,7 +20,6 @@ IEGamePlayState::IEGamePlayState(IEGame& game) :
     glExtraFunc(game.getGlExtraFunc()),
     time(&game.getIETime()),
     input(&game.getIEInput()),
-    physicsEngine(&game.getIEPhysicsEngine()),
     renderEngine(&game.getIERenderEngine()),
     ecs(&game.getECS()),
     scriptSystem(ecs->getComponent<IEECSScriptSystem>("Script")),
@@ -49,7 +48,7 @@ void IEGamePlayState::exit(IEGame&)
 
 void IEGamePlayState::onUpdateFrame()
 {
-    physicsEngine->onUpdateFrame(time->getDeltaTime());
+    IEPhysicsEngine::instance().onUpdateFrame(time->getDeltaTime());
     scriptSystem->onUpdateFrame(&(*ecsUpdateEvent));
     rigidbody3dSystem->onUpdateFrame(&(*ecsUpdateEvent));
     transformSystem->onUpdateFrame(&(*ecsUpdateEvent));

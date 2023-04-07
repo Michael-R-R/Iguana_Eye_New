@@ -121,7 +121,12 @@ QDataStream& IERigidBody::serialize(QDataStream& out, const Serializable& obj) c
 {
     const IERigidBody& body = static_cast<const IERigidBody&>(obj);
 
+    physx::PxVec3 p = body.getGlobalPos();
+    physx::PxQuat q = body.getGlobalQuat();
+
     out << body.rigidbodyType << body.attachedId << body.density << body.sleepThreshold;
+    out << p.x << p.y << p.z;
+    out << q.x << q.y << q.z << q.w;
 
     return out;
 }

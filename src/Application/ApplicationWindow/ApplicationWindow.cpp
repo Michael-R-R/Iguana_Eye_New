@@ -3,6 +3,7 @@
 #include "AppStartEvent.h"
 #include "Editor.h"
 #include "IEGame.h"
+#include "IEGamePlayState.h"
 #include "IEGameStopState.h"
 #include "IESerialize.h"
 
@@ -21,6 +22,8 @@ ApplicationWindow::ApplicationWindow(bool buildEditor, QWidget *parent) :
 
 ApplicationWindow::~ApplicationWindow()
 {
+    IEFile::removeAllFiles("./resources/temp/backup/");
+
     delete ui;
 }
 
@@ -72,16 +75,12 @@ void ApplicationWindow::initalize()
 {
     disconnect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
     game->startup();
+    game->changeState(std::move(std::make_unique<IEGameStopState>(*game)));
 
     if(doBuildEditor)
     {
-        game->stop(false);
         editor = std::make_unique<Editor>(this);
         editor->startup(AppStartEvent(this, *editor, *game));
-    }
-    else
-    {
-        game->play();
     }
 }
 
@@ -111,7 +110,7 @@ bool ApplicationWindow::saveToFile(const QString& path)
 bool ApplicationWindow::openFromFile(const QString& path)
 {
     game->makeCurrent();
-    game->stop(false);
+    game->changeState(std::move(std::make_unique<IEGameStopState>(*game)));
     if(!IESerialize::read<IEGame>(path, &(*game)))
             return false;
 

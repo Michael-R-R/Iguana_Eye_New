@@ -2,16 +2,17 @@
 
 #include <memory>
 
-#include "IEObject.h"
+#include "IEGameSystem.h"
 #include "IESimulationCallback.h"
 #include "PxPhysics.h"
 #include "PxPhysicsAPI.h"
 
 class GameStartEvent;
 
-class IEPhysicsEngine : public IEObject
+class IEPhysicsEngine : public IEGameSystem
 {
-    Q_OBJECT
+    IEPhysicsEngine();
+    static IEPhysicsEngine mInstance;
 
     physx::PxDefaultAllocator defaultAllocatorCallback;
     physx::PxDefaultErrorCallback defaultErrorCallback;
@@ -30,21 +31,21 @@ class IEPhysicsEngine : public IEObject
     float stepSize;
 
 public:
-    IEPhysicsEngine();
+    static IEPhysicsEngine& instance();
     ~IEPhysicsEngine();
+
+    void startup() override;
+    void shutdown() override;
+    void reset() override;
 
     void onUpdateFrame(const float dt);
 
     void addActorToScene(physx::PxActor* actor);
     void removeActorFromScene(physx::PxActor* actor);
     void releaseActor(physx::PxActor* actor);
-    void stop();
 
     physx::PxPhysics* getPxPhysics() const { return pxPhysics; }
     physx::PxMaterial* getDefaultPxMaterial() const { return pxDefaultMaterial; }
     IESimulationCallback* getSimulationCallback() const { return &(*simulationCallback); }
-
-private:
-    void setup();
 };
 

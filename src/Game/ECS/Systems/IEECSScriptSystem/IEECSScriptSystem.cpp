@@ -6,13 +6,13 @@
 #include "ECSOnUpdateEvent.h"
 #include "IEHash.h"
 
-IEECSScriptSystem::IEECSScriptSystem(IEGame& game) :
+IEECSScriptSystem::IEECSScriptSystem() :
     IEECSSystem(),
     data()
 {
     IEECSScriptSystem::attach(IEEntity(-1));
 
-    auto& physicsEngine = game.getIEPhysicsEngine();
+    auto& physicsEngine = IEPhysicsEngine::instance();
     auto* simCallback = physicsEngine.getSimulationCallback();
     connect(simCallback, &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
     connect(simCallback, &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);

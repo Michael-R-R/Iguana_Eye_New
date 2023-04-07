@@ -54,7 +54,16 @@ QDataStream& IEBoxRigidBody::deserialize(QDataStream& in, Serializable& obj)
 
     IEBoxRigidBody& body = static_cast<IEBoxRigidBody&>(obj);
 
+    float px = 0.0f, py = 0.0f, pz = 0.0f;
+    float qx = 0.0f, qy = 0.0f, qz = 0.0f, qw = 0.0f;
+    in >> px >> py >> pz;
+    in >> qx >> qy >> qz >> qw;
     in >> body.extentX >> body.extentY >> body.extentZ;
+
+    physx::PxTransform p(px, py, pz);
+    physx::PxTransform q(physx::PxQuat(qx, qy, qz, qw));
+    physx::PxTransform t = p * q;
+    body.create(t);
 
     return in;
 }
