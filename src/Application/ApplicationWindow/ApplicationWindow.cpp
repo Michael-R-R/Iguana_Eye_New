@@ -7,23 +7,20 @@
 #include "IEGameStopState.h"
 #include "IESerialize.h"
 
-ApplicationWindow::ApplicationWindow(bool buildEditor, QWidget *parent) :
+ApplicationWindow::ApplicationWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::ApplicationWindow),
+    appFileHandler(this),
     game(nullptr),
     editor(nullptr),
     permenentTitle("Iguana Eye"),
-    tempTitle(permenentTitle),
-    savePath(""),
-    doBuildEditor(buildEditor)
+    tempTitle(permenentTitle)
 {
     ui->setupUi(this);
 }
 
 ApplicationWindow::~ApplicationWindow()
 {
-    IEFile::removeAllFiles("./resources/temp/backup/");
-
     delete ui;
 }
 
@@ -36,12 +33,9 @@ void ApplicationWindow::startup()
 
 void ApplicationWindow::shutdown()
 {
-    if(doBuildEditor)
-    {
-        clearActions();
-        editor->shutdown();
-        editor = nullptr;
-    }
+    clearActions();
+    editor->shutdown();
+    editor = nullptr;
 
     game->shutdown();
     game = nullptr;
@@ -77,11 +71,8 @@ void ApplicationWindow::initalize()
     game->startup();
     game->changeState(QSharedPointer<IEGameStopState>::create(*game));
 
-    if(doBuildEditor)
-    {
-        editor = QSharedPointer<Editor>::create(this);
-        editor->startup(AppStartEvent(this, *editor, *game));
-    }
+    editor = QSharedPointer<Editor>::create(this);
+    editor->startup(AppStartEvent(this, *editor, *game));
 }
 
 void ApplicationWindow::clearActions()
@@ -98,28 +89,42 @@ void ApplicationWindow::clearActions()
 
 void ApplicationWindow::newFile()
 {
-    this->shutdown();
-    this->startup();
+    appFileHandler.handleFileNew();
 }
 
-bool ApplicationWindow::saveToFile(const QString& path)
+void ApplicationWindow::saveToFile()
 {
-    return IESerialize::write<IEGame>(path, &(*game));
+    appFileHandler.handleFileSaved();
 }
 
-bool ApplicationWindow::openFromFile(const QString& path)
+void ApplicationWindow::saveAsToFile(const QString& path)
 {
-    game->makeCurrent();
-    game->changeState(QSharedPointer<IEGameStopState>::create(*game));
-    if(!IESerialize::read<IEGame>(path, &(*game)))
-            return false;
+    appFileHandler.handleFileSavedAs(path);
+}
 
-    if(doBuildEditor)
-    {
-        clearActions();
-        editor = QSharedPointer<Editor>::create(this);
-        editor->startup(AppStartEvent(this, *editor, *game));
-    }
+void ApplicationWindow::openFromFile(const QString& path)
+{
+    appFileHandler.handleFileOpened(path);
+}
 
-    return true;
+QDataStream& ApplicationWindow::serialize(QDataStream& out, const Serializable& obj) const
+{
+    const ApplicationWindow& app = static_cast<const ApplicationWindow&>(obj);
+
+    out << *app.game;
+
+    return out;
+}
+
+QDataStream& ApplicationWindow::deserialize(QDataStream& in, Serializable& obj)
+{
+    ApplicationWindow& app = static_cast<ApplicationWindow&>(obj);
+    app.clearActions();
+
+    in >> *app.game;
+
+    app.editor = QSharedPointer<Editor>::create(this);
+    app.editor->startup(AppStartEvent(this, *app.editor, *app.game));
+
+    return in;
 }

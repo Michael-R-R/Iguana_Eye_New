@@ -134,8 +134,11 @@ QDataStream& IEGame::serialize(QDataStream& out, const Serializable&) const
     return out;
 }
 
-QDataStream& IEGame::deserialize(QDataStream& in, Serializable&)
+QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
 {
+    IEGame& game = static_cast<IEGame&>(obj);
+    game.makeCurrent();
+
     in >> IETime::instance()
        >> IEInput::instance()
        >> IEScene::instance()

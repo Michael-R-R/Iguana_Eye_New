@@ -3,6 +3,9 @@
 #include <QMainWindow>
 #include <QSharedPointer>
 
+#include "Serializable.h"
+#include "ApplicationFileHandler.h"
+
 class IEGame;
 class Editor;
 
@@ -10,23 +13,22 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class ApplicationWindow; }
 QT_END_NAMESPACE
 
-class ApplicationWindow : public QMainWindow
+class ApplicationWindow : public QMainWindow, public Serializable
 {
     Q_OBJECT
 
     Ui::ApplicationWindow* ui;
+
+    ApplicationFileHandler appFileHandler;
 
     QSharedPointer<IEGame> game;
     QSharedPointer<Editor> editor;
 
     const QString permenentTitle;
     QString tempTitle;
-    QString savePath;
-
-    bool doBuildEditor;
 
 public:
-    ApplicationWindow(bool buildEditor, QWidget *parent = nullptr);
+    ApplicationWindow(QWidget *parent = nullptr);
     ~ApplicationWindow();
 
     void startup();
@@ -35,15 +37,16 @@ public:
     void modifyTitle(const QString& text);
     void setModified(const bool isModified);
 
-    const QString& getSavePath() const { return savePath; }
-    void setSavePath(const QString val) { savePath = val; }
-
 private:
     void initalize();
     void clearActions();
 
 public slots:
     void newFile();
-    bool saveToFile(const QString& path);
-    bool openFromFile(const QString& path);
+    void saveToFile();
+    void saveAsToFile(const QString& path);
+    void openFromFile(const QString& path);
+
+    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 };

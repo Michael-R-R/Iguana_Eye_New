@@ -3,6 +3,7 @@ INCLUDEPATH += $$PWD/required/include/lua \
 INCLUDEPATH += $$PWD/required/include/physx \
 
 INCLUDEPATH += $$PWD/src/Application \
+    $$PWD/src/Application/ApplicationFileHandler \
     $$PWD/src/Application/ApplicationProperties \
     $$PWD/src/Application/ApplicationWindow \
 

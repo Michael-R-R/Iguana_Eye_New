@@ -7,41 +7,19 @@ OpenGameFileAction::OpenGameFileAction(ApplicationWindow* window, InputKey& shor
     BaseAction("Open File", shortcut, parent)
 {
     connect(this, &OpenGameFileAction::triggered, window, [this, window]()
-    {
-        // Ask to save file before opening a new file
-        QString savePath = window->getSavePath();
-        if(!savePath.isEmpty())
-        {
-            int answer = QMessageBox::question(window, "Save File?", "Save before closing?",
-                                               QMessageBox::No | QMessageBox::Yes);
-            if(answer == QMessageBox::Yes)
-                window->saveToFile(savePath);
-        }
+            {
+                QString path = QFileDialog::getOpenFileName(window,
+                                                            "Open File",
+                                                            ".",
+                                                            "Iguana Eye File (*.iedat)");
+                if(path.isEmpty())
+                    return;
 
-        QString path = askForPath(window);
-        if(path.isEmpty())
-            return;
-
-        tryOpenPath(path, window);
-    });
+                window->openFromFile(path);
+            });
 }
 
 OpenGameFileAction::~OpenGameFileAction()
 {
 
-}
-
-QString OpenGameFileAction::askForPath(QWidget* parent)
-{
-    return QFileDialog::getOpenFileName(parent, "Open File", ".", "Iguana Eye File (*.iedat)");
-}
-
-void OpenGameFileAction::tryOpenPath(const QString path, ApplicationWindow* window)
-{
-    if(!window->openFromFile(path))
-        return;
-
-    window->setSavePath(path);
-    window->modifyTitle(path);
-    window->setModified(false);
 }
