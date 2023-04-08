@@ -31,7 +31,7 @@ IEECS::~IEECS()
 
 void IEECS::startup(IEGame&)
 {
-    entityManager = std::make_unique<IEEntityManager>();
+    entityManager = QSharedPointer<IEEntityManager>::create();
     initSystems();
 }
 
@@ -45,7 +45,7 @@ void IEECS::initalize(IEGame&)
 {
     for(auto& i : systems)
     {
-        i.second->initalize();
+        i->initalize();
     }
 }
 
@@ -53,7 +53,7 @@ void IEECS::reset(IEGame&)
 {
     for(auto& i : systems)
     {
-        i.second->reset();
+        i->reset();
     }
 }
 
@@ -82,9 +82,11 @@ void IEECS::remove(const IEEntity entity)
     }
 
     // Iterate through the systems, removing the entity from them
-    for(auto& i : systems)
+    QMapIterator<QString, QSharedPointer<IEECSSystem>> it(systems);
+    while(it.hasNext())
     {
-        detachComponent(entity, i.first);
+        it.next();
+        detachComponent(entity, it.key());
     }
 
     entityManager->remove(entity);
@@ -140,29 +142,29 @@ void IEECS::clearSystems()
 
 void IEECS::initSystems()
 {
-    auto nameSystem = std::make_unique<IEECSNameSystem>();
-    auto hierarchySystem = std::make_unique<IEECSHierarchySystem>();
-    auto inputSystem = std::make_unique<IEECSInputSystem>();
-    auto scriptSystem = std::make_unique<IEECSScriptSystem>();
-    auto rigidbody3dSystem = std::make_unique<IEECSRigidbody3DSystem>();
-    auto transformSystem = std::make_unique<IEECSTransformSystem>();
-    auto cameraSystem = std::make_unique<IEECSCameraSystem>();
-    auto meshSystem = std::make_unique<IEECSMeshSystem>();
-    auto materialSystem = std::make_unique<IEECSMaterialSystem>();
-    auto shaderSystem = std::make_unique<IEECSShaderSystem>();
-    auto renderableSystem = std::make_unique<IEECSRenderableSystem>();
+    auto nameSystem = QSharedPointer<IEECSNameSystem>::create();
+    auto hierarchySystem = QSharedPointer<IEECSHierarchySystem>::create();
+    auto inputSystem = QSharedPointer<IEECSInputSystem>::create();
+    auto scriptSystem = QSharedPointer<IEECSScriptSystem>::create();
+    auto rigidbody3dSystem = QSharedPointer<IEECSRigidbody3DSystem>::create();
+    auto transformSystem = QSharedPointer<IEECSTransformSystem>::create();
+    auto cameraSystem = QSharedPointer<IEECSCameraSystem>::create();
+    auto meshSystem = QSharedPointer<IEECSMeshSystem>::create();
+    auto materialSystem = QSharedPointer<IEECSMaterialSystem>::create();
+    auto shaderSystem = QSharedPointer<IEECSShaderSystem>::create();
+    auto renderableSystem = QSharedPointer<IEECSRenderableSystem>::create();
 
-    systems["Name"] = std::move(nameSystem);
-    systems["Hierarchy"] = std::move(hierarchySystem);
-    systems["Input"] = std::move(inputSystem);
-    systems["Script"] = std::move(scriptSystem);
-    systems["Rigidbody3D"] = std::move(rigidbody3dSystem);
-    systems["Transform"] = std::move(transformSystem);
-    systems["Camera"] = std::move(cameraSystem);
-    systems["Mesh"] = std::move(meshSystem);
-    systems["Material"] = std::move(materialSystem);
-    systems["Shader"] = std::move(shaderSystem);
-    systems["Renderable"] = std::move(renderableSystem);
+    systems["Name"] = nameSystem;
+    systems["Hierarchy"] = hierarchySystem;
+    systems["Input"] = inputSystem;
+    systems["Script"] = scriptSystem;
+    systems["Rigidbody3D"] = rigidbody3dSystem;
+    systems["Transform"] = transformSystem;
+    systems["Camera"] = cameraSystem;
+    systems["Mesh"] = meshSystem;
+    systems["Material"] = materialSystem;
+    systems["Shader"] = shaderSystem;
+    systems["Renderable"] = renderableSystem;
 }
 
 QDataStream& IEECS::serialize(QDataStream& out, const Serializable& obj) const
@@ -173,7 +175,7 @@ QDataStream& IEECS::serialize(QDataStream& out, const Serializable& obj) const
 
     for(auto& i : ecs.systems)
     {
-        out << *i.second;
+        out << *i;
     }
 
     return out;
@@ -187,7 +189,7 @@ QDataStream& IEECS::deserialize(QDataStream& in, Serializable& obj)
 
     for(auto& i : ecs.systems)
     {
-        in >> *i.second;
+        in >> *i;
     }
 
     return in;

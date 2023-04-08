@@ -6,7 +6,7 @@
 
 ERenderEngine::ERenderEngine(QObject* parent) :
     IEObject(parent),
-    gridRenderable(std::make_unique<EGridRenderable>())
+    gridRenderable(QSharedPointer<EGridRenderable>::create())
 {
 
 }
@@ -16,7 +16,7 @@ ERenderEngine::~ERenderEngine()
 
 }
 
-void ERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera)
+void ERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, QSharedPointer<IECamera> camera)
 {
     gridRenderable->draw(glFunc, camera);
 }

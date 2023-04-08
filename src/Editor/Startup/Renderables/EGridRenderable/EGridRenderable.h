@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QSharedPointer>
+
 class EGridMesh;
 class EGridShader;
 class QVector3D;
@@ -12,16 +14,16 @@ class IEVertexBuffer;
 
 class EGridRenderable
 {
-    EGridMesh* gridMesh;
-    EGridShader* gridShader;
-    QOpenGLVertexArrayObject* vao;
-    IEVertexBuffer<QVector3D>* posBuffer;
+    QSharedPointer<EGridMesh> gridMesh;
+    QSharedPointer<EGridShader> gridShader;
+    QSharedPointer<QOpenGLVertexArrayObject> vao;
+    QSharedPointer<IEVertexBuffer<QVector3D>> posBuffer;
 
 public:
     EGridRenderable();
     ~EGridRenderable();
 
     void setup();
-    void draw(QOpenGLExtraFunctions* glFunc, IECamera* camera);
+    void draw(QOpenGLExtraFunctions* glFunc, QSharedPointer<IECamera> camera);
 };
 

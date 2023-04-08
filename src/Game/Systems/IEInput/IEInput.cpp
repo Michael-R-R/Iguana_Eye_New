@@ -17,7 +17,7 @@ IEInput::~IEInput()
 
 void IEInput::startup(IEGame& game)
 {
-    inputCapture = std::make_unique<InputCapture>(&game);
+    inputCapture = QSharedPointer<InputCapture>::create(&game);
     setupInputContainer();
 }
 

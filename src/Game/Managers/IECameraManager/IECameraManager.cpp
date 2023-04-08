@@ -12,7 +12,7 @@ IECameraManager::~IECameraManager()
 
 }
 
-bool IECameraManager::add(const unsigned long long key, std::unique_ptr<IECamera> value)
+bool IECameraManager::add(const unsigned long long key, QSharedPointer<IECamera> value)
 {
     if(!value || doesExist(key))
         return false;
@@ -29,7 +29,7 @@ bool IECameraManager::remove(const unsigned long long key)
     if(!doesExist(key))
         return false;
 
-    resources.erase(key);
+    resources.remove(key);
 
     emit removed(key);
 
@@ -41,9 +41,9 @@ bool IECameraManager::changeKey(const unsigned long long oldKey, const unsigned 
     if(!doesExist(oldKey) || doesExist(newKey))
         return false;
 
-    auto temp = std::move(resources.at(oldKey));
-    resources.erase(oldKey);
-    resources[newKey] = std::move(temp);
+    auto temp = resources[oldKey];
+    resources.remove(oldKey);
+    resources[newKey] = temp;
 
     emit keyChanged(oldKey, newKey);
 
@@ -58,11 +58,7 @@ QDataStream& IECameraManager::serialize(QDataStream& out, const Serializable& ob
 
     for(auto& i : manager.resources)
     {
-        auto& camera = *i.second;
-
-        out << camera.getFilePath();
-
-        IESerialize::write<IECamera>(camera.getFilePath(), &camera);
+        out << *i;
     }
 
     return out;
@@ -71,22 +67,18 @@ QDataStream& IECameraManager::serialize(QDataStream& out, const Serializable& ob
 QDataStream& IECameraManager::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& manager = static_cast<IECameraManager&>(obj);
+    manager.clear();
 
     int size = 0;
     in >> size;
 
-    QString filePath = "";
-
     for(int i = 0; i < size; i++)
     {
-        in >> filePath;
+        auto camera = QSharedPointer<IECamera>::create();
 
-        auto camera = std::make_unique<IECamera>();
-        if(!IESerialize::read<IECamera>(filePath, &(*camera)))
-            continue;
+        in >> *camera;
 
-        auto id = camera->getId();
-        manager.add(id, std::move(camera));
+        manager.add(camera->getId(), std::move(camera));
     }
 
     return in;

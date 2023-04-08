@@ -1,8 +1,8 @@
 #pragma once
 
+#include <QSharedPointer>
 #include <QString>
-#include <map>
-#include <memory>
+#include <QMap>
 
 #include "IEVertexBuffer.h"
 #include "Serializable.h"
@@ -10,36 +10,19 @@
 template <class T>
 class IEVertexBufferContainer : public Serializable
 {
-    std::map<QString, std::unique_ptr<IEVertexBuffer<T>>> buffers;
+    QMap<QString, QSharedPointer<IEVertexBuffer<T>>> buffers;
 
 public:
-    IEVertexBufferContainer() :
-        buffers()
-    {
+    IEVertexBufferContainer() : buffers() {}
+    IEVertexBufferContainer(const IEVertexBufferContainer& other) = delete;
+    ~IEVertexBufferContainer() {}
 
-    }
-
-    IEVertexBufferContainer(const IEVertexBufferContainer& other) :
-        buffers()
-    {
-        for(auto& i : other.buffers)
-        {
-            auto tempBuffer = std::make_unique<IEVertexBuffer<T>>(*i.second);
-            buffers[i.first] = std::move(tempBuffer);
-        }
-    }
-
-    ~IEVertexBufferContainer()
-    {
-
-    }
-
-    bool add(const QString key, std::unique_ptr<IEVertexBuffer<T>> value)
+    bool add(const QString key, QSharedPointer<IEVertexBuffer<T>> value)
     {
         if(doesExist(key))
             return false;
 
-        buffers[key] = std::move(value);
+        buffers[key] = value;
 
         return true;
     }
@@ -63,24 +46,24 @@ public:
     {
         for(auto& i : buffers)
         {
-            i.second->release();
+            i->release();
         }
     }
 
     bool doesExist(const QString& key) const
     {
-        return (buffers.find(key) != buffers.end());
+        return buffers.contains(key);
     }
 
-    IEVertexBuffer<T>* value(const QString& key) const
+    QSharedPointer<IEVertexBuffer<T>> value(const QString& key) const
     {
         if(!doesExist(key))
             return nullptr;
 
-        return &(*buffers.at(key));
+        return buffers[key];
     }
 
-    const std::map<QString, std::unique_ptr<IEVertexBuffer<T>>>* getBuffers() const { return &buffers; }
+    const QMap<QString, QSharedPointer<IEVertexBuffer<T>>>& getBuffers() const { return buffers; }
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override
     {
@@ -88,9 +71,11 @@ public:
 
         out << (int)container.buffers.size();
 
-        for(auto& i : container.buffers)
+        QMapIterator<QString, QSharedPointer<IEVertexBuffer<T>>> it(container.buffers);
+        while(it.hasNext())
         {
-            out << i.first << *i.second;
+            it.next();
+            out << it.key() << *it.value();
         }
 
         return out;
@@ -99,22 +84,22 @@ public:
     QDataStream& deserialize(QDataStream &in, Serializable &obj) override
     {
         auto& container = static_cast<IEVertexBufferContainer&>(obj);
+        container.clear();
 
         int size = 0;
         in >> size;
 
         QString key;
 
-        container.clear();
         for(int i = 0; i < size; i++)
         {
             in >> key;
 
-            auto value = std::make_unique<IEVertexBuffer<T>>();
+            auto value = QSharedPointer<IEVertexBuffer<T>>::create();
 
             in >> *value;
 
-            container.buffers[key] = std::move(value);
+            container.buffers[key] = value;
         }
 
         return in;

@@ -2,7 +2,7 @@
 #include "EWGlslEditor.h"
 #include "IEShaderManager.h"
 #include "IEHash.h"
-#include "IEFile.h"
+#include "IESerialize.h"
 #include <QFileDialog>
 
 NewShaderAction::NewShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
@@ -21,22 +21,21 @@ NewShaderAction::NewShaderAction(EWGlslEditor* editor, IEShaderManager& shaderMa
         editor->clearAll();
 
         unsigned long long id = IEHash::Compute(path);
+        QSharedPointer<IEShader> shader = nullptr;
         if(shaderManager.doesExist(id))
         {
-            auto* shader = shaderManager.value(id);
-            shader->setVertexSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
-            shader->setFragmentSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
-            shader->build();
+            shader = shaderManager.value(id);
         }
         else
         {
-            auto shader = std::make_unique<IEShader>(path);
-            shader->build();
-            shaderManager.add(id, std::move(shader));
+            shader = QSharedPointer<IEShader>::create(path);
+            shaderManager.add(id, shader);
         }
 
-        QString vSrc = "[VERTEX]\n#version 430 core\n\nvoid main()\n{\n\t\n}\n\n";
-        QString fSrc = "[FRAGMENT]\n#version 430 core\n\nvoid main()\n{\n\t\n}\n\n";
-        IEFile::write(path, vSrc + fSrc);
+        shader->setVertexSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
+        shader->setFragmentSrc("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n");
+        shader->build();
+
+        IESerialize::write<IEShader>(path, &(*shader));
     });
 }

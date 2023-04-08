@@ -11,7 +11,7 @@ ToggleGameStopAction::ToggleGameStopAction(IEGame& game, InputKey& shortcut, QOb
     connect(this, &ToggleGameStopAction::triggered, this, [&game]()
     {
         game.reset();
-        game.changeState(std::move(std::make_unique<IEGameStopState>(game)));
+        game.changeState(QSharedPointer<IEGameStopState>::create(game));
     });
 }
 

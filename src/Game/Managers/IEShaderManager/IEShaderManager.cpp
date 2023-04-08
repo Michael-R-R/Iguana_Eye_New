@@ -12,7 +12,7 @@ IEShaderManager::~IEShaderManager()
 
 }
 
-bool IEShaderManager::add(const unsigned long long key, std::unique_ptr<IEShader> value)
+bool IEShaderManager::add(const unsigned long long key, QSharedPointer<IEShader> value)
 {
     if(!value || doesExist(key))
         return false;
@@ -29,7 +29,7 @@ bool IEShaderManager::remove(const unsigned long long key)
     if(!doesExist(key))
         return false;
 
-    resources.erase(key);
+    resources.remove(key);
 
     emit removed(key);
 
@@ -41,9 +41,9 @@ bool IEShaderManager::changeKey(const unsigned long long oldKey, const unsigned 
     if(!doesExist(oldKey) || doesExist(newKey))
         return false;
 
-    auto temp = std::move(resources.at(oldKey));
-    resources.erase(oldKey);
-    resources[newKey] = std::move(temp);
+    auto temp = resources[oldKey];
+    resources.remove(oldKey);
+    resources[newKey] = temp;
 
     emit keyChanged(oldKey, newKey);
 
@@ -54,7 +54,7 @@ void IEShaderManager::buildAllShaders()
 {
     for(auto& i : resources)
     {
-        i.second->build();
+        i->build();
     }
 }
 
@@ -66,7 +66,7 @@ QDataStream& IEShaderManager::serialize(QDataStream& out, const Serializable& ob
 
     for(auto& i : manager.resources)
     {
-        out << *i.second;
+        out << *i;
     }
 
     return out;
@@ -82,13 +82,13 @@ QDataStream& IEShaderManager::deserialize(QDataStream& in, Serializable& obj)
 
     for(int i = 0; i < size; i++)
     {
-        auto shader = std::make_unique<IEShader>();
+        auto shader = QSharedPointer<IEShader>::create();
+
         in >> *shader;
 
         shader->build();
 
-        unsigned long long id = shader->getId();
-        manager.add(id, std::move(shader));
+        manager.add(shader->getId(), shader);
     }
 
     return in;

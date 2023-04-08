@@ -66,8 +66,8 @@ public:
 
     int getActiveIndex() const;
     IEEntity getActiveEntity() const;
-    IECamera* getActiveCamera() const;
-    IECamera* getAttachedCamera(const int index) const;
+    QSharedPointer<IECamera> getActiveCamera() const;
+    QSharedPointer<IECamera> getAttachedCamera(const int index) const;
     void setActiveIndex(const int val);
 
     const QSharedPointer<IECameraScript> getScript(const int index) const;

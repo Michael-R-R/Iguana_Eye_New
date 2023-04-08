@@ -28,8 +28,8 @@ IEGameStopState::~IEGameStopState()
 
 void IEGameStopState::enter(IEGame&)
 {
-    eRenderEngine = std::make_unique<ERenderEngine>();
-    eCamera = std::make_unique<ECamera>();
+    eRenderEngine = QSharedPointer<ERenderEngine>::create();
+    eCamera = QSharedPointer<ECamera>::create();
 
     deserializeGameStates();
 
@@ -52,8 +52,8 @@ void IEGameStopState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    IERenderEngine::instance().onRenderFrame(&(*eCamera));
-    eRenderEngine->onRenderFrame(glExtraFunc, &(*eCamera));
+    IERenderEngine::instance().onRenderFrame(eCamera);
+    eRenderEngine->onRenderFrame(glExtraFunc, eCamera);
 }
 
 void IEGameStopState::onResize(const float w, const float h)

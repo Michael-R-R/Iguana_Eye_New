@@ -40,7 +40,7 @@ public:
 
     QVector<unsigned long long> massReplaceShaderId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeShaderId(const unsigned long long idToPurge);
-    IEShader* getAttachedShader(const int index) const;
+    QSharedPointer<IEShader> getAttachedShader(const int index) const;
 
     unsigned long long getShaderId(const int index) const;
     void setShaderId(const int index, const unsigned long long val);

@@ -29,7 +29,7 @@ ApplicationWindow::~ApplicationWindow()
 
 void ApplicationWindow::startup()
 {
-    game = std::make_unique<IEGame>(this);
+    game = QSharedPointer<IEGame>::create(this);
     connect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
     this->setCentralWidget(&(*game));
 }
@@ -75,11 +75,11 @@ void ApplicationWindow::initalize()
 {
     disconnect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
     game->startup();
-    game->changeState(std::move(std::make_unique<IEGameStopState>(*game)));
+    game->changeState(QSharedPointer<IEGameStopState>::create(*game));
 
     if(doBuildEditor)
     {
-        editor = std::make_unique<Editor>(this);
+        editor = QSharedPointer<Editor>::create(this);
         editor->startup(AppStartEvent(this, *editor, *game));
     }
 }
@@ -110,14 +110,14 @@ bool ApplicationWindow::saveToFile(const QString& path)
 bool ApplicationWindow::openFromFile(const QString& path)
 {
     game->makeCurrent();
-    game->changeState(std::move(std::make_unique<IEGameStopState>(*game)));
+    game->changeState(QSharedPointer<IEGameStopState>::create(*game));
     if(!IESerialize::read<IEGame>(path, &(*game)))
             return false;
 
     if(doBuildEditor)
     {
         clearActions();
-        editor = std::make_unique<Editor>(this);
+        editor = QSharedPointer<Editor>::create(this);
         editor->startup(AppStartEvent(this, *editor, *game));
     }
 

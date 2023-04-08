@@ -23,11 +23,11 @@ OpenShaderAction::OpenShaderAction(IEShaderManager& shaderManager,
         if(shaderManager.doesExist(id))
             return;
 
-        auto shader = std::make_unique<IEShader>(path);
+        auto shader = QSharedPointer<IEShader>::create();
         if(!IESerialize::read<IEShader>(path, &(*shader)))
             return;
 
         shader->build();
-        shaderManager.add(id, std::move(shader));
+        shaderManager.add(id, shader);
     });
 }

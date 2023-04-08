@@ -13,7 +13,7 @@ IEMaterialManager::~IEMaterialManager()
 
 }
 
-bool IEMaterialManager::add(const unsigned long long key, std::unique_ptr<IEMaterial> value)
+bool IEMaterialManager::add(const unsigned long long key, QSharedPointer<IEMaterial> value)
 {
     if(!value || doesExist(key))
         return false;
@@ -30,7 +30,7 @@ bool IEMaterialManager::remove(const unsigned long long key)
     if(!doesExist(key))
         return false;
 
-    resources.erase(key);
+    resources.remove(key);
 
     emit removed(key);
 
@@ -42,9 +42,9 @@ bool IEMaterialManager::changeKey(const unsigned long long oldKey, const unsigne
     if(!doesExist(oldKey) || doesExist(newKey))
         return false;
 
-    auto temp = std::move(resources.at(oldKey));
-    resources.erase(oldKey);
-    resources[newKey] = std::move(temp);
+    auto temp = resources[oldKey];
+    resources.remove(oldKey);
+    resources[newKey] = temp;
 
     emit keyChanged(oldKey, newKey);
 
@@ -59,7 +59,7 @@ QDataStream& IEMaterialManager::serialize(QDataStream& out, const Serializable& 
 
     for(auto& i : manager.resources)
     {
-        out << *i.second;
+        out << *i;
     }
 
     return out;
@@ -75,12 +75,11 @@ QDataStream& IEMaterialManager::deserialize(QDataStream& in, Serializable& obj)
 
     for(int i = 0; i < size; i++)
     {
-        auto material = std::make_unique<IEMaterial>();
+        auto material = QSharedPointer<IEMaterial>::create();
 
         in >> *material;
 
-        auto id = material->getId();
-        manager.add(id, std::move(material));
+        manager.add(material->getId(), material);
     }
 
     return in;

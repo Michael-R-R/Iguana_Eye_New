@@ -12,7 +12,7 @@ IEMeshManager::~IEMeshManager()
 
 }
 
-bool IEMeshManager::add(const unsigned long long key, std::unique_ptr<IEMesh> value)
+bool IEMeshManager::add(const unsigned long long key, QSharedPointer<IEMesh> value)
 {
     if(!value || doesExist(key))
         return false;
@@ -29,7 +29,7 @@ bool IEMeshManager::remove(const unsigned long long key)
     if(!doesExist(key))
         return false;
 
-    resources.erase(key);
+    resources.remove(key);
 
     emit removed(key);
 
@@ -41,9 +41,9 @@ bool IEMeshManager::changeKey(const unsigned long long oldKey, const unsigned lo
     if(!doesExist(oldKey) || doesExist(newKey))
         return false;
 
-    auto temp = std::move(resources.at(oldKey));
-    resources.erase(oldKey);
-    resources[newKey] = std::move(temp);
+    auto temp = resources[oldKey];
+    resources.remove(oldKey);
+    resources[newKey] = temp;
 
     emit keyChanged(oldKey, newKey);
 
@@ -58,7 +58,7 @@ QDataStream& IEMeshManager::serialize(QDataStream& out, const Serializable& obj)
 
     for(auto& i : manager.resources)
     {
-        out << *i.second;
+        out << *i;
     }
 
     return out;
@@ -74,11 +74,11 @@ QDataStream& IEMeshManager::deserialize(QDataStream& in, Serializable& obj)
 
     for(int i = 0; i < size; i++)
     {
-        auto mesh = std::make_unique<IEMesh>();
+        auto mesh = QSharedPointer<IEMesh>::create();
+
         in >> *mesh;
 
-        unsigned long long id = mesh->getId();
-        manager.add(id, std::move(mesh));
+        manager.add(mesh->getId(), mesh);
     }
 
     return in;

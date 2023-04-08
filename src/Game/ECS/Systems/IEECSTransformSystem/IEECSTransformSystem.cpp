@@ -83,7 +83,7 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
             const IEEntity& childEntity = data.entity[j];
             const int childIndex = renderableSystem->lookUpIndex(childEntity);
             const unsigned long long renderableId = renderableSystem->getRenderableId(childIndex);
-            auto* renderable = renderableManager.value(renderableId);
+            auto renderable = renderableManager.value(renderableId);
             if(!renderable)
                 continue;
 
@@ -95,7 +95,7 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
         const IEEntity& parentEntity = data.entity[i];
         const int parentIndex = renderableSystem->lookUpIndex(parentEntity);
         const unsigned long long renderableId = renderableSystem->getRenderableId(parentIndex);
-        auto* renderable = renderableManager.value(renderableId);
+        auto renderable = renderableManager.value(renderableId);
         if(!renderable)
             continue;
 

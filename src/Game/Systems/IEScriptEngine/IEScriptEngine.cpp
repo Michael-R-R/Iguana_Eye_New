@@ -43,7 +43,7 @@ void IEScriptEngine::startup(IEGame&)
     LuaIEECS::addToLua(&IEECS::instance(), lua, gameTable);
 }
 
-void IEScriptEngine::shutdown(IEGame& game)
+void IEScriptEngine::shutdown(IEGame&)
 {
     lua = nullptr;
 }

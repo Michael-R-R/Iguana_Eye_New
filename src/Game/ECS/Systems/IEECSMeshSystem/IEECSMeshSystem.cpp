@@ -89,7 +89,7 @@ QVector<unsigned long long> IEECSMeshSystem::massPurgeMeshId(const unsigned long
     return result;
 }
 
-IEMesh* IEECSMeshSystem::getAttachedMesh(const int index)
+QSharedPointer<IEMesh> IEECSMeshSystem::getAttachedMesh(const int index)
 {
     if(!indexBoundCheck(index))
         return nullptr;

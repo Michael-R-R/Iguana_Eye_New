@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include <QSharedPointer>
 
 #include "IEGameState.h"
 
@@ -20,7 +20,7 @@ class IEGamePlayState : public IEGameState
     IEECSRigidbody3DSystem* rigidbody3dSystem;
     IEECSTransformSystem* transformSystem;
     IEECSCameraSystem* cameraSystem;
-    std::unique_ptr<ECSOnUpdateEvent> ecsUpdateEvent;
+    QSharedPointer<ECSOnUpdateEvent> ecsUpdateEvent;
 
 public:
     IEGamePlayState(IEGame& game);

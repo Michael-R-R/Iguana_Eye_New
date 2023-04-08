@@ -89,7 +89,7 @@ QVector<unsigned long long> IEECSShaderSystem::massPurgeShaderId(const unsigned 
     return result;
 }
 
-IEShader* IEECSShaderSystem::getAttachedShader(const int index) const
+QSharedPointer<IEShader> IEECSShaderSystem::getAttachedShader(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;

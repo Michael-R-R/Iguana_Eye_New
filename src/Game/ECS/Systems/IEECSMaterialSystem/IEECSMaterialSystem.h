@@ -41,7 +41,7 @@ public:
 
     QVector<unsigned long long> massReplaceMaterialId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeMaterialId(const unsigned long long idToPurge);
-    IEMaterial* getAttachedMaterial(const int index);
+    QSharedPointer<IEMaterial> getAttachedMaterial(const int index);
 
     unsigned long long getMaterialId(const int index);
     void setMaterialId(const int index, const unsigned long long val);

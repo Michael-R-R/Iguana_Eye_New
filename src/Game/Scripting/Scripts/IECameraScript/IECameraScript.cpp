@@ -53,7 +53,7 @@ void IECameraScript::update() const
     updateFunc();
 }
 
-void IECameraScript::updateProjection(IECamera* camera, const float w, const float h) const
+void IECameraScript::updateProjection(QSharedPointer<IECamera> camera, const float w, const float h) const
 {
     updateProjectionFunc(camera, w, h);
 }

@@ -25,50 +25,50 @@ IETCreateRenderable::IETCreateRenderable()
 
     QString path = "./resources/meshes/tests/cube.obj";
     unsigned long long meshId = IEHash::Compute(path);
-    auto mesh = std::make_unique<IEMesh>(path);
+    auto mesh = QSharedPointer<IEMesh>::create(path);
     IEObjImporter::importMesh(path, *mesh);
 
     path = "./resources/materials/tests/mat.iemat";
     unsigned long long materialId = IEHash::Compute(path);
-    auto material = std::make_unique<IEMaterial>(path);
+    auto material = QSharedPointer<IEMaterial>::create(path);
     IEUniform uniform;
     uniform.add("uColor", QColor(0, 0, 255, 255));
     material->setUniformData(uniform);
 
     path = "./resources/shaders/tests/instanced_renderable.glsl";
     unsigned long long shaderId = IEHash::Compute(path);
-    auto shader = std::make_unique<IEShader>(path);
+    auto shader = QSharedPointer<IEShader>::create(path);
     IEGlslImporter::importGlsl(path, *shader);
     shader->build();
 
     path = "./resources/renderables/tests/rend.ierend";
     unsigned long long renderableId = IEHash::Compute(path);
-    auto renderable = std::make_unique<IERenderable>(path,
-                                                     meshId,
-                                                     materialId,
-                                                     shaderId);
+    auto renderable = QSharedPointer<IERenderable>::create(path,
+                                                           meshId,
+                                                           materialId,
+                                                           shaderId);
     renderable->setDrawType(GL_TRIANGLES);
     renderable->setRenderType(IERenderable::RenderType::I_Index);
 
-    auto indexBuffer = std::make_unique<IEIndexBuffer>(mesh->getIndices());
-    renderable->addIndexBuffer(std::move(indexBuffer));
+    auto indexBuffer = QSharedPointer<IEIndexBuffer>::create(mesh->getIndices());
+    renderable->addIndexBuffer(indexBuffer);
 
-    auto posBuffer = std::make_unique<IEVertexBuffer<QVector3D>>(mesh->getPosVertices(), 12, 3, 0, 0, 0);
-    renderable->addVec3Buffer("aPos", std::move(posBuffer));
+    auto posBuffer = QSharedPointer<IEVertexBuffer<QVector3D>>::create(mesh->getPosVertices(), 12, 3, 0, 0, 0);
+    renderable->addVec3Buffer("aPos", posBuffer);
 
     QMatrix4x4 transform;
     transform.translate(0.0f, 1.0f, 0.0f);
     transform.scale(1.0f, 1.0f, 1.0f);
-    auto modelBuffer = std::make_unique<IEVertexBuffer<QMatrix4x4>>(QVector<QMatrix4x4>{transform}, 64, 4, 64, 4, 16);
-    renderable->addMat4Buffer("aModel", std::move(modelBuffer));
+    auto modelBuffer = QSharedPointer<IEVertexBuffer<QMatrix4x4>>::create(QVector<QMatrix4x4>{transform}, 64, 4, 64, 4, 16);
+    renderable->addMat4Buffer("aModel", modelBuffer);
 
     renderable->addShownInstance();
     renderable->build(*shader);
 
-    meshManager.add(meshId, std::move(mesh));
-    materialManager.add(materialId, std::move(material));
-    shaderManager.add(shaderId, std::move(shader));
-    renderableManager.add(renderableId, std::move(renderable));
+    meshManager.add(meshId, mesh);
+    materialManager.add(materialId, material);
+    shaderManager.add(shaderId, shader);
+    renderableManager.add(renderableId, renderable);
 }
 
 IETCreateRenderable::~IETCreateRenderable()

@@ -42,7 +42,7 @@ public:
     IERigidBody(const IERigidBody& other);
     ~IERigidBody();
 
-    virtual void create(const physx::PxTransform& t) = 0;
+    virtual void create(const physx::PxTransform&) {}
 
     bool wakeup();
     bool putToSleep();

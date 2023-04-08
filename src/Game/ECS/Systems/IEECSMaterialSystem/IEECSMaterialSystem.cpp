@@ -89,7 +89,7 @@ QVector<unsigned long long> IEECSMaterialSystem::massPurgeMaterialId(const unsig
     return result;
 }
 
-IEMaterial* IEECSMaterialSystem::getAttachedMaterial(const int index)
+QSharedPointer<IEMaterial> IEECSMaterialSystem::getAttachedMaterial(const int index)
 {
     if(!indexBoundCheck(index))
         return nullptr;

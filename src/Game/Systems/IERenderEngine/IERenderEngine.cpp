@@ -42,7 +42,7 @@ void IERenderEngine::reset(IEGame&)
 
 }
 
-void IERenderEngine::onRenderFrame(IECamera* camera)
+void IERenderEngine::onRenderFrame(QSharedPointer<IECamera> camera)
 {
     if(!camera)
         return;
@@ -52,22 +52,22 @@ void IERenderEngine::onRenderFrame(IECamera* camera)
     auto& shaderManager = IEScene::instance().getShaderManager();;
     auto& renderableManager = IEScene::instance().getRenderableManager();;
 
-    const auto* renderables = renderableManager.getResources();
-    for(auto& i : *renderables)
+    const auto renderables = renderableManager.getResources();
+    for(auto i : renderables)
     {
-        auto* mesh = meshManager.value(i.second->getMeshId());
-        auto* material = materialManager.value(i.second->getMaterialId());
-        auto* shader = shaderManager.value(i.second->getShaderId());
+        auto mesh = meshManager.value(i->getMeshId());
+        auto material = materialManager.value(i->getMaterialId());
+        auto shader = shaderManager.value(i->getShaderId());
         if(!mesh || !material || !shader)
             continue;
 
         prepareShader(*shader);
-        prepareRenderable(*i.second);
+        prepareRenderable(*i);
         prepareViewProjection(*shader, *camera);
         prepareUniformData(*shader, *material);
-        prepareUniformData(*shader, *i.second);
-        draw(*i.second, *mesh);
-        cleanup(*shader, *i.second);
+        prepareUniformData(*shader, *i);
+        draw(*i, *mesh);
+        cleanup(*shader, *i);
     }
 }
 

@@ -12,9 +12,9 @@ IEECSRigidbody3DSystem::IEECSRigidbody3DSystem() :
     IEECSRigidbody3DSystem::attach(IEEntity(-1));
 
     auto& engine = IEPhysicsEngine::instance();
-    auto* simCallback = engine.getSimulationCallback();
-    connect(simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
-    connect(simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
+    auto simCallback = engine.getSimulationCallback();
+    connect(&(*simCallback), &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
+    connect(&(*simCallback), &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
 }
 
 IEECSRigidbody3DSystem::~IEECSRigidbody3DSystem()
@@ -32,7 +32,7 @@ int IEECSRigidbody3DSystem::attach(const IEEntity entity)
     entityMap[entity] = index;
 
     data.entity.push_back(entity);
-    data.rigidbody.push_back(nullptr);
+    data.rigidbody.push_back(QSharedPointer<IERigidBody>::create());
 
     return index;
 }
@@ -50,7 +50,7 @@ bool IEECSRigidbody3DSystem::detach(const IEEntity entity)
     this->release(indexToRemove);
 
     data.entity[indexToRemove] = data.entity[lastIndex];
-    data.rigidbody[indexToRemove] = std::move(data.rigidbody[lastIndex]);
+    data.rigidbody[indexToRemove] = data.rigidbody[lastIndex];
 
     data.entity.removeLast();
     data.rigidbody.pop_back();
@@ -151,20 +151,20 @@ void IEECSRigidbody3DSystem::release(const int index)
     sleepingBodies.remove(index);
 }
 
-IERigidBody* IEECSRigidbody3DSystem::getRigidbody(const int index) const
+QSharedPointer<IERigidBody> IEECSRigidbody3DSystem::getRigidbody(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
 
-    return &(*data.rigidbody[index]);
+    return data.rigidbody[index];
 }
 
-void IEECSRigidbody3DSystem::setRigidbody(const int index, std::unique_ptr<IERigidBody> val)
+void IEECSRigidbody3DSystem::setRigidbody(const int index, const QSharedPointer<IERigidBody> val)
 {
     if(!indexBoundCheck(index))
         return;
 
-    data.rigidbody[index] = std::move(val);
+    data.rigidbody[index] = val;
 }
 
 void IEECSRigidbody3DSystem::activateRigidbody(const IEEntity& entity)

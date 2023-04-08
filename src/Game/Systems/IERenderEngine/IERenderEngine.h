@@ -22,7 +22,7 @@ public:
     void initalize(IEGame& game) override;
     void reset(IEGame& game) override;
 
-    void onRenderFrame(IECamera* camera);
+    void onRenderFrame(QSharedPointer<IECamera> camera);
 
 private:
     void prepareShader(IEShader& shader);

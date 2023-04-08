@@ -1,7 +1,6 @@
 #pragma once
 
-#include <memory>
-#include <vector>
+#include <QSharedPointer>
 #include <QVector>
 #include <QSet>
 
@@ -19,18 +18,15 @@ class IEECSRigidbody3DSystem : public IEECSSystem
     struct Data
     {
         QVector<IEEntity> entity;
-        std::vector<std::unique_ptr<IERigidBody>> rigidbody;
+        QVector<QSharedPointer<IERigidBody>> rigidbody;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
             out << data.entity << (int)data.rigidbody.size();
 
-            for(int i = 0; i < data.rigidbody.size(); i++)
+            for(int i = 1; i < data.rigidbody.size(); i++)
             {
-                if(!data.rigidbody[i])
-                    out << IERigidBody::RigidbodyShape::None;
-                else
-                    out << data.rigidbody[i]->getRigidbodyShape() << *data.rigidbody[i];
+                out << data.rigidbody[i]->getRigidbodyShape() << *data.rigidbody[i];
             }
 
             return out;
@@ -38,35 +34,34 @@ class IEECSRigidbody3DSystem : public IEECSSystem
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            int size = 0;
-
             data.rigidbody.clear();
+            data.rigidbody.append(QSharedPointer<IERigidBody>::create());
 
+            int size = 0;
             in >> data.entity >> size;
 
             IERigidBody::RigidbodyShape shape;
-            std::unique_ptr<IERigidBody> rigidbody = nullptr;
+            QSharedPointer<IERigidBody> rigidbody = nullptr;
             auto& engine = IEPhysicsEngine::instance();
             auto* pxPhysics = engine.getPxPhysics();
             auto* pxMaterial = engine.getDefaultPxMaterial();
 
-            for(int i = 0; i < size; i++)
+            for(int i = 1; i < size; i++)
             {
                 in >> shape;
 
                 switch(shape)
                 {
-                case IERigidBody::RigidbodyShape::None: { rigidbody = nullptr; break; }
-                case IERigidBody::RigidbodyShape::Box: { rigidbody = std::make_unique<IEBoxRigidBody>(pxPhysics, pxMaterial); break; }
+                case IERigidBody::RigidbodyShape::None: { rigidbody = QSharedPointer<IERigidBody>::create(); break; }
+                case IERigidBody::RigidbodyShape::Box: { rigidbody = QSharedPointer<IEBoxRigidBody>::create(pxPhysics, pxMaterial); break; }
                 case IERigidBody::RigidbodyShape::Sphere: { break; }
                 case IERigidBody::RigidbodyShape::Capsule: { break; }
-                default: { rigidbody = nullptr; break; }
+                default: { rigidbody = QSharedPointer<IERigidBody>::create(); break; }
                 }
 
-                if(rigidbody)
-                    in >> *rigidbody;
+                in >> *rigidbody;
 
-                data.rigidbody.push_back(std::move(rigidbody));
+                data.rigidbody.push_back(rigidbody);
             }
 
             return in;
@@ -92,8 +87,8 @@ public:
     void putToSleep(const int index);
     void release(const int index);
 
-    IERigidBody* getRigidbody(const int index) const;
-    void setRigidbody(const int index, const std::unique_ptr<IERigidBody> val);
+    QSharedPointer<IERigidBody> getRigidbody(const int index) const;
+    void setRigidbody(const int index, const QSharedPointer<IERigidBody> val);
 
 private slots:
     void activateRigidbody(const IEEntity& entity);

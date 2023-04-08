@@ -87,7 +87,7 @@ void IEECSRenderableSystem::addShown(const int index)
     auto& renderableManager = IEScene::instance().getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager.value(id);
+    auto renderable = renderableManager.value(id);
     if(!renderable)
         return;
 
@@ -106,7 +106,7 @@ void IEECSRenderableSystem::addHidden(const int index)
     auto& renderableManager = IEScene::instance().getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager.value(id);
+    auto renderable = renderableManager.value(id);
     if(!renderable)
         return;
 
@@ -127,7 +127,7 @@ void IEECSRenderableSystem::removeShown(const int index)
     auto& renderableManager = IEScene::instance().getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager.value(id);
+    auto renderable = renderableManager.value(id);
     if(!renderable)
         return;
 
@@ -155,7 +155,7 @@ void IEECSRenderableSystem::removeHidden(const int index)
     auto& renderableManager = IEScene::instance().getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager.value(id);
+    auto renderable = renderableManager.value(id);
     if(!renderable)
         return;
 
@@ -210,7 +210,7 @@ void IEECSRenderableSystem::transferTempData(const int index)
     auto& renderableManager = IEScene::instance().getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager.value(id);
+    auto renderable = renderableManager.value(id);
     if(!renderable)
         return;
 
@@ -262,7 +262,7 @@ QVector<unsigned long long> IEECSRenderableSystem::massPurgeRenderableId(const u
     return result;
 }
 
-IERenderable* IEECSRenderableSystem::getAttachedRenderable(const int index) const
+QSharedPointer<IERenderable> IEECSRenderableSystem::getAttachedRenderable(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
@@ -371,7 +371,7 @@ void IEECSRenderableSystem::cacheTempData(const int index)
     auto& renderableManager = IEScene::instance().getRenderableManager();
 
     const unsigned long long id = data.renderableId[index];
-    auto* renderable = renderableManager.value(id);
+    auto renderable = renderableManager.value(id);
     if(!renderable)
         return;
 

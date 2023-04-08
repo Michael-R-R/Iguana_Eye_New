@@ -13,9 +13,9 @@ IEECSScriptSystem::IEECSScriptSystem() :
     IEECSScriptSystem::attach(IEEntity(-1));
 
     auto& physicsEngine = IEPhysicsEngine::instance();
-    auto* simCallback = physicsEngine.getSimulationCallback();
-    connect(simCallback, &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
-    connect(simCallback, &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);
+    auto simCallback = physicsEngine.getSimulationCallback();
+    connect(&(*simCallback), &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
+    connect(&(*simCallback), &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);
 }
 
 IEECSScriptSystem::~IEECSScriptSystem()

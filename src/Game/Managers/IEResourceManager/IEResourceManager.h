@@ -1,7 +1,7 @@
 #pragma once
 
-#include <map>
-#include <memory>
+#include <QMap>
+#include <QSharedPointer>
 
 #include "IEObject.h"
 
@@ -10,7 +10,7 @@ class IEResourceManager : public IEObject
 {
 protected:
     unsigned long long defaultResourceId;
-    std::map<unsigned long long, std::unique_ptr<T>> resources;
+    QMap<unsigned long long, QSharedPointer<T>> resources;
 
 public:
     IEResourceManager() :
@@ -25,21 +25,21 @@ public:
 
     }
 
-    virtual bool add(const unsigned long long key, std::unique_ptr<T> value) = 0;
+    virtual bool add(const unsigned long long key, QSharedPointer<T> value) = 0;
     virtual bool remove(const unsigned long long key) = 0;
     virtual bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) = 0;
 
-    T* value(const unsigned long long key) const
+    QSharedPointer<T> value(const unsigned long long key) const
     {
         if(!doesExist(key))
             return nullptr;
 
-        return &(*resources.at(key));
+        return resources[key];
     }
 
     bool doesExist(const unsigned long long key) const
     {
-        return (resources.find(key) != resources.end());
+        return resources.contains(key);
     }
 
     void clear()
@@ -47,9 +47,9 @@ public:
         resources.clear();
     }
 
-    const std::map<unsigned long long, std::unique_ptr<T>>* getResources() const
+    const QMap<unsigned long long, QSharedPointer<T>>& getResources() const
     {
-        return &resources;
+        return resources;
     }
 
     unsigned long long getDefaultResourceId() const

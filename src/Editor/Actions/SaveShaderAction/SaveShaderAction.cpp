@@ -16,7 +16,7 @@ SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shader
         if(id == 0)
             return;
 
-        auto* shader = shaderManager.value(id);
+        auto shader = shaderManager.value(id);
         if(!shader)
             return;
 
@@ -27,7 +27,7 @@ SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shader
         shader->setVertexSrc(vSrc);
         shader->setFragmentSrc(fSrc);
 
-        IESerialize::write<IEShader>(path, shader);
+        IESerialize::write<IEShader>(path, &(*shader));
     });
 
     connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QSharedPointer>
+
 #include "IEGameSystem.h"
 #include "BaseInput.h"
 #include "InputContainer.h"
@@ -12,7 +14,7 @@ class IEInput : public IEGameSystem, public BaseInput
     IEInput();
     static IEInput mInstance;
 
-    std::unique_ptr<InputCapture> inputCapture;
+    QSharedPointer<InputCapture> inputCapture;
 
 public:
     static IEInput& instance();

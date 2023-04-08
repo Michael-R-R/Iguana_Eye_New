@@ -102,13 +102,13 @@ void IEGame::reset()
     IEECS::instance().reset(*this);
 }
 
-void IEGame::changeState(std::unique_ptr<IEGameState> val)
+void IEGame::changeState(QSharedPointer<IEGameState> val)
 {
     this->makeCurrent();
 
     if(state)
         state->exit(*this);
-    state = std::move(val);
+    state = val;
     state->enter(*this);
 }
 

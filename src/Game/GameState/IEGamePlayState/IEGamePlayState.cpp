@@ -19,7 +19,7 @@ IEGamePlayState::IEGamePlayState(IEGame& game) :
     rigidbody3dSystem(IEECS::instance().getComponent<IEECSRigidbody3DSystem>("Rigidbody3D")),
     transformSystem(IEECS::instance().getComponent<IEECSTransformSystem>("Transform")),
     cameraSystem(IEECS::instance().getComponent<IEECSCameraSystem>("Camera")),
-    ecsUpdateEvent(std::make_unique<ECSOnUpdateEvent>(&IEECS::instance()))
+    ecsUpdateEvent(QSharedPointer<ECSOnUpdateEvent>::create(&IEECS::instance()))
 {
 
 }
@@ -54,15 +54,15 @@ void IEGamePlayState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    auto* camera = cameraSystem->getActiveCamera();
+    auto camera = cameraSystem->getActiveCamera();
     IERenderEngine::instance().onRenderFrame(camera);
 }
 
 void IEGamePlayState::onResize(const float w, const float h)
 {
     const int index = cameraSystem->getActiveIndex();
-    IECamera* camera = cameraSystem->getActiveCamera();
-    const QSharedPointer<IECameraScript> script = cameraSystem->getScript(index);
+    auto camera = cameraSystem->getActiveCamera();
+    auto script = cameraSystem->getScript(index);
     if(!camera || !script)
         return;
 

@@ -239,5 +239,5 @@ INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IESerialize \
     $$PWD/src/Utility/IEStyleSheet \
 
-#INCLUDEPATH += $$PWD/tests \
-#    $$PWD/tests/IETCreateRenderable \
+INCLUDEPATH += $$PWD/tests \
+    $$PWD/tests/IETCreateRenderable \

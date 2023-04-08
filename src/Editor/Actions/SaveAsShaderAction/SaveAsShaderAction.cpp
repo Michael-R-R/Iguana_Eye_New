@@ -32,14 +32,14 @@ SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager& sh
         QString vSrc = editor->getVertSrcEditor()->getTextContent();
         QString fSrc = editor->getFragSrcEditor()->getTextContent();
 
-        auto shader = std::make_unique<IEShader>(path);
+        auto shader = QSharedPointer<IEShader>::create(path);
         shader->setVertexSrc(vSrc);
         shader->setFragmentSrc(fSrc);
 
         IESerialize::write<IEShader>(path, &(*shader));
 
         shader->build();
-        shaderManager.add(id, std::move(shader));
+        shaderManager.add(id, shader);
     });
 
     connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)

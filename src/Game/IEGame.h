@@ -17,7 +17,7 @@ class IEGame : public QOpenGLWidget, public Serializable
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
 
-    std::unique_ptr<IEGameState> state;
+    QSharedPointer<IEGameState> state;
 
 public:
     IEGame(QWidget* parent = nullptr);
@@ -33,7 +33,7 @@ public:
     void shutdown();
     void initalize();
     void reset();
-    void changeState(std::unique_ptr<IEGameState> val);
+    void changeState(QSharedPointer<IEGameState> val);
 
     QOpenGLFunctions* getGlFunc() { return glFunc; }
     QOpenGLExtraFunctions* getGlExtraFunc() { return glExtraFunc; }

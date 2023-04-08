@@ -78,7 +78,7 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
 
     auto& cameraManager = IEScene::instance().getCameraManager();
 
-    IECamera* activeCamera = cameraManager.value(activeId);
+    auto activeCamera = cameraManager.value(activeId);
     activeCamera->updateView(pos, rot.toVector3D());
 }
 
@@ -107,7 +107,7 @@ IEEntity IEECSCameraSystem::getActiveEntity() const
     return data.entity[activeIndex];
 }
 
-IECamera* IEECSCameraSystem::getActiveCamera() const
+QSharedPointer<IECamera> IEECSCameraSystem::getActiveCamera() const
 {
     if(!indexBoundCheck(activeIndex))
         return nullptr;
@@ -117,7 +117,7 @@ IECamera* IEECSCameraSystem::getActiveCamera() const
     return cameraManager.value(data.cameraId[activeIndex]);
 }
 
-IECamera* IEECSCameraSystem::getAttachedCamera(const int index) const
+QSharedPointer<IECamera> IEECSCameraSystem::getAttachedCamera(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;

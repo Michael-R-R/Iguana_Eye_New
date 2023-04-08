@@ -40,7 +40,7 @@ public:
 
     QVector<unsigned long long> massReplaceMeshId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeMeshId(const unsigned long long idToPurge);
-    IEMesh* getAttachedMesh(const int index);
+    QSharedPointer<IEMesh> getAttachedMesh(const int index);
 
     unsigned long long getMeshId(const int index);
     void setMeshId(const int index, const unsigned long long val);

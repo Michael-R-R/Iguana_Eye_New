@@ -36,7 +36,7 @@ void IEPhysicsEngine::startup(IEGame&)
     pxPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *pxFoundation, pxToleranceScale, true);
 
     pxCpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
-    simulationCallback = std::make_unique<IESimulationCallback>(this);
+    simulationCallback = QSharedPointer<IESimulationCallback>::create(this);
 
     physx::PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
     sceneDesc.gravity = physx::PxVec3(0.0f, worldGravity, 0.0f);

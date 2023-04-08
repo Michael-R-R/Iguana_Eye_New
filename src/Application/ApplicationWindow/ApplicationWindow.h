@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QMainWindow>
-#include <memory>
+#include <QSharedPointer>
 
 class IEGame;
 class Editor;
@@ -16,8 +16,8 @@ class ApplicationWindow : public QMainWindow
 
     Ui::ApplicationWindow* ui;
 
-    std::unique_ptr<IEGame> game;
-    std::unique_ptr<Editor> editor;
+    QSharedPointer<IEGame> game;
+    QSharedPointer<Editor> editor;
 
     const QString permenentTitle;
     QString tempTitle;

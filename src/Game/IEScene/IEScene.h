@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include <QSharedPointer>
 
 #include "IEGameSystem.h"
 
@@ -15,11 +15,11 @@ class IEScene : public IEGameSystem
     IEScene();
     static IEScene mInstance;
 
-    std::unique_ptr<IEMeshManager> meshManager;
-    std::unique_ptr<IEMaterialManager> materialManager;
-    std::unique_ptr<IEShaderManager> shaderManager;
-    std::unique_ptr<IERenderableManager> renderableManager;
-    std::unique_ptr<IECameraManager> cameraManager;
+    QSharedPointer<IEMeshManager> meshManager;
+    QSharedPointer<IEMaterialManager> materialManager;
+    QSharedPointer<IEShaderManager> shaderManager;
+    QSharedPointer<IERenderableManager> renderableManager;
+    QSharedPointer<IECameraManager> cameraManager;
 
 public:
     static IEScene& instance();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include <QSharedPointer>
 
 #include "IEObject.h"
 
@@ -12,12 +12,12 @@ class ERenderEngine : public IEObject
 {
     Q_OBJECT
 
-    std::unique_ptr<EGridRenderable> gridRenderable;
+    QSharedPointer<EGridRenderable> gridRenderable;
 
 public:
     ERenderEngine(QObject* parent = nullptr);
     ~ERenderEngine();
 
-    void onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera);
+    void onRenderFrame(QOpenGLExtraFunctions* glFunc, QSharedPointer<IECamera> camera);
 };
 

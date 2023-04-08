@@ -1,7 +1,7 @@
 #pragma once
 
-#include <map>
-#include <memory>
+#include <QMap>
+#include <QSharedPointer>
 
 #include "IEGameSystem.h"
 #include "IEEntity.h"
@@ -17,8 +17,8 @@ class IEECS : public IEGameSystem
     IEECS();
     static IEECS mInstance;
 
-    std::map<QString, std::unique_ptr<IEECSSystem>> systems;
-    std::unique_ptr<IEEntityManager> entityManager;
+    QMap<QString, QSharedPointer<IEECSSystem>> systems;
+    QSharedPointer<IEEntityManager> entityManager;
 
 public:
     static IEECS& instance();
@@ -54,7 +54,7 @@ public:
         if(!doesSystemExist(component))
             return nullptr;
 
-        return dynamic_cast<T*>(&(*systems.at(component)));
+        return dynamic_cast<T*>(&(*systems[component]));
     }
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;

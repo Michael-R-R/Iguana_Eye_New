@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include <QSharedPointer>
 
 #include "IEGameState.h"
 
@@ -14,8 +14,8 @@ class IEGameStopState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
-    std::unique_ptr<ERenderEngine> eRenderEngine;
-    std::unique_ptr<ECamera> eCamera;
+    QSharedPointer<ERenderEngine> eRenderEngine;
+    QSharedPointer<ECamera> eCamera;
 
 public:
     IEGameStopState(IEGame& game);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <memory>
+#include <QSharedPointer>
 
 #include "IEGameSystem.h"
 #include "IESimulationCallback.h"
@@ -23,7 +23,7 @@ class IEPhysicsEngine : public IEGameSystem
     physx::PxScene* pxScene;
     physx::PxMaterial* pxDefaultMaterial;
 
-    std::unique_ptr<IESimulationCallback> simulationCallback;
+    QSharedPointer<IESimulationCallback> simulationCallback;
 
     float worldGravity;
 
@@ -47,6 +47,6 @@ public:
 
     physx::PxPhysics* getPxPhysics() const { return pxPhysics; }
     physx::PxMaterial* getDefaultPxMaterial() const { return pxDefaultMaterial; }
-    IESimulationCallback* getSimulationCallback() const { return &(*simulationCallback); }
+    QSharedPointer<IESimulationCallback> getSimulationCallback() const { return simulationCallback; }
 };
 
