@@ -2,14 +2,17 @@
 
 #include <QString>
 
-class IEResource
+#include "Serializable.h"
+
+class IEResource : public Serializable
 {
 protected:
     QString filePath;
     unsigned long long id;
 
 public:
-    IEResource(const QString& path, const unsigned long long resourceId);
+    IEResource();
+    IEResource(const QString& path);
     ~IEResource();
 
     bool operator==(const IEResource& other) { return (this->id == other.id); }
@@ -17,10 +20,12 @@ public:
     bool operator<(const IEResource& other) { return (this->id < other.id); }
     bool operator>(const IEResource& other) { return (this->id > other.id); }
 
+    unsigned long long updatePath(const QString& path);
+
     const QString& getFilePath() const { return filePath; }
     unsigned long long getId() const { return id; }
 
-    void setFilePath(const QString& val) { filePath = val; }
-    void setId(const unsigned long long val) { id = val; }
+    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 };
 

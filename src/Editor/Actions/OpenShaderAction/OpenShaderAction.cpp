@@ -3,6 +3,7 @@
 #include "IEGlslImporter.h"
 #include "IEHash.h"
 #include "IEFile.h"
+#include "IESerialize.h"
 #include <QFileDialog>
 
 OpenShaderAction::OpenShaderAction(IEShaderManager& shaderManager,
@@ -14,7 +15,7 @@ OpenShaderAction::OpenShaderAction(IEShaderManager& shaderManager,
         QString path = QFileDialog::getOpenFileName(nullptr,
                                                     "Open Shader...",
                                                     "./resources",
-                                                    "Shader(*.glsl)");
+                                                    "Shader(*.ieshader)");
         if(path.isEmpty())
             return;
 
@@ -22,8 +23,8 @@ OpenShaderAction::OpenShaderAction(IEShaderManager& shaderManager,
         if(shaderManager.doesExist(id))
             return;
 
-        std::unique_ptr<IEShader> shader = std::make_unique<IEShader>(path, id);
-        if(!IEGlslImporter::importGlsl(path, *shader))
+        auto shader = std::make_unique<IEShader>(path);
+        if(!IESerialize::read<IEShader>(path, &(*shader)))
             return;
 
         shader->build();

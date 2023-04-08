@@ -10,14 +10,13 @@
 #include <memory>
 
 #include "IEResource.h"
-#include "Serializable.h"
 #include "IEIndexBuffer.h"
 #include "IEVertexBufferContainer.h"
 #include "IEUniform.h"
 
 class IEShader;
 
-class IERenderable : public QOpenGLVertexArrayObject, public IEResource, public Serializable
+class IERenderable : public QOpenGLVertexArrayObject, public IEResource
 {
 public:
     enum class RenderType
@@ -48,16 +47,13 @@ protected:
     QSet<QString> dirtyVec4Buffers;
     QSet<QString> dirtyMat4Buffers;
 
-    bool isEdited;
-
 public:
     IERenderable();
     IERenderable(const QString& path,
-                 const unsigned long long id,
                  const unsigned long long meshId_,
                  const unsigned long long materialId_,
                  const unsigned long long shaderId_);
-    IERenderable(const IERenderable& other);
+    IERenderable(const IERenderable&) = delete;
     ~IERenderable();
 
     bool operator==(const IERenderable& other) { return IEResource::operator==(other); }
@@ -112,7 +108,6 @@ public:
     unsigned long long getMeshId() const { return meshId; }
     unsigned long long getMaterialId() const { return materialId; }
     unsigned long long getShaderId() const { return shaderId; }
-    bool getIsEdited() const { return isEdited; }
 
     void setRenderType(const RenderType val) { renderType = val; }
     void setDrawType(const GLenum val) { drawMode = val; }
@@ -120,7 +115,6 @@ public:
     void setMaterialId(const unsigned long long val) { materialId = val; }
     void setShaderId(const unsigned long long val) { shaderId = val; }
     void setUniformData(const IEUniform& val) { uniformData = val; }
-    void setIsEdited(const bool val) { isEdited = val; }
 
 private:
     void purgeInstanceValues(const int index);

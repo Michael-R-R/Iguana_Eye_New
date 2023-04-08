@@ -2,7 +2,7 @@
 #include "IEGlslImporter.h"
 
 EGridShader::EGridShader() :
-    IEShader("", 0)
+    IEShader()
 {
     IEGlslImporter::importGlsl("./resources/shaders/editor/persp_grid.glsl", *this);
 }

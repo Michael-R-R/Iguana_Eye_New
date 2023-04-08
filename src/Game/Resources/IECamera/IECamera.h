@@ -4,9 +4,8 @@
 #include <QMatrix4x4>
 
 #include "IEResource.h"
-#include "Serializable.h"
 
-class IECamera : public IEResource, public Serializable
+class IECamera : public IEResource
 {
 protected:
     QMatrix4x4 projection;
@@ -20,8 +19,8 @@ protected:
 
 public:
     IECamera();
-    IECamera(const QString& path, const unsigned long long resourceId);
-    IECamera(const IECamera& other);
+    IECamera(const QString& path);
+    IECamera(const IECamera&) = delete;
     ~IECamera();
 
     bool operator==(const IECamera& other) { return IEResource::operator==(other); }

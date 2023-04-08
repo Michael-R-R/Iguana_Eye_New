@@ -1,9 +1,9 @@
 #include "SaveAsShaderAction.h"
 #include "EWGlslEditor.h"
+#include "EWGlslSrcEditor.h"
 #include "IEShaderManager.h"
 #include "IEHash.h"
-#include "IEFile.h"
-#include "IEGlslImporter.h"
+#include "IESerialize.h"
 #include <QFileDialog>
 
 SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
@@ -21,19 +21,22 @@ SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, IEShaderManager& sh
         QString path = QFileDialog::getSaveFileName(nullptr,
                                                     "Save As Shader...",
                                                     "./resources",
-                                                    "Shaders(*.glsl)");
+                                                    "Shaders(*.ieshader)");
         if(path.isEmpty())
             return;
-
-        editor->saveContentToFile(path);
 
         id = IEHash::Compute(path);
         if(shaderManager.doesExist(id))
             return;
 
-        std::unique_ptr<IEShader> shader = std::make_unique<IEShader>(path, id);
-        if(!IEGlslImporter::importGlsl(path, *shader))
-            return;
+        QString vSrc = editor->getVertSrcEditor()->getTextContent();
+        QString fSrc = editor->getFragSrcEditor()->getTextContent();
+
+        auto shader = std::make_unique<IEShader>(path);
+        shader->setVertexSrc(vSrc);
+        shader->setFragmentSrc(fSrc);
+
+        IESerialize::write<IEShader>(path, &(*shader));
 
         shader->build();
         shaderManager.add(id, std::move(shader));

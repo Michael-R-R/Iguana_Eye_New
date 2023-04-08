@@ -1,15 +1,15 @@
 #include "IEScript.h"
 
 IEScript::IEScript() :
-    IEResource("", 0),
-    env(), isValid(false)
+    IEResource(),
+    env()
 {
 
 }
 
-IEScript::IEScript(const QString& path, const unsigned long long id) :
-    IEResource(path, id),
-    env(), isValid(false)
+IEScript::IEScript(const QString& path) :
+    IEResource(path),
+    env()
 {
 
 }
@@ -32,4 +32,14 @@ sol::object IEScript::getFunc(const char* name) const
 sol::object IEScript::callFunc(const char* name, sol::variadic_args args) const
 {
     return env[name](args);
+}
+
+QDataStream& IEScript::serialize(QDataStream& out, const Serializable& obj) const
+{
+    return IEResource::serialize(out, obj);
+}
+
+QDataStream& IEScript::deserialize(QDataStream& in, Serializable& obj)
+{
+    return IEResource::deserialize(in, obj);
 }

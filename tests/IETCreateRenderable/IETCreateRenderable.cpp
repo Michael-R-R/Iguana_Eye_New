@@ -25,25 +25,25 @@ IETCreateRenderable::IETCreateRenderable()
 
     QString path = "./resources/meshes/tests/cube.obj";
     unsigned long long meshId = IEHash::Compute(path);
-    auto mesh = std::make_unique<IEMesh>(path, meshId);
+    auto mesh = std::make_unique<IEMesh>(path);
     IEObjImporter::importMesh(path, *mesh);
 
     path = "./resources/materials/tests/mat.iemat";
     unsigned long long materialId = IEHash::Compute(path);
-    auto material = std::make_unique<IEMaterial>(path, materialId);
+    auto material = std::make_unique<IEMaterial>(path);
     IEUniform uniform;
     uniform.add("uColor", QColor(0, 0, 255, 255));
     material->setUniformData(uniform);
 
     path = "./resources/shaders/tests/instanced_renderable.glsl";
     unsigned long long shaderId = IEHash::Compute(path);
-    auto shader = std::make_unique<IEShader>(path, shaderId);
+    auto shader = std::make_unique<IEShader>(path);
     IEGlslImporter::importGlsl(path, *shader);
     shader->build();
 
     path = "./resources/renderables/tests/rend.ierend";
     unsigned long long renderableId = IEHash::Compute(path);
-    auto renderable = std::make_unique<IERenderable>(path, renderableId,
+    auto renderable = std::make_unique<IERenderable>(path,
                                                      meshId,
                                                      materialId,
                                                      shaderId);

@@ -3,25 +3,17 @@
 
 IEShader::IEShader() :
     QOpenGLShaderProgram(),
-    IEResource("", 0),
+    IEResource(),
     vertexSource(), fragmentSource()
 {
 
 }
 
-IEShader::IEShader(const QString& path, const unsigned long long id) :
+IEShader::IEShader(const QString& path) :
     QOpenGLShaderProgram(),
-    IEResource(path, id),
+    IEResource(path),
     vertexSource("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n"),
     fragmentSource("#version 430 core\n\nvoid main()\n{\n\t\n}\n\n")
-{
-
-}
-
-IEShader::IEShader(const IEShader& other) :
-    QOpenGLShaderProgram(),
-    IEResource(other.filePath, other.id),
-    vertexSource(other.vertexSource), fragmentSource(other.fragmentSource)
 {
 
 }
@@ -40,4 +32,27 @@ void IEShader::build()
     this->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexSource);
     this->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentSource);
     this->link();
+}
+
+
+QDataStream& IEShader::serialize(QDataStream& out, const Serializable& obj) const
+{
+    IEResource::serialize(out, obj);
+
+    const IEShader& shader = static_cast<const IEShader&>(obj);
+
+    out << shader.vertexSource << shader.fragmentSource;
+
+    return out;
+}
+
+QDataStream& IEShader::deserialize(QDataStream& in, Serializable& obj)
+{
+    IEResource::deserialize(in, obj);
+
+    IEShader& shader = static_cast<IEShader&>(obj);
+
+    in >> shader.vertexSource >> shader.fragmentSource;
+
+    return in;
 }

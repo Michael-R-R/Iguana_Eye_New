@@ -6,7 +6,7 @@ class EDefaultMaterial : public IEMaterial
 {
 
 public:
-    EDefaultMaterial(const QString& path, const unsigned long long id);
+    EDefaultMaterial(const QString& path);
     ~EDefaultMaterial() {}
 
 };

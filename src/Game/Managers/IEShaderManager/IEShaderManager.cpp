@@ -66,9 +66,7 @@ QDataStream& IEShaderManager::serialize(QDataStream& out, const Serializable& ob
 
     for(auto& i : manager.resources)
     {
-        auto& shader = *i.second;
-
-        out << shader.getFilePath() << shader.getId();
+        out << *i.second;
     }
 
     return out;
@@ -82,18 +80,14 @@ QDataStream& IEShaderManager::deserialize(QDataStream& in, Serializable& obj)
     int size = 0;
     in >> size;
 
-    QString path = "";
-    unsigned long long id = 0;
-
     for(int i = 0; i < size; i++)
     {
-        in >> path >> id;
-
-        auto shader = std::make_unique<IEShader>(path, id);
-        if(!IEGlslImporter::importGlsl(path, *shader))
-            continue;
+        auto shader = std::make_unique<IEShader>();
+        in >> *shader;
 
         shader->build();
+
+        unsigned long long id = shader->getId();
         manager.add(id, std::move(shader));
     }
 

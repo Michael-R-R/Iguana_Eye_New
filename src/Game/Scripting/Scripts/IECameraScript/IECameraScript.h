@@ -4,12 +4,11 @@
 #include <sol/sol.hpp>
 
 #include "IEScript.h"
-#include "Serializable.h"
 #include "IEEntity.h"
 
 class IECamera;
 
-class IECameraScript : public IEScript, public Serializable
+class IECameraScript : public IEScript
 {
     sol::function startFunc;
     sol::function updateFunc;
@@ -17,7 +16,8 @@ class IECameraScript : public IEScript, public Serializable
 
 public:
     IECameraScript();
-    IECameraScript(const QString& path, const unsigned long long id);
+    IECameraScript(const QString& path);
+    IECameraScript(const IECameraScript&) = delete;
     ~IECameraScript();
 
     bool operator==(const IECameraScript& other) { return IEScript::operator==(other); }

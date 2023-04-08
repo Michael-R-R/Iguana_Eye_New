@@ -14,7 +14,7 @@ NewShaderAction::NewShaderAction(EWGlslEditor* editor, IEShaderManager& shaderMa
         QString path = QFileDialog::getSaveFileName(nullptr,
                                                     "New Shader...",
                                                     "./resources",
-                                                    "Shader(*.glsl)");
+                                                    "Shader(*.ieshader)");
         if(path.isEmpty())
             return;
 
@@ -30,8 +30,7 @@ NewShaderAction::NewShaderAction(EWGlslEditor* editor, IEShaderManager& shaderMa
         }
         else
         {
-            std::unique_ptr<IEShader> shader = nullptr;
-            shader = std::make_unique<IEShader>(path, id);
+            auto shader = std::make_unique<IEShader>(path);
             shader->build();
             shaderManager.add(id, std::move(shader));
         }

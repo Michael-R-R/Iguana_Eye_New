@@ -18,8 +18,8 @@ protected:
 
 public:
     IEMesh();
-    IEMesh(const QString& path, const unsigned long long id);
-    IEMesh(const IEMesh& other);
+    IEMesh(const QString& path);
+    IEMesh(const IEMesh&) = delete;
     ~IEMesh();
 
     bool operator==(const IEMesh& other) { return IEResource::operator==(other); }
@@ -40,4 +40,7 @@ public:
     void setTanVertices(const QVector<QVector3D> val) { tangentVertices = val; }
     void setBiTanVertices(const QVector<QVector3D> val) { bitangentVertices = val; }
     void setIndices(const QVector<unsigned> val) { indices = val; }
+
+    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 };

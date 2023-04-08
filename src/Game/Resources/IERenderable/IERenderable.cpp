@@ -3,7 +3,7 @@
 
 IERenderable::IERenderable() :
     QOpenGLVertexArrayObject(),
-    IEResource("", 0),
+    IEResource(),
     renderType(RenderType::None), drawMode(GL_TRIANGLES),
     meshId(0), materialId(0), shaderId(0),
     indexBuffer(std::make_unique<IEIndexBuffer>()),
@@ -14,19 +14,17 @@ IERenderable::IERenderable() :
     shownCount(0), hiddenCount(0),
     uniformData(),
     dirtyVec2Buffers(), dirtyVec3Buffers(),
-    dirtyVec4Buffers(), dirtyMat4Buffers(),
-    isEdited(false)
+    dirtyVec4Buffers(), dirtyMat4Buffers()
 {
 
 }
 
 IERenderable::IERenderable(const QString& path,
-                           const unsigned long long id,
                            const unsigned long long meshId_,
                            const unsigned long long materialId_,
                            const unsigned long long shaderId_) :
     QOpenGLVertexArrayObject(),
-    IEResource(path, id),
+    IEResource(path),
     renderType(RenderType::None), drawMode(GL_TRIANGLES),
     meshId(meshId_), materialId(materialId_), shaderId(shaderId_),
     indexBuffer(std::make_unique<IEIndexBuffer>()),
@@ -37,28 +35,7 @@ IERenderable::IERenderable(const QString& path,
     shownCount(0), hiddenCount(0),
     uniformData(),
     dirtyVec2Buffers(), dirtyVec3Buffers(),
-    dirtyVec4Buffers(), dirtyMat4Buffers(),
-    isEdited(true)
-{
-
-}
-
-IERenderable::IERenderable(const IERenderable& other) :
-    QOpenGLVertexArrayObject(),
-    IEResource(other.filePath, other.id),
-    renderType(other.renderType), drawMode(other.drawMode),
-    meshId(other.meshId), materialId(other.materialId),
-    shaderId(other.shaderId),
-    indexBuffer(std::make_unique<IEIndexBuffer>(*other.indexBuffer)),
-    vec2BufferContainer(std::make_unique<IEVertexBufferContainer<QVector2D>>(*other.vec2BufferContainer)),
-    vec3BufferContainer(std::make_unique<IEVertexBufferContainer<QVector3D>>(*other.vec3BufferContainer)),
-    vec4BufferContainer(std::make_unique<IEVertexBufferContainer<QVector4D>>(*other.vec4BufferContainer)),
-    mat4BufferContainer(std::make_unique<IEVertexBufferContainer<QMatrix4x4>>(*other.mat4BufferContainer)),
-    shownCount(other.shownCount), hiddenCount(other.hiddenCount),
-    uniformData(other.uniformData),
-    dirtyVec2Buffers(other.dirtyVec2Buffers), dirtyVec3Buffers(other.dirtyVec3Buffers),
-    dirtyVec4Buffers(other.dirtyVec4Buffers), dirtyMat4Buffers(other.dirtyMat4Buffers),
-    isEdited(other.isEdited)
+    dirtyVec4Buffers(), dirtyMat4Buffers()
 {
 
 }
@@ -408,34 +385,34 @@ void IERenderable::purgeInstanceValues(const int index)
 
 QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) const
 {
+    IEResource::serialize(out, obj);
+
     const auto& renderable = static_cast<const IERenderable&>(obj);
 
-    out << renderable.filePath << renderable.id
-        << renderable.renderType
+    out << renderable.renderType
         << renderable.drawMode << renderable.meshId
         << renderable.materialId << renderable.shaderId
         << *renderable.indexBuffer << *renderable.vec2BufferContainer
         << *renderable.vec3BufferContainer << *renderable.vec4BufferContainer
         << *renderable.mat4BufferContainer << renderable.shownCount
-        << renderable.hiddenCount << renderable.uniformData
-        << renderable.isEdited;
+        << renderable.hiddenCount << renderable.uniformData;
 
     return out;
 }
 
 QDataStream& IERenderable::deserialize(QDataStream& in, Serializable& obj)
 {
+    IEResource::deserialize(in, obj);
+
     auto& renderable = static_cast<IERenderable&>(obj);
 
-    in >> renderable.filePath >> renderable.id
-       >> renderable.renderType
+    in >> renderable.renderType
        >> renderable.drawMode >> renderable.meshId
        >> renderable.materialId >> renderable.shaderId
        >> *renderable.indexBuffer >> *renderable.vec2BufferContainer
        >> *renderable.vec3BufferContainer >> *renderable.vec4BufferContainer
        >> *renderable.mat4BufferContainer >> renderable.shownCount
-       >> renderable.hiddenCount >> renderable.uniformData
-       >> renderable.isEdited;
+       >> renderable.hiddenCount >> renderable.uniformData;
 
     return in;
 }

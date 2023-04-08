@@ -4,11 +4,10 @@
 #include <sol/sol.hpp>
 
 #include "IEScript.h"
-#include "Serializable.h"
 #include "ScriptData.h"
 #include "IEEntity.h"
 
-class IEEntityScript : public IEScript, public Serializable
+class IEEntityScript : public IEScript
 {
     sol::function startFunc;
     sol::function updateFunc;
@@ -21,7 +20,8 @@ class IEEntityScript : public IEScript, public Serializable
 
 public:
     IEEntityScript();
-    IEEntityScript(const QString& path, const unsigned long long id);
+    IEEntityScript(const QString& path);
+    IEEntityScript(const IEEntityScript&) = delete;
     ~IEEntityScript();
 
     bool operator==(const IEEntityScript& other) { return IEScript::operator==(other); }

@@ -1,7 +1,7 @@
 #include "SaveShaderAction.h"
 #include "EWGlslEditor.h"
 #include "IEShaderManager.h"
-#include "IEFile.h"
+#include "IESerialize.h"
 
 SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
                                    InputKey& shortcut, QObject* parent) :
@@ -21,13 +21,13 @@ SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shader
             return;
 
         const QString& path = shader->getFilePath();
-        editor->saveContentToFile(path);
-
         QString vSrc = editor->getVertSrcEditor()->getTextContent();
         QString fSrc = editor->getFragSrcEditor()->getTextContent();
 
         shader->setVertexSrc(vSrc);
         shader->setFragmentSrc(fSrc);
+
+        IESerialize::write<IEShader>(path, shader);
     });
 
     connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)

@@ -61,18 +61,7 @@ QDataStream& IERenderableManager::serialize(QDataStream& out, const Serializable
 
     for(auto& i : manager.resources)
     {
-        IERenderable& renderable = *i.second;
-
-        if(renderable.getIsEdited())
-        {
-            if(!IEFile::doesPathExist(renderable.getFilePath()))
-                IEFile::makePath(renderable.getFilePath());
-
-            if(IESerialize::write<IERenderable>(renderable.getFilePath(), &renderable))
-                renderable.setIsEdited(false);
-        }
-
-        out << renderable.getFilePath();
+        out << *i.second;
     }
 
     return out;
@@ -86,15 +75,11 @@ QDataStream& IERenderableManager::deserialize(QDataStream& in, Serializable& obj
     int size = 0;
     in >> size;
 
-    QString filePath = "";
-
     for(int i = 0; i < size; i++)
     {
-        in >> filePath;
-
         auto renderable = std::make_unique<IERenderable>();
-        if(!IESerialize::read<IERenderable>(filePath, &(*renderable)))
-            continue;
+
+        in >> *renderable;
 
         auto& shaderManager = IEScene::instance().getShaderManager();
         IEShader* shader = shaderManager.value(renderable->getShaderId());

@@ -1,12 +1,11 @@
 #pragma once
 
 #include "IEResource.h"
-#include "Serializable.h"
 #include "IEUniform.h"
 
 class IEShader;
 
-class IEMaterial : public IEResource, public Serializable
+class IEMaterial : public IEResource
 {
 protected:
     IEUniform uniformData;
@@ -16,12 +15,11 @@ protected:
     unsigned long long specularTexId;
     unsigned long long normalTexId;
     unsigned long long heightTexId;
-    bool isEdited;
 
 public:
     IEMaterial();
-    IEMaterial(const QString& path, const unsigned long long id);
-    IEMaterial(const IEMaterial& other);
+    IEMaterial(const QString& path);
+    IEMaterial(const IEMaterial&) = delete;
     ~IEMaterial();
 
     bool operator==(const IEMaterial& other) { return IEResource::operator==(other); }
@@ -37,7 +35,6 @@ public:
     unsigned long long getSpecularTexId() const { return specularTexId; }
     unsigned long long getNormalTexId() const { return normalTexId; }
     unsigned long long getHeightTexId() const { return heightTexId; }
-    bool getIsEdited() const { return isEdited; }
 
     void setUniformData(const IEUniform& val) { uniformData = val; }
     void setObjectColor(const QColor val) { objectColor = val; }
@@ -46,7 +43,6 @@ public:
     void setSpecularTexId(const unsigned long long val) { specularTexId = val; }
     void setNormalTexId(const unsigned long long val) { normalTexId = val; }
     void setHeightTexId(const unsigned long long val) { heightTexId = val; }
-    void setIsEdited(const bool val) { isEdited = val; }
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
     QDataStream& deserialize(QDataStream &in, Serializable &obj) override;

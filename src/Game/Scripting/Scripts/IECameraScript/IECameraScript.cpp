@@ -9,8 +9,8 @@ IECameraScript::IECameraScript() :
 
 }
 
-IECameraScript::IECameraScript(const QString& path, const unsigned long long id) :
-    IEScript(path, id),
+IECameraScript::IECameraScript(const QString& path) :
+    IEScript(path),
     startFunc(), updateFunc(), updateProjectionFunc()
 {
 
@@ -33,16 +33,14 @@ bool IECameraScript::initalize(sol::state& lua)
         updateFunc = env["update"];
         updateProjectionFunc = env["updateProjection"];
 
-        isValid = true;
+        return true;
     }
     catch(const std::exception& e)
     {
-        isValid = false;
-
         qDebug() << QString("ERROR::%1").arg(e.what());
-    }
 
-    return isValid;
+        return false;
+    }
 }
 
 void IECameraScript::start(const IEEntity entity) const
@@ -62,18 +60,10 @@ void IECameraScript::updateProjection(IECamera* camera, const float w, const flo
 
 QDataStream& IECameraScript::serialize(QDataStream& out, const Serializable& obj) const
 {
-    const auto& script = static_cast<const IECameraScript&>(obj);
-
-    out << script.filePath << script.id;
-
-    return out;
+    return IEScript::serialize(out, obj);
 }
 
 QDataStream& IECameraScript::deserialize(QDataStream& in, Serializable& obj)
 {
-    auto& script = static_cast<IECameraScript&>(obj);
-
-    in >> script.filePath >> script.id;
-
-    return in;
+    return IEScript::deserialize(in, obj);
 }

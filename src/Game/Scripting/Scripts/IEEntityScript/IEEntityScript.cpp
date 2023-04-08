@@ -11,11 +11,12 @@ IEEntityScript::IEEntityScript() :
 
 }
 
-IEEntityScript::IEEntityScript(const QString& path, const unsigned long long id) :
-    IEScript(path, id),
+IEEntityScript::IEEntityScript(const QString& path) :
+    IEScript(path),
     startFunc(), updateFunc(),
     wakeFunc(), sleepFunc(),
-    onTriggerEnterFunc(), onTriggerLeaveFunc(),
+    onTriggerEnterFunc(),
+    onTriggerLeaveFunc(),
     scriptData()
 {
 
@@ -41,16 +42,14 @@ bool IEEntityScript::initalize(sol::state& lua)
         onTriggerEnterFunc = env["onTriggerEnter"];
         onTriggerLeaveFunc = env["onTriggerLeave"];
 
-        isValid = true;
+        return true;
     }
     catch(const std::exception& e)
     {
-        isValid = false;
-
         qDebug() << QString("ERROR::%1").arg(e.what());
-    }
 
-    return isValid;
+        return false;
+    }
 }
 
 void IEEntityScript::start(const IEEntity entity) const
@@ -85,36 +84,34 @@ void IEEntityScript::onTriggerLeave(const IEEntity& otherEntity) const
 
 void IEEntityScript::dataFromScript()
 {
-    if(!isValid)
-        return;
-
     scriptData.fromScript(env);
 }
 
 void IEEntityScript::dataToScript()
 {
-    if(!isValid)
-        return;
-
     scriptData.toScript(env);
 }
 
 QDataStream& IEEntityScript::serialize(QDataStream& out, const Serializable& obj) const
 {
+    IEScript::serialize(out, obj);
+
     const auto& script = static_cast<const IEEntityScript&>(obj);
 
     const_cast<IEEntityScript&>(script).dataFromScript();
 
-    out << script.filePath << script.id << script.scriptData;
+    out << script.scriptData;
 
     return out;
 }
 
 QDataStream& IEEntityScript::deserialize(QDataStream& in, Serializable& obj)
 {
+    IEScript::deserialize(in, obj);
+
     auto& script = static_cast<IEEntityScript&>(obj);
 
-    in >> script.filePath >> script.id >> script.scriptData;
+    in >> script.scriptData;
 
     return in;
 }

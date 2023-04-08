@@ -1,7 +1,7 @@
 #pragma once
 
+#include <QSharedPointer>
 #include <QVector>
-#include <QMap>
 #include <QSet>
 
 #include "IEECSSystem.h"
@@ -17,20 +17,53 @@ class IEECSScriptSystem : public IEECSSystem
     struct Data
     {
         QVector<IEEntity> entity;
-        QVector<QMap<unsigned long long, IEEntityScript>> scriptCollection;
+        QVector<QMap<unsigned long long, QSharedPointer<IEEntityScript>>> scriptCollection;
         QVector<QSet<unsigned long long>> sleepingScripts;
         QVector<QSet<unsigned long long>> awakenedScripts;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entity << data.scriptCollection << data.sleepingScripts << data.awakenedScripts;
+            out << data.entity << data.sleepingScripts << data.awakenedScripts;
+            out << (int)data.scriptCollection.size();
+
+            foreach (auto i, data.scriptCollection)
+            {
+                out << (int)i.size();
+
+                foreach(auto j, i)
+                {
+                    out << *j;
+                }
+            }
 
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entity >> data.scriptCollection >> data.sleepingScripts >> data.awakenedScripts;
+            data.scriptCollection.clear();
+
+            int vecSize = 0;
+            in >> data.entity >> data.sleepingScripts >> data.awakenedScripts;
+            in >> vecSize;
+
+            for(int i = 0; i < vecSize; i++)
+            {
+                QMap<unsigned long long, QSharedPointer<IEEntityScript>> tempMap;
+
+                int mapSize = 0;
+                in >> mapSize;
+
+                for(int j = 0; j < mapSize; j++)
+                {
+                    auto script = QSharedPointer<IEEntityScript>::create();
+                    in >> *script;
+
+                    tempMap.insert(script->getId(), script);
+                }
+
+                data.scriptCollection.append(tempMap);
+            }
 
             return in;
         }
@@ -48,21 +81,18 @@ public:
     void initalize() override;
     void reset() override;
 
-    bool initalizeScript(const int index, const unsigned long long id, sol::state& lua);
-    void startScript(const int index, const unsigned long long id);
     void wakeScript(const int index, const unsigned long long id);
     void sleepScript(const int index, const unsigned long long id);
     void clearSleepingScripts();
     void clearAwakenScripts();
 
-    void attachScript(const int index, const IEEntityScript& script);
+    void attachScript(const int index, const QSharedPointer<IEEntityScript> script);
     void removeScript(const int index, const unsigned long long id);
 
     bool hasScript(const int index, const unsigned long long id);
-    bool isScriptValid(const int index, const unsigned long long id);
 
-    IEScript* getScript(const int index, const unsigned long long id);
-    IEScript* getScript(const int index, const char* name);
+    QSharedPointer<IEEntityScript> getScript(const int index, const unsigned long long id);
+    QSharedPointer<IEEntityScript> getScript(const int index, const char* name);
 
 private:
     void deserializeScripts();

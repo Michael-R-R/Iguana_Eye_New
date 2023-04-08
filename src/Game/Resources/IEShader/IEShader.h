@@ -14,8 +14,8 @@ protected:
 
 public:
     IEShader();
-    IEShader(const QString& path, const unsigned long long id);
-    IEShader(const IEShader& other);
+    IEShader(const QString& path);
+    IEShader(const IEShader&) = delete;
     ~IEShader();
 
     bool operator==(const IEShader& other) { return IEResource::operator==(other); }
@@ -30,4 +30,7 @@ public:
 
     void setVertexSrc(const QString& val) { vertexSource = val; }
     void setFragmentSrc(const QString& val) { fragmentSource = val; }
+
+    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 };

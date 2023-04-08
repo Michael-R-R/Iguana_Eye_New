@@ -2,7 +2,7 @@
 #include "IEInput.h"
 
 ECamera::ECamera() :
-    IECamera("", 0),
+    IECamera(),
     position(0.0f, 5.0f, 0.0f), rotation(0.0f, 0.0f, -1.0f), transform(),
     lastX(0.0f), lastY(0.0f), isCaptured(false),
     yaw(-90.0f), pitch(0.0f)
@@ -100,9 +100,9 @@ void ECamera::calcModelMatrix()
 
 QDataStream& ECamera::serialize(QDataStream& out, const Serializable& obj) const
 {
-    const ECamera& camera = static_cast<const ECamera&>(obj);
-
     IECamera::serialize(out, obj);
+
+    const ECamera& camera = static_cast<const ECamera&>(obj);
 
     out << camera.position << camera.rotation << camera.transform
         << camera.lastX << camera.lastY << camera.yaw << camera.pitch;
@@ -112,9 +112,9 @@ QDataStream& ECamera::serialize(QDataStream& out, const Serializable& obj) const
 
 QDataStream& ECamera::deserialize(QDataStream& in, Serializable& obj)
 {
-    ECamera& camera = static_cast<ECamera&>(obj);
-
     IECamera::deserialize(in, obj);
+
+    ECamera& camera = static_cast<ECamera&>(obj);
 
     in >> camera.position >> camera.rotation >> camera.transform
        >> camera.lastX >> camera.lastY >> camera.yaw >> camera.pitch;

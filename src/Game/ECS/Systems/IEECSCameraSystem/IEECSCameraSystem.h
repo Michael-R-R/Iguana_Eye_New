@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QDataStream>
+#include <QSharedPointer>
 #include <QVector>
 #include <QMap>
 
@@ -15,18 +15,38 @@ class IEECSCameraSystem : public IEECSSystem
     struct Data
     {
         QVector<IEEntity> entity;
-        QVector<IECameraScript> cameraScript;
         QVector<unsigned long long> cameraId;
+        QVector<QSharedPointer<IECameraScript>> cameraScript;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entity << data.cameraId << data.cameraScript;
+            out << data.entity << data.cameraId;
+            out << (int)data.cameraScript.size();
+
+            foreach(auto& i, data.cameraScript)
+            {
+                out << *i;
+            }
+
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entity >> data.cameraId >> data.cameraScript;
+            data.cameraScript.clear();
+
+            int size = 0;
+            in >> data.entity >> data.cameraId >> size;
+
+            for(int i = 0; i < size; i++)
+            {
+                auto script = QSharedPointer<IECameraScript>::create();
+
+                in >> *script;
+
+                data.cameraScript.append(script);
+            }
+
             return in;
         }
     };
@@ -50,10 +70,10 @@ public:
     IECamera* getAttachedCamera(const int index) const;
     void setActiveIndex(const int val);
 
-    const IECameraScript* getScript(const int index) const;
+    const QSharedPointer<IECameraScript> getScript(const int index) const;
     unsigned long long getCameraId(const int index) const;
 
-    void setScript(const int index, const IECameraScript& val);
+    void setScript(const int index, const QSharedPointer<IECameraScript> val);
     void setCameraId(const int index, const unsigned long long val);
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

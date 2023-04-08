@@ -2,31 +2,21 @@
 #include "IEShader.h"
 
 IEMaterial::IEMaterial() :
-    IEResource("", 0),
+    IEResource(),
     uniformData(), objectColor(),
     atlasTexId(0), diffuseTexId(0),
     specularTexId(0), normalTexId(0),
-    heightTexId(0), isEdited(false)
+    heightTexId(0)
 {
 
 }
 
-IEMaterial::IEMaterial(const QString& path, const unsigned long long id) :
-    IEResource(path, id),
+IEMaterial::IEMaterial(const QString& path) :
+    IEResource(path),
     uniformData(), objectColor(),
     atlasTexId(0), diffuseTexId(0),
     specularTexId(0), normalTexId(0),
-    heightTexId(0), isEdited(true)
-{
-
-}
-
-IEMaterial::IEMaterial(const IEMaterial& other) :
-    IEResource(other.filePath, other.id),
-    uniformData(other.uniformData), objectColor(other.objectColor),
-    atlasTexId(other.atlasTexId), diffuseTexId(other.diffuseTexId),
-    specularTexId(other.specularTexId), normalTexId(other.normalTexId),
-    heightTexId(other.heightTexId), isEdited(other.isEdited)
+    heightTexId(0)
 {
 
 }
@@ -43,36 +33,34 @@ void IEMaterial::bindUniformData(IEShader& shader) const
 
 QDataStream& IEMaterial::serialize(QDataStream& out, const Serializable& obj) const
 {
+    IEResource::serialize(out, obj);
+
     const auto& material = static_cast<const IEMaterial&>(obj);
 
-    out << material.filePath
-        << material.id
-        << material.uniformData
+    out << material.uniformData
         << material.objectColor
         << material.atlasTexId
         << material.diffuseTexId
         << material.specularTexId
         << material.normalTexId
-        << material.heightTexId
-        << material.isEdited;
+        << material.heightTexId;
 
     return out;
 }
 
 QDataStream& IEMaterial::deserialize(QDataStream& in, Serializable& obj)
 {
+    IEResource::deserialize(in, obj);
+
     auto& material = static_cast<IEMaterial&>(obj);
 
-    in >> material.filePath
-       >> material.id
-       >> material.uniformData
+    in >> material.uniformData
        >> material.objectColor
        >> material.atlasTexId
        >> material.diffuseTexId
        >> material.specularTexId
        >> material.normalTexId
-       >> material.heightTexId
-       >> material.isEdited;
+       >> material.heightTexId;
 
     return in;
 }

@@ -58,9 +58,7 @@ QDataStream& IEMeshManager::serialize(QDataStream& out, const Serializable& obj)
 
     for(auto& i : manager.resources)
     {
-        IEMesh& mesh = *i.second;
-
-        out << mesh.getFilePath() << mesh.getId();
+        out << *i.second;
     }
 
     return out;
@@ -74,17 +72,12 @@ QDataStream& IEMeshManager::deserialize(QDataStream& in, Serializable& obj)
     int size = 0;
     in >> size;
 
-    QString path = "";
-    unsigned long long id = 0;
-
     for(int i = 0; i < size; i++)
     {
-        in >> path >> id;
+        auto mesh = std::make_unique<IEMesh>();
+        in >> *mesh;
 
-        auto mesh = std::make_unique<IEMesh>(path, id);
-        if(!IEObjImporter::importMesh(path, *mesh))
-            continue;
-
+        unsigned long long id = mesh->getId();
         manager.add(id, std::move(mesh));
     }
 

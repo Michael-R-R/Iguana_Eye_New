@@ -1,7 +1,7 @@
 #include "EGridMesh.h"
 
 EGridMesh::EGridMesh() :
-    IEMesh("", 0)
+    IEMesh()
 {
     positionVertices =
     {
@@ -11,7 +11,7 @@ EGridMesh::EGridMesh() :
         QVector3D(-1.0f, -1.0f, 0.0),
         QVector3D(1.0f, 1.0f, 0.0),
         QVector3D(1.0f, -1.0f, 0.0)
-        };
+    };
 }
 
 EGridMesh::~EGridMesh()

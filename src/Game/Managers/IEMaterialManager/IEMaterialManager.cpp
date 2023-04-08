@@ -59,18 +59,7 @@ QDataStream& IEMaterialManager::serialize(QDataStream& out, const Serializable& 
 
     for(auto& i : manager.resources)
     {
-        IEMaterial& material = *i.second;
-
-        if(material.getIsEdited())
-        {
-            if(!IEFile::doesPathExist(material.getFilePath()))
-                IEFile::makePath(material.getFilePath());
-
-            if(IESerialize::write<IEMaterial>(material.getFilePath(), &material))
-                material.setIsEdited(false);
-        }
-
-        out << material.getFilePath();
+        out << *i.second;
     }
 
     return out;
@@ -84,15 +73,11 @@ QDataStream& IEMaterialManager::deserialize(QDataStream& in, Serializable& obj)
     int size = 0;
     in >> size;
 
-    QString filePath = "";
-
     for(int i = 0; i < size; i++)
     {
-        in >> filePath;
-
         auto material = std::make_unique<IEMaterial>();
-        if(!IESerialize::read<IEMaterial>(filePath, &(*material)))
-            continue;
+
+        in >> *material;
 
         auto id = material->getId();
         manager.add(id, std::move(material));
