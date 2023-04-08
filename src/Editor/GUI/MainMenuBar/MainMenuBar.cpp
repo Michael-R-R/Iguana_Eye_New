@@ -62,7 +62,7 @@ QAction* MainMenuBar::getMenuAction(const QString& menuTitle, const QString& act
 void MainMenuBar::setupFileSubMenu(const AppStartEvent& event)
 {
     auto fileMenu = new FileSubMenu(this);
-    fileMenu->setupActions(event);
+    fileMenu->startup(event);
     appendSubMenu("File", fileMenu);
 }
 

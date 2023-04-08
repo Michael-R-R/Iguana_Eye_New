@@ -10,6 +10,9 @@
 #include "SaveAsGameFileAction.h"
 #include "ToggleWindowAction.h"
 #include "QuitAppAction.h"
+#include "IEGame.h"
+#include "IEGamePlayState.h"
+#include "IEGameStopState.h"
 
 FileSubMenu::FileSubMenu(QWidget* parent) :
     SubMenu("File", parent)
@@ -22,7 +25,7 @@ FileSubMenu::~FileSubMenu()
 
 }
 
-void FileSubMenu::setupActions(const AppStartEvent& event)
+void FileSubMenu::startup(const AppStartEvent& event)
 {
     auto* input = event.getEditor()->getInput();
     auto windowManager = event.getEditor()->getUi()->getWindowManager();
@@ -35,4 +38,17 @@ void FileSubMenu::setupActions(const AppStartEvent& event)
     this->addSeparator();
     appendAction("Options", new ToggleWindowAction("Options", input->getConfigKey("Options"), windowManager->getValue("Options"), this));
     appendAction("Quit", new QuitAppAction(input->getConfigKey("Quit"), this));
+
+    setupConnections(event);
+}
+
+void FileSubMenu::setupConnections(const AppStartEvent& event)
+{
+    connect(event.getGame(), &IEGame::stateChanged, this, [this](QSharedPointer<IEGameState> state)
+            {
+                if(dynamic_cast<IEGamePlayState*>(&(*state)))
+                    this->setAllEnabled(false);
+                else if(dynamic_cast<IEGameStopState*>(&(*state)))
+                    this->setAllEnabled(true);
+            });
 }

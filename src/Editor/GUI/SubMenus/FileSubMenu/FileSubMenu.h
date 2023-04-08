@@ -11,6 +11,9 @@ public:
     FileSubMenu(QWidget* parent = nullptr);
     ~FileSubMenu();
 
-    void setupActions(const AppStartEvent& event);
+    void startup(const AppStartEvent& event);
+
+private:
+    void setupConnections(const AppStartEvent& event);
 };
 

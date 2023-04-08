@@ -110,6 +110,8 @@ void IEGame::changeState(QSharedPointer<IEGameState> val)
         state->exit(*this);
     state = val;
     state->enter(*this);
+
+    emit stateChanged(val);
 }
 
 void IEGame::onUpdateFrame()

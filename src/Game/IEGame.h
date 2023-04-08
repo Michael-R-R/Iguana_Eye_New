@@ -48,4 +48,5 @@ public:
 
 signals:
     void initialized();
+    void stateChanged(QSharedPointer<IEGameState> state);
 };

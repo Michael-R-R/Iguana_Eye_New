@@ -18,5 +18,7 @@ public:
     bool doesExist(const QString& title);
 
     QAction* getAction(const QString& title);
+
+    void setAllEnabled(bool val);
 };
 

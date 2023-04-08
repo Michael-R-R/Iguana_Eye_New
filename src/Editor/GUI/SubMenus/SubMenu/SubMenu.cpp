@@ -41,3 +41,11 @@ QAction* SubMenu::getAction(const QString& title)
     if(!doesExist(title)) { return nullptr; }
     return actionCollection[title];
 }
+
+void SubMenu::setAllEnabled(bool val)
+{
+    for(auto& i : actionCollection)
+    {
+        i->setEnabled(val);
+    }
+}
