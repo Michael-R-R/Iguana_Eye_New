@@ -10,9 +10,10 @@ class IEResourceManager : public IEObject
 {
 protected:
     QMap<unsigned long long, QSharedPointer<T>> resources;
+    unsigned long long defaultId;
 
 public:
-    IEResourceManager() : resources()
+    IEResourceManager() : resources(), defaultId(0)
     {
 
     }
@@ -76,6 +77,8 @@ public:
     {
         return resources;
     }
+
+    unsigned long long getDefaultId() const { return defaultId; }
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override
     {

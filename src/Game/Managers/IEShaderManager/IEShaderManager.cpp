@@ -1,9 +1,13 @@
 #include "IEShaderManager.h"
+#include "IEDefaultShader.h"
 
 IEShaderManager::IEShaderManager() :
     IEResourceManager()
 {
-
+    auto shader = QSharedPointer<IEDefaultShader>::create("./resources/shaders/game/default.glsl");
+    shader->build();
+    defaultId = shader->getId();
+    IEShaderManager::add(defaultId, shader);
 }
 
 IEShaderManager::~IEShaderManager()

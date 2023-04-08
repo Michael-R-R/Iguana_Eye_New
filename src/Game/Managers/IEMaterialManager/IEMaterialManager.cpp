@@ -1,9 +1,12 @@
 #include "IEMaterialManager.h"
+#include "IEDefaultMaterial.h"
 
 IEMaterialManager::IEMaterialManager() :
     IEResourceManager()
 {
-
+    auto defaultMat = QSharedPointer<IEDefaultMaterial>::create("./resources/materials/game/default.iemat");
+    defaultId = defaultMat->getId();
+    IEMaterialManager::add(defaultId, defaultMat);
 }
 
 IEMaterialManager::~IEMaterialManager()

@@ -15,6 +15,7 @@ public:
     static bool removePath(const QString& path);
     static bool doesPathExist(const QString& path);
     static QString extractName(const QString& path);
+    static QString extractExtension(const QString& path);
 
 private:
     static QString removeFileName(const QString& path);

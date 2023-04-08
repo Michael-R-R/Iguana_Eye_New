@@ -115,7 +115,7 @@ INCLUDEPATH += $$PWD/src/Editor/Startup/Cameras \
     $$PWD/src/Editor/Startup/Cameras/ECamera \
 
 INCLUDEPATH += $$PWD/src/Editor/Startup/Materials \
-    $$PWD/src/Editor/Startup/Materials/EDefaultMaterial \
+    $$PWD/src/Editor/Startup/Materials/IEDefaultMaterial \
 
 INCLUDEPATH += $$PWD/src/Editor/Startup/Meshes \
     $$PWD/src/Editor/Startup/Meshes/EGridMesh \
@@ -125,6 +125,7 @@ INCLUDEPATH += $$PWD/src/Editor/Startup/Renderables \
 
 INCLUDEPATH += $$PWD/src/Editor/Startup/Shaders \
     $$PWD/src/Editor/Startup/Shaders/EGridShader \
+    $$PWD/src/Editor/Startup/Shaders/IEDefaultShader \
 
 INCLUDEPATH += $$PWD/src/Events \
     $$PWD/src/Events/AppStartEvent \
