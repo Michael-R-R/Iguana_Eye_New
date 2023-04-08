@@ -3,8 +3,6 @@
 #include "IEResourceManager.h"
 #include "IEShader.h"
 
-class GameStartEvent;
-
 class IEShaderManager : public IEResourceManager<IEShader>
 {
     Q_OBJECT
@@ -18,7 +16,7 @@ public:
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
 
 private:
-    void buildAllShaders();
+    void buildAll();
 
 signals:
     void added(const unsigned long long key, const QString& path);

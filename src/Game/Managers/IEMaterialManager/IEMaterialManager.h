@@ -3,8 +3,6 @@
 #include "IEResourceManager.h"
 #include "IEMaterial.h"
 
-class GameStartEvent;
-
 class IEMaterialManager: public IEResourceManager<IEMaterial>
 {
     Q_OBJECT

@@ -3,8 +3,6 @@
 #include "IEResourceManager.h"
 #include "IERenderable.h"
 
-class IEShader;
-
 class IERenderableManager : public IEResourceManager<IERenderable>
 {
     Q_OBJECT
@@ -16,6 +14,9 @@ public:
     bool add(const unsigned long long key, QSharedPointer<IERenderable> value) override;
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
+
+private:
+    void buildAll();
 
 signals:
     void added(const unsigned long long key, const QString& path);

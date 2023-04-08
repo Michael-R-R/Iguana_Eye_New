@@ -9,13 +9,10 @@ template <class T>
 class IEResourceManager : public IEObject
 {
 protected:
-    unsigned long long defaultResourceId;
     QMap<unsigned long long, QSharedPointer<T>> resources;
 
 public:
-    IEResourceManager() :
-        resources(),
-        defaultResourceId(0)
+    IEResourceManager() : resources()
     {
 
     }
@@ -25,9 +22,37 @@ public:
 
     }
 
-    virtual bool add(const unsigned long long key, QSharedPointer<T> value) = 0;
-    virtual bool remove(const unsigned long long key) = 0;
-    virtual bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) = 0;
+    virtual bool add(const unsigned long long key, QSharedPointer<T> value)
+    {
+        if(!value || doesExist(key))
+            return false;
+
+        resources[key] = value;
+
+        return true;
+    }
+
+    virtual bool remove(const unsigned long long key)
+    {
+        if(!doesExist(key))
+            return false;
+
+        resources.remove(key);
+
+        return true;
+    }
+
+    virtual bool changeKey(const unsigned long long oldKey, const unsigned long long newKey)
+    {
+        if(!doesExist(oldKey) || doesExist(newKey))
+            return false;
+
+        auto temp = resources[oldKey];
+        resources.remove(oldKey);
+        resources[newKey] = temp;
+
+        return true;
+    }
 
     QSharedPointer<T> value(const unsigned long long key) const
     {
@@ -52,13 +77,37 @@ public:
         return resources;
     }
 
-    unsigned long long getDefaultResourceId() const
+    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override
     {
-        return defaultResourceId;
+        const auto& manager = static_cast<const IEResourceManager&>(obj);
+
+        out << (int)manager.resources.size();
+
+        for(auto& i : manager.resources)
+        {
+            out << *i;
+        }
+
+        return out;
     }
 
-    void setDefaultResourceId(const unsigned long long val)
+    QDataStream& deserialize(QDataStream& in, Serializable& obj) override
     {
-        defaultResourceId = val;
+        auto& manager = static_cast<IEResourceManager&>(obj);
+        manager.clear();
+
+        int size = 0;
+        in >> size;
+
+        for(int i = 0; i < size; i++)
+        {
+            auto resource = QSharedPointer<T>::create();
+
+            in >> *resource;
+
+            manager.add(resource->getId(), resource);
+        }
+
+        return in;
     }
 };

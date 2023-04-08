@@ -3,8 +3,6 @@
 #include "IEResourceManager.h"
 #include "IEMesh.h"
 
-class GameStartEvent;
-
 class IEMeshManager : public IEResourceManager<IEMesh>
 {
     Q_OBJECT
