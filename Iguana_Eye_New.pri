@@ -176,9 +176,12 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
 INCLUDEPATH += $$PWD/src/Game/Physics \
     $$PWD/src/Game/Physics/IEBaseCollider \
     $$PWD/src/Game/Physics/IEBoxCollider \
-    $$PWD/src/Game/Physics/IEBoxRigidBody \
-    $$PWD/src/Game/Physics/IERigidBody \
+    $$PWD/src/Game/Physics/IEBoxRigidbody \
+    $$PWD/src/Game/Physics/IECapsuleRigidbody \
+    $$PWD/src/Game/Physics/IEPlaneRigidbody \
+    $$PWD/src/Game/Physics/IERigidbody \
     $$PWD/src/Game/Physics/IESimulationCallback \
+    $$PWD/src/Game/Physics/IESphereRigidbody \
 
 INCLUDEPATH += $$PWD/src/Game/Resources \
     $$PWD/src/Game/Resources/IECamera \

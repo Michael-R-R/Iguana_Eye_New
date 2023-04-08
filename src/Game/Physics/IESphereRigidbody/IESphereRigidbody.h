@@ -1,23 +1,22 @@
 #pragma once
 
-#include "IERigidBody.h"
+#include "IERigidbody.h"
 
-class IEBoxRigidbody : public IERigidbody
+class IESphereRigidbody : public IERigidbody
 {
-    float extentX, extentY, extentZ;
+    float radius;
 
 public:
-    IEBoxRigidbody(physx::PxPhysics* p,
-                   physx::PxMaterial* m);
-    IEBoxRigidbody(physx::PxPhysics* p,
+    IESphereRigidbody(physx::PxPhysics* p,
+                      physx::PxMaterial* m);
+    IESphereRigidbody(physx::PxPhysics* p,
                    physx::PxMaterial* m,
                    RigidbodyType type,
                    const int id,
-                   const float x, const float y, const float z,
+                   const float r,
                    const float d = 0.0f,
                    const float st = 0.0f);
-    IEBoxRigidbody(const IEBoxRigidbody&) = delete;
-    ~IEBoxRigidbody();
+    ~IESphereRigidbody();
 
     void create(const physx::PxTransform& t) override;
 

@@ -1,5 +1,4 @@
 #include "IEECSRigidbody3DSystem.h"
-#include "IEGame.h"
 #include "IESimulationCallback.h"
 #include "IEECSTransformSystem.h"
 #include "ECSOnUpdateEvent.h"
@@ -32,7 +31,7 @@ int IEECSRigidbody3DSystem::attach(const IEEntity entity)
     entityMap[entity] = index;
 
     data.entity.push_back(entity);
-    data.rigidbody.push_back(QSharedPointer<IERigidBody>::create());
+    data.rigidbody.push_back(QSharedPointer<IERigidbody>::create());
 
     return index;
 }
@@ -82,7 +81,7 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
         if(!data.rigidbody[i])
             continue;
 
-        IERigidBody& rigidbody = *data.rigidbody[i];
+        IERigidbody& rigidbody = *data.rigidbody[i];
 
         physx::PxVec3 pxPos = rigidbody.getGlobalPos();
         physx::PxQuat pxQuat = rigidbody.getGlobalQuat();
@@ -151,7 +150,7 @@ void IEECSRigidbody3DSystem::release(const int index)
     sleepingBodies.remove(index);
 }
 
-QSharedPointer<IERigidBody> IEECSRigidbody3DSystem::getRigidbody(const int index) const
+QSharedPointer<IERigidbody> IEECSRigidbody3DSystem::getRigidbody(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
@@ -159,7 +158,7 @@ QSharedPointer<IERigidBody> IEECSRigidbody3DSystem::getRigidbody(const int index
     return data.rigidbody[index];
 }
 
-void IEECSRigidbody3DSystem::setRigidbody(const int index, const QSharedPointer<IERigidBody> val)
+void IEECSRigidbody3DSystem::setRigidbody(const int index, const QSharedPointer<IERigidbody> val)
 {
     if(!indexBoundCheck(index))
         return;
