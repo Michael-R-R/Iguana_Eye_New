@@ -31,22 +31,22 @@ public:
     ApplicationWindow(QWidget *parent = nullptr);
     ~ApplicationWindow();
 
-    void startup();
-    void shutdown();
-
     void modifyTitle(const QString& text);
     void setModified(const bool isModified);
 
-private:
+    void startup();
     void initalize();
-    void clearActions();
+    void shutdown();
 
-public slots:
     void newFile();
     void saveToFile();
     void saveAsToFile(const QString& path);
     void openFromFile(const QString& path);
 
+private:
+    void clearActions();
+
+public:
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 };

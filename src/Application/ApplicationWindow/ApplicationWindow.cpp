@@ -3,9 +3,7 @@
 #include "AppStartEvent.h"
 #include "Editor.h"
 #include "IEGame.h"
-#include "IEGamePlayState.h"
 #include "IEGameStopState.h"
-#include "IESerialize.h"
 
 ApplicationWindow::ApplicationWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,23 +20,6 @@ ApplicationWindow::ApplicationWindow(QWidget *parent) :
 ApplicationWindow::~ApplicationWindow()
 {
     delete ui;
-}
-
-void ApplicationWindow::startup()
-{
-    game = QSharedPointer<IEGame>::create(this);
-    connect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
-    this->setCentralWidget(&(*game));
-}
-
-void ApplicationWindow::shutdown()
-{
-    clearActions();
-    editor->shutdown();
-    editor = nullptr;
-
-    game->shutdown();
-    game = nullptr;
 }
 
 void ApplicationWindow::modifyTitle(const QString& text)
@@ -65,6 +46,13 @@ void ApplicationWindow::setModified(const bool isModified)
     this->setWindowTitle(tempTitle);
 }
 
+void ApplicationWindow::startup()
+{
+    game = QSharedPointer<IEGame>::create(this);
+    connect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
+    this->setCentralWidget(&(*game));
+}
+
 void ApplicationWindow::initalize()
 {
     disconnect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
@@ -75,16 +63,14 @@ void ApplicationWindow::initalize()
     editor->startup(AppStartEvent(this, *editor, *game));
 }
 
-void ApplicationWindow::clearActions()
+void ApplicationWindow::shutdown()
 {
-    auto actionList = this->actions();
-    for(auto item : actionList)
-    {
-        delete item;
-        item = nullptr;
-    }
-    actionList.clear();
-    this->addActions(actionList);
+    clearActions();
+    editor->shutdown();
+    editor = nullptr;
+
+    game->shutdown();
+    game = nullptr;
 }
 
 void ApplicationWindow::newFile()
@@ -105,6 +91,18 @@ void ApplicationWindow::saveAsToFile(const QString& path)
 void ApplicationWindow::openFromFile(const QString& path)
 {
     appFileHandler.handleFileOpened(path);
+}
+
+void ApplicationWindow::clearActions()
+{
+    auto actionList = this->actions();
+    for(auto item : actionList)
+    {
+        delete item;
+        item = nullptr;
+    }
+    actionList.clear();
+    this->addActions(actionList);
 }
 
 QDataStream& ApplicationWindow::serialize(QDataStream& out, const Serializable& obj) const
