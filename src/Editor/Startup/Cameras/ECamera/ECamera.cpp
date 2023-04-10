@@ -3,7 +3,7 @@
 
 ECamera::ECamera() :
     IECamera(),
-    position(0.0f, 5.0f, 0.0f), rotation(0.0f, 0.0f, -1.0f), transform(),
+    position(0.0f, 5.0f, 0.0f), rotation(0.0f, 0.0f, -1.0f),
     lastX(0.0f), lastY(0.0f), isCaptured(false),
     yaw(-90.0f), pitch(0.0f)
 {
@@ -91,20 +91,13 @@ void ECamera::updateRotation(IEInput& input, const float dt)
     }
 }
 
-void ECamera::calcModelMatrix()
-{
-    transform.setToIdentity();
-    transform.translate(position);
-    transform.rotate(0.0f, rotation.x(), rotation.y(), rotation.z());
-}
-
 QDataStream& ECamera::serialize(QDataStream& out, const Serializable& obj) const
 {
     IECamera::serialize(out, obj);
 
     const ECamera& camera = static_cast<const ECamera&>(obj);
 
-    out << camera.position << camera.rotation << camera.transform
+    out << camera.position << camera.rotation
         << camera.lastX << camera.lastY << camera.yaw << camera.pitch;
 
     return out;
@@ -116,7 +109,7 @@ QDataStream& ECamera::deserialize(QDataStream& in, Serializable& obj)
 
     ECamera& camera = static_cast<ECamera&>(obj);
 
-    in >> camera.position >> camera.rotation >> camera.transform
+    in >> camera.position >> camera.rotation
        >> camera.lastX >> camera.lastY >> camera.yaw >> camera.pitch;
 
     return in;

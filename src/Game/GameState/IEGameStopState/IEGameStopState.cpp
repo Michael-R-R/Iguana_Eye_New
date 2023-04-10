@@ -8,6 +8,8 @@
 #include "IEInput.h"
 #include "IERenderEngine.h"
 #include "ERenderEngine.h"
+#include "IEECSTransformSystem.h"
+#include "ECSOnUpdateEvent.h"
 #include "ECamera.h"
 #include "IEFile.h"
 #include "IESerialize.h"
@@ -15,6 +17,8 @@
 IEGameStopState::IEGameStopState(IEGame& game) :
     glFunc(game.getGlFunc()),
     glExtraFunc(game.getGlExtraFunc()),
+    transformSystem(IEECS::instance().getComponent<IEECSTransformSystem>("Transform")),
+    ecsUpdateEvent(QSharedPointer<ECSOnUpdateEvent>::create(&IEECS::instance())),
     eRenderEngine(nullptr),
     eCamera(nullptr)
 {
@@ -45,6 +49,7 @@ void IEGameStopState::onUpdateFrame()
 {
     const float dt = IETime::instance().getDeltaTime();
 
+    transformSystem->onUpdateFrame(&(*ecsUpdateEvent));
     eCamera->update(IEInput::instance(), dt);
 }
 
@@ -52,7 +57,7 @@ void IEGameStopState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    IERenderEngine::instance().onRenderFrame(eCamera);
+    IERenderEngine::instance().onRenderFrame(glExtraFunc, eCamera);
     eRenderEngine->onRenderFrame(glExtraFunc, eCamera);
 }
 

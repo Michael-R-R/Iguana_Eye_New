@@ -2,6 +2,8 @@
 
 #include "IEGameSystem.h"
 
+class QOpenGLExtraFunctions;
+class IEGame;
 class IEMesh;
 class IEMaterial;
 class IEShader;
@@ -22,7 +24,7 @@ public:
     void initalize(IEGame& game) override;
     void reset(IEGame& game) override;
 
-    void onRenderFrame(QSharedPointer<IECamera> camera);
+    void onRenderFrame(QOpenGLExtraFunctions* glFunc, QSharedPointer<IECamera> camera);
 
 private:
     void prepareShader(IEShader& shader);
@@ -30,7 +32,7 @@ private:
     void prepareViewProjection(IEShader& shader, IECamera& camera);
     void prepareUniformData(IEShader& shader, IEMaterial& material);
     void prepareUniformData(IEShader& shader, IERenderable& renderable);
-    void draw(IERenderable& renderable, IEMesh& mesh);
+    void draw(QOpenGLExtraFunctions* glFunc, IERenderable& renderable, IEMesh& mesh);
     void cleanup(IEShader& shader, IERenderable& renderable);
 };
 

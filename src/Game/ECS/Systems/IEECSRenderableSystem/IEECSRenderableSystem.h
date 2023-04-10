@@ -24,7 +24,7 @@ class IEECSRenderableSystem : public IEECSSystem
         QVector<QMap<QString, QVector2D>> tempVec2Data;
         QVector<QMap<QString, QVector3D>> tempVec3Data;
         QVector<QMap<QString, QVector4D>> tempVec4Data;
-        QVector<QMap<QString, QMatrix4x4>> tempMat4Data;
+        QVector<QMap<QString, QGenericMatrix<4,4,float>>> tempMat4Data;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
@@ -63,8 +63,8 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent* event) override;
 
-    void addShown(const int index);
-    void addHidden(const int index);
+    int addShown(const int index);
+    int addHidden(const int index);
     void removeShown(const int index);
     void removeHidden(const int index);
     bool doesExistShown(const int index) const;

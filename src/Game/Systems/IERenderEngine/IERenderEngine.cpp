@@ -1,6 +1,5 @@
 #include "IERenderEngine.h"
 #include <QOpenGLExtraFunctions>
-#include <QOpenGLContext>
 #include <QMatrix4x4>
 #include "IEScene.h"
 #include "IEMeshManager.h"
@@ -42,7 +41,7 @@ void IERenderEngine::reset(IEGame&)
 
 }
 
-void IERenderEngine::onRenderFrame(QSharedPointer<IECamera> camera)
+void IERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, QSharedPointer<IECamera> camera)
 {
     if(!camera)
         return;
@@ -53,7 +52,7 @@ void IERenderEngine::onRenderFrame(QSharedPointer<IECamera> camera)
     auto& renderableManager = IEScene::instance().getRenderableManager();;
 
     const auto renderables = renderableManager.getResources();
-    for(auto i : renderables)
+    for(auto& i : renderables)
     {
         auto mesh = meshManager.value(i->getMeshId());
         auto material = materialManager.value(i->getMaterialId());
@@ -66,7 +65,7 @@ void IERenderEngine::onRenderFrame(QSharedPointer<IECamera> camera)
         prepareViewProjection(*shader, *camera);
         prepareUniformData(*shader, *material);
         prepareUniformData(*shader, *i);
-        draw(*i, *mesh);
+        draw(glFunc, *i, *mesh);
         cleanup(*shader, *i);
     }
 }
@@ -78,8 +77,8 @@ void IERenderEngine::prepareShader(IEShader& shader)
 
 void IERenderEngine::prepareRenderable(IERenderable& renderable)
 {
-    renderable.checkForDirtyBuffers();
     renderable.bind();
+    renderable.checkForDirtyBuffers();
 }
 
 void IERenderEngine::prepareViewProjection(IEShader& shader, IECamera& camera)
@@ -97,27 +96,25 @@ void IERenderEngine::prepareUniformData(IEShader& shader, IERenderable& renderab
     renderable.bindUniformData(shader);
 }
 
-void IERenderEngine::draw(IERenderable& renderable, IEMesh& mesh)
+void IERenderEngine::draw(QOpenGLExtraFunctions* glFunc, IERenderable& renderable, IEMesh& mesh)
 {
-    QOpenGLExtraFunctions* glFunc = QOpenGLContext::currentContext()->extraFunctions();
-
-    switch(renderable.getRenderType())
+    switch(renderable.getRenderMode())
     {
-    case IERenderable::RenderType::Vertex:
+    case IERenderable::RenderMode::Vertex:
     {
         GLenum mode = renderable.getDrawMode();
         int count = mesh.getPosVertices().size();
         glFunc->glDrawArrays(mode, 0, count);
         break;
     }
-    case IERenderable::RenderType::Index:
+    case IERenderable::RenderMode::Index:
     {
         GLenum mode = renderable.getDrawMode();
         int count = mesh.getIndices().size();
         glFunc->glDrawElements(mode, count, GL_UNSIGNED_INT, 0);
         break;
     }
-    case IERenderable::RenderType::I_Vertex:
+    case IERenderable::RenderMode::I_Vertex:
     {
         GLenum mode = renderable.getDrawMode();
         int count = mesh.getPosVertices().size();
@@ -125,7 +122,7 @@ void IERenderEngine::draw(IERenderable& renderable, IEMesh& mesh)
         glFunc->glDrawArraysInstanced(mode, 0, count, instanceCount);
         break;
     }
-    case IERenderable::RenderType::I_Index:
+    case IERenderable::RenderMode::I_Index:
     {
         GLenum mode = renderable.getDrawMode();
         int count = mesh.getIndices().size();
@@ -133,7 +130,7 @@ void IERenderEngine::draw(IERenderable& renderable, IEMesh& mesh)
         glFunc->glDrawElementsInstanced(mode, count, GL_UNSIGNED_INT, 0, instanceCount);
         break;
     }
-    case IERenderable::RenderType::None: { break; }
+    case IERenderable::RenderMode::None: { break; }
     default: { break; }
     }
 }

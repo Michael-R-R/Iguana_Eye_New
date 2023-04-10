@@ -33,7 +33,7 @@ int IEECSRenderableSystem::attach(const IEEntity entity)
     data.tempVec2Data.append(QMap<QString, QVector2D>());
     data.tempVec3Data.append(QMap<QString, QVector3D>());
     data.tempVec4Data.append(QMap<QString, QVector4D>());
-    data.tempMat4Data.append(QMap<QString, QMatrix4x4>());
+    data.tempMat4Data.append(QMap<QString, QGenericMatrix<4,4,float>>());
 
     return index;
 }
@@ -79,36 +79,38 @@ void IEECSRenderableSystem::onUpdateFrame(ECSOnUpdateEvent*)
     // Not used
 }
 
-void IEECSRenderableSystem::addShown(const int index)
+int IEECSRenderableSystem::addShown(const int index)
 {
     if(doesExistShown(index))
-        return;
+        return -1;
 
     auto& renderableManager = IEScene::instance().getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager.value(id);
     if(!renderable)
-        return;
+        return -1;
 
     const int instanceIndex = renderable->addShownInstance();
     data.shownInstanceIndex[index] = instanceIndex;
 
     IEEntity entity = data.entity[index];
     add(entity, shownEntityMap[id], shownEntityList[id]);
+
+    return instanceIndex;
 }
 
-void IEECSRenderableSystem::addHidden(const int index)
+int IEECSRenderableSystem::addHidden(const int index)
 {
     if(doesExistHidden(index))
-        return;
+        return -1;
 
     auto& renderableManager = IEScene::instance().getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager.value(id);
     if(!renderable)
-        return;
+        return -1;
 
     const int instanceIndex = renderable->addHiddenInstance();
     data.hiddenInstanceIndex[index] = instanceIndex;
@@ -117,6 +119,8 @@ void IEECSRenderableSystem::addHidden(const int index)
     add(entity, hiddenEntityMap[id], hiddenEntityList[id]);
 
     cacheTempData(index);
+
+    return instanceIndex;
 }
 
 void IEECSRenderableSystem::removeShown(const int index)
@@ -223,7 +227,7 @@ void IEECSRenderableSystem::transferTempData(const int index)
     QMapIterator<QString, QVector4D> it3(data.tempVec4Data[index]);
     while(it3.hasNext()) { it3.next(); renderable->appendVec4InstanceValue(it3.key(), it3.value()); }
 
-    QMapIterator<QString, QMatrix4x4> it4(data.tempMat4Data[index]);
+    QMapIterator<QString, QGenericMatrix<4,4,float>> it4(data.tempMat4Data[index]);
     while(it4.hasNext()) { it4.next(); renderable->appendMat4InstanceValue(it4.key(), it4.value()); }
 
     clearTempData(index);
@@ -378,7 +382,7 @@ void IEECSRenderableSystem::cacheTempData(const int index)
     QMap<QString, QVector2D> vec2Data;
     QMap<QString, QVector3D> vec3Data;
     QMap<QString, QVector4D> vec4Data;
-    QMap<QString, QMatrix4x4> mat4Data;
+    QMap<QString, QGenericMatrix<4,4,float>> mat4Data;
     renderable->fetchBufferDataAtIndex(instanceIndex,
                                        vec2Data,
                                        vec3Data,

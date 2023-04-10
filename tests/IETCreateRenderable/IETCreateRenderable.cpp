@@ -43,12 +43,12 @@ IETCreateRenderable::IETCreateRenderable()
 
     path = "./resources/renderables/tests/rend.ierend";
     unsigned long long renderableId = IEHash::Compute(path);
-    auto renderable = QSharedPointer<IERenderable>::create(path,
+    QSharedPointer<IERenderable> renderable = QSharedPointer<IERenderable>::create(path,
                                                            meshId,
                                                            materialId,
                                                            shaderId);
     renderable->setDrawType(GL_TRIANGLES);
-    renderable->setRenderType(IERenderable::RenderType::I_Index);
+    renderable->setRenderMode(IERenderable::RenderMode::I_Index);
 
     auto indexBuffer = QSharedPointer<IEIndexBuffer>::create(mesh->getIndices());
     renderable->addIndexBuffer(indexBuffer);
@@ -56,14 +56,16 @@ IETCreateRenderable::IETCreateRenderable()
     auto posBuffer = QSharedPointer<IEVertexBuffer<QVector3D>>::create(mesh->getPosVertices(), 12, 3, 0, 0, 0);
     renderable->addVec3Buffer("aPos", posBuffer);
 
-    QMatrix4x4 transform;
-    transform.translate(0.0f, 1.0f, 0.0f);
-    transform.scale(1.0f, 1.0f, 1.0f);
-    auto modelBuffer = QSharedPointer<IEVertexBuffer<QMatrix4x4>>::create(QVector<QMatrix4x4>{transform}, 64, 4, 64, 4, 16);
+    auto modelBuffer = QSharedPointer<IEVertexBuffer<QGenericMatrix<4,4,float>>>::create(QVector<QGenericMatrix<4,4,float>>(), 64, 4, 64, 4, 16);
     renderable->addMat4Buffer("aModel", modelBuffer);
+    renderable->build(*shader);
 
     renderable->addShownInstance();
-    renderable->build(*shader);
+
+    QMatrix4x4 t1;
+    t1.translate(QVector3D(0.0f, 0.0f, 0.0f));
+    t1.scale(QVector3D(1.0f, 1.0f, 1.0f));
+    renderable->setMat4InstanceValue("aModel", 0, t1.toGenericMatrix<4,4>());
 
     meshManager.add(meshId, mesh);
     materialManager.add(materialId, material);

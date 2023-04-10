@@ -1,8 +1,6 @@
 #pragma once
 
 #include <QVector3D>
-#include <QVector4D>
-#include <QMatrix4x4>
 
 #include "IECamera.h"
 
@@ -12,7 +10,6 @@ class ECamera : public IECamera
 {
     QVector3D position;
     QVector3D rotation;
-    QMatrix4x4 transform;
 
     float lastX;
     float lastY;
@@ -31,7 +28,6 @@ public:
 private:
     void updateMovement(IEInput& input, const float dt);
     void updateRotation(IEInput& input, const float dt);
-    void calcModelMatrix();
 
 public:
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

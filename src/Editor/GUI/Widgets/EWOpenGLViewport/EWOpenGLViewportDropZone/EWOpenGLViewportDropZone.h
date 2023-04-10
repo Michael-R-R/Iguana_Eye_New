@@ -4,13 +4,15 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMimeData>
-#include <QOpenGLWidget>
 
 class AppStartEvent;
+class QOpenGLWidget;
 
 class EWOpenGLViewportDropZone : public QWidget
 {
     Q_OBJECT
+
+    QOpenGLWidget* glWidget;
 
 public:
     EWOpenGLViewportDropZone(QWidget* parent = nullptr);

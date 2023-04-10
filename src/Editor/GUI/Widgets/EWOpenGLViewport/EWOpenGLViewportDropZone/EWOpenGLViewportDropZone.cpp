@@ -13,21 +13,24 @@
 #include "IEECSRenderableSystem.h"
 #include "IEEntity.h"
 #include "IEFile.h"
+#include "IESerialize.h"
 #include "IEHash.h"
 #include "IEObjImporter.h"
 #include <QFileInfo>
+#include <QOpenGLWidget>
 
 EWOpenGLViewportDropZone::EWOpenGLViewportDropZone(QWidget* parent) :
-    QWidget(parent)
+    QWidget(parent),
+    glWidget(nullptr)
 {
 
 }
 
 void EWOpenGLViewportDropZone::startup(const AppStartEvent& event)
 {
-    auto host = event.getGame();
-    host->setAcceptDrops(true);
-    host->installEventFilter(this);
+    glWidget = event.getGame();
+    glWidget->setAcceptDrops(true);
+    glWidget->installEventFilter(this);
 }
 
 bool EWOpenGLViewportDropZone::eventFilter(QObject* watched, QEvent* event)
@@ -80,6 +83,8 @@ void EWOpenGLViewportDropZone::checkEvent(QEvent* event)
 
 void EWOpenGLViewportDropZone::handleObjFile(const QString& path)
 {
+    glWidget->makeCurrent();
+
     auto& meshManager = IEScene::instance().getMeshManager();
     auto& materialManager = IEScene::instance().getMaterialManager();
     auto& shaderManager = IEScene::instance().getShaderManager();
@@ -89,13 +94,18 @@ void EWOpenGLViewportDropZone::handleObjFile(const QString& path)
     const unsigned long long materialId = materialManager.getDefaultId();
     const unsigned long long shaderId = shaderManager.getDefaultId();
 
+    QSharedPointer<IEMesh> mesh = nullptr;
     if(!meshManager.doesExist(meshId))
     {
-        auto mesh = QSharedPointer<IEMesh>::create(path);
+        mesh = QSharedPointer<IEMesh>::create(path);
         if(!IEObjImporter::importMesh(path, *mesh))
             return;
 
         meshManager.add(meshId, mesh);
+    }
+    else
+    {
+        mesh = meshManager.value(meshId);
     }
 
     auto& ecs = IEECS::instance();
@@ -115,15 +125,35 @@ void EWOpenGLViewportDropZone::handleObjFile(const QString& path)
     materialSystem->setMaterialId(maIndex, materialId);
     shaderSystem->setShaderId(sIndex, shaderId);
 
-    // TODO set renderable id
+    QString rPath = QString("./resources/renderables/%1/%2/%3/r.ierend").arg(QString::number(meshId),
+                                                                             QString::number(materialId),
+                                                                             QString::number(shaderId));
 
-    if(renderableManager.doesExist(meshId, materialId, shaderId))
+    unsigned long long rID = IEHash::Compute(rPath);
+
+    if(!renderableManager.doesExist(meshId, materialId, shaderId))
     {
-        // add instance renderable
+        auto rType = (mesh->getIndices().size() > 0) ? IERenderable::RenderMode::I_Index : IERenderable::RenderMode::I_Vertex;
+
+        // create new renderable
+        QSharedPointer<IERenderable> renderable = QSharedPointer<IERenderable>::create(rPath, meshId, materialId, shaderId);
+        renderable->setDrawType(GL_TRIANGLES);
+        renderable->setRenderMode(rType);
+        renderable->addIndexBuffer(QSharedPointer<IEIndexBuffer>::create(mesh->getIndices()));
+        renderable->addVec3Buffer("aPos", QSharedPointer<IEVertexBuffer<QVector3D>>::create(mesh->getPosVertices(), 12, 3, 0, 0, 0));
+        renderable->addMat4Buffer("aModel", QSharedPointer<IEVertexBuffer<QGenericMatrix<4,4,float>>>::create(QVector<QGenericMatrix<4,4,float>>(), 64, 4, 64, 4, 16));
+
+        auto shader = shaderManager.value(shaderId);
+        renderable->build(*shader);
+
+        renderableManager.add(rID, renderable);
+
+        renderableSystem->setRenderableId(rIndex, rID);
         renderableSystem->addShown(rIndex);
     }
     else
     {
-        // create new renderable
+        renderableSystem->setRenderableId(rIndex, rID);
+        renderableSystem->addShown(rIndex);
     }
 }

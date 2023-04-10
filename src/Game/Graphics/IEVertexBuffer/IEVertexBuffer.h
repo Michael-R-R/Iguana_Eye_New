@@ -38,14 +38,7 @@ public:
 
     }
 
-    IEVertexBuffer(const IEVertexBuffer& other) :
-        IEBuffer<T>(QOpenGLBuffer::VertexBuffer, other.bufferData),
-        tuple(other.tuple), stride(other.stride),
-        divisor(other.divisor), typeSize(other.typeSize),
-        ptrSize(other.ptrSize), isInstanced(other.isInstanced)
-    {
-
-    }
+    IEVertexBuffer(const IEVertexBuffer&) = delete;
 
     ~IEVertexBuffer() {}
 
@@ -59,12 +52,12 @@ public:
 
         this->setUsagePattern(QOpenGLBuffer::StaticDraw);
         this->bind();
-        this->allocate(this->bufferData.data(), (int)(this->bufferData.size() * typeSize));
+        this->allocate(this->bufferData.constData(), (int)(this->bufferData.size() * typeSize));
 
         QOpenGLFunctions* func = QOpenGLContext::currentContext()->functions();
         if(divisor < 1)
         {
-            func->glVertexAttribPointer(attribLoc, tuple, GL_FLOAT, false, stride, (void*)(size_t)ptrSize);
+            func->glVertexAttribPointer(attribLoc, tuple, GL_FLOAT, GL_FALSE, stride, (void*)(size_t)ptrSize);
             func->glEnableVertexAttribArray(attribLoc);
         }
         else
@@ -72,7 +65,7 @@ public:
             QOpenGLExtraFunctions* extraFunc = QOpenGLContext::currentContext()->extraFunctions();
             for(int i = 0; i < divisor; i++)
             {
-                func->glVertexAttribPointer(attribLoc + i, tuple, GL_FLOAT, false, stride, (void*)(size_t)(i * ptrSize));
+                func->glVertexAttribPointer(attribLoc + i, tuple, GL_FLOAT, GL_FALSE, stride, (void*)(size_t)(i * ptrSize));
                 func->glEnableVertexAttribArray(attribLoc + i);
                 extraFunc->glVertexAttribDivisor(attribLoc + i, 1);
             }
@@ -85,7 +78,7 @@ public:
             return;
 
         this->bind();
-        this->allocate(this->bufferData.data(), (int)(this->bufferData.size() * typeSize));
+        this->allocate(this->bufferData.constData(), (int)(this->bufferData.size() * typeSize));
         this->release();
     }
 

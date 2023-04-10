@@ -7,6 +7,8 @@
 class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
 class IEGame;
+class IEECSTransformSystem;
+class ECSOnUpdateEvent;
 class ERenderEngine;
 class ECamera;
 
@@ -14,6 +16,9 @@ class IEGameStopState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
+    IEECSTransformSystem* transformSystem;
+    QSharedPointer<ECSOnUpdateEvent> ecsUpdateEvent;
+
     QSharedPointer<ERenderEngine> eRenderEngine;
     QSharedPointer<ECamera> eCamera;
 

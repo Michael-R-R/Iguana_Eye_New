@@ -55,7 +55,7 @@ void IEGamePlayState::onRenderFrame()
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     auto camera = cameraSystem->getActiveCamera();
-    IERenderEngine::instance().onRenderFrame(camera);
+    IERenderEngine::instance().onRenderFrame(glExtraFunc, camera);
 }
 
 void IEGamePlayState::onResize(const float w, const float h)

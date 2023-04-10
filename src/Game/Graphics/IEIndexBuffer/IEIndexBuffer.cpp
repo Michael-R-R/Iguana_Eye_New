@@ -6,7 +6,7 @@ IEIndexBuffer::IEIndexBuffer() :
 
 }
 
-IEIndexBuffer::IEIndexBuffer(const QVector<unsigned int>& data_) :
+IEIndexBuffer::IEIndexBuffer(const QVector<unsigned>& data_) :
     IEBuffer(QOpenGLBuffer::IndexBuffer, data_)
 {
 
@@ -25,7 +25,7 @@ void IEIndexBuffer::build(const int)
 
     this->setUsagePattern(QOpenGLBuffer::StaticDraw);
     this->bind();
-    this->allocate(bufferData.data(), (int)(bufferData.size() * sizeof(unsigned)));
+    this->allocate(bufferData.constData(), (int)(bufferData.size() * sizeof(unsigned)));
 }
 
 QDataStream& IEIndexBuffer::serialize(QDataStream& out, const Serializable& obj) const
