@@ -36,7 +36,7 @@ protected:
     QSharedPointer<IEVertexBufferContainer<QVector2D>> vec2BufferContainer;
     QSharedPointer<IEVertexBufferContainer<QVector3D>> vec3BufferContainer;
     QSharedPointer<IEVertexBufferContainer<QVector4D>> vec4BufferContainer;
-    QSharedPointer<IEVertexBufferContainer<QGenericMatrix<4,4,float>>> mat4BufferContainer;
+    QSharedPointer<IEVertexBufferContainer<QMatrix4x4>> mat4BufferContainer;
     int shownCount;
     int hiddenCount;
 
@@ -65,11 +65,11 @@ public:
     void addVec2Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QVector2D>> value);
     void addVec3Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QVector3D>> value);
     void addVec4Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QVector4D>> value);
-    void addMat4Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QGenericMatrix<4,4,float>>> value);
+    void addMat4Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QMatrix4x4>> value);
     void setVec2BufferData(const QString& key, const QVector<QVector2D>& data);
     void setVec3BufferData(const QString& key, const QVector<QVector3D>& data);
     void setVec4BufferData(const QString& key, const QVector<QVector4D>& data);
-    void setMat4BufferData(const QString& key, const QVector<QGenericMatrix<4,4,float>>& data);
+    void setMat4BufferData(const QString& key, const QVector<QMatrix4x4>& data);
 
     int addShownInstance();
     int addHiddenInstance();
@@ -81,12 +81,12 @@ public:
                                 QMap<QString, QVector2D>& vec2Data,
                                 QMap<QString, QVector3D>& vec3Data,
                                 QMap<QString, QVector4D>& vec4Data,
-                                QMap<QString, QGenericMatrix<4,4,float>>& mat4Data);
+                                QMap<QString, QMatrix4x4>& mat4Data);
 
     void appendVec2InstanceValue(const QString& key, const QVector2D& value);
     void appendVec3InstanceValue(const QString& key, const QVector3D& value);
     void appendVec4InstanceValue(const QString& key, const QVector4D& value);
-    void appendMat4InstanceValue(const QString& key, const QGenericMatrix<4,4,float>& value);
+    void appendMat4InstanceValue(const QString& key, const QMatrix4x4& value);
     void removeVec2InstanceValue(const QString& key, const int index);
     void removeVec3InstanceValue(const QString& key, const int index);
     void removeVec4InstanceValue(const QString& key, const int index);
@@ -94,7 +94,7 @@ public:
     void setVec2InstanceValue(const QString& key, const int index, const QVector2D& value);
     void setVec3InstanceValue(const QString& key, const int index, const QVector3D& value);
     void setVec4InstanceValue(const QString& key, const int index, const QVector4D& value);
-    void setMat4InstanceValue(const QString& key, const int index, const QGenericMatrix<4,4,float>& value);
+    void setMat4InstanceValue(const QString& key, const int index, const QMatrix4x4& value);
 
     void build(IEShader& shader);
     void bindUniformData(IEShader& shader);

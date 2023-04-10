@@ -141,7 +141,7 @@ void EWOpenGLViewportDropZone::handleObjFile(const QString& path)
         renderable->setRenderMode(rType);
         renderable->addIndexBuffer(QSharedPointer<IEIndexBuffer>::create(mesh->getIndices()));
         renderable->addVec3Buffer("aPos", QSharedPointer<IEVertexBuffer<QVector3D>>::create(mesh->getPosVertices(), 12, 3, 0, 0, 0));
-        renderable->addMat4Buffer("aModel", QSharedPointer<IEVertexBuffer<QGenericMatrix<4,4,float>>>::create(QVector<QGenericMatrix<4,4,float>>(), 64, 4, 64, 4, 16));
+        renderable->addMat4Buffer("aModel", QSharedPointer<IEVertexBuffer<QMatrix4x4>>::create(QVector<QMatrix4x4>(), 68, 4, 68, 4, 16));
 
         auto shader = shaderManager.value(shaderId);
         renderable->build(*shader);

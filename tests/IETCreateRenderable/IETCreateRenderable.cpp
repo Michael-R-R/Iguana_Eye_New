@@ -56,16 +56,26 @@ IETCreateRenderable::IETCreateRenderable()
     auto posBuffer = QSharedPointer<IEVertexBuffer<QVector3D>>::create(mesh->getPosVertices(), 12, 3, 0, 0, 0);
     renderable->addVec3Buffer("aPos", posBuffer);
 
-    auto modelBuffer = QSharedPointer<IEVertexBuffer<QGenericMatrix<4,4,float>>>::create(QVector<QGenericMatrix<4,4,float>>(), 64, 4, 64, 4, 16);
+    auto modelBuffer = QSharedPointer<IEVertexBuffer<QMatrix4x4>>::create(QVector<QMatrix4x4>(), 68, 4, 68, 4, 16);
     renderable->addMat4Buffer("aModel", modelBuffer);
     renderable->build(*shader);
 
+    renderable->addShownInstance();
+    renderable->addShownInstance();
     renderable->addShownInstance();
 
     QMatrix4x4 t1;
     t1.translate(QVector3D(0.0f, 0.0f, 0.0f));
     t1.scale(QVector3D(1.0f, 1.0f, 1.0f));
-    renderable->setMat4InstanceValue("aModel", 0, t1.toGenericMatrix<4,4>());
+    renderable->setMat4InstanceValue("aModel", 0, t1);
+    QMatrix4x4 t2;
+    t2.translate(QVector3D(0.0f, 10.0f, 0.0f));
+    t2.scale(QVector3D(1.0f, 1.0f, 1.0f));
+    renderable->setMat4InstanceValue("aModel", 1, t2);
+    QMatrix4x4 t3;
+    t3.translate(QVector3D(5.0f, 0.0f, 0.0f));
+    t3.scale(QVector3D(1.0f, 1.0f, 1.0f));
+    renderable->setMat4InstanceValue("aModel", 2, t3);
 
     meshManager.add(meshId, mesh);
     materialManager.add(materialId, material);

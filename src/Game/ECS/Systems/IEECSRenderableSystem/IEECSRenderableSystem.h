@@ -24,7 +24,7 @@ class IEECSRenderableSystem : public IEECSSystem
         QVector<QMap<QString, QVector2D>> tempVec2Data;
         QVector<QMap<QString, QVector3D>> tempVec3Data;
         QVector<QMap<QString, QVector4D>> tempVec4Data;
-        QVector<QMap<QString, QGenericMatrix<4,4,float>>> tempMat4Data;
+        QVector<QMap<QString, QMatrix4x4>> tempMat4Data;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {

@@ -89,7 +89,7 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
 
             QMatrix4x4& transform = data.transform[j];
             const int childInstanceIndex = renderableSystem->getShownInstanceIndex(childIndex);
-            renderable->setMat4InstanceValue("aModel", childInstanceIndex, transform.toGenericMatrix<4,4>());
+            renderable->setMat4InstanceValue("aModel", childInstanceIndex, transform);
         }
 
         const IEEntity& parentEntity = data.entity[i];
@@ -101,7 +101,7 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
 
         QMatrix4x4& transform = data.transform[i];
         const int parentInstanceIndex = renderableSystem->getShownInstanceIndex(parentIndex);
-        renderable->setMat4InstanceValue("aModel", parentInstanceIndex, transform.toGenericMatrix<4,4>());
+        renderable->setMat4InstanceValue("aModel", parentInstanceIndex, transform);
     }
 
     dirtyParentIndices.clear();
