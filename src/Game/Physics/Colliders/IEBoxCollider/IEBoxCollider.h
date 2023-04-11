@@ -8,8 +8,7 @@ class IEBoxCollider : public IEBaseCollider
     float extentX, extentY, extentZ;
 
 public:
-    IEBoxCollider(physx::PxPhysics* p,
-                  physx::PxMaterial* m);
+    IEBoxCollider();
     IEBoxCollider(physx::PxPhysics* p,
                   physx::PxMaterial* m,
                   const int id,

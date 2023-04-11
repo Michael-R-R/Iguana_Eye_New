@@ -1,8 +1,8 @@
 #include "IESphereRigidbody.h"
+#include "IEPhysicsEngine.h"
 
-IESphereRigidbody::IESphereRigidbody(physx::PxPhysics* p,
-                                     physx::PxMaterial* m) :
-    IEBaseRigidbody(p, m, RigidbodyType::None, RigidbodyShape::Sphere, 0),
+IESphereRigidbody::IESphereRigidbody() :
+    IEBaseRigidbody(nullptr, nullptr, RigidbodyType::None, RigidbodyShape::Sphere, 0),
     radius(1.0f)
 {
 
@@ -48,6 +48,9 @@ QDataStream& IESphereRigidbody::deserialize(QDataStream& in, Serializable& obj)
     IEBaseRigidbody::deserialize(in, obj);
 
     IESphereRigidbody& body = static_cast<IESphereRigidbody&>(obj);
+
+    body.physics = IEPhysicsEngine::instance().getPxPhysics();
+    body.material = IEPhysicsEngine::instance().getDefaultPxMaterial();
 
     float px = 0.0f, py = 0.0f, pz = 0.0f;
     float qx = 0.0f, qy = 0.0f, qz = 0.0f, qw = 0.0f;

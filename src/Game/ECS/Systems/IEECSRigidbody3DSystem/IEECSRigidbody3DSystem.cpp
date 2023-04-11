@@ -1,4 +1,5 @@
 #include "IEECSRigidbody3DSystem.h"
+#include "IEPhysicsEngine.h"
 #include "IESimulationCallback.h"
 #include "IEECSTransformSystem.h"
 #include "ECSOnUpdateEvent.h"

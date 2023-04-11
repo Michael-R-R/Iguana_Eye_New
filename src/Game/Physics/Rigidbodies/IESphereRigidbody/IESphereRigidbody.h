@@ -7,8 +7,7 @@ class IESphereRigidbody : public IEBaseRigidbody
     float radius;
 
 public:
-    IESphereRigidbody(physx::PxPhysics* p,
-                      physx::PxMaterial* m);
+    IESphereRigidbody();
     IESphereRigidbody(physx::PxPhysics* p,
                    physx::PxMaterial* m,
                    RigidbodyType type,

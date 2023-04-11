@@ -10,7 +10,6 @@
 #include "IESphereRigidbody.h"
 #include "IECapsuleRigidbody.h"
 #include "IEPlaneRigidbody.h"
-#include "IEPhysicsEngine.h"
 
 class IEGame;
 
@@ -27,7 +26,7 @@ class IEECSRigidbody3DSystem : public IEECSSystem
         {
             out << data.entity << (int)data.rigidbody.size();
 
-            for(int i = 1; i < data.rigidbody.size(); i++)
+            for(int i = 0; i < data.rigidbody.size(); i++)
             {
                 out << data.rigidbody[i]->getRigidbodyShape() << *data.rigidbody[i];
             }
@@ -38,28 +37,24 @@ class IEECSRigidbody3DSystem : public IEECSSystem
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
             data.rigidbody.clear();
-            data.rigidbody.append(QSharedPointer<IEBaseRigidbody>::create());
 
             int size = 0;
             in >> data.entity >> size;
 
             IEBaseRigidbody::RigidbodyShape shape;
             QSharedPointer<IEBaseRigidbody> rigidbody = nullptr;
-            auto& engine = IEPhysicsEngine::instance();
-            auto* pxPhysics = engine.getPxPhysics();
-            auto* pxMaterial = engine.getDefaultPxMaterial();
 
-            for(int i = 1; i < size; i++)
+            for(int i = 0; i < size; i++)
             {
                 in >> shape;
 
                 switch(shape)
                 {
                 case IEBaseRigidbody::RigidbodyShape::None: { rigidbody = QSharedPointer<IEBaseRigidbody>::create(); break; }
-                case IEBaseRigidbody::RigidbodyShape::Box: { rigidbody = QSharedPointer<IEBoxRigidbody>::create(pxPhysics, pxMaterial); break; }
-                case IEBaseRigidbody::RigidbodyShape::Sphere: { rigidbody = QSharedPointer<IESphereRigidbody>::create(pxPhysics, pxMaterial); break; }
-                case IEBaseRigidbody::RigidbodyShape::Capsule: { rigidbody = QSharedPointer<IECapsuleRigidbody>::create(pxPhysics, pxMaterial); break; }
-                case IEBaseRigidbody::RigidbodyShape::Plane: { rigidbody = QSharedPointer<IEPlaneRigidbody>::create(pxPhysics, pxMaterial); break; }
+                case IEBaseRigidbody::RigidbodyShape::Box: { rigidbody = QSharedPointer<IEBoxRigidbody>::create(); break; }
+                case IEBaseRigidbody::RigidbodyShape::Sphere: { rigidbody = QSharedPointer<IESphereRigidbody>::create(); break; }
+                case IEBaseRigidbody::RigidbodyShape::Capsule: { rigidbody = QSharedPointer<IECapsuleRigidbody>::create(); break; }
+                case IEBaseRigidbody::RigidbodyShape::Plane: { rigidbody = QSharedPointer<IEPlaneRigidbody>::create(); break; }
                 default: { rigidbody = QSharedPointer<IEBaseRigidbody>::create(); break; }
                 }
 

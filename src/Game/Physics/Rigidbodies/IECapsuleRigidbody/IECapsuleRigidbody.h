@@ -8,8 +8,7 @@ class IECapsuleRigidbody : public IEBaseRigidbody
     float halfHeight;
 
 public:
-    IECapsuleRigidbody(physx::PxPhysics* p,
-                       physx::PxMaterial* m);
+    IECapsuleRigidbody();
     IECapsuleRigidbody(physx::PxPhysics* p,
                       physx::PxMaterial* m,
                       RigidbodyType type,

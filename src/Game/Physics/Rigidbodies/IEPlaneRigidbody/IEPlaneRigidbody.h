@@ -6,8 +6,7 @@ class IEPlaneRigidbody : public IEBaseRigidbody
 {
 
 public:
-    IEPlaneRigidbody(physx::PxPhysics* p,
-                     physx::PxMaterial* m);
+    IEPlaneRigidbody();
     IEPlaneRigidbody(physx::PxPhysics* p,
                      physx::PxMaterial* m,
                      RigidbodyType type,

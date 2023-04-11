@@ -1,7 +1,7 @@
 #include "IEBoxCollider.h"
 
-IEBoxCollider::IEBoxCollider(physx::PxPhysics* p, physx::PxMaterial* m) :
-    IEBaseCollider(p, m, ColliderShape::Box, 0),
+IEBoxCollider::IEBoxCollider() :
+    IEBaseCollider(nullptr, nullptr, ColliderShape::Box, 0),
     extentX(0.0f), extentY(0.0f), extentZ(0.0f)
 {
 
