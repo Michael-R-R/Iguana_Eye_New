@@ -1,8 +1,6 @@
 #pragma once
 
-#include <QFile>
-#include <QDir>
-#include <QTextStream>
+#include <QString>
 
 class IEFile
 {
@@ -14,6 +12,7 @@ public:
     static bool makePath(const QString& path);
     static bool removePath(const QString& path);
     static bool doesPathExist(const QString& path);
+    static QString absolutePath(const QString& path);
     static QString extractName(const QString& path);
     static QString extractExtension(const QString& path);
 

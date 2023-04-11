@@ -60,7 +60,7 @@ bool EWindowManager::removeWindow(const QString& title)
     return true;
 }
 
-EWindow* EWindowManager::getValue(const QString& title) const
+EWindow* EWindowManager::value(const QString& title) const
 {
     if(!doesExist(title)) { return nullptr; }
     return windowCollection[title];

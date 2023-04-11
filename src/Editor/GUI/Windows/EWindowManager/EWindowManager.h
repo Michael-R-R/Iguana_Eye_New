@@ -22,7 +22,7 @@ public:
 
     bool appendWindow(const QString title, EWindow* window);
     bool removeWindow(const QString& title);
-    EWindow* getValue(const QString& title) const;
+    EWindow* value(const QString& title) const;
     bool doesExist(const QString& title) const;
 
     void clear();

@@ -1,4 +1,7 @@
 #include "IEFile.h"
+#include <QFile>
+#include <QDir>
+#include <QTextStream>
 
 bool IEFile::write(const QString& path, const QString& outData)
 {
@@ -70,6 +73,13 @@ bool IEFile::doesPathExist(const QString& path)
 
     QDir dir(tempPath);
     return dir.exists();
+}
+
+QString IEFile::absolutePath(const QString& path)
+{
+    QDir dir(path);
+
+    return dir.absolutePath();
 }
 
 QString IEFile::extractName(const QString& path)

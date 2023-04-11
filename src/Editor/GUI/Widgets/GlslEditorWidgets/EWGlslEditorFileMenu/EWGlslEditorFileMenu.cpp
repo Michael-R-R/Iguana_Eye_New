@@ -1,8 +1,6 @@
 #include "EWGlslEditorFileMenu.h"
 #include "AppStartEvent.h"
 #include "EWGlslEditor.h"
-#include "IEGame.h"
-#include "IEScene.h"
 #include "Editor.h"
 #include "EInput.h"
 #include "NewShaderAction.h"
@@ -19,10 +17,9 @@ EWGlslEditorFileMenu::EWGlslEditorFileMenu(QWidget* parent) :
 void EWGlslEditorFileMenu::startup(const AppStartEvent& event, EWGlslEditor* editor)
 {
     auto* input = event.getEditor()->getInput();
-    auto& shaderManager = IEScene::instance().getShaderManager();
 
-    appendAction("New Shader", new NewShaderAction(editor, shaderManager, input->getConfigKey(""), this));
-    appendAction("Open Shader", new OpenShaderAction(shaderManager, input->getConfigKey(""), this));
-    appendAction("Save Shader", new SaveShaderAction(editor, shaderManager, input->getConfigKey(""), this));
-    appendAction("Save As Shader", new SaveAsShaderAction(editor, shaderManager, input->getConfigKey(""), this));
+    appendAction("New Shader", new NewShaderAction(editor, input->getConfigKey(""), this));
+    appendAction("Open Shader", new OpenShaderAction(editor, input->getConfigKey(""), this));
+    appendAction("Save Shader", new SaveShaderAction(editor, input->getConfigKey(""), this));
+    appendAction("Save As Shader", new SaveAsShaderAction(editor, input->getConfigKey(""), this));
 }

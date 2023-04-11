@@ -1,51 +1,47 @@
 #include "SaveShaderAction.h"
 #include "EWGlslEditor.h"
+#include "IEScene.h"
 #include "IEShaderManager.h"
-#include "IESerialize.h"
+#include "IEHash.h"
+#include "IEGlslExporter.h"
 
-SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
-                                   InputKey& shortcut, QObject* parent) :
+SaveShaderAction::SaveShaderAction(EWGlslEditor* editor, InputKey& shortcut, QObject* parent) :
     BaseAction("Save", shortcut, parent),
-    isShaderActive(false)
+    isVertexSrcDirty(false),
+    isFragmentSrcDirty(false)
 {
     this->setEnabled(false);
 
-    connect(this, &SaveShaderAction::triggered, this, [this, editor, &shaderManager]()
-    {
-        unsigned long long id = editor->getShaderComboBox()->getSelectedId();
-        if(id == 0)
-            return;
+    connect(this, &SaveShaderAction::triggered, this, [this, editor]()
+            {
+                // Save source to file
+                const QString& path = editor->getCurrShaderPath();
+                QString vSrc = editor->getVertexSource();
+                QString fSrc = editor->getFragmentSource();
+                if(!IEGlslExporter::exportGlsl(path, vSrc, fSrc))
+                    return;
 
-        auto shader = shaderManager.value(id);
-        if(!shader)
-            return;
+                // Check is a shader exist to update
+                auto& shaderManager = IEScene::instance().getShaderManager();
+                unsigned long long id = IEHash::Compute(path);
+                auto shader = shaderManager.value(id);
+                if(!shader)
+                    return;
 
-        const QString& path = shader->getFilePath();
-        QString vSrc = editor->getVertSrcEditor()->getTextContent();
-        QString fSrc = editor->getFragSrcEditor()->getTextContent();
-
-        shader->setVertexSrc(vSrc);
-        shader->setFragmentSrc(fSrc);
-
-        IESerialize::write<IEShader>(path, &(*shader));
-    });
-
-    connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)
-    {
-        isShaderActive = (index > 0) ? true : false;
-        if(!isShaderActive)
-            this->setEnabled(false);
-    });
+                shader->setVertexSrc(vSrc);
+                shader->setFragmentSrc(fSrc);
+                shader->build();
+            });
 
     connect(editor->getVertSrcEditor(), &EWGlslSrcEditor::modified, this, [this, editor](const bool val)
-    {
-        bool status = (isShaderActive) ? val : false;
-        this->setEnabled(status);
-    });
+            {
+                isVertexSrcDirty = val;
+                this->setEnabled(isVertexSrcDirty || isFragmentSrcDirty);
+            });
 
     connect(editor->getFragSrcEditor(), &EWGlslSrcEditor::modified, this, [this, editor](const bool val)
-    {
-        bool status = (isShaderActive) ? val : false;
-        this->setEnabled(status);
-    });
+            {
+                isFragmentSrcDirty = val;
+                this->setEnabled(isVertexSrcDirty || isFragmentSrcDirty);
+            });
 }

@@ -82,6 +82,7 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslSyntaxHighlighter \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslTextEditLineNumArea \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWShaderComboBox \
+    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/GlslFileHandler \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/SyntaxHighlightBehaviour/GlslCollectionHighlight \
@@ -244,6 +245,7 @@ INCLUDEPATH += $$PWD/src/Serialize \
 
 INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \
+    $$PWD/src/Utility/IEGlslExporter \
     $$PWD/src/Utility/IEGlslImporter \
     $$PWD/src/Utility/IEHash \
     $$PWD/src/Utility/IEMath \

@@ -10,7 +10,6 @@ ApplicationWindow::ApplicationWindow(QWidget *parent) :
     ui(new Ui::ApplicationWindow),
     appFileHandler(this),
     game(nullptr),
-    editor(nullptr),
     permenentTitle("Iguana Eye"),
     tempTitle(permenentTitle)
 {
@@ -59,15 +58,14 @@ void ApplicationWindow::initalize()
     game->startup();
     game->changeState(QSharedPointer<IEGameStopState>::create(*game));
 
-    editor = QSharedPointer<Editor>::create(this);
-    editor->startup(AppStartEvent(this, *editor, *game));
+    auto& editor = Editor::instance();
+    editor.startup(AppStartEvent(this, editor, *game));
 }
 
 void ApplicationWindow::shutdown()
 {
     clearActions();
-    editor->shutdown();
-    editor = nullptr;
+    Editor::instance().shutdown();
 
     game->shutdown();
     game = nullptr;
@@ -117,12 +115,13 @@ QDataStream& ApplicationWindow::serialize(QDataStream& out, const Serializable& 
 QDataStream& ApplicationWindow::deserialize(QDataStream& in, Serializable& obj)
 {
     ApplicationWindow& app = static_cast<ApplicationWindow&>(obj);
-    app.clearActions();
 
     in >> *app.game;
 
-    app.editor = QSharedPointer<Editor>::create(this);
-    app.editor->startup(AppStartEvent(this, *app.editor, *app.game));
+    app.clearActions();
+    auto& editor = Editor::instance();
+    editor.shutdown();
+    editor.startup(AppStartEvent(this, editor, *app.game));
 
     return in;
 }

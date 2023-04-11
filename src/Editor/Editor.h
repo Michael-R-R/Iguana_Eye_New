@@ -11,12 +11,15 @@ class Editor : public QObject
 {
     Q_OBJECT
 
+    Editor();
+    static Editor mInstance;
+
     EInput* input;
     EGUI* ui;
     EWOpenGLViewportDropZone* viewportDropZone;
 
 public:
-    Editor(QObject* parent = nullptr);
+    static Editor& instance();
     ~Editor();
 
     void startup(const AppStartEvent& event);

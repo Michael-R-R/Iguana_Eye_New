@@ -1,31 +1,35 @@
 #include "CompileShaderAction.h"
 #include "EWGlslEditor.h"
+#include "IEScene.h"
 #include "IEShaderManager.h"
+#include "IEShader.h"
+#include "IEHash.h"
 
-CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, IEShaderManager& manager,
-                                         InputKey& shortcut, QObject* parent) :
+CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, InputKey& shortcut, QObject* parent) :
     BaseAction("Compile", shortcut, parent)
 {
     this->setEnabled(false);
 
-    connect(this, &CompileShaderAction::triggered, this, [editor, &manager]()
-    {
-        unsigned long long id = editor->getShaderComboBox()->getSelectedId();
-        auto shader = manager.value(id);
-        if(!shader)
-            return;
+    connect(this, &CompileShaderAction::triggered, this, [editor]()
+            {
+                auto& shaderManager = IEScene::instance().getShaderManager();
 
-        QString vSrc = editor->getVertSrcEditor()->getTextContent();
-        QString fSrc = editor->getFragSrcEditor()->getTextContent();
+                unsigned long long id = IEHash::Compute(editor->getCurrShaderPath());
+                auto shader = shaderManager.value(id);
+                if(!shader)
+                    return;
 
-        shader->setVertexSrc(vSrc);
-        shader->setFragmentSrc(fSrc);
+                QString vSrc = editor->getVertexSource();
+                QString fSrc = editor->getFragmentSource();
 
-        shader->build();
-    });
+                shader->setVertexSrc(vSrc);
+                shader->setFragmentSrc(fSrc);
 
-    connect(editor->getShaderComboBox(), &EWShaderComboBox::currentIndexChanged, this, [this](int index)
-    {
-        this->setEnabled((index > 0));
-    });
+                shader->build();
+            });
+
+    connect(editor, &EWGlslEditor::glslPathChanged, this, [this](const QString& path)
+            {
+                this->setEnabled(!path.isEmpty());
+            });
 }

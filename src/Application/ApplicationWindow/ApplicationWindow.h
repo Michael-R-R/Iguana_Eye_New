@@ -7,7 +7,6 @@
 #include "ApplicationFileHandler.h"
 
 class IEGame;
-class Editor;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ApplicationWindow; }
@@ -22,7 +21,6 @@ class ApplicationWindow : public QMainWindow, public Serializable
     ApplicationFileHandler appFileHandler;
 
     QSharedPointer<IEGame> game;
-    QSharedPointer<Editor> editor;
 
     const QString permenentTitle;
     QString tempTitle;

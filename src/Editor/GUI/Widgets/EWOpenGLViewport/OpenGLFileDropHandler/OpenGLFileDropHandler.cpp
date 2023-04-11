@@ -12,10 +12,12 @@
 #include "IEECSRenderableSystem.h"
 #include "IEEntity.h"
 #include "IEFile.h"
-#include "IESerialize.h"
 #include "IEHash.h"
 #include "IEObjImporter.h"
-#include "IEGlslImporter.h"
+#include "Editor.h"
+#include "EGUI.h"
+#include "EWindowManager.h"
+#include "EGlslEditorWindow.h"
 #include <QOpenGLWidget>
 
 OpenGLFileDropHandler::OpenGLFileDropHandler()
@@ -38,7 +40,7 @@ void OpenGLFileDropHandler::handle(QOpenGLWidget* glWidget, const QString& path)
     if(extension == ".obj")
         handleObjFile(glWidget, path);
     else if(extension == ".glsl")
-        handleGlslFile(glWidget, path);
+        handleGlslFile(path);
 }
 
 void OpenGLFileDropHandler::handleObjFile(QOpenGLWidget* glWidget, const QString& path)
@@ -119,16 +121,16 @@ void OpenGLFileDropHandler::handleObjFile(QOpenGLWidget* glWidget, const QString
     }
 }
 
-void OpenGLFileDropHandler::handleGlslFile(QOpenGLWidget* glWidget, const QString& path)
+void OpenGLFileDropHandler::handleGlslFile(const QString& path)
 {
-    glWidget->makeCurrent();
-
-    auto shader = QSharedPointer<IEShader>::create(path);
-    if(!IEGlslImporter::importGlsl(path, *shader))
+    auto* ui = Editor::instance().getUi();
+    auto* windowManager = ui->getWindowManager();
+    auto* glslWindow = static_cast<EGlslEditorWindow*>(windowManager->value("GLSL Editor"));
+    if(!glslWindow)
         return;
 
-    shader->build();
+    auto* glslEditor = glslWindow->getGlslEditorWidget();
+    glslEditor->openGlslFile(path);
 
-    auto& shaderManager = IEScene::instance().getShaderManager();
-    shaderManager.add(shader->getId(), shader);
+    glslWindow->show();
 }

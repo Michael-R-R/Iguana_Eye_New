@@ -2,13 +2,13 @@
 #include "IEHash.h"
 
 IEResource::IEResource() :
-    filePath(""), id(0), isViewable(false)
+    filePath(""), id(0)
 {
 
 }
 
 IEResource::IEResource(const QString& path) :
-    filePath(path), id(IEHash::Compute(path)), isViewable(true)
+    filePath(path), id(IEHash::Compute(path))
 {
 
 }
@@ -34,7 +34,7 @@ QDataStream& IEResource::serialize(QDataStream& out, const Serializable& obj) co
 {
     const IEResource& resource = static_cast<const IEResource&>(obj);
 
-    out << resource.filePath << resource.id << resource.isViewable;
+    out << resource.filePath << resource.id;
 
     return out;
 }
@@ -43,7 +43,7 @@ QDataStream& IEResource::deserialize(QDataStream& in, Serializable& obj)
 {
     IEResource& resource = static_cast<IEResource&>(obj);
 
-    in >> resource.filePath >> resource.id << resource.isViewable;
+    in >> resource.filePath >> resource.id;
 
     return in;
 }

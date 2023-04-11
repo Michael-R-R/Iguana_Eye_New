@@ -15,6 +15,6 @@ public:
 
 private:
     void handleObjFile(QOpenGLWidget* glWidget, const QString& path);
-    void handleGlslFile(QOpenGLWidget* glWidget, const QString& path);
+    void handleGlslFile(const QString& path);
 };
 

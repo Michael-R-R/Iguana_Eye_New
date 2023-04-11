@@ -14,5 +14,7 @@ public:
     ~EGlslEditorWindow() {}
 
     void startup(const AppStartEvent& event) override;
+
+    EWGlslEditor* getGlslEditorWidget() const { return glslEditorWidget; }
 };
 

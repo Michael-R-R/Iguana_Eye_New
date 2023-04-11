@@ -2,14 +2,13 @@
 
 #include "BaseAction.h"
 
-class IEShaderManager;
+class EWGlslEditor;
 
 class OpenShaderAction : public BaseAction
 {
 
 public:
-    OpenShaderAction(IEShaderManager& shaderManager,
-                     InputKey& shortcut, QObject* parent = nullptr);
+    OpenShaderAction(EWGlslEditor* editor, InputKey& shortcut, QObject* parent = nullptr);
     ~OpenShaderAction() {}
 };
 

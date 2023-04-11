@@ -13,7 +13,4 @@ EGlslEditorWindow::EGlslEditorWindow(QWidget* parent) :
 void EGlslEditorWindow::startup(const AppStartEvent& event)
 {
     glslEditorWidget->startup(event);
-
-    connect(glslEditorWidget->getVertSrcEditor(), &EWGlslSrcEditor::modified, this, &EGlslEditorWindow::setModified);
-    connect(glslEditorWidget->getFragSrcEditor(), &EWGlslSrcEditor::modified, this, &EGlslEditorWindow::setModified);
 }

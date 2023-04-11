@@ -20,6 +20,24 @@ bool IEGlslImporter::importGlsl(const QString& path, IEShader& shader)
     return true;
 }
 
+bool IEGlslImporter::importGlsl(const QString& path, QString& vSrc, QString& fSrc)
+{
+    if(path.lastIndexOf(".glsl") < 0)
+        return false;
+
+    QString tempVSrc = "";
+    QString tempFSrc = "";
+
+    std::tie(tempVSrc, tempFSrc) = parseFile(path);
+    if(tempVSrc.isEmpty() || tempFSrc.isEmpty())
+        return false;
+
+    vSrc = tempVSrc;
+    fSrc = tempFSrc;
+
+    return true;
+}
+
 std::tuple<QString, QString> IEGlslImporter::parseFile(const QString& filePath)
 {
     QString content = "";

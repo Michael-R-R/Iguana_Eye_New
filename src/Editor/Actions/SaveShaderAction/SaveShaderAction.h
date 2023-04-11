@@ -3,15 +3,14 @@
 #include "BaseAction.h"
 
 class EWGlslEditor;
-class IEShaderManager;
 
 class SaveShaderAction : public BaseAction
 {
-    bool isShaderActive;
+    bool isVertexSrcDirty;
+    bool isFragmentSrcDirty;
 
 public:
-    SaveShaderAction(EWGlslEditor* editor, IEShaderManager& shaderManager,
-                     InputKey& shortcut, QObject* parent = nullptr);
+    SaveShaderAction(EWGlslEditor* editor, InputKey& shortcut, QObject* parent = nullptr);
     ~SaveShaderAction() {}
 };
 

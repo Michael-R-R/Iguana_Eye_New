@@ -36,7 +36,7 @@ void FileSubMenu::startup(const AppStartEvent& event)
     appendAction("Save File", new SaveGameFileAction(applicationWindow, input->getConfigKey("Save File"), this));
     appendAction("Save File As", new SaveAsGameFileAction(applicationWindow, input->getConfigKey("Save File As"), this));
     this->addSeparator();
-    appendAction("Options", new ToggleWindowAction("Options", input->getConfigKey("Options"), windowManager->getValue("Options"), this));
+    appendAction("Options", new ToggleWindowAction("Options", input->getConfigKey("Options"), windowManager->value("Options"), this));
     appendAction("Quit", new QuitAppAction(input->getConfigKey("Quit"), this));
 
     setupConnections(event);

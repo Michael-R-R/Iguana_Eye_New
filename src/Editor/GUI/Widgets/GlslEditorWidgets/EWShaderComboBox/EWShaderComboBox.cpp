@@ -70,9 +70,6 @@ void EWShaderComboBox::initialBuild(IEShaderManager* shaderManager)
     const auto resources = shaderManager->getResources();
     for(auto& i : resources)
     {
-        if(!i->getIsViewable())
-            continue;
-
         this->addShader(i->getId(), i->getFilePath());
     }
 }
