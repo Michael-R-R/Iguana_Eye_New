@@ -14,9 +14,6 @@ public:
     bool add(const unsigned long long key, QSharedPointer<IERenderable> value) override;
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
-    bool doesExist(const unsigned long long meshId,
-                   const unsigned long long materialId,
-                   const unsigned long long shaderId);
 
 private:
     void buildAll();

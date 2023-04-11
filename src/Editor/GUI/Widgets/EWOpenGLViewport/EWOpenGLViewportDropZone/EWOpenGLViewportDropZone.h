@@ -4,15 +4,18 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMimeData>
+#include <QSharedPointer>
 
 class AppStartEvent;
 class QOpenGLWidget;
+class OpenGLFileDropHandler;
 
 class EWOpenGLViewportDropZone : public QWidget
 {
     Q_OBJECT
 
     QOpenGLWidget* glWidget;
+    QSharedPointer<OpenGLFileDropHandler> fileHandler;
 
 public:
     EWOpenGLViewportDropZone(QWidget* parent = nullptr);
@@ -27,6 +30,5 @@ protected:
 
 private:
     void checkEvent(QEvent* event);
-    void handleObjFile(const QString& path);
 };
 

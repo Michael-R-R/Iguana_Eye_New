@@ -319,7 +319,7 @@ QTreeView
 QTreeView::item:selected
 {
 	color: white;
-	background-color: @lightGray;
+	background-color: @darkGray;
 }
 
 QTreeView::item:hover

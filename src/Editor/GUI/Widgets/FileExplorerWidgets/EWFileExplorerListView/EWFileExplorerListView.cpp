@@ -9,7 +9,7 @@ EWFileExplorerListView::EWFileExplorerListView(QFileSystemModel* model, QWidget*
     this->setResizeMode(QListView::Adjust);
     this->setMovement(QListView::Static);
     this->setDragEnabled(true);
-    this->setSelectionMode(QAbstractItemView::SingleSelection);
+    this->setSelectionMode(QAbstractItemView::ExtendedSelection);
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     this->setIconSize(QSize(36, 36));
     this->setUniformItemSizes(true);

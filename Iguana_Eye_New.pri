@@ -60,6 +60,7 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportDropZone \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportInput \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportTime \
+    $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/OpenGLFileDropHandler \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets \
     $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWDirectoryButton \
@@ -238,6 +239,7 @@ INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \
     $$PWD/src/Utility/IEGlslImporter \
     $$PWD/src/Utility/IEHash \
+    $$PWD/src/Utility/IEMath \
     $$PWD/src/Utility/IEObjExporter \
     $$PWD/src/Utility/IEObjImporter \
     $$PWD/src/Utility/IERandomNumber \

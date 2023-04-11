@@ -43,19 +43,6 @@ bool IERenderableManager::changeKey(const unsigned long long oldKey, const unsig
     return true;
 }
 
-bool IERenderableManager::doesExist(const unsigned long long meshId,
-                                    const unsigned long long materialId,
-                                    const unsigned long long shaderId)
-{
-    for(auto& i : resources)
-    {
-        if(i->equals(meshId, materialId, shaderId))
-            return true;
-    }
-
-    return false;
-}
-
 void IERenderableManager::buildAll()
 {
     auto& shaderManager = IEScene::instance().getShaderManager();

@@ -7,7 +7,7 @@ EWFileExplorerTreeView::EWFileExplorerTreeView(QFileSystemModel* model, QWidget*
     this->setFocusPolicy(Qt::NoFocus);
     this->setDragEnabled(true);
     this->setExpandsOnDoubleClick(false);
-    this->setSelectionMode(QAbstractItemView::SingleSelection);
+    this->setSelectionMode(QAbstractItemView::ExtendedSelection);
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     this->setUniformRowHeights(true);
     this->setModel(fileModel);

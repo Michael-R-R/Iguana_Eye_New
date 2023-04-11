@@ -84,6 +84,8 @@ QString IEFile::extractName(const QString& path)
 QString IEFile::extractExtension(const QString& path)
 {
     int index = path.lastIndexOf('.');
+    if(index < 0)
+        return "";
 
     return path.mid(index);
 }
