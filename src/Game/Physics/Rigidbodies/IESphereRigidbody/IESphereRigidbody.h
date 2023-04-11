@@ -1,8 +1,8 @@
 #pragma once
 
-#include "IERigidbody.h"
+#include "IEBaseRigidbody.h"
 
-class IESphereRigidbody : public IERigidbody
+class IESphereRigidbody : public IEBaseRigidbody
 {
     float radius;
 

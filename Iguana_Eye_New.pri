@@ -176,14 +176,18 @@ INCLUDEPATH += $$PWD/src/Game/Managers \
     $$PWD/src/Game/Managers/IEShaderManager \
 
 INCLUDEPATH += $$PWD/src/Game/Physics \
-    $$PWD/src/Game/Physics/IEBaseCollider \
-    $$PWD/src/Game/Physics/IEBoxCollider \
-    $$PWD/src/Game/Physics/IEBoxRigidbody \
-    $$PWD/src/Game/Physics/IECapsuleRigidbody \
-    $$PWD/src/Game/Physics/IEPlaneRigidbody \
-    $$PWD/src/Game/Physics/IERigidbody \
     $$PWD/src/Game/Physics/IESimulationCallback \
-    $$PWD/src/Game/Physics/IESphereRigidbody \
+
+INCLUDEPATH += $$PWD/src/Game/Physics/Colliders \
+    $$PWD/src/Game/Physics/Colliders/IEBaseCollider \
+    $$PWD/src/Game/Physics/Colliders/IEBoxCollider \
+
+INCLUDEPATH += $$PWD/src/Game/Physics/Rigidbodies \
+    $$PWD/src/Game/Physics/Rigidbodies/IEBoxRigidbody \
+    $$PWD/src/Game/Physics/Rigidbodies/IECapsuleRigidbody \
+    $$PWD/src/Game/Physics/Rigidbodies/IEPlaneRigidbody \
+    $$PWD/src/Game/Physics/Rigidbodies/IEBaseRigidbody \
+    $$PWD/src/Game/Physics/Rigidbodies/IESphereRigidbody \
 
 INCLUDEPATH += $$PWD/src/Game/Resources \
     $$PWD/src/Game/Resources/IECamera \
@@ -220,7 +224,7 @@ INCLUDEPATH += $$PWD/src/Game/Scripting/Scripts \
     $$PWD/src/Game/Scripting/Scripts/IECameraScript \
     $$PWD/src/Game/Scripting/Scripts/IEEntityScript \
     $$PWD/src/Game/Scripting/Scripts/IEScript \
-    $$PWD/src/Game/Scripting/Scripts/ScriptData \
+    $$PWD/src/Game/Scripting/Scripts/IEScriptData \
 
 INCLUDEPATH += $$PWD/src/Game/Systems \
     $$PWD/src/Game/Systems/IEGameSystem \

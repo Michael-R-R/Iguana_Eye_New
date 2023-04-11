@@ -4,7 +4,7 @@
 #include <sol/sol.hpp>
 
 #include "IEScript.h"
-#include "ScriptData.h"
+#include "IEScriptData.h"
 #include "IEEntity.h"
 
 class IEEntityScript : public IEScript
@@ -16,7 +16,7 @@ class IEEntityScript : public IEScript
     sol::function onTriggerEnterFunc;
     sol::function onTriggerLeaveFunc;
 
-    ScriptData scriptData;
+    IEScriptData scriptData;
 
 public:
     IEEntityScript();

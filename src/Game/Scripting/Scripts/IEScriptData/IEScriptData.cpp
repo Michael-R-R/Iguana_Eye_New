@@ -1,20 +1,20 @@
-#include "ScriptData.h"
+#include "IEScriptData.h"
 
-ScriptData::ScriptData() :
+IEScriptData::IEScriptData() :
     tableNames(), strTableVals(),
     numTableVals(), boolTableVals()
 {
 
 }
 
-ScriptData::ScriptData(const ScriptData& other) :
+IEScriptData::IEScriptData(const IEScriptData& other) :
     tableNames(other.tableNames), strTableVals(other.strTableVals),
     numTableVals(other.numTableVals), boolTableVals(other.boolTableVals)
 {
 
 }
 
-void ScriptData::clear()
+void IEScriptData::clear()
 {
     tableNames.clear();
     strTableVals.clear();
@@ -22,13 +22,13 @@ void ScriptData::clear()
     boolTableVals.clear();
 }
 
-void ScriptData::fromScript(sol::environment& env)
+void IEScriptData::fromScript(sol::environment& env)
 {
     clear();
     fromScriptHelper(env);
 }
 
-void ScriptData::toScript(sol::environment& env)
+void IEScriptData::toScript(sol::environment& env)
 {
     sol::environment table = env;
 
@@ -47,7 +47,7 @@ void ScriptData::toScript(sol::environment& env)
     }
 }
 
-void ScriptData::fromScriptHelper(sol::table& table, const QString& tableName)
+void IEScriptData::fromScriptHelper(sol::table& table, const QString& tableName)
 {
     int index = tableNames.size();
 

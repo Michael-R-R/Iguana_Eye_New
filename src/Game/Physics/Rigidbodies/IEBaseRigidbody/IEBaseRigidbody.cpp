@@ -1,7 +1,7 @@
-#include "IERigidBody.h"
+#include "IEBaseRigidbody.h"
 #include "physx/extensions/PxSimpleFactory.h"
 
-IERigidbody::IERigidbody() :
+IEBaseRigidbody::IEBaseRigidbody() :
     physics(nullptr),
     material(nullptr),
     rigidActor(nullptr),
@@ -12,7 +12,7 @@ IERigidbody::IERigidbody() :
 
 }
 
-IERigidbody::IERigidbody(physx::PxPhysics* p,
+IEBaseRigidbody::IEBaseRigidbody(physx::PxPhysics* p,
                          physx::PxMaterial* m,
                          RigidbodyType type,
                          RigidbodyShape shape,
@@ -26,14 +26,14 @@ IERigidbody::IERigidbody(physx::PxPhysics* p,
 
 }
 
-IERigidbody::~IERigidbody()
+IEBaseRigidbody::~IEBaseRigidbody()
 {
     physics = nullptr;
     material = nullptr;
     rigidActor = nullptr; // Manually clean up with release() or let scene clean up
 }
 
-bool IERigidbody::wakeup()
+bool IEBaseRigidbody::wakeup()
 {
     if(!rigidActor)
         return false;
@@ -47,7 +47,7 @@ bool IERigidbody::wakeup()
     return true;
 }
 
-bool IERigidbody::putToSleep()
+bool IEBaseRigidbody::putToSleep()
 {
     if(!rigidActor)
         return false;
@@ -61,7 +61,7 @@ bool IERigidbody::putToSleep()
     return true;
 }
 
-void IERigidbody::release()
+void IEBaseRigidbody::release()
 {
     rigidActor->release();
     physics = nullptr;
@@ -71,19 +71,19 @@ void IERigidbody::release()
     rigidbodyShape = RigidbodyShape::None;
 }
 
-void IERigidbody::create(const physx::PxTransform& t, const physx::PxGeometry& g)
+void IEBaseRigidbody::create(const physx::PxTransform& t, const physx::PxGeometry& g)
 {
     switch(rigidbodyType)
     {
-    case IERigidbody::RigidbodyType::None: { break; }
-    case IERigidbody::RigidbodyType::Static: { createAsStatic(t, g); break; }
-    case IERigidbody::RigidbodyType::Dynamic: { createAsDynamic(t, g); break; }
-    case IERigidbody::RigidbodyType::Kinematic: { createAsKinematic(t, g); break; }
+    case IEBaseRigidbody::RigidbodyType::None: { break; }
+    case IEBaseRigidbody::RigidbodyType::Static: { createAsStatic(t, g); break; }
+    case IEBaseRigidbody::RigidbodyType::Dynamic: { createAsDynamic(t, g); break; }
+    case IEBaseRigidbody::RigidbodyType::Kinematic: { createAsKinematic(t, g); break; }
     default: { break; }
     }
 }
 
-void IERigidbody::createAsStatic(const physx::PxTransform& t,
+void IEBaseRigidbody::createAsStatic(const physx::PxTransform& t,
                                  const physx::PxGeometry& geometry)
 {
     auto* actor = physx::PxCreateStatic(*physics, t, geometry, *material);
@@ -95,7 +95,7 @@ void IERigidbody::createAsStatic(const physx::PxTransform& t,
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, false);
 }
 
-void IERigidbody::createAsDynamic(const physx::PxTransform& t,
+void IEBaseRigidbody::createAsDynamic(const physx::PxTransform& t,
                                   const physx::PxGeometry& geometry)
 {
     auto* actor = physx::PxCreateDynamic(*physics, t, geometry, *material, density);
@@ -108,7 +108,7 @@ void IERigidbody::createAsDynamic(const physx::PxTransform& t,
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
 }
 
-void IERigidbody::createAsKinematic(const physx::PxTransform& t,
+void IEBaseRigidbody::createAsKinematic(const physx::PxTransform& t,
                                     const physx::PxGeometry& geometry)
 {
     auto* actor = physx::PxCreateKinematic(*physics, t, geometry, *material, density);
@@ -121,9 +121,9 @@ void IERigidbody::createAsKinematic(const physx::PxTransform& t,
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
 }
 
-QDataStream& IERigidbody::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEBaseRigidbody::serialize(QDataStream& out, const Serializable& obj) const
 {
-    const IERigidbody& body = static_cast<const IERigidbody&>(obj);
+    const IEBaseRigidbody& body = static_cast<const IEBaseRigidbody&>(obj);
 
     physx::PxVec3 p = body.getGlobalPos();
     physx::PxQuat q = body.getGlobalQuat();
@@ -135,9 +135,9 @@ QDataStream& IERigidbody::serialize(QDataStream& out, const Serializable& obj) c
     return out;
 }
 
-QDataStream& IERigidbody::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEBaseRigidbody::deserialize(QDataStream& in, Serializable& obj)
 {
-    IERigidbody& body = static_cast<IERigidbody&>(obj);
+    IEBaseRigidbody& body = static_cast<IEBaseRigidbody&>(obj);
 
     in >> body.rigidbodyType >> body.attachedId >> body.density >> body.sleepThreshold;
 

@@ -31,7 +31,7 @@ int IEECSRigidbody3DSystem::attach(const IEEntity entity)
     entityMap[entity] = index;
 
     data.entity.push_back(entity);
-    data.rigidbody.push_back(QSharedPointer<IERigidbody>::create());
+    data.rigidbody.push_back(QSharedPointer<IEBaseRigidbody>::create());
 
     return index;
 }
@@ -81,7 +81,7 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
         if(!data.rigidbody[i])
             continue;
 
-        IERigidbody& rigidbody = *data.rigidbody[i];
+        IEBaseRigidbody& rigidbody = *data.rigidbody[i];
 
         physx::PxVec3 pxPos = rigidbody.getGlobalPos();
         physx::PxQuat pxQuat = rigidbody.getGlobalQuat();
@@ -150,7 +150,7 @@ void IEECSRigidbody3DSystem::release(const int index)
     sleepingBodies.remove(index);
 }
 
-QSharedPointer<IERigidbody> IEECSRigidbody3DSystem::getRigidbody(const int index) const
+QSharedPointer<IEBaseRigidbody> IEECSRigidbody3DSystem::getRigidbody(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
@@ -158,7 +158,7 @@ QSharedPointer<IERigidbody> IEECSRigidbody3DSystem::getRigidbody(const int index
     return data.rigidbody[index];
 }
 
-void IEECSRigidbody3DSystem::setRigidbody(const int index, const QSharedPointer<IERigidbody> val)
+void IEECSRigidbody3DSystem::setRigidbody(const int index, const QSharedPointer<IEBaseRigidbody> val)
 {
     if(!indexBoundCheck(index))
         return;

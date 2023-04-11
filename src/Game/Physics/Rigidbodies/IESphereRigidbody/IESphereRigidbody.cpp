@@ -2,7 +2,7 @@
 
 IESphereRigidbody::IESphereRigidbody(physx::PxPhysics* p,
                                      physx::PxMaterial* m) :
-    IERigidbody(p, m, RigidbodyType::None, RigidbodyShape::Sphere, 0),
+    IEBaseRigidbody(p, m, RigidbodyType::None, RigidbodyShape::Sphere, 0),
     radius(1.0f)
 {
 
@@ -14,7 +14,7 @@ IESphereRigidbody::IESphereRigidbody(physx::PxPhysics* p,
                                      const int id,
                                      const float r,
                                      const float d, const float st) :
-    IERigidbody(p, m, type, RigidbodyShape::Sphere, id, d, st),
+    IEBaseRigidbody(p, m, type, RigidbodyShape::Sphere, id, d, st),
     radius(r)
 {
 
@@ -29,12 +29,12 @@ void IESphereRigidbody::create(const physx::PxTransform& t)
 {
     physx::PxSphereGeometry g(radius);
 
-    IERigidbody::create(t, g);
+    IEBaseRigidbody::create(t, g);
 }
 
 QDataStream& IESphereRigidbody::serialize(QDataStream& out, const Serializable& obj) const
 {
-    IERigidbody::serialize(out, obj);
+    IEBaseRigidbody::serialize(out, obj);
 
     const IESphereRigidbody& body = static_cast<const IESphereRigidbody&>(obj);
 
@@ -45,7 +45,7 @@ QDataStream& IESphereRigidbody::serialize(QDataStream& out, const Serializable& 
 
 QDataStream& IESphereRigidbody::deserialize(QDataStream& in, Serializable& obj)
 {
-    IERigidbody::deserialize(in, obj);
+    IEBaseRigidbody::deserialize(in, obj);
 
     IESphereRigidbody& body = static_cast<IESphereRigidbody&>(obj);
 

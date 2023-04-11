@@ -2,7 +2,7 @@
 
 IEPlaneRigidbody::IEPlaneRigidbody(physx::PxPhysics* p,
                                    physx::PxMaterial* m) :
-    IERigidbody(p, m, RigidbodyType::None, RigidbodyShape::Plane, 0)
+    IEBaseRigidbody(p, m, RigidbodyType::None, RigidbodyShape::Plane, 0)
 {
 
 }
@@ -12,7 +12,7 @@ IEPlaneRigidbody::IEPlaneRigidbody(physx::PxPhysics* p,
                                    RigidbodyType type,
                                    const int id,
                                    const float d, const float st) :
-    IERigidbody(p, m, type, RigidbodyShape::Plane, id, d, st)
+    IEBaseRigidbody(p, m, type, RigidbodyShape::Plane, id, d, st)
 {
 
 }
@@ -26,17 +26,17 @@ void IEPlaneRigidbody::create(const physx::PxTransform& t)
 {
     physx::PxPlaneGeometry g;
 
-    IERigidbody::create(t, g);
+    IEBaseRigidbody::create(t, g);
 }
 
 QDataStream& IEPlaneRigidbody::serialize(QDataStream& out, const Serializable& obj) const
 {
-    return IERigidbody::serialize(out, obj);
+    return IEBaseRigidbody::serialize(out, obj);
 }
 
 QDataStream& IEPlaneRigidbody::deserialize(QDataStream& in, Serializable& obj)
 {
-    IERigidbody::deserialize(in, obj);
+    IEBaseRigidbody::deserialize(in, obj);
 
     IEPlaneRigidbody& body = static_cast<IEPlaneRigidbody&>(obj);
 

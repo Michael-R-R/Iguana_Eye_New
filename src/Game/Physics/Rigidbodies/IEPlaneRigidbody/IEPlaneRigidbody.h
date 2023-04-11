@@ -1,8 +1,8 @@
 #pragma once
 
-#include "IERigidbody.h"
+#include "IEBaseRigidbody.h"
 
-class IEPlaneRigidbody : public IERigidbody
+class IEPlaneRigidbody : public IEBaseRigidbody
 {
 
 public:

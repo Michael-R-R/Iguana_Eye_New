@@ -1,8 +1,8 @@
 #pragma once
 
-#include "IERigidBody.h"
+#include "IEBaseRigidbody.h"
 
-class IEBoxRigidbody : public IERigidbody
+class IEBoxRigidbody : public IEBaseRigidbody
 {
     float extentX, extentY, extentZ;
 

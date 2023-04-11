@@ -5,7 +5,7 @@
 #include "PxRigidStatic.h"
 #include "PxRigidDynamic.h"
 
-class IERigidbody : public Serializable
+class IEBaseRigidbody : public Serializable
 {
 public:
     enum class RigidbodyType
@@ -31,16 +31,16 @@ protected:
     float sleepThreshold;
 
 public:
-    IERigidbody();
-    IERigidbody(physx::PxPhysics* p,
-                physx::PxMaterial* m,
-                RigidbodyType type,
-                RigidbodyShape shape,
-                const int id,
-                const float d = 0.0f,
-                const float st = 0.0f);
-    IERigidbody(const IERigidbody&) = delete;
-    ~IERigidbody();
+    IEBaseRigidbody();
+    IEBaseRigidbody(physx::PxPhysics* p,
+                    physx::PxMaterial* m,
+                    RigidbodyType type,
+                    RigidbodyShape shape,
+                    const int id,
+                    const float d = 0.0f,
+                    const float st = 0.0f);
+    IEBaseRigidbody(const IEBaseRigidbody&) = delete;
+    ~IEBaseRigidbody();
 
     virtual void create(const physx::PxTransform&) {}
 

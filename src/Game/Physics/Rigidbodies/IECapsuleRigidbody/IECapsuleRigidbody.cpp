@@ -2,7 +2,7 @@
 
 IECapsuleRigidbody::IECapsuleRigidbody(physx::PxPhysics* p,
                                        physx::PxMaterial* m) :
-    IERigidbody(p, m, RigidbodyType::None, RigidbodyShape::Capsule, 0),
+    IEBaseRigidbody(p, m, RigidbodyType::None, RigidbodyShape::Capsule, 0),
     radius(1.0f), halfHeight(1.0f)
 {
 
@@ -14,7 +14,7 @@ IECapsuleRigidbody::IECapsuleRigidbody(physx::PxPhysics* p,
                                        const int id,
                                        const float r, const float hh,
                                        const float d, const float st) :
-    IERigidbody(p, m, type, RigidbodyShape::Capsule, id, d, st),
+    IEBaseRigidbody(p, m, type, RigidbodyShape::Capsule, id, d, st),
     radius(r), halfHeight(hh)
 {
 
@@ -30,12 +30,12 @@ void IECapsuleRigidbody::create(const physx::PxTransform& t)
 {
     physx::PxCapsuleGeometry g(radius, halfHeight);
 
-    IERigidbody::create(t, g);
+    IEBaseRigidbody::create(t, g);
 }
 
 QDataStream& IECapsuleRigidbody::serialize(QDataStream& out, const Serializable& obj) const
 {
-    IERigidbody::serialize(out, obj);
+    IEBaseRigidbody::serialize(out, obj);
 
     const IECapsuleRigidbody& body = static_cast<const IECapsuleRigidbody&>(obj);
 
@@ -46,7 +46,7 @@ QDataStream& IECapsuleRigidbody::serialize(QDataStream& out, const Serializable&
 
 QDataStream& IECapsuleRigidbody::deserialize(QDataStream& in, Serializable& obj)
 {
-    IERigidbody::deserialize(in, obj);
+    IEBaseRigidbody::deserialize(in, obj);
 
     IECapsuleRigidbody& body = static_cast<IECapsuleRigidbody&>(obj);
 

@@ -1,7 +1,7 @@
 #include "IEBoxRigidBody.h"
 
 IEBoxRigidbody::IEBoxRigidbody(physx::PxPhysics* p, physx::PxMaterial* m) :
-    IERigidbody(p, m, RigidbodyType::None, RigidbodyShape::Box, 0),
+    IEBaseRigidbody(p, m, RigidbodyType::None, RigidbodyShape::Box, 0),
     extentX(1.0f), extentY(1.0f), extentZ(1.0f)
 {
 
@@ -13,7 +13,7 @@ IEBoxRigidbody::IEBoxRigidbody(physx::PxPhysics* p,
                                const int id,
                                const float x, const float y, const float z,
                                const float d, const float st) :
-    IERigidbody(p, m, type, RigidbodyShape::Box, id, d, st),
+    IEBaseRigidbody(p, m, type, RigidbodyShape::Box, id, d, st),
     extentX(x), extentY(y), extentZ(z)
 {
 
@@ -28,12 +28,12 @@ void IEBoxRigidbody::create(const physx::PxTransform& t)
 {
     physx::PxBoxGeometry g(extentX, extentY, extentZ);
 
-    IERigidbody::create(t, g);
+    IEBaseRigidbody::create(t, g);
 }
 
 QDataStream& IEBoxRigidbody::serialize(QDataStream& out, const Serializable& obj) const
 {
-    IERigidbody::serialize(out, obj);
+    IEBaseRigidbody::serialize(out, obj);
 
     const IEBoxRigidbody& body = static_cast<const IEBoxRigidbody&>(obj);
 
@@ -44,7 +44,7 @@ QDataStream& IEBoxRigidbody::serialize(QDataStream& out, const Serializable& obj
 
 QDataStream& IEBoxRigidbody::deserialize(QDataStream& in, Serializable& obj)
 {
-    IERigidbody::deserialize(in, obj);
+    IEBaseRigidbody::deserialize(in, obj);
 
     IEBoxRigidbody& body = static_cast<IEBoxRigidbody&>(obj);
 
