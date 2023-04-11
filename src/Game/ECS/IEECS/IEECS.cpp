@@ -6,6 +6,7 @@
 #include "IEECSHierarchySystem.h"
 #include "IEECSInputSystem.h"
 #include "IEECSScriptSystem.h"
+#include "IEECSColliderSystem.h"
 #include "IEECSRigidbody3DSystem.h"
 #include "IEECSTransformSystem.h"
 #include "IEECSCameraSystem.h"
@@ -146,6 +147,7 @@ void IEECS::initSystems()
     auto hierarchySystem = QSharedPointer<IEECSHierarchySystem>::create();
     auto inputSystem = QSharedPointer<IEECSInputSystem>::create();
     auto scriptSystem = QSharedPointer<IEECSScriptSystem>::create();
+    auto colliderSystem = QSharedPointer<IEECSColliderSystem>::create();
     auto rigidbody3dSystem = QSharedPointer<IEECSRigidbody3DSystem>::create();
     auto transformSystem = QSharedPointer<IEECSTransformSystem>::create();
     auto cameraSystem = QSharedPointer<IEECSCameraSystem>::create();
@@ -158,6 +160,7 @@ void IEECS::initSystems()
     systems["Hierarchy"] = hierarchySystem;
     systems["Input"] = inputSystem;
     systems["Script"] = scriptSystem;
+    systems["Collider"] = colliderSystem;
     systems["Rigidbody3D"] = rigidbody3dSystem;
     systems["Transform"] = transformSystem;
     systems["Camera"] = cameraSystem;

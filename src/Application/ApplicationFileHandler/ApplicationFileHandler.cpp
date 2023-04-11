@@ -3,6 +3,7 @@
 #include "IEFile.h"
 #include "IESerialize.h"
 #include <QMessageBox>
+#include <QFileDialog>
 
 ApplicationFileHandler::ApplicationFileHandler(ApplicationWindow* app) :
     application(app),
@@ -30,7 +31,13 @@ void ApplicationFileHandler::handleFileNew()
 void ApplicationFileHandler::handleFileSaved()
 {
     if(savePath.isEmpty())
-        return;
+    {
+        savePath = openSaveFileExplorer();
+        if(savePath.isEmpty())
+            return;
+
+        application->modifyTitle(savePath);
+    }
 
     IESerialize::write<ApplicationWindow>(savePath, application);
 }
@@ -70,6 +77,15 @@ bool ApplicationFileHandler::askToSaveFile()
                                        QMessageBox::No | QMessageBox::Yes);
 
     return (answer == QMessageBox::Yes);
+}
+
+QString ApplicationFileHandler::openSaveFileExplorer()
+{
+    QString path = QFileDialog::getSaveFileName(application,
+                                                "Save File...",
+                                                ".",
+                                                "Iguana Eye File (*.iedat)");
+    return path;
 }
 
 void ApplicationFileHandler::cleanTempFiles()

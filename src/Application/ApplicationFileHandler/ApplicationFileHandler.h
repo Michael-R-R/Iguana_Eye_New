@@ -24,6 +24,7 @@ public:
 
 private:
     bool askToSaveFile();
+    QString openSaveFileExplorer();
     void cleanTempFiles();
 };
 
