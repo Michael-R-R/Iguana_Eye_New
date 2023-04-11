@@ -70,6 +70,9 @@ void EWShaderComboBox::initialBuild(IEShaderManager* shaderManager)
     const auto resources = shaderManager->getResources();
     for(auto& i : resources)
     {
+        if(!i->getIsViewable())
+            continue;
+
         this->addShader(i->getId(), i->getFilePath());
     }
 }
@@ -82,6 +85,24 @@ bool EWShaderComboBox::indexBoundCheck(const int index)
 bool EWShaderComboBox::doesExist(const unsigned long long key)
 {
     return (fullIdList.indexOf(key) > -1);
+}
+
+QString EWShaderComboBox::checkForDuplicateName(const QString& nameToCheck)
+{
+    QString temp = nameToCheck;
+    int counter = 0;
+
+    for(int i = 0; i < this->count(); i++)
+    {
+        if(this->itemText(i) != temp)
+            continue;
+
+        temp = nameToCheck + "_" + QString::number(counter);
+        counter++;
+        i = 0;
+    }
+
+    return temp;
 }
 
 void EWShaderComboBox::currentShaderChanged(int index)
@@ -117,6 +138,7 @@ void EWShaderComboBox::addShader(const unsigned long long key, const QString& pa
     fullIdList.append(key);
 
     QString extractedName = IEFile::extractName(path);
+    extractedName = checkForDuplicateName(extractedName);
 
     this->addItem(extractedName);
     this->setCurrentIndex(index);
@@ -147,9 +169,10 @@ void EWShaderComboBox::changeShaderKey(const unsigned long long oldKey, const un
     fullIdList[index] = newKey;
 
     auto& shaderManager = IEScene::instance().getShaderManager();
-
     auto shader = shaderManager.value(newKey);
+
     QString extractedName = IEFile::extractName(shader->getFilePath());
+    extractedName = checkForDuplicateName(extractedName);
 
     this->setItemText(index, extractedName);
 }

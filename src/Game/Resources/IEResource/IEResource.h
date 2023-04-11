@@ -9,6 +9,7 @@ class IEResource : public Serializable
 protected:
     QString filePath;
     unsigned long long id;
+    bool isViewable;
 
 public:
     IEResource();
@@ -24,6 +25,7 @@ public:
 
     const QString& getFilePath() const { return filePath; }
     unsigned long long getId() const { return id; }
+    bool getIsViewable() const { return isViewable; }
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, Serializable& obj) override;

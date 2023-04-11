@@ -29,6 +29,7 @@ private:
     void initialBuild(IEShaderManager* shaderManager);
     bool indexBoundCheck(const int index);
     bool doesExist(const unsigned long long key);
+    QString checkForDuplicateName(const QString& nameToCheck);
 
 private slots:
     void currentShaderChanged(int index);
