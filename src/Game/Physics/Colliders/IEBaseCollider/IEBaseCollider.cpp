@@ -1,18 +1,17 @@
 #include "IEBaseCollider.h"
+#include "IEPhysicsEngine.h"
 #include "physx/extensions/PxSimpleFactory.h"
 
 IEBaseCollider::IEBaseCollider() :
-    physics(nullptr), material(nullptr), rigidActor(nullptr),
+    rigidActor(nullptr),
     colliderShape(ColliderShape::None), attachedId(0)
 {
 
 }
 
-IEBaseCollider::IEBaseCollider(physx::PxPhysics* p,
-                               physx::PxMaterial* m,
-                               ColliderShape shape,
+IEBaseCollider::IEBaseCollider(ColliderShape shape,
                                const int id) :
-    physics(p), material(m), rigidActor(nullptr),
+    rigidActor(nullptr),
     colliderShape(shape), attachedId(id)
 {
 
@@ -20,9 +19,16 @@ IEBaseCollider::IEBaseCollider(physx::PxPhysics* p,
 
 IEBaseCollider::~IEBaseCollider()
 {
-    physics = nullptr;
-    material = nullptr;
-    rigidActor = nullptr; // Manually clean up with release() or let scene clean up
+    if(rigidActor)
+        rigidActor->release();
+}
+
+void IEBaseCollider::release()
+{
+    if(!rigidActor)
+        return;
+
+    rigidActor->release();
 }
 
 void IEBaseCollider::setIsTrigger(const bool val)
@@ -37,21 +43,54 @@ void IEBaseCollider::setIsTrigger(const bool val)
     shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, val);
 }
 
+physx::PxVec3 IEBaseCollider::getGlobalPos() const
+{
+    if(!rigidActor)
+        return physx::PxVec3();
+
+    return rigidActor->getGlobalPose().p;
+}
+
+physx::PxQuat IEBaseCollider::getGlobalQuat() const
+{
+    if(!rigidActor)
+        return physx::PxQuat();
+
+    return rigidActor->getGlobalPose().q;
+}
+
 void IEBaseCollider::create(const physx::PxTransform& t, const physx::PxGeometry& g)
 {
-    auto* actor = physx::PxCreateStatic(*physics, t, g, *material);
+    auto* p = IEPhysicsEngine::instance().getPxPhysics();
+    auto* m = IEPhysicsEngine::instance().getPxMaterial();
+
+    auto* actor = physx::PxCreateStatic(*p, t, g, *m);
 
     rigidActor = actor;
     rigidActor->userData = (void*)(size_t)attachedId;
+
+    IEPhysicsEngine::instance().addActorToScene(rigidActor);
 }
 
-
-QDataStream& IEBaseCollider::serialize(QDataStream& out, const Serializable&) const
+QDataStream& IEBaseCollider::serialize(QDataStream& out, const Serializable& obj) const
 {
+    const IEBaseCollider& collider = static_cast<const IEBaseCollider&>(obj);
+
+    physx::PxVec3 p = collider.getGlobalPos();
+    physx::PxQuat q = collider.getGlobalQuat();
+
+    out << collider.colliderShape << collider.attachedId;
+    out << p.x << p.y << p.z;
+    out << q.x << q.y << q.z << q.w;
+
     return out;
 }
 
-QDataStream& IEBaseCollider::deserialize(QDataStream& in, Serializable&)
+QDataStream& IEBaseCollider::deserialize(QDataStream& in, Serializable& obj)
 {
+    IEBaseCollider& collider = static_cast<IEBaseCollider&>(obj);
+
+    in >> collider.colliderShape >> collider.attachedId;
+
     return in;
 }

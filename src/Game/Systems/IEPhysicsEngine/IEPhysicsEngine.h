@@ -21,7 +21,7 @@ class IEPhysicsEngine : public IEGameSystem
     physx::PxFoundation* pxFoundation;
     physx::PxPhysics* pxPhysics;
     physx::PxScene* pxScene;
-    physx::PxMaterial* pxDefaultMaterial;
+    physx::PxMaterial* pxMaterial;
 
     QSharedPointer<IESimulationCallback> simulationCallback;
 
@@ -46,7 +46,7 @@ public:
     void releaseActor(physx::PxActor* actor);
 
     physx::PxPhysics* getPxPhysics() const { return pxPhysics; }
-    physx::PxMaterial* getDefaultPxMaterial() const { return pxDefaultMaterial; }
+    physx::PxMaterial* getPxMaterial() const { return pxMaterial; }
     QSharedPointer<IESimulationCallback> getSimulationCallback() const { return simulationCallback; }
 };
 

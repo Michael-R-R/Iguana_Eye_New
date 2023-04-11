@@ -1,9 +1,8 @@
 #include "IEBaseRigidbody.h"
+#include "IEPhysicsEngine.h"
 #include "physx/extensions/PxSimpleFactory.h"
 
 IEBaseRigidbody::IEBaseRigidbody() :
-    physics(nullptr),
-    material(nullptr),
     rigidActor(nullptr),
     rigidbodyType(RigidbodyType::None),
     rigidbodyShape(RigidbodyShape::None),
@@ -12,14 +11,12 @@ IEBaseRigidbody::IEBaseRigidbody() :
 
 }
 
-IEBaseRigidbody::IEBaseRigidbody(physx::PxPhysics* p,
-                         physx::PxMaterial* m,
-                         RigidbodyType type,
-                         RigidbodyShape shape,
-                         const int id,
-                         const float d,
-                         const float st) :
-    physics(p), material(m), rigidActor(nullptr),
+IEBaseRigidbody::IEBaseRigidbody(RigidbodyType type,
+                                 RigidbodyShape shape,
+                                 const int id,
+                                 const float d,
+                                 const float st) :
+    rigidActor(nullptr),
     rigidbodyType(type), rigidbodyShape(shape),
     attachedId(id), density(d), sleepThreshold(st)
 {
@@ -28,9 +25,8 @@ IEBaseRigidbody::IEBaseRigidbody(physx::PxPhysics* p,
 
 IEBaseRigidbody::~IEBaseRigidbody()
 {
-    physics = nullptr;
-    material = nullptr;
-    rigidActor = nullptr; // Manually clean up with release() or let scene clean up
+    if(rigidActor)
+        rigidActor->release();
 }
 
 bool IEBaseRigidbody::wakeup()
@@ -64,11 +60,25 @@ bool IEBaseRigidbody::putToSleep()
 void IEBaseRigidbody::release()
 {
     rigidActor->release();
-    physics = nullptr;
-    material = nullptr;
     rigidActor = nullptr;
     rigidbodyType = RigidbodyType::None;
     rigidbodyShape = RigidbodyShape::None;
+}
+
+physx::PxVec3 IEBaseRigidbody::getGlobalPos() const
+{
+    if(!rigidActor)
+        return physx::PxVec3();
+
+    return rigidActor->getGlobalPose().p;
+}
+
+physx::PxQuat IEBaseRigidbody::getGlobalQuat() const
+{
+    if(!rigidActor)
+        return physx::PxQuat();
+
+    return rigidActor->getGlobalPose().q;
 }
 
 void IEBaseRigidbody::create(const physx::PxTransform& t, const physx::PxGeometry& g)
@@ -84,21 +94,29 @@ void IEBaseRigidbody::create(const physx::PxTransform& t, const physx::PxGeometr
 }
 
 void IEBaseRigidbody::createAsStatic(const physx::PxTransform& t,
-                                 const physx::PxGeometry& geometry)
+                                     const physx::PxGeometry& geometry)
 {
-    auto* actor = physx::PxCreateStatic(*physics, t, geometry, *material);
+    auto* p = IEPhysicsEngine::instance().getPxPhysics();
+    auto* m = IEPhysicsEngine::instance().getPxMaterial();
+
+    auto* actor = physx::PxCreateStatic(*p, t, geometry, *m);
 
     rigidActor = actor;
     rigidActor->userData = (void*)(size_t)attachedId;
     rigidbodyType = RigidbodyType::Static;
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, false);
+
+    IEPhysicsEngine::instance().addActorToScene(rigidActor);
 }
 
 void IEBaseRigidbody::createAsDynamic(const physx::PxTransform& t,
-                                  const physx::PxGeometry& geometry)
+                                      const physx::PxGeometry& geometry)
 {
-    auto* actor = physx::PxCreateDynamic(*physics, t, geometry, *material, density);
+    auto* p = IEPhysicsEngine::instance().getPxPhysics();
+    auto* m = IEPhysicsEngine::instance().getPxMaterial();
+
+    auto* actor = physx::PxCreateDynamic(*p, t, geometry, *m, density);
     actor->setSleepThreshold(sleepThreshold);
 
     rigidActor = actor;
@@ -106,12 +124,17 @@ void IEBaseRigidbody::createAsDynamic(const physx::PxTransform& t,
     rigidbodyType = RigidbodyType::Dynamic;
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
+
+    IEPhysicsEngine::instance().addActorToScene(rigidActor);
 }
 
 void IEBaseRigidbody::createAsKinematic(const physx::PxTransform& t,
-                                    const physx::PxGeometry& geometry)
+                                        const physx::PxGeometry& geometry)
 {
-    auto* actor = physx::PxCreateKinematic(*physics, t, geometry, *material, density);
+    auto* p = IEPhysicsEngine::instance().getPxPhysics();
+    auto* m = IEPhysicsEngine::instance().getPxMaterial();
+
+    auto* actor = physx::PxCreateKinematic(*p, t, geometry, *m, density);
     actor->setSleepThreshold(sleepThreshold);
 
     rigidActor = actor;
@@ -119,6 +142,8 @@ void IEBaseRigidbody::createAsKinematic(const physx::PxTransform& t,
     rigidbodyType = RigidbodyType::Kinematic;
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
+
+    IEPhysicsEngine::instance().addActorToScene(rigidActor);
 }
 
 QDataStream& IEBaseRigidbody::serialize(QDataStream& out, const Serializable& obj) const

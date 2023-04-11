@@ -142,6 +142,7 @@ INCLUDEPATH += $$PWD/src/Game/ECS \
 
 INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
     $$PWD/src/Game/ECS/Systems/IEECSCameraSystem \
+    $$PWD/src/Game/ECS/Systems/IEECSColliderSystem \
     $$PWD/src/Game/ECS/Systems/IEECSHierarchySystem \
     $$PWD/src/Game/ECS/Systems/IEECSInputSystem \
     $$PWD/src/Game/ECS/Systems/IEECSMaterialSystem \
@@ -181,6 +182,8 @@ INCLUDEPATH += $$PWD/src/Game/Physics \
 INCLUDEPATH += $$PWD/src/Game/Physics/Colliders \
     $$PWD/src/Game/Physics/Colliders/IEBaseCollider \
     $$PWD/src/Game/Physics/Colliders/IEBoxCollider \
+    $$PWD/src/Game/Physics/Colliders/IECapsuleCollider \
+    $$PWD/src/Game/Physics/Colliders/IESphereCollider \
 
 INCLUDEPATH += $$PWD/src/Game/Physics/Rigidbodies \
     $$PWD/src/Game/Physics/Rigidbodies/IEBoxRigidbody \

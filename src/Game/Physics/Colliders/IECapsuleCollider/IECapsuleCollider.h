@@ -2,16 +2,16 @@
 
 #include "IEBaseCollider.h"
 
-class IEBoxCollider : public IEBaseCollider
+class IECapsuleCollider : public IEBaseCollider
 {
-    float extentX, extentY, extentZ;
+    float radius;
+    float halfHeight;
 
 public:
-    IEBoxCollider();
-    IEBoxCollider(const int id,
-                  const float x, const float y, const float z);
-    IEBoxCollider(const IEBoxCollider&) = delete;
-    ~IEBoxCollider();
+    IECapsuleCollider();
+    IECapsuleCollider(const int id, const float r, const float hh);
+    IECapsuleCollider(const IECapsuleCollider&) = delete;
+    ~IECapsuleCollider();
 
     void create(const physx::PxTransform& t) override;
 

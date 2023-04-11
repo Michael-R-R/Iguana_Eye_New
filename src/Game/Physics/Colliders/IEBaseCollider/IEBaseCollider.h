@@ -14,9 +14,6 @@ public:
     };
 
 protected:
-    // DOES NOT OWN THESE POINTERS
-    physx::PxPhysics* physics;
-    physx::PxMaterial* material;
     physx::PxRigidActor* rigidActor;
 
     ColliderShape colliderShape;
@@ -24,17 +21,19 @@ protected:
 
 public:
     IEBaseCollider();
-    IEBaseCollider(physx::PxPhysics* p,
-                   physx::PxMaterial* m,
-                   ColliderShape shape,
+    IEBaseCollider(ColliderShape shape,
                    const int id);
     ~IEBaseCollider();
 
     virtual void create(const physx::PxTransform&) {}
 
+    void release();
     void setIsTrigger(const bool val);
 
+    physx::PxVec3 getGlobalPos() const;
+    physx::PxQuat getGlobalQuat() const;
     physx::PxRigidActor* getActor() const { return rigidActor; }
+    ColliderShape getShape() const { return colliderShape; }
 
 protected:
     void create(const physx::PxTransform& t, const physx::PxGeometry& g);

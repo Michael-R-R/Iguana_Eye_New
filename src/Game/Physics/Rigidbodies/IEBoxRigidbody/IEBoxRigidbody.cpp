@@ -1,20 +1,17 @@
 #include "IEBoxRigidBody.h"
-#include "IEPhysicsEngine.h"
 
 IEBoxRigidbody::IEBoxRigidbody() :
-    IEBaseRigidbody(nullptr, nullptr, RigidbodyType::None, RigidbodyShape::Box, 0),
+    IEBaseRigidbody(RigidbodyType::None, RigidbodyShape::Box, 0),
     extentX(1.0f), extentY(1.0f), extentZ(1.0f)
 {
 
 }
 
-IEBoxRigidbody::IEBoxRigidbody(physx::PxPhysics* p,
-                               physx::PxMaterial* m,
-                               RigidbodyType type,
+IEBoxRigidbody::IEBoxRigidbody(RigidbodyType type,
                                const int id,
                                const float x, const float y, const float z,
                                const float d, const float st) :
-    IEBaseRigidbody(p, m, type, RigidbodyShape::Box, id, d, st),
+    IEBaseRigidbody(type, RigidbodyShape::Box, id, d, st),
     extentX(x), extentY(y), extentZ(z)
 {
 
@@ -48,9 +45,6 @@ QDataStream& IEBoxRigidbody::deserialize(QDataStream& in, Serializable& obj)
     IEBaseRigidbody::deserialize(in, obj);
 
     IEBoxRigidbody& body = static_cast<IEBoxRigidbody&>(obj);
-
-    body.physics = IEPhysicsEngine::instance().getPxPhysics();
-    body.material = IEPhysicsEngine::instance().getDefaultPxMaterial();
 
     float px = 0.0f, py = 0.0f, pz = 0.0f;
     float qx = 0.0f, qy = 0.0f, qz = 0.0f, qw = 0.0f;

@@ -1,20 +1,17 @@
 #include "IECapsuleRigidbody.h"
-#include "IEPhysicsEngine.h"
 
 IECapsuleRigidbody::IECapsuleRigidbody() :
-    IEBaseRigidbody(nullptr, nullptr, RigidbodyType::None, RigidbodyShape::Capsule, 0),
+    IEBaseRigidbody(RigidbodyType::None, RigidbodyShape::Capsule, 0),
     radius(1.0f), halfHeight(1.0f)
 {
 
 }
 
-IECapsuleRigidbody::IECapsuleRigidbody(physx::PxPhysics* p,
-                                       physx::PxMaterial* m,
-                                       RigidbodyType type,
+IECapsuleRigidbody::IECapsuleRigidbody(RigidbodyType type,
                                        const int id,
                                        const float r, const float hh,
                                        const float d, const float st) :
-    IEBaseRigidbody(p, m, type, RigidbodyShape::Capsule, id, d, st),
+    IEBaseRigidbody(type, RigidbodyShape::Capsule, id, d, st),
     radius(r), halfHeight(hh)
 {
 
@@ -49,9 +46,6 @@ QDataStream& IECapsuleRigidbody::deserialize(QDataStream& in, Serializable& obj)
     IEBaseRigidbody::deserialize(in, obj);
 
     IECapsuleRigidbody& body = static_cast<IECapsuleRigidbody&>(obj);
-
-    body.physics = IEPhysicsEngine::instance().getPxPhysics();
-    body.material = IEPhysicsEngine::instance().getDefaultPxMaterial();
 
     float px = 0.0f, py = 0.0f, pz = 0.0f;
     float qx = 0.0f, qy = 0.0f, qz = 0.0f, qw = 0.0f;

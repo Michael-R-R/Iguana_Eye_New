@@ -8,13 +8,11 @@ class IESphereRigidbody : public IEBaseRigidbody
 
 public:
     IESphereRigidbody();
-    IESphereRigidbody(physx::PxPhysics* p,
-                   physx::PxMaterial* m,
-                   RigidbodyType type,
-                   const int id,
-                   const float r,
-                   const float d = 0.0f,
-                   const float st = 0.0f);
+    IESphereRigidbody(RigidbodyType type,
+                      const int id,
+                      const float r,
+                      const float d = 0.0f,
+                      const float st = 0.0f);
     ~IESphereRigidbody();
 
     void create(const physx::PxTransform& t) override;

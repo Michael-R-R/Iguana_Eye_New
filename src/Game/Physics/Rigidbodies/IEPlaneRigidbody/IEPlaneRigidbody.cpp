@@ -1,18 +1,15 @@
 #include "IEPlaneRigidbody.h"
-#include "IEPhysicsEngine.h"
 
 IEPlaneRigidbody::IEPlaneRigidbody() :
-    IEBaseRigidbody(nullptr, nullptr, RigidbodyType::None, RigidbodyShape::Plane, 0)
+    IEBaseRigidbody(RigidbodyType::None, RigidbodyShape::Plane, 0)
 {
 
 }
 
-IEPlaneRigidbody::IEPlaneRigidbody(physx::PxPhysics* p,
-                                   physx::PxMaterial* m,
-                                   RigidbodyType type,
+IEPlaneRigidbody::IEPlaneRigidbody(RigidbodyType type,
                                    const int id,
                                    const float d, const float st) :
-    IEBaseRigidbody(p, m, type, RigidbodyShape::Plane, id, d, st)
+    IEBaseRigidbody(type, RigidbodyShape::Plane, id, d, st)
 {
 
 }
@@ -39,9 +36,6 @@ QDataStream& IEPlaneRigidbody::deserialize(QDataStream& in, Serializable& obj)
     IEBaseRigidbody::deserialize(in, obj);
 
     IEPlaneRigidbody& body = static_cast<IEPlaneRigidbody&>(obj);
-
-    body.physics = IEPhysicsEngine::instance().getPxPhysics();
-    body.material = IEPhysicsEngine::instance().getDefaultPxMaterial();
 
     float px = 0.0f, py = 0.0f, pz = 0.0f;
     float qx = 0.0f, qy = 0.0f, qz = 0.0f, qw = 0.0f;

@@ -8,9 +8,7 @@ class IEBoxRigidbody : public IEBaseRigidbody
 
 public:
     IEBoxRigidbody();
-    IEBoxRigidbody(physx::PxPhysics* p,
-                   physx::PxMaterial* m,
-                   RigidbodyType type,
+    IEBoxRigidbody(RigidbodyType type,
                    const int id,
                    const float x, const float y, const float z,
                    const float d = 0.0f,

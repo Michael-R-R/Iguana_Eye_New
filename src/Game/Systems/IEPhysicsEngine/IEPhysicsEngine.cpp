@@ -16,7 +16,7 @@ IEPhysicsEngine::IEPhysicsEngine() :
     pxFoundation(nullptr),
     pxPhysics(nullptr),
     pxScene(nullptr),
-    pxDefaultMaterial(nullptr),
+    pxMaterial(nullptr),
     simulationCallback(nullptr),
     worldGravity(-9.81f),
     accumulator(0.0f),
@@ -45,7 +45,7 @@ void IEPhysicsEngine::startup(IEGame&)
     sceneDesc.simulationEventCallback = &(*simulationCallback);
 
     pxScene = pxPhysics->createScene(sceneDesc);
-    pxDefaultMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
+    pxMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
 }
 
 void IEPhysicsEngine::shutdown(IEGame&)

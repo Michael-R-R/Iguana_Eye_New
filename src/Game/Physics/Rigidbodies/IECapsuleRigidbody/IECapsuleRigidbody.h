@@ -9,13 +9,11 @@ class IECapsuleRigidbody : public IEBaseRigidbody
 
 public:
     IECapsuleRigidbody();
-    IECapsuleRigidbody(physx::PxPhysics* p,
-                      physx::PxMaterial* m,
-                      RigidbodyType type,
-                      const int id,
-                      const float r, const float hh,
-                      const float d = 0.0f,
-                      const float st = 0.0f);
+    IECapsuleRigidbody(RigidbodyType type,
+                       const int id,
+                       const float r, const float hh,
+                       const float d = 0.0f,
+                       const float st = 0.0f);
     ~IECapsuleRigidbody();
 
     void create(const physx::PxTransform& t) override;

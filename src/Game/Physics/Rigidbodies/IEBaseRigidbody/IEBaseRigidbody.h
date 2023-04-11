@@ -19,9 +19,6 @@ public:
     };
 
 protected:
-    // DOES NOT OWN THESE POINTERS
-    physx::PxPhysics* physics;
-    physx::PxMaterial* material;
     physx::PxRigidActor* rigidActor;
 
     RigidbodyType rigidbodyType;
@@ -32,9 +29,7 @@ protected:
 
 public:
     IEBaseRigidbody();
-    IEBaseRigidbody(physx::PxPhysics* p,
-                    physx::PxMaterial* m,
-                    RigidbodyType type,
+    IEBaseRigidbody(RigidbodyType type,
                     RigidbodyShape shape,
                     const int id,
                     const float d = 0.0f,
@@ -48,12 +43,13 @@ public:
     bool putToSleep();
     void release();
 
+    physx::PxVec3 getGlobalPos() const;
+    physx::PxQuat getGlobalQuat() const;
+
     bool is(RigidbodyType type) const { return (this->rigidbodyType == type); }
     physx::PxRigidActor* getActor() const { return rigidActor; }
     physx::PxRigidStatic* getStatic() const { return static_cast<physx::PxRigidStatic*>(rigidActor); }
     physx::PxRigidDynamic* getDynamic() const { return static_cast<physx::PxRigidDynamic*>(rigidActor); }
-    physx::PxVec3 getGlobalPos() const { return rigidActor->getGlobalPose().p; }
-    physx::PxQuat getGlobalQuat() const { return rigidActor->getGlobalPose().q; }
     RigidbodyType getRigidbodyType() const { return rigidbodyType; }
     RigidbodyShape getRigidbodyShape() const { return rigidbodyShape; }
 

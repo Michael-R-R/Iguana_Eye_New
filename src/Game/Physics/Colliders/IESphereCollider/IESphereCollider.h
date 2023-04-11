@@ -2,16 +2,15 @@
 
 #include "IEBaseCollider.h"
 
-class IEBoxCollider : public IEBaseCollider
+class IESphereCollider : public IEBaseCollider
 {
-    float extentX, extentY, extentZ;
+    float radius;
 
 public:
-    IEBoxCollider();
-    IEBoxCollider(const int id,
-                  const float x, const float y, const float z);
-    IEBoxCollider(const IEBoxCollider&) = delete;
-    ~IEBoxCollider();
+    IESphereCollider();
+    IESphereCollider(const int id, const float r);
+    IESphereCollider(const IESphereCollider&) = delete;
+    ~IESphereCollider();
 
     void create(const physx::PxTransform& t) override;
 
