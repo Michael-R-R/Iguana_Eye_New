@@ -1,4 +1,5 @@
 #include "IEMeshManager.h"
+#include "IEObjImporter.h"
 
 IEMeshManager::IEMeshManager() :
     IEResourceManager()
@@ -41,6 +42,25 @@ bool IEMeshManager::changeKey(const unsigned long long oldKey, const unsigned lo
     return true;
 }
 
+void IEMeshManager::importAll()
+{
+    QVector<unsigned long long> markedForRemove;
+
+    for(auto& i : resources)
+    {
+        if(!IEObjImporter::importMesh(i->getFilePath(), *i))
+        {
+            markedForRemove.push_back(i->getId());
+            continue;
+        }
+    }
+
+    for(auto& i : markedForRemove)
+    {
+        IEMeshManager::remove(i);
+    }
+}
+
 QDataStream& IEMeshManager::serialize(QDataStream& out, const Serializable& obj) const
 {
     return IEResourceManager::serialize(out, obj);
@@ -48,5 +68,10 @@ QDataStream& IEMeshManager::serialize(QDataStream& out, const Serializable& obj)
 
 QDataStream& IEMeshManager::deserialize(QDataStream& in, Serializable& obj)
 {
-    return IEResourceManager::deserialize(in, obj);
+    IEResourceManager::deserialize(in, obj);
+
+    IEMeshManager& manager = static_cast<IEMeshManager&>(obj);
+    manager.importAll();
+
+    return in;
 }

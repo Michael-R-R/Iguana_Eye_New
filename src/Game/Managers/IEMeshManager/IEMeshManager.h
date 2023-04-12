@@ -15,6 +15,9 @@ public:
     bool remove(const unsigned long long key) override;
     bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
 
+private:
+    void importAll();
+
 signals:
     void added(const unsigned long long key, const QString& path);
     void removed(const unsigned long long key);

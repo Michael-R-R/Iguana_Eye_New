@@ -1,4 +1,5 @@
 #include "IECameraManager.h"
+#include "IESerialize.h"
 
 IECameraManager::IECameraManager() :
     IEResourceManager()
@@ -43,10 +44,41 @@ bool IECameraManager::changeKey(const unsigned long long oldKey, const unsigned 
 
 QDataStream& IECameraManager::serialize(QDataStream& out, const Serializable& obj) const
 {
-    return IEResourceManager::serialize(out, obj);
+    const auto& manager = static_cast<const IECameraManager&>(obj);
+
+    out << (int)manager.resources.size();
+
+    for(auto& i : manager.resources)
+    {
+        const QString& path = i->getFilePath();
+
+        out << path;
+
+        IESerialize::write<IECamera>(path, &(*i));
+    }
+
+    return out;
 }
 
 QDataStream& IECameraManager::deserialize(QDataStream& in, Serializable& obj)
 {
-    return IEResourceManager::deserialize(in, obj);
+    auto& manager = static_cast<IECameraManager&>(obj);
+    manager.clear();
+
+    int size = 0;
+    in >> size;
+
+    QString path = "";
+    for(int i = 0; i < size; i++)
+    {
+        in >> path;
+
+        auto resource = QSharedPointer<IECamera>::create(path);
+        if(!IESerialize::read<IECamera>(path, &(*resource)))
+            continue;
+
+        manager.add(resource->getId(), resource);
+    }
+
+    return in;
 }

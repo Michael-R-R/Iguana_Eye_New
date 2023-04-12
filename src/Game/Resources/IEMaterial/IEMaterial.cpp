@@ -1,5 +1,6 @@
 #include "IEMaterial.h"
 #include "IEShader.h"
+#include "IESerialize.h"
 
 IEMaterial::IEMaterial() :
     IEResource(),

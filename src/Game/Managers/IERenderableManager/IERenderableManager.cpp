@@ -1,5 +1,7 @@
 #include "IERenderableManager.h"
 #include "IEScene.h"
+#include "IEMeshManager.h"
+#include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 
 IERenderableManager::IERenderableManager() :
@@ -43,17 +45,44 @@ bool IERenderableManager::changeKey(const unsigned long long oldKey, const unsig
     return true;
 }
 
-void IERenderableManager::buildAll()
+void IERenderableManager::importAll()
 {
+    QVector<unsigned long long> markedForRemove;
+
+    auto& meshManager = IEScene::instance().getMeshManager();
+    auto& materialManager = IEScene::instance().getMaterialManager();
     auto& shaderManager = IEScene::instance().getShaderManager();
 
     for(auto& i : resources)
     {
+        if(!meshManager.doesExist(i->getMeshId()))
+        {
+            markedForRemove.push_back(i->getId());
+            continue;
+        }
+
+        if(!materialManager.doesExist(i->getMaterialId()))
+        {
+            markedForRemove.push_back(i->getId());
+            continue;
+        }
+
+        if(!shaderManager.doesExist(i->getShaderId()))
+        {
+            markedForRemove.push_back(i->getId());
+            continue;
+        }
+
         auto shader = shaderManager.value(i->getShaderId());
         if(!shader)
             continue;
 
         i->build(*shader);
+    }
+
+    for(auto& i : markedForRemove)
+    {
+        IERenderableManager::remove(i);
     }
 }
 
@@ -67,7 +96,7 @@ QDataStream& IERenderableManager::deserialize(QDataStream& in, Serializable& obj
     IEResourceManager::deserialize(in, obj);
 
     IERenderableManager& manager = static_cast<IERenderableManager&>(obj);
-    manager.buildAll();
+    manager.importAll();
 
     return in;
 }
