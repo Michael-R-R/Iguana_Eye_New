@@ -6,7 +6,7 @@ bool IEGlslExporter::exportGlsl(const QString& path, const QString& vSrc, const 
     if(path.isEmpty())
         return false;
 
-    QString content = QString("[VERTEX]\n%1\n[FRAGMENT]\n%2").arg(vSrc, fSrc);
+    QString content = QString("[VERTEX]\n%1[FRAGMENT]\n%2").arg(vSrc, fSrc);
 
     return IEFile::write(path, content);
 }

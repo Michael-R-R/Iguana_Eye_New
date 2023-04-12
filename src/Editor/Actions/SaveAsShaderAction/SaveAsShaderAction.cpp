@@ -6,25 +6,15 @@
 SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, InputKey& shortcut, QObject* parent) :
     BaseAction("Save As", shortcut, parent)
 {
-    this->setEnabled(false);
-
     connect(this, &SaveAsShaderAction::triggered, this, [editor]()
             {
                 QString path = QFileDialog::getSaveFileName(nullptr,
-                                                            "Save As Shader...",
+                                                            "Glsl Save As...",
                                                             "./resources",
-                                                            "Shaders(*.ieshader)");
+                                                            "Glsl File(*.glsl)");
                 if(path.isEmpty())
                     return;
 
-                QString vSrc = editor->getVertexSource();
-                QString fSrc = editor->getFragmentSource();
-
-                IEGlslExporter::exportGlsl(path, vSrc, fSrc);
-            });
-
-    connect(editor, &EWGlslEditor::glslPathChanged, this, [this](const QString& path)
-            {
-                this->setEnabled(!path.isEmpty());
+                editor->saveAsGlslFile(path);
             });
 }

@@ -7,6 +7,7 @@
 
 #include "EWGlslEditorMenuBar.h"
 #include "EWGlslSrcEditor.h"
+#include "GlslFileHandler.h"
 
 class AppStartEvent;
 
@@ -25,12 +26,18 @@ class EWGlslEditor : public QWidget
     EWGlslSrcEditor* vSrcEditor;
     EWGlslSrcEditor* fSrcEditor;
 
+    GlslFileHandler fileHandler;
+
 public:
     EWGlslEditor(QWidget* parent = nullptr);
     ~EWGlslEditor();
 
     void startup(const AppStartEvent& event);
+
+    void newGlslFile(const QString& path);
     void openGlslFile(const QString& path);
+    void saveGlslFile();
+    void saveAsGlslFile(const QString& path);
 
     QString getCurrShaderName() const;
     QString getCurrShaderPath() const;

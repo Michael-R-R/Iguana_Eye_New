@@ -4,7 +4,6 @@
 #include "IEShaderManager.h"
 #include "IEFile.h"
 #include "IEHash.h"
-#include "IEGlslImporter.h"
 
 EWGlslEditor::EWGlslEditor(QWidget* parent) :
     QWidget(parent),
@@ -16,7 +15,8 @@ EWGlslEditor::EWGlslEditor(QWidget* parent) :
     currShaderNameLabel(new QLabel("", this)),
     currShaderPathLabel(new QLabel("", this)),
     vSrcEditor(new EWGlslSrcEditor("Vertex", this)),
-    fSrcEditor(new EWGlslSrcEditor("Fragment", this))
+    fSrcEditor(new EWGlslSrcEditor("Fragment", this)),
+    fileHandler(this)
 {
     setup();
 }
@@ -36,20 +36,26 @@ void EWGlslEditor::startup(const AppStartEvent& event)
     connect(&shaderManager, &IEShaderManager::keyChanged, this, &EWGlslEditor::glslRenamedSlot);
 }
 
+void EWGlslEditor::newGlslFile(const QString& path)
+{
+    fileHandler.handleGlslNew(path);
+}
+
 void EWGlslEditor::openGlslFile(const QString& path)
 {
-    QString vSrc = "";
-    QString fSrc = "";
-    IEGlslImporter::importGlsl(path, vSrc, fSrc);
-
-    QString name = IEFile::extractName(path);
-    currShaderNameLabel->setText(name);
-    currShaderPathLabel->setText(path);
-
-    vSrcEditor->setTextContent(vSrc);
-    fSrcEditor->setTextContent(fSrc);
+    fileHandler.handleGlslOpen(path);
 
     emit glslPathChanged(path);
+}
+
+void EWGlslEditor::saveGlslFile()
+{
+    fileHandler.handleGlslSave(getCurrShaderPath());
+}
+
+void EWGlslEditor::saveAsGlslFile(const QString& path)
+{
+    fileHandler.handleGlslSaveAs(path);
 }
 
 QString EWGlslEditor::getCurrShaderName() const
@@ -74,11 +80,6 @@ QString EWGlslEditor::getFragmentSource() const
 
 void EWGlslEditor::openGlslFileSlot(const unsigned long long, const QString& path)
 {
-    if(!getCurrShaderPath().isEmpty())
-    {
-        // TODO ask to save file if needed
-    }
-
     openGlslFile(path);
 }
 

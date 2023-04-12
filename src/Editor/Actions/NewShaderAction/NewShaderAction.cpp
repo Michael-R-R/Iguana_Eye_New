@@ -15,10 +15,6 @@ NewShaderAction::NewShaderAction(EWGlslEditor* editor, InputKey& shortcut, QObje
         if(path.isEmpty())
             return;
 
-        QString vSrc = "#version 430 core\n\nint main()\n{\n\t\n}\n";
-        QString fSrc = "#version 430 core\n\nint main()\n{\n\t\n}\n";
-        IEGlslExporter::exportGlsl(path, vSrc, fSrc);
-
-        editor->openGlslFile(path);
+        editor->newGlslFile(path);
     });
 }
