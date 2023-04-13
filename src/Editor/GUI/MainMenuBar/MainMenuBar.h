@@ -6,8 +6,6 @@
 
 #include "SubMenu.h"
 
-class AppStartEvent;
-
 class MainMenuBar : public QMenuBar
 {
     QMap<QString, SubMenu*> menuCollection;
@@ -16,7 +14,7 @@ public:
     MainMenuBar(QWidget* parent = nullptr);
     ~MainMenuBar();
 
-    void startup(const AppStartEvent& event);
+    void startup();
 
     bool appendSubMenu(QString title, SubMenu* menu);
     bool removeSubMenu(const QString& title);
@@ -26,8 +24,8 @@ public:
     QAction* getMenuAction(const QString& menuTitle, const QString& actionTitle);
 
 private:
-    void setupFileSubMenu(const AppStartEvent& event);
-    void setupGameSubMenu(const AppStartEvent& event);
-    void setupWindowSubMenu(const AppStartEvent& event);
+    void setupFileSubMenu();
+    void setupGameSubMenu();
+    void setupWindowSubMenu();
 };
 

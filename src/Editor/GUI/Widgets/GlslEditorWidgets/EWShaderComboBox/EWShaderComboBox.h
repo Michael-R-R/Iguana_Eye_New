@@ -5,7 +5,6 @@
 
 #include "ShaderComboBoxContextMenu.h"
 
-class AppStartEvent;
 class IEShaderManager;
 
 class EWShaderComboBox : public QComboBox
@@ -21,7 +20,7 @@ public:
     ~EWShaderComboBox();
 
     bool eventFilter(QObject* watched, QEvent* event) override;
-    void startup(const AppStartEvent& event);
+    void startup();
     void selectShader(const unsigned long long key);
     unsigned long long getSelectedId();
 

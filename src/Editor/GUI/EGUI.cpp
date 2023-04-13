@@ -1,5 +1,4 @@
 #include "EGUI.h"
-#include "AppStartEvent.h"
 #include "ApplicationWindow.h"
 
 EGUI::EGUI(QObject* parent) :
@@ -16,12 +15,12 @@ EGUI::~EGUI()
 
 }
 
-void EGUI::startup(const AppStartEvent& event)
+void EGUI::startup()
 {
     // *** DO NOT REORDER *** //
-    setupWindowManager(event);
-    setupStatusBar(event);
-    setupMainMenuBar(event);
+    setupWindowManager();
+    setupStatusBar();
+    setupMainMenuBar();
 }
 
 void EGUI::toggleUi(bool val)
@@ -40,23 +39,23 @@ void EGUI::toggleUi(bool val)
     }
 }
 
-void EGUI::setupMainMenuBar(const AppStartEvent& event)
+void EGUI::setupMainMenuBar()
 {
-    mainMenuBar->startup(event);
+    mainMenuBar->startup();
 
-    auto applicationWindow = event.getAppWindow();
-    applicationWindow->setMenuBar(mainMenuBar);
+    auto& applicationWindow = ApplicationWindow::instance();
+    applicationWindow.setMenuBar(mainMenuBar);
 }
 
-void EGUI::setupStatusBar(const AppStartEvent& event)
+void EGUI::setupStatusBar()
 {
-    statusBar->setupIEObjectConnections(event);
+    statusBar->startup();
 
-    auto applicationWindow = event.getAppWindow();
-    applicationWindow->setStatusBar(statusBar);
+    auto& applicationWindow = ApplicationWindow::instance();
+    applicationWindow.setStatusBar(statusBar);
 }
 
-void EGUI::setupWindowManager(const AppStartEvent& event)
+void EGUI::setupWindowManager()
 {
-    windowManager->startup(event);
+    windowManager->startup();
 }

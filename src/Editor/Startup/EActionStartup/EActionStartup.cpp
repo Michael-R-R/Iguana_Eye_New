@@ -1,15 +1,15 @@
 #include "EActionStartup.h"
-#include "AppStartEvent.h"
 #include "ApplicationWindow.h"
 #include "Editor.h"
 #include "EInput.h"
 #include "ToggleEditorUiAction.h"
 
-void EActionStartup::startup(const AppStartEvent& event)
+void EActionStartup::startup()
 {
-    auto* input = event.getEditor()->getInput();
-    auto* ui = event.getEditor()->getUi();
-    auto* applicationWindow = event.getAppWindow();
+    auto& application = ApplicationWindow::instance();
+    auto editor = application.getEditor();
+    auto* input = editor->getInput();
+    auto* ui = editor->getUi();
 
-    applicationWindow->addAction(new ToggleEditorUiAction(input->getConfigKey("Toggle Ui"), ui, applicationWindow));
+    application.addAction(new ToggleEditorUiAction(input->getConfigKey("Toggle Ui"), ui, &(*editor)));
 }

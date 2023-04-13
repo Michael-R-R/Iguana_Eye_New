@@ -2,8 +2,6 @@
 
 #include <QDockWidget>
 
-class AppStartEvent;
-
 class EWindow : public QDockWidget
 {
     Q_OBJECT
@@ -17,7 +15,7 @@ public:
     EWindow(QString title, QWidget* parent = nullptr);
     ~EWindow();
 
-    virtual void startup(const AppStartEvent& event) = 0;
+    virtual void startup() = 0;
 
     void modifyTitle(const QString& text);
     void setModified(const bool isModified);

@@ -1,5 +1,5 @@
 #include "EWGlslEditorViewMenu.h"
-#include "AppStartEvent.h"
+#include "ApplicationWindow.h"
 #include "Editor.h"
 #include "EInput.h"
 #include "EWGlslEditor.h"
@@ -11,9 +11,11 @@ EWGlslEditorViewMenu::EWGlslEditorViewMenu(QWidget* parent) :
 
 }
 
-void EWGlslEditorViewMenu::startup(const AppStartEvent& event, EWGlslEditor* editor)
+void EWGlslEditorViewMenu::startup(EWGlslEditor* glEditor)
 {
-    auto* input = event.getEditor()->getInput();
+    auto& application = ApplicationWindow::instance();
+    auto editor = application.getEditor();
+    auto* input = editor->getInput();
 
-    appendAction("Vertical/Horizontal", new ToggleGlslEditorViewAction(editor, input->getConfigKey(""), this));
+    appendAction("Vertical/Horizontal", new ToggleGlslEditorViewAction(glEditor, input->getConfigKey(""), this));
 }

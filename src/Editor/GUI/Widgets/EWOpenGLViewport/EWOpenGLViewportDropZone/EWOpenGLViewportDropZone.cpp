@@ -1,5 +1,5 @@
 #include "EWOpenGLViewportDropZone.h"
-#include "AppStartEvent.h"
+#include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "OpenGLFileDropHandler.h"
 #include <QFileInfo>
@@ -13,9 +13,12 @@ EWOpenGLViewportDropZone::EWOpenGLViewportDropZone(QWidget* parent) :
 
 }
 
-void EWOpenGLViewportDropZone::startup(const AppStartEvent& event)
+void EWOpenGLViewportDropZone::startup()
 {
-    glWidget = event.getGame();
+    auto& application = ApplicationWindow::instance();
+    auto game = application.getGame();
+
+    glWidget = &(*game);
     glWidget->setAcceptDrops(true);
     glWidget->installEventFilter(this);
 }

@@ -8,7 +8,7 @@ class ToggleGamePlayAction : public BaseAction
 {
 
 public:
-    ToggleGamePlayAction(IEGame& game, InputKey& shortcut, QObject* parent = nullptr);
+    ToggleGamePlayAction(IEGame* game, InputKey& shortcut, QObject* parent = nullptr);
     ~ToggleGamePlayAction();
 };
 

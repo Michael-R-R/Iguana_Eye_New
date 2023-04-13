@@ -1,15 +1,21 @@
 #include "ApplicationWindow.h"
 #include "ui_ApplicationWindow.h"
-#include "AppStartEvent.h"
 #include "Editor.h"
 #include "IEGame.h"
 #include "IEGameStopState.h"
 
-ApplicationWindow::ApplicationWindow(QWidget *parent) :
-    QMainWindow(parent),
+ApplicationWindow& ApplicationWindow::instance()
+{
+    static ApplicationWindow mInstance;
+    return mInstance;
+}
+
+ApplicationWindow::ApplicationWindow() :
+    QMainWindow(),
     ui(new Ui::ApplicationWindow),
     appFileHandler(this),
     game(nullptr),
+    editor(nullptr),
     permenentTitle("Iguana Eye"),
     tempTitle(permenentTitle)
 {
@@ -58,14 +64,15 @@ void ApplicationWindow::initalize()
     game->startup();
     game->changeState(QSharedPointer<IEGameStopState>::create(*game));
 
-    auto& editor = Editor::instance();
-    editor.startup(AppStartEvent(this, editor, *game));
+    editor = QSharedPointer<Editor>::create(this);
+    editor->startup();
 }
 
 void ApplicationWindow::shutdown()
 {
     clearActions();
-    Editor::instance().shutdown();
+    editor->shutdown();
+    editor = nullptr;
 
     game->shutdown();
     game = nullptr;
@@ -119,9 +126,9 @@ QDataStream& ApplicationWindow::deserialize(QDataStream& in, Serializable& obj)
     in >> *app.game;
 
     app.clearActions();
-    auto& editor = Editor::instance();
-    editor.shutdown();
-    editor.startup(AppStartEvent(this, editor, *app.game));
+    app.editor->shutdown();
+    app.editor = QSharedPointer<Editor>::create(this);
+    app.editor->startup();
 
     return in;
 }

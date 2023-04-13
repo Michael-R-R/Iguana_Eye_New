@@ -1,5 +1,4 @@
 #include "EWGlslEditor.h"
-#include "AppStartEvent.h"
 #include "IEScene.h"
 #include "IEShaderManager.h"
 #include "IEFile.h"
@@ -26,9 +25,9 @@ EWGlslEditor::~EWGlslEditor()
 
 }
 
-void EWGlslEditor::startup(const AppStartEvent& event)
+void EWGlslEditor::startup()
 {
-    menuBar->startup(event, this);
+    menuBar->startup(this);
 
     auto& shaderManager = IEScene::instance().getShaderManager();
     connect(&shaderManager, &IEShaderManager::added, this, &EWGlslEditor::openGlslFileSlot);

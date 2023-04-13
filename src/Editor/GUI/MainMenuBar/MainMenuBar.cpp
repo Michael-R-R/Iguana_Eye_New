@@ -1,5 +1,4 @@
 #include "MainMenuBar.h"
-#include "AppStartEvent.h"
 #include "FileSubMenu.h"
 #include "GameSubMenu.h"
 #include "WindowSubMenu.h"
@@ -16,11 +15,11 @@ MainMenuBar::~MainMenuBar()
 
 }
 
-void MainMenuBar::startup(const AppStartEvent& event)
+void MainMenuBar::startup()
 {
-    setupFileSubMenu(event);
-    setupGameSubMenu(event);
-    setupWindowSubMenu(event);
+    setupFileSubMenu();
+    setupGameSubMenu();
+    setupWindowSubMenu();
 }
 
 bool MainMenuBar::appendSubMenu(QString title, SubMenu* menu)
@@ -59,23 +58,23 @@ QAction* MainMenuBar::getMenuAction(const QString& menuTitle, const QString& act
     return menuCollection[menuTitle]->getAction(actionTitle);
 }
 
-void MainMenuBar::setupFileSubMenu(const AppStartEvent& event)
+void MainMenuBar::setupFileSubMenu()
 {
     auto fileMenu = new FileSubMenu(this);
-    fileMenu->startup(event);
+    fileMenu->startup();
     appendSubMenu("File", fileMenu);
 }
 
-void MainMenuBar::setupGameSubMenu(const AppStartEvent& event)
+void MainMenuBar::setupGameSubMenu()
 {
     auto gameMenu = new GameSubMenu(this);
-    gameMenu->setupActions(event);
+    gameMenu->setupActions();
     appendSubMenu("Game", gameMenu);
 }
 
-void MainMenuBar::setupWindowSubMenu(const AppStartEvent& event)
+void MainMenuBar::setupWindowSubMenu()
 {
     auto windowMenu = new WindowSubMenu(this);
-    windowMenu->setupActions(event);
+    windowMenu->setupActions();
     appendSubMenu("Window", windowMenu);
 }

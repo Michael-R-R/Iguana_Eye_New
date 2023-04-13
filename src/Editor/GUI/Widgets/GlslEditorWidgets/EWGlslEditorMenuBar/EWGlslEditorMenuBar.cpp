@@ -1,5 +1,4 @@
 #include "EWGlslEditorMenuBar.h"
-#include "AppStartEvent.h"
 
 EWGlslEditorMenuBar::EWGlslEditorMenuBar(QWidget* parent) :
     QMenuBar(parent),
@@ -12,24 +11,24 @@ EWGlslEditorMenuBar::EWGlslEditorMenuBar(QWidget* parent) :
     this->addMenu(viewMenu);
 }
 
-void EWGlslEditorMenuBar::startup(const AppStartEvent& event, EWGlslEditor* editor)
+void EWGlslEditorMenuBar::startup(EWGlslEditor* glEditor)
 {
-    setupFileMenu(event, editor);
-    setupEditMenu(event, editor);
-    setupViewMenu(event, editor);
+    setupFileMenu(glEditor);
+    setupEditMenu(glEditor);
+    setupViewMenu(glEditor);
 }
 
-void EWGlslEditorMenuBar::setupFileMenu(const AppStartEvent& event, EWGlslEditor* editor)
+void EWGlslEditorMenuBar::setupFileMenu(EWGlslEditor* glEditor)
 {
-    fileMenu->startup(event, editor);
+    fileMenu->startup(glEditor);
 }
 
-void EWGlslEditorMenuBar::setupEditMenu(const AppStartEvent& event, EWGlslEditor* editor)
+void EWGlslEditorMenuBar::setupEditMenu(EWGlslEditor* glEditor)
 {
-    editMenu->startup(event, editor);
+    editMenu->startup(glEditor);
 }
 
-void EWGlslEditorMenuBar::setupViewMenu(const AppStartEvent& event, EWGlslEditor* editor)
+void EWGlslEditorMenuBar::setupViewMenu(EWGlslEditor* glEditor)
 {
-    viewMenu->startup(event, editor);
+    viewMenu->startup(glEditor);
 }

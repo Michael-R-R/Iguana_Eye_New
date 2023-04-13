@@ -1,6 +1,6 @@
 #include "EWGlslEditorFileMenu.h"
-#include "AppStartEvent.h"
 #include "EWGlslEditor.h"
+#include "ApplicationWindow.h"
 #include "Editor.h"
 #include "EInput.h"
 #include "NewShaderAction.h"
@@ -14,12 +14,14 @@ EWGlslEditorFileMenu::EWGlslEditorFileMenu(QWidget* parent) :
 
 }
 
-void EWGlslEditorFileMenu::startup(const AppStartEvent& event, EWGlslEditor* editor)
+void EWGlslEditorFileMenu::startup(EWGlslEditor* glEditor)
 {
-    auto* input = event.getEditor()->getInput();
+    auto& application = ApplicationWindow::instance();
+    auto editor = application.getEditor();
+    auto* input = editor->getInput();
 
-    appendAction("New Shader", new NewShaderAction(editor, input->getConfigKey(""), this));
-    appendAction("Open Shader", new OpenShaderAction(editor, input->getConfigKey(""), this));
-    appendAction("Save Shader", new SaveShaderAction(editor, input->getConfigKey(""), this));
-    appendAction("Save As Shader", new SaveAsShaderAction(editor, input->getConfigKey(""), this));
+    appendAction("New Shader", new NewShaderAction(glEditor, input->getConfigKey(""), this));
+    appendAction("Open Shader", new OpenShaderAction(glEditor, input->getConfigKey(""), this));
+    appendAction("Save Shader", new SaveShaderAction(glEditor, input->getConfigKey(""), this));
+    appendAction("Save As Shader", new SaveAsShaderAction(glEditor, input->getConfigKey(""), this));
 }

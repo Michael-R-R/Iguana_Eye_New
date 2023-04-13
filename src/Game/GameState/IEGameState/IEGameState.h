@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QSharedPointer>
 #include <QVector2D>
 
 class IEGame;

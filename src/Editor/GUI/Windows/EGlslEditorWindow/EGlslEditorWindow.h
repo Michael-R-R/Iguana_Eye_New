@@ -13,7 +13,7 @@ public:
     EGlslEditorWindow(QWidget* parent = nullptr);
     ~EGlslEditorWindow() {}
 
-    void startup(const AppStartEvent& event) override;
+    void startup() override;
 
     EWGlslEditor* getGlslEditorWidget() const { return glslEditorWidget; }
 };

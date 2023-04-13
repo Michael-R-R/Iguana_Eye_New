@@ -5,7 +5,6 @@
 
 #include "EWindow.h"
 
-class AppStartEvent;
 class EWSelectApplicationOption;
 
 class EApplicationOptionsWindow : public EWindow
@@ -18,6 +17,6 @@ public:
     EApplicationOptionsWindow(QWidget* parent = nullptr);
     ~EApplicationOptionsWindow();
 
-    void startup(const AppStartEvent& event) override;
+    void startup() override;
 };
 

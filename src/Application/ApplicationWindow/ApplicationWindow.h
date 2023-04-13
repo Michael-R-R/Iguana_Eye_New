@@ -7,6 +7,7 @@
 #include "ApplicationFileHandler.h"
 
 class IEGame;
+class Editor;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class ApplicationWindow; }
@@ -16,17 +17,22 @@ class ApplicationWindow : public QMainWindow, public Serializable
 {
     Q_OBJECT
 
+    ApplicationWindow();
+
     Ui::ApplicationWindow* ui;
 
     ApplicationFileHandler appFileHandler;
 
     QSharedPointer<IEGame> game;
+    QSharedPointer<Editor> editor;
 
     const QString permenentTitle;
     QString tempTitle;
 
 public:
-    ApplicationWindow(QWidget *parent = nullptr);
+    static ApplicationWindow& instance();
+    ApplicationWindow(const ApplicationWindow&) = delete;
+    void operator=(const ApplicationWindow&) = delete;
     ~ApplicationWindow();
 
     void modifyTitle(const QString& text);
@@ -40,6 +46,9 @@ public:
     void saveToFile();
     void saveAsToFile(const QString& path);
     void openFromFile(const QString& path);
+
+    IEGame* getGame() const { return &(*game); }
+    Editor* getEditor() const { return &(*editor); }
 
 private:
     void clearActions();

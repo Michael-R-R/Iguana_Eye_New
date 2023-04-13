@@ -6,7 +6,6 @@
 #include "EWGlslEditorEditMenu.h"
 #include "EWGlslEditorViewMenu.h"
 
-class AppStartEvent;
 class EWGlslEditor;
 
 class EWGlslEditorMenuBar : public QMenuBar
@@ -19,11 +18,11 @@ public:
     EWGlslEditorMenuBar(QWidget* parent = nullptr);
     ~EWGlslEditorMenuBar() {}
 
-    void startup(const AppStartEvent& event, EWGlslEditor* editor);
+    void startup(EWGlslEditor* editor);
 
 private:
-    void setupFileMenu(const AppStartEvent& event, EWGlslEditor* editor);
-    void setupEditMenu(const AppStartEvent& event, EWGlslEditor* editor);
-    void setupViewMenu(const AppStartEvent& event, EWGlslEditor* editor);
+    void setupFileMenu(EWGlslEditor* editor);
+    void setupEditMenu(EWGlslEditor* editor);
+    void setupViewMenu(EWGlslEditor* editor);
 };
 

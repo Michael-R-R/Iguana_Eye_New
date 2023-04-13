@@ -1,5 +1,4 @@
 #include "EWindowManager.h"
-#include "AppStartEvent.h"
 #include "ApplicationWindow.h"
 #include "EApplicationOptionsWindow.h"
 #include "EGlslEditorWindow.h"
@@ -18,12 +17,12 @@ EWindowManager::~EWindowManager()
     clear();
 }
 
-void EWindowManager::startup(const AppStartEvent& event)
+void EWindowManager::startup()
 {
-    setupOptionsWindow(event);
-    setupGlslEditorWindow(event);
-    setupFileExplorerWindow(event);
-    setupMessageLogWindow(event);
+    setupOptionsWindow();
+    setupGlslEditorWindow();
+    setupFileExplorerWindow();
+    setupMessageLogWindow();
 }
 
 void EWindowManager::showAll()
@@ -84,51 +83,51 @@ void EWindowManager::clear()
     }
 }
 
-void EWindowManager::setupOptionsWindow(const AppStartEvent& event)
+void EWindowManager::setupOptionsWindow()
 {
-    auto* applicationWindow = event.getAppWindow();
+    auto& application = ApplicationWindow::instance();
 
-    auto* optionsWindow = new EApplicationOptionsWindow(applicationWindow);
-    optionsWindow->startup(event);
+    auto* optionsWindow = new EApplicationOptionsWindow(&application);
+    optionsWindow->startup();
 
     this->appendWindow(optionsWindow->getPermTitle(), optionsWindow);
 
-    applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, optionsWindow);
+    application.addDockWidget(Qt::LeftDockWidgetArea, optionsWindow);
 }
 
-void EWindowManager::setupGlslEditorWindow(const AppStartEvent& event)
+void EWindowManager::setupGlslEditorWindow()
 {
-    auto* applicationWindow = event.getAppWindow();
+    auto& applicationWindow = ApplicationWindow::instance();
 
-    auto* glslEditorWindow = new EGlslEditorWindow(applicationWindow);
-    glslEditorWindow->startup(event);
+    auto* glslEditorWindow = new EGlslEditorWindow(&applicationWindow);
+    glslEditorWindow->startup();
 
     this->appendWindow(glslEditorWindow->getPermTitle(), glslEditorWindow);
 
-    applicationWindow->addDockWidget(Qt::LeftDockWidgetArea, glslEditorWindow);
+    applicationWindow.addDockWidget(Qt::LeftDockWidgetArea, glslEditorWindow);
 }
 
-void EWindowManager::setupFileExplorerWindow(const AppStartEvent& event)
+void EWindowManager::setupFileExplorerWindow()
 {
-    auto* applicationWindow = event.getAppWindow();
+    auto& applicationWindow = ApplicationWindow::instance();
 
-    auto* fileExpWindow = new EFileExplorerWindow(applicationWindow);
-    fileExpWindow->startup(event);
+    auto* fileExpWindow = new EFileExplorerWindow(&applicationWindow);
+    fileExpWindow->startup();
 
     this->appendWindow(fileExpWindow->getPermTitle(), fileExpWindow);
 
-    applicationWindow->addDockWidget(Qt::BottomDockWidgetArea, fileExpWindow);
+    applicationWindow.addDockWidget(Qt::BottomDockWidgetArea, fileExpWindow);
 
 }
 
-void EWindowManager::setupMessageLogWindow(const AppStartEvent& event)
+void EWindowManager::setupMessageLogWindow()
 {
-    auto applicationWindow = event.getAppWindow();
+    auto& applicationWindow = ApplicationWindow::instance();
 
-    auto* messageLogWindow = new EMessageLogWindow(applicationWindow);
-    messageLogWindow->startup(event);
+    auto* messageLogWindow = new EMessageLogWindow(&applicationWindow);
+    messageLogWindow->startup();
 
     this->appendWindow(messageLogWindow->getPermTitle(), messageLogWindow);
 
-    applicationWindow->addDockWidget(Qt::BottomDockWidgetArea, messageLogWindow);
+    applicationWindow.addDockWidget(Qt::BottomDockWidgetArea, messageLogWindow);
 }

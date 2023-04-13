@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     QApplication application(argc, argv);
     IEStyleSheet::setStyle(&application, "./resources/style/stylevars.qss", "./resources/style/stylesheet.qss");
 
-    ApplicationWindow window;
+    ApplicationWindow& window = ApplicationWindow::instance();
     window.startup();
     window.show();
     const int val = application.exec();

@@ -2,8 +2,6 @@
 
 #include "SubMenu.h"
 
-class AppStartEvent;
-
 class FileSubMenu : public SubMenu
 {
 
@@ -11,9 +9,9 @@ public:
     FileSubMenu(QWidget* parent = nullptr);
     ~FileSubMenu();
 
-    void startup(const AppStartEvent& event);
+    void startup();
 
 private:
-    void setupConnections(const AppStartEvent& event);
+    void setupConnections();
 };
 

@@ -13,6 +13,6 @@ public:
     EMessageLogWindow(QWidget* parent = nullptr);
     ~EMessageLogWindow();
 
-    void startup(const AppStartEvent& event) override;
+    void startup() override;
 };
 

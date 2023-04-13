@@ -1,5 +1,4 @@
 #include "EWShaderComboBox.h"
-#include "AppStartEvent.h"
 #include "IEGame.h"
 #include "IEScene.h"
 #include "IEShaderManager.h"
@@ -36,7 +35,7 @@ bool EWShaderComboBox::eventFilter(QObject*, QEvent* event)
     return false;
 }
 
-void EWShaderComboBox::startup(const AppStartEvent&)
+void EWShaderComboBox::startup()
 {
     auto& shaderManager = IEScene::instance().getShaderManager();
 

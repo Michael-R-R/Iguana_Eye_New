@@ -1,6 +1,6 @@
 #include "EApplicationOptionsWindow.h"
 #include "EWSelectApplicationOption.h"
-#include "AppStartEvent.h"
+#include "ApplicationWindow.h"
 #include "Editor.h"
 #include "IEGame.h"
 #include "BaseInput.h"
@@ -23,9 +23,11 @@ EApplicationOptionsWindow::~EApplicationOptionsWindow()
 
 }
 
-void EApplicationOptionsWindow::startup(const AppStartEvent& event)
+void EApplicationOptionsWindow::startup()
 {
-    BaseInput* editorInput = event.getEditor()->getInput();
+    auto& application = ApplicationWindow::instance();
+    auto editor = application.getEditor();
+    BaseInput* editorInput = editor->getInput();
 
     selectOptionsWidget->setupGameGroupBox(&IEInput::instance());
     selectOptionsWidget->setupEditorGroupBox(editorInput);

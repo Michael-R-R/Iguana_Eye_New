@@ -1,5 +1,4 @@
 #include "FileSubMenu.h"
-#include "AppStartEvent.h"
 #include "ApplicationWindow.h"
 #include "Editor.h"
 #include "EGUI.h"
@@ -25,26 +24,31 @@ FileSubMenu::~FileSubMenu()
 
 }
 
-void FileSubMenu::startup(const AppStartEvent& event)
+void FileSubMenu::startup()
 {
-    auto* input = event.getEditor()->getInput();
-    auto windowManager = event.getEditor()->getUi()->getWindowManager();
-    auto applicationWindow = event.getAppWindow();
+    auto& application = ApplicationWindow::instance();
+    auto editor = application.getEditor();
+    auto* input = editor->getInput();
+    auto* ui = editor->getUi();
+    auto* windowManager = ui->getWindowManager();
 
-    appendAction("New File", new NewGameFileAction(applicationWindow, input->getConfigKey("New File"), this));
-    appendAction("Open File", new OpenGameFileAction(applicationWindow, input->getConfigKey("Open File"), this));
-    appendAction("Save File", new SaveGameFileAction(applicationWindow, input->getConfigKey("Save File"), this));
-    appendAction("Save File As", new SaveAsGameFileAction(applicationWindow, input->getConfigKey("Save File As"), this));
+    appendAction("New File", new NewGameFileAction(&application, input->getConfigKey("New File"), this));
+    appendAction("Open File", new OpenGameFileAction(&application, input->getConfigKey("Open File"), this));
+    appendAction("Save File", new SaveGameFileAction(&application, input->getConfigKey("Save File"), this));
+    appendAction("Save File As", new SaveAsGameFileAction(&application, input->getConfigKey("Save File As"), this));
     this->addSeparator();
     appendAction("Options", new ToggleWindowAction("Options", input->getConfigKey("Options"), windowManager->value("Options"), this));
     appendAction("Quit", new QuitAppAction(input->getConfigKey("Quit"), this));
 
-    setupConnections(event);
+    setupConnections();
 }
 
-void FileSubMenu::setupConnections(const AppStartEvent& event)
+void FileSubMenu::setupConnections()
 {
-    connect(event.getGame(), &IEGame::stateChanged, this, [this](QSharedPointer<IEGameState> state)
+    auto& application = ApplicationWindow::instance();
+    auto game = application.getGame();
+
+    connect(&(*game), &IEGame::stateChanged, this, [this](QSharedPointer<IEGameState> state)
             {
                 if(dynamic_cast<IEGamePlayState*>(&(*state)))
                     this->setAllEnabled(false);

@@ -7,7 +7,7 @@ EFileExplorerWindow::EFileExplorerWindow(QWidget* parent) :
     this->setWidget(fileExplWidget);
 }
 
-void EFileExplorerWindow::startup(const AppStartEvent&)
+void EFileExplorerWindow::startup()
 {
     fileExplWidget->startup();
 }

@@ -1,5 +1,4 @@
 #include "EGlslEditorWindow.h"
-#include "AppStartEvent.h"
 
 EGlslEditorWindow::EGlslEditorWindow(QWidget* parent) :
     EWindow("GLSL Editor", parent),
@@ -10,7 +9,7 @@ EGlslEditorWindow::EGlslEditorWindow(QWidget* parent) :
     this->setWidget(glslEditorWidget);
 }
 
-void EGlslEditorWindow::startup(const AppStartEvent& event)
+void EGlslEditorWindow::startup()
 {
-    glslEditorWidget->startup(event);
+    glslEditorWidget->startup();
 }

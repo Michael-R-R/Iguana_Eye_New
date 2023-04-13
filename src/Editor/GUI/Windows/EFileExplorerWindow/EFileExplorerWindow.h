@@ -12,6 +12,6 @@ public:
     EFileExplorerWindow(QWidget* parent = nullptr);
     ~EFileExplorerWindow() {}
 
-    void startup(const AppStartEvent& event) override;
+    void startup() override;
 };
 

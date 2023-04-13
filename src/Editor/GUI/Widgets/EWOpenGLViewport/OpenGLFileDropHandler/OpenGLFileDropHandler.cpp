@@ -1,4 +1,5 @@
 #include "OpenGLFileDropHandler.h"
+#include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScene.h"
 #include "IEMeshManager.h"
@@ -123,7 +124,9 @@ void OpenGLFileDropHandler::handleObjFile(QOpenGLWidget* glWidget, const QString
 
 void OpenGLFileDropHandler::handleGlslFile(const QString& path)
 {
-    auto* ui = Editor::instance().getUi();
+    auto& application = ApplicationWindow::instance();
+    auto editor = application.getEditor();
+    auto* ui = editor->getUi();
     auto* windowManager = ui->getWindowManager();
     auto* glslWindow = static_cast<EGlslEditorWindow*>(windowManager->value("GLSL Editor"));
     if(!glslWindow)

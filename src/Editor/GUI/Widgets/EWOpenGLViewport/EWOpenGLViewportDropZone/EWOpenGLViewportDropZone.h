@@ -6,7 +6,6 @@
 #include <QMimeData>
 #include <QSharedPointer>
 
-class AppStartEvent;
 class QOpenGLWidget;
 class OpenGLFileDropHandler;
 
@@ -21,7 +20,7 @@ public:
     EWOpenGLViewportDropZone(QWidget* parent = nullptr);
     ~EWOpenGLViewportDropZone() {}
 
-    void startup(const AppStartEvent& event);
+    void startup();
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override;

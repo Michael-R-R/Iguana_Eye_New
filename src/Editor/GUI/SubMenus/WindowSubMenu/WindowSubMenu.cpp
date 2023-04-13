@@ -1,6 +1,6 @@
 #include "WindowSubMenu.h"
-#include "AppStartEvent.h"
 #include "ToggleWindowAction.h"
+#include "ApplicationWindow.h"
 #include "Editor.h"
 #include "EGUI.h"
 #include "EInput.h"
@@ -11,10 +11,12 @@ WindowSubMenu::WindowSubMenu(QWidget* parent) :
 
 }
 
-void WindowSubMenu::setupActions(const AppStartEvent& event)
+void WindowSubMenu::setupActions()
 {
-    auto* input = event.getEditor()->getInput();
-    auto* windowManager = event.getEditor()->getUi()->getWindowManager();
+    auto editor = ApplicationWindow::instance().getEditor();
+    auto* input = editor->getInput();
+    auto* ui = editor->getUi();
+    auto* windowManager = ui->getWindowManager();
 
     appendAction("File Explorer", new ToggleWindowAction("File Explorer", input->getConfigKey("File Explorer"), windowManager->value("File Explorer"), this));
     appendAction("GLSL Editor", new ToggleWindowAction("GLSL Editor", input->getConfigKey("GLSL Editor"), windowManager->value("GLSL Editor"), this));

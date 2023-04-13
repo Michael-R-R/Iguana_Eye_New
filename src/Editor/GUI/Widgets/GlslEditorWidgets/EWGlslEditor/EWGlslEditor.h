@@ -9,8 +9,6 @@
 #include "EWGlslSrcEditor.h"
 #include "GlslFileHandler.h"
 
-class AppStartEvent;
-
 class EWGlslEditor : public QWidget
 {
     Q_OBJECT
@@ -32,7 +30,7 @@ public:
     EWGlslEditor(QWidget* parent = nullptr);
     ~EWGlslEditor();
 
-    void startup(const AppStartEvent& event);
+    void startup();
 
     void newGlslFile(const QString& path);
     void openGlslFile(const QString& path);

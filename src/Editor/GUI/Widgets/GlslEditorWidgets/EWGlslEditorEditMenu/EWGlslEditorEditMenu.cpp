@@ -1,6 +1,5 @@
 #include "EWGlslEditorEditMenu.h"
-#include "AppStartEvent.h"
-#include "IEGame.h"
+#include "ApplicationWindow.h"
 #include "Editor.h"
 #include "EInput.h"
 #include "EWGlslEditor.h"
@@ -12,9 +11,11 @@ EWGlslEditorEditMenu::EWGlslEditorEditMenu(QWidget* parent) :
 
 }
 
-void EWGlslEditorEditMenu::startup(const AppStartEvent& event, EWGlslEditor* editor)
+void EWGlslEditorEditMenu::startup(EWGlslEditor* glEditor)
 {
-    auto* input = event.getEditor()->getInput();
+    auto& application = ApplicationWindow::instance();
+    auto editor = application.getEditor();
+    auto* input = editor->getInput();
 
-    appendAction("Compile", new CompileShaderAction(editor, input->getConfigKey(""), this));
+    appendAction("Compile", new CompileShaderAction(glEditor, input->getConfigKey(""), this));
 }

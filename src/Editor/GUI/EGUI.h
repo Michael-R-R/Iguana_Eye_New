@@ -6,8 +6,6 @@
 #include "StatusBar.h"
 #include "EWindowManager.h"
 
-class AppStartEvent;
-
 class EGUI : public QObject
 {
     MainMenuBar* mainMenuBar;
@@ -18,7 +16,7 @@ public:
     EGUI(QObject* parent = nullptr);
     ~EGUI();
 
-    void startup(const AppStartEvent& event);
+    void startup();
 
     MainMenuBar* getMainMenuBar() const { return mainMenuBar; }
     StatusBar* getStatusBar() const { return statusBar; }
@@ -28,8 +26,8 @@ public slots:
     void toggleUi(bool val);
 
 private:
-    void setupMainMenuBar(const AppStartEvent& event);
-    void setupStatusBar(const AppStartEvent& event);
-    void setupWindowManager(const AppStartEvent& event);
+    void setupMainMenuBar();
+    void setupStatusBar();
+    void setupWindowManager();
 };
 
