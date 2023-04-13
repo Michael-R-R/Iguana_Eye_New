@@ -26,9 +26,12 @@ EApplicationOptionsWindow::~EApplicationOptionsWindow()
 void EApplicationOptionsWindow::startup()
 {
     auto& application = ApplicationWindow::instance();
-    auto editor = application.getEditor();
+    auto* game = application.getGame();
+    auto* editor = application.getEditor();
+
+    BaseInput* gameInput = &game->getInput();
     BaseInput* editorInput = editor->getInput();
 
-    selectOptionsWidget->setupGameGroupBox(&IEInput::instance());
+    selectOptionsWidget->setupGameGroupBox(gameInput);
     selectOptionsWidget->setupEditorGroupBox(editorInput);
 }

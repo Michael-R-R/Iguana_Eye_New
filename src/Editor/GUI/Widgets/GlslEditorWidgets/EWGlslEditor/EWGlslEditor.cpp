@@ -1,4 +1,6 @@
 #include "EWGlslEditor.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEShaderManager.h"
 #include "IEFile.h"
@@ -29,7 +31,9 @@ void EWGlslEditor::startup()
 {
     menuBar->startup(this);
 
-    auto& shaderManager = IEScene::instance().getShaderManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& shaderManager = scene.getShaderManager();
     connect(&shaderManager, &IEShaderManager::added, this, &EWGlslEditor::openGlslFileSlot);
     connect(&shaderManager, &IEShaderManager::removed, this, &EWGlslEditor::glslRemovedSlot);
     connect(&shaderManager, &IEShaderManager::keyChanged, this, &EWGlslEditor::glslRenamedSlot);
@@ -90,7 +94,9 @@ void EWGlslEditor::glslRemovedSlot(const unsigned long long key)
 
 void EWGlslEditor::glslRenamedSlot(const unsigned long long, const unsigned long long newKey)
 {
-    auto& shaderManager = IEScene::instance().getShaderManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& shaderManager = scene.getShaderManager();
     auto shader = shaderManager.value(newKey);
     if(!shader)
         return;

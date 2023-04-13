@@ -5,9 +5,6 @@
 #include "IERenderableManager.h"
 #include "IECameraManager.h"
 
-IEScene IEScene::mInstance;
-IEScene& IEScene::instance() { return mInstance; }
-
 IEScene::IEScene() :
     meshManager(nullptr),
     materialManager(nullptr),

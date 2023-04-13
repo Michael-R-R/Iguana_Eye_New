@@ -7,9 +7,6 @@
 
 class IETime : public IEGameSystem
 {
-    IETime();
-    static IETime mInstance;
-
     QTimer updateTimer;
     QTimer renderTimer;
     int updateRefresh;
@@ -18,7 +15,7 @@ class IETime : public IEGameSystem
     DeltaTime dt;
 
 public:
-    static IETime& instance();
+    IETime();
     ~IETime();
 
     void startup(IEGame& game) override;

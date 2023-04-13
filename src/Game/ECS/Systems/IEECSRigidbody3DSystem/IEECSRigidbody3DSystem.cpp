@@ -1,4 +1,6 @@
 #include "IEECSRigidbody3DSystem.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEPhysicsEngine.h"
 #include "IESimulationCallback.h"
 #include "IEECSTransformSystem.h"
@@ -11,10 +13,11 @@ IEECSRigidbody3DSystem::IEECSRigidbody3DSystem() :
 {
     IEECSRigidbody3DSystem::attach(IEEntity(-1));
 
-    auto& engine = IEPhysicsEngine::instance();
-    auto simCallback = engine.getSimulationCallback();
-    connect(&(*simCallback), &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
-    connect(&(*simCallback), &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& engine = game->getPhysicsEngine();
+    auto& simCallback = engine.getSimulationCallback();
+    connect(&simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
+    connect(&simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
 }
 
 IEECSRigidbody3DSystem::~IEECSRigidbody3DSystem()
@@ -101,7 +104,8 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
 
 void IEECSRigidbody3DSystem::initalize()
 {
-    auto& engine = IEPhysicsEngine::instance();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& engine = game->getPhysicsEngine();
 
     for(int i = 1; i < data.rigidbody.size(); i++)
     {

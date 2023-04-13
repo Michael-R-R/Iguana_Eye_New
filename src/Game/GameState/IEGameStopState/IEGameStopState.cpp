@@ -17,8 +17,11 @@
 IEGameStopState::IEGameStopState(IEGame& game) :
     glFunc(game.getGlFunc()),
     glExtraFunc(game.getGlExtraFunc()),
-    transformSystem(IEECS::instance().getComponent<IEECSTransformSystem>("Transform")),
-    ecsUpdateEvent(QSharedPointer<ECSOnUpdateEvent>::create(&IEECS::instance())),
+    time(game.getTime()),
+    input(game.getInput()),
+    gRenderEngine(game.getRenderEngine()),
+    transformSystem(game.getECS().getComponent<IEECSTransformSystem>("Transform")),
+    ecsUpdateEvent(QSharedPointer<ECSOnUpdateEvent>::create(&game.getECS())),
     eRenderEngine(nullptr),
     eCamera(nullptr)
 {
@@ -30,34 +33,34 @@ IEGameStopState::~IEGameStopState()
 
 }
 
-void IEGameStopState::enter(IEGame&)
+void IEGameStopState::enter(IEGame& game)
 {
     eRenderEngine = QSharedPointer<ERenderEngine>::create();
     eCamera = QSharedPointer<ECamera>::create();
 
-    deserializeGameStates();
+    deserializeGameStates(game);
 
     IEGameState::onResize(ApplicationProperties::viewportDimensions);
 }
 
-void IEGameStopState::exit(IEGame&)
+void IEGameStopState::exit(IEGame& game)
 {
-    serializeGameStates();
+    serializeGameStates(game);
 }
 
 void IEGameStopState::onUpdateFrame()
 {
-    const float dt = IETime::instance().getDeltaTime();
+    const float dt = time.getDeltaTime();
 
     transformSystem->onUpdateFrame(&(*ecsUpdateEvent));
-    eCamera->update(IEInput::instance(), dt);
+    eCamera->update(input, dt);
 }
 
 void IEGameStopState::onRenderFrame()
 {
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    IERenderEngine::instance().onRenderFrame(glExtraFunc, eCamera);
+    gRenderEngine.onRenderFrame(glExtraFunc, eCamera);
     eRenderEngine->onRenderFrame(glExtraFunc, eCamera);
 }
 
@@ -66,15 +69,15 @@ void IEGameStopState::onResize(const float w, const float h)
     eCamera->updateProjection(w, h);
 }
 
-void IEGameStopState::serializeGameStates()
+void IEGameStopState::serializeGameStates(IEGame& game)
 {
-    IESerialize::write<IEECS>("./resources/temp/backup/ecs.iedat", &IEECS::instance());
+    IESerialize::write<IEECS>("./resources/temp/backup/ecs.iedat", &game.getECS());
     IESerialize::write<ECamera>("./resources/temp/backup/camera.iedat", &(*eCamera));
 }
 
-void IEGameStopState::deserializeGameStates()
+void IEGameStopState::deserializeGameStates(IEGame& game)
 {
-    IESerialize::read<IEECS>("./resources/temp/backup/ecs.iedat", &IEECS::instance());
+    IESerialize::read<IEECS>("./resources/temp/backup/ecs.iedat", &game.getECS());
     IESerialize::read<ECamera>("./resources/temp/backup/camera.iedat", &(*eCamera));
 
     IEFile::removeAllFiles("./resources/temp/backup/");

@@ -1,4 +1,6 @@
 #include "IERenderableManager.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEMeshManager.h"
 #include "IEMaterialManager.h"
@@ -49,9 +51,11 @@ void IERenderableManager::importAll()
 {
     QVector<unsigned long long> markedForRemove;
 
-    auto& meshManager = IEScene::instance().getMeshManager();
-    auto& materialManager = IEScene::instance().getMaterialManager();
-    auto& shaderManager = IEScene::instance().getShaderManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& meshManager = scene.getMeshManager();
+    auto& materialManager = scene.getMaterialManager();
+    auto& shaderManager = scene.getShaderManager();
 
     for(auto& i : resources)
     {

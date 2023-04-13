@@ -1,4 +1,5 @@
 #include "IEECSCameraSystem.h"
+#include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScriptEngine.h"
 #include "IEScene.h"
@@ -76,7 +77,9 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
     auto& pos = transformSystem->getPosition(transformIndex);
     auto& rot = transformSystem->getRotation(transformIndex);
 
-    auto& cameraManager = IEScene::instance().getCameraManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& cameraManager = scene.getCameraManager();
 
     auto activeCamera = cameraManager.value(activeId);
     activeCamera->updateView(pos, rot.toVector3D());
@@ -84,7 +87,8 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
 
 void IEECSCameraSystem::initalize()
 {
-    auto& scriptEngine = IEScriptEngine::instance();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scriptEngine = game->getScriptEngine();
     auto& lua = scriptEngine.getLua();
 
     for(int i = 1; i < entityMap.size(); i++)
@@ -112,7 +116,9 @@ QSharedPointer<IECamera> IEECSCameraSystem::getActiveCamera() const
     if(!indexBoundCheck(activeIndex))
         return nullptr;
 
-    auto& cameraManager = IEScene::instance().getCameraManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& cameraManager = scene.getCameraManager();
 
     return cameraManager.value(data.cameraId[activeIndex]);
 }
@@ -122,7 +128,9 @@ QSharedPointer<IECamera> IEECSCameraSystem::getAttachedCamera(const int index) c
     if(!indexBoundCheck(index))
         return nullptr;
 
-    auto& cameraManager = IEScene::instance().getCameraManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& cameraManager = scene.getCameraManager();
 
     return cameraManager.value(data.cameraId[index]);
 }

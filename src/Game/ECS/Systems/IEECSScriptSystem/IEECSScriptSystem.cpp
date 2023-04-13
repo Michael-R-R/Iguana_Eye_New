@@ -1,4 +1,5 @@
 #include "IEECSScriptSystem.h"
+#include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScriptEngine.h"
 #include "IEPhysicsEngine.h"
@@ -12,10 +13,11 @@ IEECSScriptSystem::IEECSScriptSystem() :
 {
     IEECSScriptSystem::attach(IEEntity(-1));
 
-    auto& physicsEngine = IEPhysicsEngine::instance();
-    auto simCallback = physicsEngine.getSimulationCallback();
-    connect(&(*simCallback), &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
-    connect(&(*simCallback), &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& physicsEngine = game->getPhysicsEngine();
+    auto& simCallback = physicsEngine.getSimulationCallback();
+    connect(&simCallback, &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
+    connect(&simCallback, &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);
 }
 
 IEECSScriptSystem::~IEECSScriptSystem()
@@ -81,7 +83,8 @@ void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent*)
 
 void IEECSScriptSystem::initalize()
 {
-    auto& scriptEngine = IEScriptEngine::instance();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scriptEngine = game->getScriptEngine();
     auto& lua = scriptEngine.getLua();
 
     for(int i = 1; i < entityMap.size(); i++)

@@ -1,4 +1,6 @@
 #include "IEECSTransformSystem.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IERenderableManager.h"
 #include "IEECSHierarchySystem.h"
@@ -71,7 +73,10 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
 {
     auto hierarchySystem = event->getHierarchy();
     auto renderableSystem = event->getRenderable();
-    auto& renderableManager = IEScene::instance().getRenderableManager();
+
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& renderableManager = scene.getRenderableManager();
 
     for(const auto& i : qAsConst(dirtyParentIndices))
     {

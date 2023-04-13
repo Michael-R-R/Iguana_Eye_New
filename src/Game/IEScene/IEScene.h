@@ -12,9 +12,6 @@ class IECameraManager;
 
 class IEScene : public IEGameSystem
 {
-    IEScene();
-    static IEScene mInstance;
-
     QSharedPointer<IEMeshManager> meshManager;
     QSharedPointer<IEMaterialManager> materialManager;
     QSharedPointer<IEShaderManager> shaderManager;
@@ -22,7 +19,7 @@ class IEScene : public IEGameSystem
     QSharedPointer<IECameraManager> cameraManager;
 
 public:
-    static IEScene& instance();
+    IEScene();
     ~IEScene();
 
     void startup(IEGame& game) override;

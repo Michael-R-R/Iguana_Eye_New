@@ -11,9 +11,6 @@ class GameStartEvent;
 
 class IEPhysicsEngine : public IEGameSystem
 {
-    IEPhysicsEngine();
-    static IEPhysicsEngine mInstance;
-
     physx::PxDefaultAllocator defaultAllocatorCallback;
     physx::PxDefaultErrorCallback defaultErrorCallback;
     physx::PxDefaultCpuDispatcher* pxCpuDispatcher;
@@ -31,7 +28,7 @@ class IEPhysicsEngine : public IEGameSystem
     float stepSize;
 
 public:
-    static IEPhysicsEngine& instance();
+    IEPhysicsEngine();
     ~IEPhysicsEngine();
 
     void startup(IEGame& game) override;
@@ -47,6 +44,6 @@ public:
 
     physx::PxPhysics* getPxPhysics() const { return pxPhysics; }
     physx::PxMaterial* getPxMaterial() const { return pxMaterial; }
-    QSharedPointer<IESimulationCallback> getSimulationCallback() const { return simulationCallback; }
+    IESimulationCallback& getSimulationCallback() const { return *simulationCallback; }
 };
 

@@ -1,4 +1,6 @@
 #include "IEBaseRigidbody.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEPhysicsEngine.h"
 #include "physx/extensions/PxSimpleFactory.h"
 
@@ -96,8 +98,11 @@ void IEBaseRigidbody::create(const physx::PxTransform& t, const physx::PxGeometr
 void IEBaseRigidbody::createAsStatic(const physx::PxTransform& t,
                                      const physx::PxGeometry& geometry)
 {
-    auto* p = IEPhysicsEngine::instance().getPxPhysics();
-    auto* m = IEPhysicsEngine::instance().getPxMaterial();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& engine = game->getPhysicsEngine();
+
+    auto* p = engine.getPxPhysics();
+    auto* m = engine.getPxMaterial();
 
     auto* actor = physx::PxCreateStatic(*p, t, geometry, *m);
 
@@ -107,14 +112,17 @@ void IEBaseRigidbody::createAsStatic(const physx::PxTransform& t,
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, false);
 
-    IEPhysicsEngine::instance().addActorToScene(rigidActor);
+    engine.addActorToScene(rigidActor);
 }
 
 void IEBaseRigidbody::createAsDynamic(const physx::PxTransform& t,
                                       const physx::PxGeometry& geometry)
 {
-    auto* p = IEPhysicsEngine::instance().getPxPhysics();
-    auto* m = IEPhysicsEngine::instance().getPxMaterial();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& engine = game->getPhysicsEngine();
+
+    auto* p = engine.getPxPhysics();
+    auto* m = engine.getPxMaterial();
 
     auto* actor = physx::PxCreateDynamic(*p, t, geometry, *m, density);
     actor->setSleepThreshold(sleepThreshold);
@@ -125,14 +133,17 @@ void IEBaseRigidbody::createAsDynamic(const physx::PxTransform& t,
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
 
-    IEPhysicsEngine::instance().addActorToScene(rigidActor);
+    engine.addActorToScene(rigidActor);
 }
 
 void IEBaseRigidbody::createAsKinematic(const physx::PxTransform& t,
                                         const physx::PxGeometry& geometry)
 {
-    auto* p = IEPhysicsEngine::instance().getPxPhysics();
-    auto* m = IEPhysicsEngine::instance().getPxMaterial();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& engine = game->getPhysicsEngine();
+
+    auto* p = engine.getPxPhysics();
+    auto* m = engine.getPxMaterial();
 
     auto* actor = physx::PxCreateKinematic(*p, t, geometry, *m, density);
     actor->setSleepThreshold(sleepThreshold);
@@ -143,7 +154,7 @@ void IEBaseRigidbody::createAsKinematic(const physx::PxTransform& t,
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
 
-    IEPhysicsEngine::instance().addActorToScene(rigidActor);
+    engine.addActorToScene(rigidActor);
 }
 
 QDataStream& IEBaseRigidbody::serialize(QDataStream& out, const Serializable& obj) const

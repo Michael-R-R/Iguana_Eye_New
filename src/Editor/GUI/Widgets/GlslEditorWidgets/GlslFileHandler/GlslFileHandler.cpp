@@ -1,5 +1,7 @@
 #include "GlslFileHandler.h"
 #include "EWGlslEditor.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEShaderManager.h"
 #include "IEGlslImporter.h"
@@ -73,7 +75,9 @@ void GlslFileHandler::handleGlslSave(const QString& path)
         return;
 
     // Check if a shader exist to update
-    auto& shaderManager = IEScene::instance().getShaderManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& shaderManager = scene.getShaderManager();
     unsigned long long id = IEHash::Compute(path);
     auto shader = shaderManager.value(id);
     if(!shader)

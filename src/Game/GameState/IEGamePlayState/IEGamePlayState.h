@@ -6,6 +6,9 @@
 
 class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
+class IETime;
+class IEPhysicsEngine;
+class IERenderEngine;
 class IEECSScriptSystem;
 class IEECSRigidbody3DSystem;
 class IEECSTransformSystem;
@@ -16,6 +19,9 @@ class IEGamePlayState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
+    IETime& time;
+    IEPhysicsEngine& physicsEngine;
+    IERenderEngine& gRenderEngine;
     IEECSScriptSystem* scriptSystem;
     IEECSRigidbody3DSystem* rigidbody3dSystem;
     IEECSTransformSystem* transformSystem;

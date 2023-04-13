@@ -7,6 +7,9 @@
 class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
 class IEGame;
+class IETime;
+class IEInput;
+class IERenderEngine;
 class IEECSTransformSystem;
 class ECSOnUpdateEvent;
 class ERenderEngine;
@@ -16,6 +19,9 @@ class IEGameStopState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
+    IETime& time;
+    IEInput& input;
+    IERenderEngine& gRenderEngine;
     IEECSTransformSystem* transformSystem;
     QSharedPointer<ECSOnUpdateEvent> ecsUpdateEvent;
 
@@ -33,7 +39,7 @@ public:
     void onResize(const float w, const float h) override;
 
 private:
-    void serializeGameStates();
-    void deserializeGameStates();
+    void serializeGameStates(IEGame& game);
+    void deserializeGameStates(IEGame& game);
 };
 

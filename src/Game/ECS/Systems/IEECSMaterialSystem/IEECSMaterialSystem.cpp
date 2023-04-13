@@ -1,4 +1,6 @@
 #include "IEECSMaterialSystem.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEMaterialManager.h"
 #include "ECSOnUpdateEvent.h"
@@ -94,7 +96,9 @@ QSharedPointer<IEMaterial> IEECSMaterialSystem::getAttachedMaterial(const int in
     if(!indexBoundCheck(index))
         return nullptr;
 
-    auto& materialManager = IEScene::instance().getMaterialManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& materialManager = scene.getMaterialManager();
 
     return materialManager.value(data.materialId[index]);
 }

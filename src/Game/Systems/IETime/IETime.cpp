@@ -1,9 +1,6 @@
 #include "IETime.h"
 #include "IEGame.h"
 
-IETime IETime::mInstance;
-IETime& IETime::instance() { return mInstance; }
-
 IETime::IETime() :
     updateTimer(this),
     renderTimer(this),

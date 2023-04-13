@@ -1,19 +1,26 @@
 #include "IEGame.h"
-#include "IEGameState.h"
-#include "IETime.h"
-#include "IEInput.h"
-#include "IEScriptEngine.h"
-#include "IEPhysicsEngine.h"
+#include "ApplicationProperties.h"
 #include "IERenderEngine.h"
+#include "IEPhysicsEngine.h"
 #include "IEScene.h"
 #include "IEECS.h"
-#include "ApplicationProperties.h"
+#include "IEInput.h"
+#include "IEScriptEngine.h"
+#include "IETime.h"
+#include "IEGameState.h"
 
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(),
     glFunc(nullptr),
     glExtraFunc(nullptr),
+    renderEngine(QSharedPointer<IERenderEngine>::create()),
+    physicsEngine(QSharedPointer<IEPhysicsEngine>::create()),
+    scene(QSharedPointer<IEScene>::create()),
+    ecs(QSharedPointer<IEECS>::create()),
+    input(QSharedPointer<IEInput>::create()),
+    scriptEngine(QSharedPointer<IEScriptEngine>::create()),
+    time(QSharedPointer<IETime>::create()),
     state(nullptr)
 {
     this->setFocusPolicy(Qt::StrongFocus);
@@ -54,7 +61,7 @@ void IEGame::initializeGL()
 void IEGame::paintGL()
 {
     state->onRenderFrame();
-    IETime::instance().processDeltaTime();
+    time->processDeltaTime();
 }
 
 void IEGame::resizeGL(int w, int h)
@@ -69,37 +76,37 @@ void IEGame::resizeGL(int w, int h)
 void IEGame::startup()
 {
     this->makeCurrent();
-    IERenderEngine::instance().startup(*this);
-    IEPhysicsEngine::instance().startup(*this);
-    IEScene::instance().startup(*this);
-    IEECS::instance().startup(*this);
-    IEInput::instance().startup(*this);
-    IEScriptEngine::instance().startup(*this);
-    IETime::instance().startup(*this);
+    renderEngine->startup(*this);
+    physicsEngine->startup(*this);
+    scene->startup(*this);
+    ecs->startup(*this);
+    input->startup(*this);
+    scriptEngine->startup(*this);
+    time->startup(*this);
 }
 
 void IEGame::shutdown()
 {
     this->makeCurrent();
-    IETime::instance().shutdown(*this);
-    IEScriptEngine::instance().shutdown(*this);
-    IEInput::instance().shutdown(*this);
-    IEECS::instance().shutdown(*this);
-    IEScene::instance().shutdown(*this);
-    IEPhysicsEngine::instance().shutdown(*this);
-    IERenderEngine::instance().shutdown(*this);
+    time->shutdown(*this);
+    scriptEngine->shutdown(*this);
+    input->shutdown(*this);
+    ecs->shutdown(*this);
+    scene->shutdown(*this);
+    physicsEngine->shutdown(*this);
+    renderEngine->shutdown(*this);
 }
 
 void IEGame::initalize()
 {
-    IEECS::instance().initalize(*this);
+    ecs->initalize(*this);
 }
 
 void IEGame::reset()
 {
-    IEPhysicsEngine::instance().reset(*this);
-    IEScriptEngine::instance().reset(*this);
-    IEECS::instance().reset(*this);
+    physicsEngine->reset(*this);
+    scriptEngine->reset(*this);
+    ecs->reset(*this);
 }
 
 void IEGame::changeState(QSharedPointer<IEGameState> val)
@@ -124,12 +131,14 @@ void IEGame::onRenderFrame()
     this->update();
 }
 
-QDataStream& IEGame::serialize(QDataStream& out, const Serializable&) const
+QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const
 {
-    out << IETime::instance()
-        << IEInput::instance()
-        << IEScene::instance()
-        << IEECS::instance();
+    const IEGame& game = static_cast<const IEGame&>(obj);
+
+    out << *game.time
+        << *game.input
+        << *game.scene
+        << *game.ecs;
 
     return out;
 }
@@ -139,10 +148,10 @@ QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
     IEGame& game = static_cast<IEGame&>(obj);
     game.makeCurrent();
 
-    in >> IETime::instance()
-       >> IEInput::instance()
-       >> IEScene::instance()
-       >> IEECS::instance();
+    in >> *game.time
+        >> *game.input
+        >> *game.scene
+        >> *game.ecs;
 
     return in;
 }

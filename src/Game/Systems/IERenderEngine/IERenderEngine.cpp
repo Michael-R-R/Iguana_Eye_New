@@ -1,15 +1,14 @@
 #include "IERenderEngine.h"
 #include <QOpenGLExtraFunctions>
 #include <QMatrix4x4>
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEMeshManager.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
 #include "IECamera.h"
-
-IERenderEngine IERenderEngine::mInstance;
-IERenderEngine& IERenderEngine::instance() { return mInstance; }
 
 IERenderEngine::IERenderEngine()
 {
@@ -46,10 +45,12 @@ void IERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, QSharedPointer
     if(!camera)
         return;
 
-    auto& meshManager = IEScene::instance().getMeshManager();
-    auto& materialManager = IEScene::instance().getMaterialManager();;
-    auto& shaderManager = IEScene::instance().getShaderManager();;
-    auto& renderableManager = IEScene::instance().getRenderableManager();;
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& meshManager = scene.getMeshManager();
+    auto& materialManager = scene.getMaterialManager();;
+    auto& shaderManager = scene.getShaderManager();;
+    auto& renderableManager = scene.getRenderableManager();;
 
     const auto renderables = renderableManager.getResources();
     for(auto& i : renderables)

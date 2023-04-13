@@ -1,4 +1,5 @@
 #include "IETCreateRenderable.h"
+#include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScene.h"
 #include "IEMeshManager.h"
@@ -17,7 +18,8 @@
 
 IETCreateRenderable::IETCreateRenderable()
 {
-    auto& scene = IEScene::instance();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
     auto& meshManager = scene.getMeshManager();
     auto& materialManager = scene.getMaterialManager();
     auto& shaderManager = scene.getShaderManager();

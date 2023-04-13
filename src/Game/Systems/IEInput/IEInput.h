@@ -7,17 +7,12 @@
 #include "InputContainer.h"
 #include "InputCapture.h"
 
-class QWidget;
-
 class IEInput : public IEGameSystem, public BaseInput
 {
-    IEInput();
-    static IEInput mInstance;
-
     QSharedPointer<InputCapture> inputCapture;
 
 public:
-    static IEInput& instance();
+    IEInput();
     ~IEInput();
 
     void startup(IEGame& game) override;

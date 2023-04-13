@@ -46,14 +46,15 @@ void OpenGLFileHandler::handle(const QString& path)
 void OpenGLFileHandler::handleObjFile(const QString& path)
 {
     auto& application = ApplicationWindow::instance();
-    auto game = application.getGame();
+    auto* game = application.getGame();
     game->makeCurrent();
 
     // --- Create or get mesh --- //
-    auto& meshManager = IEScene::instance().getMeshManager();
-    auto& materialManager = IEScene::instance().getMaterialManager();
-    auto& shaderManager = IEScene::instance().getShaderManager();
-    auto& renderableManager = IEScene::instance().getRenderableManager();
+    auto& scene = game->getScene();
+    auto& meshManager = scene.getMeshManager();
+    auto& materialManager = scene.getMaterialManager();
+    auto& shaderManager = scene.getShaderManager();
+    auto& renderableManager = scene.getRenderableManager();
 
     const unsigned long long meshId = IEHash::Compute(path);
     const unsigned long long materialId = materialManager.getDefaultId();
@@ -74,7 +75,7 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
     }
 
     // --- Create entity and attach components --- //
-    auto& ecs = IEECS::instance();
+    auto& ecs = game->getECS();
     auto* meshSystem = ecs.getComponent<IEECSMeshSystem>("Mesh");
     auto* materialSystem = ecs.getComponent<IEECSMaterialSystem>("Material");
     auto* shaderSystem = ecs.getComponent<IEECSShaderSystem>("Shader");

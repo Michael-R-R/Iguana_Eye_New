@@ -1,4 +1,6 @@
 #include "IEECSMeshSystem.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEMeshManager.h"
 #include "ECSOnUpdateEvent.h"
@@ -94,7 +96,9 @@ QSharedPointer<IEMesh> IEECSMeshSystem::getAttachedMesh(const int index)
     if(!indexBoundCheck(index))
         return nullptr;
 
-    auto& meshManager = IEScene::instance().getMeshManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& meshManager = scene.getMeshManager();
 
     return meshManager.value(data.meshId[index]);
 }

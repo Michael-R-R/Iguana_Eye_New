@@ -1,4 +1,6 @@
 #include "IEBaseCollider.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEPhysicsEngine.h"
 #include "physx/extensions/PxSimpleFactory.h"
 
@@ -61,15 +63,18 @@ physx::PxQuat IEBaseCollider::getGlobalQuat() const
 
 void IEBaseCollider::create(const physx::PxTransform& t, const physx::PxGeometry& g)
 {
-    auto* p = IEPhysicsEngine::instance().getPxPhysics();
-    auto* m = IEPhysicsEngine::instance().getPxMaterial();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& engine = game->getPhysicsEngine();
+
+    auto* p = engine.getPxPhysics();
+    auto* m = engine.getPxMaterial();
 
     auto* actor = physx::PxCreateStatic(*p, t, g, *m);
 
     rigidActor = actor;
     rigidActor->userData = (void*)(size_t)attachedId;
 
-    IEPhysicsEngine::instance().addActorToScene(rigidActor);
+    engine.addActorToScene(rigidActor);
 }
 
 QDataStream& IEBaseCollider::serialize(QDataStream& out, const Serializable& obj) const

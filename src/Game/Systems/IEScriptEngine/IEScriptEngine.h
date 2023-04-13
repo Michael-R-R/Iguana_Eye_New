@@ -6,13 +6,10 @@
 
 class IEScriptEngine : public IEGameSystem
 {
-    IEScriptEngine();
-    static IEScriptEngine mInstance;
-
     sol::state lua;
 
 public:
-    static IEScriptEngine& instance();
+    IEScriptEngine();
     ~IEScriptEngine();
 
     void startup(IEGame& game) override;

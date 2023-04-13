@@ -1,4 +1,6 @@
 #include "IEECSRenderableSystem.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IERenderableManager.h"
 #include "ECSOnUpdateEvent.h"
@@ -84,7 +86,9 @@ int IEECSRenderableSystem::addShown(const int index)
     if(doesExistShown(index))
         return -1;
 
-    auto& renderableManager = IEScene::instance().getRenderableManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& renderableManager = scene.getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager.value(id);
@@ -105,7 +109,9 @@ int IEECSRenderableSystem::addHidden(const int index)
     if(doesExistHidden(index))
         return -1;
 
-    auto& renderableManager = IEScene::instance().getRenderableManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& renderableManager = scene.getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager.value(id);
@@ -128,7 +134,9 @@ void IEECSRenderableSystem::removeShown(const int index)
     if(!doesExistShown(index))
         return;
 
-    auto& renderableManager = IEScene::instance().getRenderableManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& renderableManager = scene.getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager.value(id);
@@ -156,7 +164,9 @@ void IEECSRenderableSystem::removeHidden(const int index)
     if(!doesExistHidden(index))
         return;
 
-    auto& renderableManager = IEScene::instance().getRenderableManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& renderableManager = scene.getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager.value(id);
@@ -211,7 +221,9 @@ void IEECSRenderableSystem::transferTempData(const int index)
     if(!indexBoundCheck(index))
         return;
 
-    auto& renderableManager = IEScene::instance().getRenderableManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& renderableManager = scene.getRenderableManager();
 
     unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager.value(id);
@@ -271,7 +283,9 @@ QSharedPointer<IERenderable> IEECSRenderableSystem::getAttachedRenderable(const 
     if(!indexBoundCheck(index))
         return nullptr;
 
-    auto& renderableManager = IEScene::instance().getRenderableManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& renderableManager = scene.getRenderableManager();
 
     return renderableManager.value(data.renderableId[index]);
 }
@@ -372,7 +386,9 @@ void IEECSRenderableSystem::cacheTempData(const int index)
     if(instanceIndex < 0)
         return;
 
-    auto& renderableManager = IEScene::instance().getRenderableManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& renderableManager = scene.getRenderableManager();
 
     const unsigned long long id = data.renderableId[index];
     auto renderable = renderableManager.value(id);

@@ -1,4 +1,6 @@
 #include "IEECSShaderSystem.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEShaderManager.h"
 #include "ECSOnUpdateEvent.h"
@@ -94,7 +96,9 @@ QSharedPointer<IEShader> IEECSShaderSystem::getAttachedShader(const int index) c
     if(!indexBoundCheck(index))
         return nullptr;
 
-    auto& shaderManager = IEScene::instance().getShaderManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& shaderManager = scene.getShaderManager();
 
     return shaderManager.value(data.shaderId[index]);
 }

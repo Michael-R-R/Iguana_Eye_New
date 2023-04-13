@@ -11,9 +11,6 @@
 #include "LuaIEInput.h"
 #include "LuaIEECS.h"
 
-IEScriptEngine IEScriptEngine::mInstance;
-IEScriptEngine& IEScriptEngine::instance() { return mInstance; }
-
 IEScriptEngine::IEScriptEngine() :
     lua()
 {
@@ -25,7 +22,7 @@ IEScriptEngine::~IEScriptEngine()
 
 }
 
-void IEScriptEngine::startup(IEGame&)
+void IEScriptEngine::startup(IEGame& game)
 {
     lua.open_libraries(sol::lib::base, sol::lib::math);
 
@@ -38,9 +35,9 @@ void IEScriptEngine::startup(IEGame&)
     LuaEnum::addToLua(enumTable);
     LuaUtility::addToLua(utilTable);
     LuaApplication::addToLua(gameTable);
-    LuaIETime::addToLua(&IETime::instance(), gameTable);
-    LuaIEInput::addToLua(&IEInput::instance(), gameTable);
-    LuaIEECS::addToLua(&IEECS::instance(), lua, gameTable);
+    LuaIETime::addToLua(&game.getTime(), gameTable);
+    LuaIEInput::addToLua(&game.getInput(), gameTable);
+    LuaIEECS::addToLua(&game.getECS(), lua, gameTable);
 }
 
 void IEScriptEngine::shutdown(IEGame&)

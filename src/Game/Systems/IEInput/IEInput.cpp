@@ -1,9 +1,6 @@
 #include "IEInput.h"
 #include "IEGame.h"
 
-IEInput IEInput::mInstance;
-IEInput& IEInput::instance() { return mInstance; }
-
 IEInput::IEInput() :
     inputCapture(nullptr)
 {

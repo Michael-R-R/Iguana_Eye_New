@@ -15,11 +15,14 @@
 IEGamePlayState::IEGamePlayState(IEGame& game) :
     glFunc(game.getGlFunc()),
     glExtraFunc(game.getGlExtraFunc()),
-    scriptSystem(IEECS::instance().getComponent<IEECSScriptSystem>("Script")),
-    rigidbody3dSystem(IEECS::instance().getComponent<IEECSRigidbody3DSystem>("Rigidbody3D")),
-    transformSystem(IEECS::instance().getComponent<IEECSTransformSystem>("Transform")),
-    cameraSystem(IEECS::instance().getComponent<IEECSCameraSystem>("Camera")),
-    ecsUpdateEvent(QSharedPointer<ECSOnUpdateEvent>::create(&IEECS::instance()))
+    time(game.getTime()),
+    physicsEngine(game.getPhysicsEngine()),
+    gRenderEngine(game.getRenderEngine()),
+    scriptSystem(game.getECS().getComponent<IEECSScriptSystem>("Script")),
+    rigidbody3dSystem(game.getECS().getComponent<IEECSRigidbody3DSystem>("Rigidbody3D")),
+    transformSystem(game.getECS().getComponent<IEECSTransformSystem>("Transform")),
+    cameraSystem(game.getECS().getComponent<IEECSCameraSystem>("Camera")),
+    ecsUpdateEvent(QSharedPointer<ECSOnUpdateEvent>::create(&game.getECS()))
 {
 
 }
@@ -41,9 +44,9 @@ void IEGamePlayState::exit(IEGame&)
 
 void IEGamePlayState::onUpdateFrame()
 {
-    const float dt = IETime::instance().getDeltaTime();
+    const float dt = time.getDeltaTime();
 
-    IEPhysicsEngine::instance().onUpdateFrame(dt);
+    physicsEngine.onUpdateFrame(dt);
     scriptSystem->onUpdateFrame(&(*ecsUpdateEvent));
     rigidbody3dSystem->onUpdateFrame(&(*ecsUpdateEvent));
     transformSystem->onUpdateFrame(&(*ecsUpdateEvent));
@@ -55,7 +58,7 @@ void IEGamePlayState::onRenderFrame()
     glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     auto camera = cameraSystem->getActiveCamera();
-    IERenderEngine::instance().onRenderFrame(glExtraFunc, camera);
+    gRenderEngine.onRenderFrame(glExtraFunc, camera);
 }
 
 void IEGamePlayState::onResize(const float w, const float h)

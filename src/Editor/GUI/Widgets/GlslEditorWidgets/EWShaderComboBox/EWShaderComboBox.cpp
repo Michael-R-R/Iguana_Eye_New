@@ -1,4 +1,5 @@
 #include "EWShaderComboBox.h"
+#include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScene.h"
 #include "IEShaderManager.h"
@@ -37,7 +38,9 @@ bool EWShaderComboBox::eventFilter(QObject*, QEvent* event)
 
 void EWShaderComboBox::startup()
 {
-    auto& shaderManager = IEScene::instance().getShaderManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& shaderManager = scene.getShaderManager();
 
     this->initialBuild(&shaderManager);
 
@@ -111,7 +114,9 @@ void EWShaderComboBox::currentShaderChanged(int index)
 
     auto resourceId = fullIdList[index];
 
-    auto& shaderManager = IEScene::instance().getShaderManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& shaderManager = scene.getShaderManager();
 
     auto shader = shaderManager.value(resourceId);
     if(!shader)
@@ -164,7 +169,10 @@ void EWShaderComboBox::changeShaderKey(const unsigned long long oldKey, const un
 
     fullIdList[index] = newKey;
 
-    auto& shaderManager = IEScene::instance().getShaderManager();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto& scene = game->getScene();
+    auto& shaderManager = scene.getShaderManager();
+
     auto shader = shaderManager.value(newKey);
 
     QString extractedName = IEFile::extractName(shader->getFilePath());

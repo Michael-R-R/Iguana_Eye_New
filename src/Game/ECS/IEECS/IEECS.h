@@ -14,14 +14,11 @@ class IEECS : public IEGameSystem
 {
     Q_OBJECT
 
-    IEECS();
-    static IEECS mInstance;
-
     QMap<QString, QSharedPointer<IEECSSystem>> systems;
     QSharedPointer<IEEntityManager> entityManager;
 
 public:
-    static IEECS& instance();
+    IEECS();
     ~IEECS();
 
     void startup(IEGame& game) override;

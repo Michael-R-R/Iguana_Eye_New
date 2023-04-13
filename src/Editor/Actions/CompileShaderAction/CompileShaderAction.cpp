@@ -1,5 +1,7 @@
 #include "CompileShaderAction.h"
 #include "EWGlslEditor.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
 #include "IEScene.h"
 #include "IEShaderManager.h"
 #include "IEShader.h"
@@ -12,7 +14,9 @@ CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, InputKey& shortcu
 
     connect(this, &CompileShaderAction::triggered, this, [editor]()
             {
-                auto& shaderManager = IEScene::instance().getShaderManager();
+                auto* game = ApplicationWindow::instance().getGame();
+                auto& scene = game->getScene();
+                auto& shaderManager = scene.getShaderManager();
 
                 unsigned long long id = IEHash::Compute(editor->getCurrShaderPath());
                 auto shader = shaderManager.value(id);

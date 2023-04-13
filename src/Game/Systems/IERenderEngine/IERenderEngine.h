@@ -12,11 +12,9 @@ class IECamera;
 
 class IERenderEngine : public IEGameSystem
 {
-    IERenderEngine();
-    static IERenderEngine mInstance;
 
 public:
-    static IERenderEngine& instance();
+    IERenderEngine();
     ~IERenderEngine();
 
     void startup(IEGame& game) override;

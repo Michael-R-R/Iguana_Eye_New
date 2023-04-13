@@ -15,9 +15,6 @@
 #include "IEECSShaderSystem.h"
 #include "IEECSRenderableSystem.h"
 
-IEECS IEECS::mInstance;
-IEECS& IEECS::instance() { return mInstance; }
-
 IEECS::IEECS() :
     systems(),
     entityManager(nullptr)

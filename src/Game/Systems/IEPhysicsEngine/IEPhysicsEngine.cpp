@@ -1,13 +1,5 @@
 #include "IEPhysicsEngine.h"
 
-IEPhysicsEngine IEPhysicsEngine::mInstance;
-IEPhysicsEngine& IEPhysicsEngine::instance() { return mInstance; }
-
-IEPhysicsEngine::~IEPhysicsEngine()
-{
-
-}
-
 IEPhysicsEngine::IEPhysicsEngine() :
     defaultAllocatorCallback(),
     defaultErrorCallback(),
@@ -21,6 +13,11 @@ IEPhysicsEngine::IEPhysicsEngine() :
     worldGravity(-9.81f),
     accumulator(0.0f),
     stepSize(1.0f / 60.0f)
+{
+
+}
+
+IEPhysicsEngine::~IEPhysicsEngine()
 {
 
 }
