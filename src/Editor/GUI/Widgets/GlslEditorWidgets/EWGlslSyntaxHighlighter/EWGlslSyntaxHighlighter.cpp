@@ -46,11 +46,9 @@ void EWGlslSyntaxHighlighter::setupHighlightBehaviours()
 
 void EWGlslSyntaxHighlighter::clearBehaviours()
 {
-    for(auto item : highlightingBehaviours)
+    for(SyntaxHighlightBehaviour* i : highlightingBehaviours)
     {
-        auto temp = item;
-        item = nullptr;
-        delete temp;
+        delete i;
     }
 
     highlightingBehaviours.clear();

@@ -21,6 +21,7 @@ public:
     ~EWOpenGLViewportDropZone() {}
 
     void startup();
+    void shutdown();
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override;

@@ -101,10 +101,10 @@ void ApplicationWindow::openFromFile(const QString& path)
 void ApplicationWindow::clearActions()
 {
     auto actionList = this->actions();
-    for(auto item : actionList)
+    for(auto i : actionList)
     {
-        delete item;
-        item = nullptr;
+        delete i;
+        i = nullptr;
     }
     actionList.clear();
     this->addActions(actionList);

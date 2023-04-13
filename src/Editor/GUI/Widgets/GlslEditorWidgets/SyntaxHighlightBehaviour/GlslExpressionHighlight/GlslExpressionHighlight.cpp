@@ -9,6 +9,11 @@ GlslExpressionHighlight::GlslExpressionHighlight(const QString& startExpr, const
 
 }
 
+GlslExpressionHighlight::~GlslExpressionHighlight()
+{
+
+}
+
 void GlslExpressionHighlight::processSyntax(const QString& word, EWGlslSyntaxHighlighter* highlighter)
 {
     if(!word.contains(startExpression))

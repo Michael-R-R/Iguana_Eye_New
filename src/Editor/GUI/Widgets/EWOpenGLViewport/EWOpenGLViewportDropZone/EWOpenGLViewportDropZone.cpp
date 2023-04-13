@@ -23,6 +23,11 @@ void EWOpenGLViewportDropZone::startup()
     glWidget->installEventFilter(this);
 }
 
+void EWOpenGLViewportDropZone::shutdown()
+{
+
+}
+
 bool EWOpenGLViewportDropZone::eventFilter(QObject* watched, QEvent* event)
 {
     checkEvent(event);

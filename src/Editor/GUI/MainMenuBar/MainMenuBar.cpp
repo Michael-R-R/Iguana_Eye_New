@@ -22,6 +22,11 @@ void MainMenuBar::startup()
     setupWindowSubMenu();
 }
 
+void MainMenuBar::shutdown()
+{
+
+}
+
 bool MainMenuBar::appendSubMenu(QString title, SubMenu* menu)
 {
     if(doesExist(title)) { return false; }

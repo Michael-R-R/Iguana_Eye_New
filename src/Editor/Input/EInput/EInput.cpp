@@ -3,12 +3,22 @@
 EInput::EInput(QObject* parent) :
     QObject(parent)
 {
-    EInput::setupInputContainer();
+
 }
 
 EInput::~EInput()
 {
 
+}
+
+void EInput::startup()
+{
+    setupInputContainer();
+}
+
+void EInput::shutdown()
+{
+    inputContainer.clear();
 }
 
 void EInput::setupInputContainer()

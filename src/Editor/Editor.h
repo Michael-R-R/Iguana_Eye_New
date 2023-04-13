@@ -1,12 +1,12 @@
 #pragma once
 
-#include <QObject>
+#include <QWidget>
 
 class EInput;
 class EGUI;
 class EWOpenGLViewportDropZone;
 
-class Editor : public QObject
+class Editor : public QWidget
 {
     Q_OBJECT
 
@@ -15,7 +15,7 @@ class Editor : public QObject
     EWOpenGLViewportDropZone* viewportDropZone;
 
 public:
-    Editor(QObject* parent = nullptr);
+    Editor(QWidget* parent = nullptr);
     ~Editor();
 
     void startup();

@@ -13,7 +13,7 @@ class GlslExpressionHighlight : public SyntaxHighlightBehaviour
 
 public:
     GlslExpressionHighlight(const QString& startExpr, const QString& endExpr, const QColor& color);
-    ~GlslExpressionHighlight() {}
+    ~GlslExpressionHighlight();
 
     void processSyntax(const QString& word, EWGlslSyntaxHighlighter* highlighter) override;
 

@@ -12,7 +12,7 @@ class GlslCollectionHighlight : public SyntaxHighlightBehaviour
 
 public:
     GlslCollectionHighlight(const QColor& color, const QString& expr, const QString& filePath);
-    ~GlslCollectionHighlight() {}
+    ~GlslCollectionHighlight();
 
     void processSyntax(const QString& word, EWGlslSyntaxHighlighter* highlighter) override;
 

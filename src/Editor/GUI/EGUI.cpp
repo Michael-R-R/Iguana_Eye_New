@@ -1,10 +1,10 @@
 #include "EGUI.h"
 #include "ApplicationWindow.h"
 
-EGUI::EGUI(QObject* parent) :
-    QObject(parent),
-    mainMenuBar(new MainMenuBar()),
-    statusBar(new StatusBar()),
+EGUI::EGUI(QWidget* parent) :
+    QWidget(parent),
+    mainMenuBar(new MainMenuBar(this)),
+    statusBar(new StatusBar(this)),
     windowManager(new EWindowManager(this))
 {
 
@@ -21,6 +21,11 @@ void EGUI::startup()
     setupWindowManager();
     setupStatusBar();
     setupMainMenuBar();
+}
+
+void EGUI::shutdown()
+{
+
 }
 
 void EGUI::toggleUi(bool val)

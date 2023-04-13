@@ -13,7 +13,7 @@ protected:
 
 public:
     SyntaxHighlightBehaviour(const QColor& color);
-    ~SyntaxHighlightBehaviour() {}
+    virtual ~SyntaxHighlightBehaviour();
 
     virtual void processSyntax(const QString& word, EWGlslSyntaxHighlighter* highlighter) = 0;
 };

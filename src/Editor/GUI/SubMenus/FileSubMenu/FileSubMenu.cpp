@@ -3,15 +3,15 @@
 #include "Editor.h"
 #include "EGUI.h"
 #include "EInput.h"
+#include "IEGame.h"
+#include "IEGamePlayState.h"
+#include "IEGameStopState.h"
 #include "NewGameFileAction.h"
 #include "OpenGameFileAction.h"
 #include "SaveGameFileAction.h"
 #include "SaveAsGameFileAction.h"
 #include "ToggleWindowAction.h"
 #include "QuitAppAction.h"
-#include "IEGame.h"
-#include "IEGamePlayState.h"
-#include "IEGameStopState.h"
 
 FileSubMenu::FileSubMenu(QWidget* parent) :
     SubMenu("File", parent)

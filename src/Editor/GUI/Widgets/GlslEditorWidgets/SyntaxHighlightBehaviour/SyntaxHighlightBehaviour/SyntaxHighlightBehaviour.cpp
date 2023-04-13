@@ -7,3 +7,8 @@ SyntaxHighlightBehaviour::SyntaxHighlightBehaviour(const QColor& color) :
     textFormat.setFontWeight(QFont::Bold);
     textFormat.setForeground(QBrush(textColor));
 }
+
+SyntaxHighlightBehaviour::~SyntaxHighlightBehaviour()
+{
+
+}

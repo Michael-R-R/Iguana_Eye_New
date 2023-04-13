@@ -11,6 +11,11 @@ GlslCollectionHighlight::GlslCollectionHighlight(const QColor& color, const QStr
     openSyntaxFile(filePath);
 }
 
+GlslCollectionHighlight::~GlslCollectionHighlight()
+{
+
+}
+
 void GlslCollectionHighlight::processSyntax(const QString& word, EWGlslSyntaxHighlighter* highlighter)
 {
     QRegularExpressionMatchIterator it = expression.globalMatch(word);

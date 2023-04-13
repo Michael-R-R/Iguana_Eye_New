@@ -15,6 +15,7 @@ public:
     ~MainMenuBar();
 
     void startup();
+    void shutdown();
 
     bool appendSubMenu(QString title, SubMenu* menu);
     bool removeSubMenu(const QString& title);
