@@ -66,10 +66,10 @@ void IEBaseCollider::create(const physx::PxTransform& t, const physx::PxGeometry
     auto* game = ApplicationWindow::instance().getGame();
     auto& engine = game->getPhysicsEngine();
 
-    auto* p = engine.getPxPhysics();
-    auto* m = engine.getPxMaterial();
+    auto& p = engine.getPxPhysics();
+    auto& m = engine.getPxMaterial();
 
-    auto* actor = physx::PxCreateStatic(*p, t, g, *m);
+    auto* actor = physx::PxCreateStatic(p, t, g, m);
 
     rigidActor = actor;
     rigidActor->userData = (void*)(size_t)attachedId;

@@ -30,7 +30,7 @@ IEEntity IEEntityManager::create()
         }
     }
 
-    entityMap[entity] = QSet<QString>();
+    entityMap[entity] = QSet<size_t>();
 
     return entity;
 }
@@ -46,7 +46,7 @@ bool IEEntityManager::remove(const IEEntity key)
     return true;
 }
 
-bool IEEntityManager::attachComponent(const IEEntity& key, const QString& component)
+bool IEEntityManager::attachComponent(const IEEntity& key, const size_t& component)
 {
     if(hasComponent(key, component))
         return false;
@@ -56,7 +56,7 @@ bool IEEntityManager::attachComponent(const IEEntity& key, const QString& compon
     return true;
 }
 
-bool IEEntityManager::detachComponent(const IEEntity& key, const QString& component)
+bool IEEntityManager::detachComponent(const IEEntity& key, const size_t& component)
 {
     if(!hasComponent(key, component))
         return false;
@@ -71,7 +71,7 @@ bool IEEntityManager::doesEntityExist(const IEEntity& key) const
     return entityMap.contains(key);
 }
 
-bool IEEntityManager::hasComponent(const IEEntity& key, const QString& component) const
+bool IEEntityManager::hasComponent(const IEEntity& key, const size_t& component) const
 {
     if(!doesEntityExist(key))
         return false;
@@ -79,10 +79,10 @@ bool IEEntityManager::hasComponent(const IEEntity& key, const QString& component
     return entityMap[key].contains(component);
 }
 
-QSet<QString> IEEntityManager::getAttachComponents(const IEEntity& key) const
+QSet<size_t> IEEntityManager::getAttachedComponents(const IEEntity& key) const
 {
     if(!doesEntityExist(key))
-        return QSet<QString>();
+        return QSet<size_t>();
 
     return entityMap[key];
 }

@@ -107,6 +107,9 @@ INCLUDEPATH += $$PWD/src/Editor/Input \
     $$PWD/src/Editor/Input/InputKey \
     $$PWD/src/Editor/Input/InputContainer \
 
+INCLUDEPATH += $$PWD/src/Editor/Physics \
+    $$PWD/src/Editor/Physics/EPhysicsEngine \
+
 INCLUDEPATH += $$PWD/src/Editor/Renderer \
     $$PWD/src/Editor/Renderer/ERenderEngine \
 

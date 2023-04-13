@@ -4,17 +4,17 @@
 #include <QSharedPointer>
 
 #include "IEGameSystem.h"
+#include "IEEntityManager.h"
 #include "IEEntity.h"
 
 class IEGame;
-class IEEntityManager;
 class IEECSSystem;
 
 class IEECS : public IEGameSystem
 {
     Q_OBJECT
 
-    QMap<QString, QSharedPointer<IEECSSystem>> systems;
+    QMap<size_t, QSharedPointer<IEECSSystem>> systems;
     QSharedPointer<IEEntityManager> entityManager;
 
 public:
@@ -28,30 +28,63 @@ public:
 
     IEEntity create();
     void remove(const IEEntity entity);
-    int attachComponent(const IEEntity entity, const QString& component);
-    bool detachComponent(const IEEntity entity, const QString& component);
-    bool hasComponent(const IEEntity entity, const QString& component) const;
-    bool doesSystemExist(const QString& component) const;
+
     int entityCount() const;
     void clearSystems();
 
 private:
     void initSystems();
+    bool detachComponent(const IEEntity entity, const size_t& component);
+    bool doesSystemExist(const size_t& component) const;
 
 signals:
     void entityCreated(const IEEntity& entity);
     void entityRemoved(const IEEntity& entity);
-    void componentAttached(const IEEntity& entity, const QString& component);
-    void componentDetached(const IEEntity& entity, const QString& component);
+    void componentAttached(const IEEntity& entity, const size_t& component);
+    void componentDetached(const IEEntity& entity, const size_t& component);
 
 public:
     template<class T>
-    T* getComponent(const QString& component) const
+    int attachComponent(const IEEntity entity)
     {
+        size_t component = typeid(T).hash_code();
+
+        if(!doesSystemExist(component))
+            return -1;
+
+        if(!entityManager->attachComponent(entity, component))
+            return -1;
+
+        emit componentAttached(entity, component);
+
+        return systems[component]->attach(entity);
+    }
+
+    template<class T>
+    bool detachComponent(const IEEntity entity)
+    {
+        size_t component = typeid(T).hash_code();
+
+        return IEECS::detachComponent(entity, component);
+    }
+
+    template<class T>
+    bool hasComponent(const IEEntity entity) const
+    {
+        size_t component = typeid(T).hash_code();
+
+        return entityManager->hasComponent(entity, component);
+    }
+
+    template<class T>
+    T* getComponent() const
+    {
+        size_t component = typeid(T).hash_code();
+
         if(!doesSystemExist(component))
             return nullptr;
 
-        return dynamic_cast<T*>(&(*systems[component]));
+        return static_cast<T*>(&(*systems[component]));
     }
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;

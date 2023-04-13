@@ -76,16 +76,16 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
 
     // --- Create entity and attach components --- //
     auto& ecs = game->getECS();
-    auto* meshSystem = ecs.getComponent<IEECSMeshSystem>("Mesh");
-    auto* materialSystem = ecs.getComponent<IEECSMaterialSystem>("Material");
-    auto* shaderSystem = ecs.getComponent<IEECSShaderSystem>("Shader");
-    auto* renderableSystem = ecs.getComponent<IEECSRenderableSystem>("Renderable");
+    auto* meshSystem = ecs.getComponent<IEECSMeshSystem>();
+    auto* materialSystem = ecs.getComponent<IEECSMaterialSystem>();
+    auto* shaderSystem = ecs.getComponent<IEECSShaderSystem>();
+    auto* renderableSystem = ecs.getComponent<IEECSRenderableSystem>();
 
     IEEntity entity = ecs.create();
-    const int meIndex = ecs.attachComponent(entity, "Mesh");
-    const int maIndex = ecs.attachComponent(entity, "Material");
-    const int sIndex = ecs.attachComponent(entity, "Shader");
-    const int rIndex = ecs.attachComponent(entity, "Renderable");
+    const int meIndex = ecs.attachComponent<IEECSMeshSystem>(entity);
+    const int maIndex = ecs.attachComponent<IEECSMaterialSystem>(entity);
+    const int sIndex = ecs.attachComponent<IEECSShaderSystem>(entity);
+    const int rIndex = ecs.attachComponent<IEECSRenderableSystem>(entity);
 
     meshSystem->setMeshId(meIndex, meshId);
     materialSystem->setMaterialId(maIndex, materialId);

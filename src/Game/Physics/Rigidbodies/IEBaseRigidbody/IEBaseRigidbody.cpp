@@ -101,10 +101,10 @@ void IEBaseRigidbody::createAsStatic(const physx::PxTransform& t,
     auto* game = ApplicationWindow::instance().getGame();
     auto& engine = game->getPhysicsEngine();
 
-    auto* p = engine.getPxPhysics();
-    auto* m = engine.getPxMaterial();
+    auto& p = engine.getPxPhysics();
+    auto& m = engine.getPxMaterial();
 
-    auto* actor = physx::PxCreateStatic(*p, t, geometry, *m);
+    auto* actor = physx::PxCreateStatic(p, t, geometry, m);
 
     rigidActor = actor;
     rigidActor->userData = (void*)(size_t)attachedId;
@@ -121,10 +121,10 @@ void IEBaseRigidbody::createAsDynamic(const physx::PxTransform& t,
     auto* game = ApplicationWindow::instance().getGame();
     auto& engine = game->getPhysicsEngine();
 
-    auto* p = engine.getPxPhysics();
-    auto* m = engine.getPxMaterial();
+    auto& p = engine.getPxPhysics();
+    auto& m = engine.getPxMaterial();
 
-    auto* actor = physx::PxCreateDynamic(*p, t, geometry, *m, density);
+    auto* actor = physx::PxCreateDynamic(p, t, geometry, m, density);
     actor->setSleepThreshold(sleepThreshold);
 
     rigidActor = actor;
@@ -142,10 +142,10 @@ void IEBaseRigidbody::createAsKinematic(const physx::PxTransform& t,
     auto* game = ApplicationWindow::instance().getGame();
     auto& engine = game->getPhysicsEngine();
 
-    auto* p = engine.getPxPhysics();
-    auto* m = engine.getPxMaterial();
+    auto& p = engine.getPxPhysics();
+    auto& m = engine.getPxMaterial();
 
-    auto* actor = physx::PxCreateKinematic(*p, t, geometry, *m, density);
+    auto* actor = physx::PxCreateKinematic(p, t, geometry, m, density);
     actor->setSleepThreshold(sleepThreshold);
 
     rigidActor = actor;

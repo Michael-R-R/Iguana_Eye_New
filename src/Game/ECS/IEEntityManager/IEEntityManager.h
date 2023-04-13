@@ -3,14 +3,13 @@
 #include <QMap>
 #include <QSet>
 #include <QStack>
-#include <QString>
 
 #include "IEEntity.h"
 #include "Serializable.h"
 
 class IEEntityManager : public Serializable
 {
-    QMap<IEEntity, QSet<QString>> entityMap; // <Entity, Attached components>
+    QMap<IEEntity, QSet<size_t>> entityMap; // <Entity, Attached components>
     QStack<int> freeIdStack;
     int nextId;
 
@@ -20,11 +19,11 @@ public:
 
     IEEntity create();
     bool remove(const IEEntity key);
-    bool attachComponent(const IEEntity& key, const QString& component);
-    bool detachComponent(const IEEntity& key, const QString& component);
+    bool attachComponent(const IEEntity& key, const size_t& component);
+    bool detachComponent(const IEEntity& key, const size_t& component);
     bool doesEntityExist(const IEEntity& key) const;
-    bool hasComponent(const IEEntity& key, const QString& component) const;
-    QSet<QString> getAttachComponents(const IEEntity& key) const;
+    bool hasComponent(const IEEntity& key, const size_t& component) const;
+    QSet<size_t> getAttachedComponents(const IEEntity& key) const;
     int count() const;
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;

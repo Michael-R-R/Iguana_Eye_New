@@ -42,8 +42,9 @@ public:
     void removeActorFromScene(physx::PxActor* actor);
     void releaseActor(physx::PxActor* actor);
 
-    physx::PxPhysics* getPxPhysics() const { return pxPhysics; }
-    physx::PxMaterial* getPxMaterial() const { return pxMaterial; }
+    physx::PxDefaultCpuDispatcher& getCpuDispatcher() const { return *pxCpuDispatcher; }
+    physx::PxPhysics& getPxPhysics() const { return *pxPhysics; }
+    physx::PxMaterial& getPxMaterial() const { return *pxMaterial; }
     IESimulationCallback& getSimulationCallback() const { return *simulationCallback; }
 };
 

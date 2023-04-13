@@ -20,7 +20,7 @@ IEGameStopState::IEGameStopState(IEGame& game) :
     time(game.getTime()),
     input(game.getInput()),
     gRenderEngine(game.getRenderEngine()),
-    transformSystem(game.getECS().getComponent<IEECSTransformSystem>("Transform")),
+    transformSystem(game.getECS().getComponent<IEECSTransformSystem>()),
     ecsUpdateEvent(QSharedPointer<ECSOnUpdateEvent>::create(&game.getECS())),
     eRenderEngine(nullptr),
     eCamera(nullptr)

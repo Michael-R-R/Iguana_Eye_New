@@ -17,17 +17,17 @@ ECSOnUpdateEvent::ECSOnUpdateEvent(IEECS* ecs) :
     transform(nullptr), mesh(nullptr), material(nullptr),
     shader(nullptr), renderable(nullptr)
 {
-    name = ecs->getComponent<IEECSNameSystem>("Name");
-    hierarchy = ecs->getComponent<IEECSHierarchySystem>("Hierarchy");
-    input = ecs->getComponent<IEECSInputSystem>("Input");
-    script = ecs->getComponent<IEECSScriptSystem>("Script");
-    rigidbody3d = ecs->getComponent<IEECSRigidbody3DSystem>("Rigidbody3D");
-    transform = ecs->getComponent<IEECSTransformSystem>("Transform");
-    camera = ecs->getComponent<IEECSCameraSystem>("Camera");
-    mesh = ecs->getComponent<IEECSMeshSystem>("Mesh");
-    material = ecs->getComponent<IEECSMaterialSystem>("Material");
-    shader = ecs->getComponent<IEECSShaderSystem>("Shader");
-    renderable = ecs->getComponent<IEECSRenderableSystem>("Renderable");
+    name = ecs->getComponent<IEECSNameSystem>();
+    hierarchy = ecs->getComponent<IEECSHierarchySystem>();
+    input = ecs->getComponent<IEECSInputSystem>();
+    script = ecs->getComponent<IEECSScriptSystem>();
+    rigidbody3d = ecs->getComponent<IEECSRigidbody3DSystem>();
+    transform = ecs->getComponent<IEECSTransformSystem>();
+    camera = ecs->getComponent<IEECSCameraSystem>();
+    mesh = ecs->getComponent<IEECSMeshSystem>();
+    material = ecs->getComponent<IEECSMaterialSystem>();
+    shader = ecs->getComponent<IEECSShaderSystem>();
+    renderable = ecs->getComponent<IEECSRenderableSystem>();
 }
 
 ECSOnUpdateEvent::~ECSOnUpdateEvent()

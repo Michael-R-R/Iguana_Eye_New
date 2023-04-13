@@ -18,10 +18,10 @@ IEGamePlayState::IEGamePlayState(IEGame& game) :
     time(game.getTime()),
     physicsEngine(game.getPhysicsEngine()),
     gRenderEngine(game.getRenderEngine()),
-    scriptSystem(game.getECS().getComponent<IEECSScriptSystem>("Script")),
-    rigidbody3dSystem(game.getECS().getComponent<IEECSRigidbody3DSystem>("Rigidbody3D")),
-    transformSystem(game.getECS().getComponent<IEECSTransformSystem>("Transform")),
-    cameraSystem(game.getECS().getComponent<IEECSCameraSystem>("Camera")),
+    scriptSystem(game.getECS().getComponent<IEECSScriptSystem>()),
+    rigidbody3dSystem(game.getECS().getComponent<IEECSRigidbody3DSystem>()),
+    transformSystem(game.getECS().getComponent<IEECSTransformSystem>()),
+    cameraSystem(game.getECS().getComponent<IEECSCameraSystem>()),
     ecsUpdateEvent(QSharedPointer<ECSOnUpdateEvent>::create(&game.getECS()))
 {
 

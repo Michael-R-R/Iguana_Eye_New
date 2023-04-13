@@ -44,25 +44,25 @@ void LuaIEECS::addToLua(IEECS* val, sol::state& lua, sol::table& gameTable)
 
 IEECSNameSystem* LuaIEECS::nameComponent()
 {
-    return ecs->getComponent<IEECSNameSystem>("Name");
+    return ecs->getComponent<IEECSNameSystem>();
 }
 
 IEECSInputSystem* LuaIEECS::inputComponent()
 {
-    return ecs->getComponent<IEECSInputSystem>("Input");
+    return ecs->getComponent<IEECSInputSystem>();
 }
 
 IEECSScriptSystem* LuaIEECS::scriptComponent()
 {
-    return ecs->getComponent<IEECSScriptSystem>("Script");
+    return ecs->getComponent<IEECSScriptSystem>();
 }
 
 IEECSTransformSystem* LuaIEECS::transformComponent()
 {
-    return ecs->getComponent<IEECSTransformSystem>("Transform");
+    return ecs->getComponent<IEECSTransformSystem>();
 }
 
 IEECSCameraSystem* LuaIEECS::cameraComponent()
 {
-    return ecs->getComponent<IEECSCameraSystem>("Camera");
+    return ecs->getComponent<IEECSCameraSystem>();
 }

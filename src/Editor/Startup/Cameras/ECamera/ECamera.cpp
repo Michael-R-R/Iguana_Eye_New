@@ -56,19 +56,21 @@ void ECamera::updateRotation(IEInput& input, const float dt)
     if(input.isPressed("Right Click"))
     {
         const auto& cursorPos = input.cursorPos();
+        const float x = qFloor(cursorPos.x());
+        const float y = qFloor(cursorPos.y());
 
         if(!isCaptured)
         {
             isCaptured = true;
-            lastX = cursorPos.x();
-            lastY = cursorPos.y();
+            lastX = x;
+            lastY = y;
         }
 
-        float xoffset = cursorPos.x() - lastX;
-        float yoffset = cursorPos.y() - lastY;
+        float xoffset = x - lastX;
+        float yoffset = y - lastY;
 
-        lastX = cursorPos.x();
-        lastY = cursorPos.y();
+        lastX = x;
+        lastY = y;
 
         xoffset = xoffset * (sensitivity * dt);
         yoffset = yoffset * (sensitivity * dt);
@@ -79,11 +81,11 @@ void ECamera::updateRotation(IEInput& input, const float dt)
         if (pitch > 89.0) { pitch = 89.0; }
         else if (pitch < -89.0) { pitch = -89.0; }
 
-        float x = qCos(qDegreesToRadians(yaw)) * qCos(qDegreesToRadians(pitch));
-        float y = qSin(qDegreesToRadians(pitch));
-        float z = qSin(qDegreesToRadians(yaw)) * qCos(qDegreesToRadians(pitch));
+        float rotx = qCos(qDegreesToRadians(yaw)) * qCos(qDegreesToRadians(pitch));
+        float roty = qSin(qDegreesToRadians(pitch));
+        float rotz = qSin(qDegreesToRadians(yaw)) * qCos(qDegreesToRadians(pitch));
 
-        rotation = QVector3D(x, y, z);
+        rotation = QVector3D(rotx, roty, rotz);
     }
     else
     {
