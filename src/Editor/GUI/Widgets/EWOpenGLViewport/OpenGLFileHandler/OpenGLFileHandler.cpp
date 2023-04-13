@@ -1,4 +1,4 @@
-#include "OpenGLFileDropHandler.h"
+#include "OpenGLFileHandler.h"
 #include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScene.h"
@@ -19,19 +19,18 @@
 #include "EGUI.h"
 #include "EWindowManager.h"
 #include "EGlslEditorWindow.h"
-#include <QOpenGLWidget>
 
-OpenGLFileDropHandler::OpenGLFileDropHandler()
+OpenGLFileHandler::OpenGLFileHandler()
 {
 
 }
 
-OpenGLFileDropHandler::~OpenGLFileDropHandler()
+OpenGLFileHandler::~OpenGLFileHandler()
 {
 
 }
 
-void OpenGLFileDropHandler::handle(QOpenGLWidget* glWidget, const QString& path)
+void OpenGLFileHandler::handle(const QString& path)
 {
     if(path.isEmpty())
         return;
@@ -39,14 +38,16 @@ void OpenGLFileDropHandler::handle(QOpenGLWidget* glWidget, const QString& path)
     QString extension = IEFile::extractExtension(path);
 
     if(extension == ".obj")
-        handleObjFile(glWidget, path);
+        handleObjFile(path);
     else if(extension == ".glsl")
         handleGlslFile(path);
 }
 
-void OpenGLFileDropHandler::handleObjFile(QOpenGLWidget* glWidget, const QString& path)
+void OpenGLFileHandler::handleObjFile(const QString& path)
 {
-    glWidget->makeCurrent();
+    auto& application = ApplicationWindow::instance();
+    auto game = application.getGame();
+    game->makeCurrent();
 
     // --- Create or get mesh --- //
     auto& meshManager = IEScene::instance().getMeshManager();
@@ -122,7 +123,7 @@ void OpenGLFileDropHandler::handleObjFile(QOpenGLWidget* glWidget, const QString
     }
 }
 
-void OpenGLFileDropHandler::handleGlslFile(const QString& path)
+void OpenGLFileHandler::handleGlslFile(const QString& path)
 {
     auto& application = ApplicationWindow::instance();
     auto editor = application.getEditor();

@@ -1,14 +1,17 @@
 #include "EWOpenGLViewportDropZone.h"
 #include "ApplicationWindow.h"
 #include "IEGame.h"
-#include "OpenGLFileDropHandler.h"
+#include "OpenGLFileHandler.h"
 #include <QFileInfo>
 #include <QOpenGLWidget>
 
 EWOpenGLViewportDropZone::EWOpenGLViewportDropZone(QWidget* parent) :
-    QWidget(parent),
-    glWidget(nullptr),
-    fileHandler(QSharedPointer<OpenGLFileDropHandler>::create())
+    QWidget(parent)
+{
+
+}
+
+EWOpenGLViewportDropZone::~EWOpenGLViewportDropZone()
 {
 
 }
@@ -16,11 +19,10 @@ EWOpenGLViewportDropZone::EWOpenGLViewportDropZone(QWidget* parent) :
 void EWOpenGLViewportDropZone::startup()
 {
     auto& application = ApplicationWindow::instance();
-    auto game = application.getGame();
+    auto* game = application.getGame();
 
-    glWidget = &(*game);
-    glWidget->setAcceptDrops(true);
-    glWidget->installEventFilter(this);
+    game->setAcceptDrops(true);
+    game->installEventFilter(this);
 }
 
 void EWOpenGLViewportDropZone::shutdown()
@@ -56,9 +58,11 @@ void EWOpenGLViewportDropZone::dropEvent(QDropEvent* event)
     if(!data->hasUrls())
         return;
 
+    OpenGLFileHandler glFileHandler;
+
     foreach(auto url, data->urls())
     {
-        fileHandler->handle(glWidget, url.toLocalFile());
+        glFileHandler.handle(url.toLocalFile());
     }
 }
 

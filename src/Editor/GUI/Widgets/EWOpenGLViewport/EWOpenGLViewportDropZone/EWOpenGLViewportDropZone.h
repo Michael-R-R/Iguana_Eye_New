@@ -6,19 +6,13 @@
 #include <QMimeData>
 #include <QSharedPointer>
 
-class QOpenGLWidget;
-class OpenGLFileDropHandler;
-
 class EWOpenGLViewportDropZone : public QWidget
 {
     Q_OBJECT
 
-    QOpenGLWidget* glWidget;
-    QSharedPointer<OpenGLFileDropHandler> fileHandler;
-
 public:
     EWOpenGLViewportDropZone(QWidget* parent = nullptr);
-    ~EWOpenGLViewportDropZone() {}
+    ~EWOpenGLViewportDropZone();
 
     void startup();
     void shutdown();

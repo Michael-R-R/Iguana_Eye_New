@@ -1,4 +1,5 @@
 #include "EWFileExplorerTreeView.h"
+#include "OpenGLFileHandler.h"
 
 EWFileExplorerTreeView::EWFileExplorerTreeView(QFileSystemModel* model, QWidget* parent) :
     QTreeView(parent),
@@ -33,11 +34,16 @@ QString EWFileExplorerTreeView::getCurrentDirectory()
 void EWFileExplorerTreeView::onDoubleClicked(QModelIndex index)
 {
     QFileInfo info(fileModel->filePath(index));
-    if(!info.isDir())
-        return;
+    if(info.isDir())
+    {
+        this->expand(index);
+        this->clearSelection();
 
-    this->expand(index);
-    this->clearSelection();
-
-    emit folderDoubleClicked(info.filePath());
+        emit folderDoubleClicked(info.filePath());
+    }
+    else
+    {
+        OpenGLFileHandler fileHandler;
+        fileHandler.handle(info.absoluteFilePath());
+    }
 }

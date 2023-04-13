@@ -60,7 +60,7 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportDropZone \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportInput \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportTime \
-    $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/OpenGLFileDropHandler \
+    $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/OpenGLFileHandler \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets \
     $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWDirectoryButton \

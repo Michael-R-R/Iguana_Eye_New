@@ -1,4 +1,5 @@
 #include "EWFileExplorerListView.h"
+#include "OpenGLFileHandler.h"
 
 EWFileExplorerListView::EWFileExplorerListView(QFileSystemModel* model, QWidget* parent) :
     QListView(parent),
@@ -31,12 +32,17 @@ QString EWFileExplorerListView::getCurrentDirectory()
 void EWFileExplorerListView::onDoubleClicked(QModelIndex index)
 {
     QFileInfo info(fileModel->filePath(index));
-    if(!info.isDir())
-        return;
+    if(info.isDir())
+    {
+        this->setRootIndex(index);
 
-    this->setRootIndex(index);
+        emit folderDoubleClicked(info.filePath());
 
-    emit folderDoubleClicked(info.filePath());
-
-    this->clearSelection();
+        this->clearSelection();
+    }
+    else
+    {
+        OpenGLFileHandler fileHandler;
+        fileHandler.handle(info.absoluteFilePath());
+    }
 }
