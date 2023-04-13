@@ -14,7 +14,7 @@ public:
     IEScript();
     IEScript(const QString& path);
     IEScript(const IEScript&) = delete;
-    ~IEScript();
+    virtual ~IEScript();
 
     bool operator==(const IEScript& other) { return IEResource::operator==(other); }
     bool operator!=(const IEScript& other) { return IEResource::operator!=(other); }

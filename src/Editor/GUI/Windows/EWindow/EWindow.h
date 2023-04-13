@@ -13,7 +13,7 @@ class EWindow : public QDockWidget
 
 public:
     EWindow(QString title, QWidget* parent = nullptr);
-    ~EWindow();
+    virtual ~EWindow();
 
     virtual void startup() = 0;
 

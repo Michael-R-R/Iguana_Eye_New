@@ -9,6 +9,6 @@ class BaseAction : public QAction
 
 public:
     BaseAction(QString title, InputKey& shortcut, QObject* parent = nullptr);
-    ~BaseAction();
+    virtual ~BaseAction();
 };
 

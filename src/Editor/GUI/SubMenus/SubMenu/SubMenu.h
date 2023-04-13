@@ -11,7 +11,7 @@ class SubMenu : public QMenu
 
 public:
     SubMenu(QString title, QWidget* parent = nullptr);
-    ~SubMenu();
+    virtual ~SubMenu();
 
     bool appendAction(const QString title, QAction* action);
     bool removeAction(const QString& title);

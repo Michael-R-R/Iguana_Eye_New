@@ -10,7 +10,7 @@ protected:
 
 public:
     EWFileExplorerView(QFileSystemModel* model);
-    ~EWFileExplorerView();
+    virtual ~EWFileExplorerView();
 
     virtual void startup(const QModelIndex rootIndex) = 0;
     virtual QString getCurrentDirectory() = 0;

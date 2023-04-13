@@ -7,6 +7,11 @@ EFileExplorerWindow::EFileExplorerWindow(QWidget* parent) :
     this->setWidget(fileExplWidget);
 }
 
+EFileExplorerWindow::~EFileExplorerWindow()
+{
+
+}
+
 void EFileExplorerWindow::startup()
 {
     fileExplWidget->startup();

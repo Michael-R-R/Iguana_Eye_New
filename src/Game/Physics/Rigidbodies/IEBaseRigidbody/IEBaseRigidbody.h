@@ -35,7 +35,7 @@ public:
                     const float d = 0.0f,
                     const float st = 0.0f);
     IEBaseRigidbody(const IEBaseRigidbody&) = delete;
-    ~IEBaseRigidbody();
+    virtual ~IEBaseRigidbody();
 
     virtual void create(const physx::PxTransform&) {}
 

@@ -10,7 +10,7 @@ class EFileExplorerWindow : public EWindow
 
 public:
     EFileExplorerWindow(QWidget* parent = nullptr);
-    ~EFileExplorerWindow() {}
+    ~EFileExplorerWindow();
 
     void startup() override;
 };

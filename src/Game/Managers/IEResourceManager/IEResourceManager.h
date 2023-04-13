@@ -18,7 +18,7 @@ public:
 
     }
 
-    ~IEResourceManager()
+    virtual ~IEResourceManager()
     {
 
     }

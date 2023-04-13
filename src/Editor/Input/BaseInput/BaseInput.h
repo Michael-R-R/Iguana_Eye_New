@@ -9,7 +9,7 @@ protected:
 
 public:
     BaseInput();
-    ~BaseInput();
+    virtual ~BaseInput();
 
     bool updateConfigKey(const QString& key, const int modVal, const int keyVal);
     QString getKeyName(const int mod, const int key) const;

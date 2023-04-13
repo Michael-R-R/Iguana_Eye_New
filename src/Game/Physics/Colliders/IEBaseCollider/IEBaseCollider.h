@@ -23,7 +23,7 @@ public:
     IEBaseCollider();
     IEBaseCollider(ColliderShape shape,
                    const int id);
-    ~IEBaseCollider();
+    virtual ~IEBaseCollider();
 
     virtual void create(const physx::PxTransform&) {}
 

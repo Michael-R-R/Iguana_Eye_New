@@ -31,7 +31,7 @@ public:
 
     }
 
-    ~IEBuffer()
+    virtual ~IEBuffer()
     {
         if(this->isCreated())
             this->destroy();

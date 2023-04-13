@@ -13,7 +13,7 @@ protected:
 public:
     IEResource();
     IEResource(const QString& path);
-    ~IEResource();
+    virtual ~IEResource();
 
     bool operator==(const IEResource& other) { return (this->id == other.id); }
     bool operator!=(const IEResource& other) { return (this->id != other.id); }

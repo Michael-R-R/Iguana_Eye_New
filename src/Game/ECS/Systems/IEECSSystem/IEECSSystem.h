@@ -16,7 +16,7 @@ protected:
 
 public:
     IEECSSystem();
-    ~IEECSSystem();
+    virtual ~IEECSSystem();
 
     virtual int attach(const IEEntity entity) = 0;
     virtual bool detach(const IEEntity entity) = 0;
