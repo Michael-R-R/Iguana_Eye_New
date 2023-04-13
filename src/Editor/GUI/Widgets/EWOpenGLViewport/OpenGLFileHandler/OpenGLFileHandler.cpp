@@ -128,8 +128,8 @@ void OpenGLFileHandler::handleGlslFile(const QString& path)
     auto& application = ApplicationWindow::instance();
     auto editor = application.getEditor();
     auto* ui = editor->getUi();
-    auto* windowManager = ui->getWindowManager();
-    auto* glslWindow = static_cast<EGlslEditorWindow*>(windowManager->value("GLSL Editor"));
+    auto* windows = ui->getWindowManager();
+    auto* glslWindow = windows->findWindow<EGlslEditorWindow>();
     if(!glslWindow)
         return;
 

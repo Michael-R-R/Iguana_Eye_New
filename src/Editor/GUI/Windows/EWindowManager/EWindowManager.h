@@ -17,10 +17,9 @@ public:
 
     void showAll();
     void hideAll();
-
+    EWindow* value(const QString &title) const;
     bool appendWindow(const QString title, EWindow* window);
     bool removeWindow(const QString& title);
-    EWindow* value(const QString& title) const;
     bool doesExist(const QString& title) const;
 
     void clear();
@@ -30,5 +29,18 @@ private:
     void setupGlslEditorWindow();
     void setupFileExplorerWindow();
     void setupMessageLogWindow();
+
+public:
+    template<class T>
+    T* findWindow() const
+    {
+        for(auto& i : windowCollection)
+        {
+            if(typeid(*i) == typeid(T))
+                return static_cast<T*>(&(*i));
+        }
+
+        return nullptr;
+    }
 };
 

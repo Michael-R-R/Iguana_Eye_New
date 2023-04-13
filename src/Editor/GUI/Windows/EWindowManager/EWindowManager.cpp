@@ -41,6 +41,14 @@ void EWindowManager::hideAll()
     }
 }
 
+EWindow* EWindowManager::value(const QString& title) const
+{
+    if(!doesExist(title))
+        return nullptr;
+
+    return &(*windowCollection[title]);
+}
+
 bool EWindowManager::appendWindow(const QString title, EWindow* window)
 {
     if(doesExist(title)) { return false; }
@@ -57,12 +65,6 @@ bool EWindowManager::removeWindow(const QString& title)
     delete temp;
 
     return true;
-}
-
-EWindow* EWindowManager::value(const QString& title) const
-{
-    if(!doesExist(title)) { return nullptr; }
-    return windowCollection[title];
 }
 
 bool EWindowManager::doesExist(const QString& title) const

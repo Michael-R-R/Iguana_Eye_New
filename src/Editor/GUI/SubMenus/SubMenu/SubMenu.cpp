@@ -36,16 +36,18 @@ bool SubMenu::doesExist(const QString& title)
     return (actionCollection.find(title) != actionCollection.end());
 }
 
-QAction* SubMenu::getAction(const QString& title)
-{
-    if(!doesExist(title)) { return nullptr; }
-    return actionCollection[title];
-}
-
 void SubMenu::setAllEnabled(bool val)
 {
     for(auto& i : actionCollection)
     {
         i->setEnabled(val);
     }
+}
+
+QAction* SubMenu::getAction(const QString& title)
+{
+    if(!doesExist(title))
+        return nullptr;
+
+    return actionCollection[title];
 }

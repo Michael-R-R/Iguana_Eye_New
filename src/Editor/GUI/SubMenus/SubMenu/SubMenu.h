@@ -16,9 +16,22 @@ public:
     bool appendAction(const QString title, QAction* action);
     bool removeAction(const QString& title);
     bool doesExist(const QString& title);
-
+    void setAllEnabled(bool val);
     QAction* getAction(const QString& title);
 
-    void setAllEnabled(bool val);
+
+    template<class T>
+    T* findAction()
+    {
+        for(auto& i : actionCollection)
+        {
+            if(typeid(*i) == typeid(T))
+            {
+                return static_cast<T*>(&(*i));
+            }
+        }
+
+        return nullptr;
+    }
 };
 
