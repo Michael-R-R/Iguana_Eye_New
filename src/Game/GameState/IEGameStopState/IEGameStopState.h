@@ -12,6 +12,7 @@ class IEInput;
 class IERenderEngine;
 class IEECSTransformSystem;
 class ECSOnUpdateEvent;
+class EPhysicsEngine;
 class ERenderEngine;
 class ECamera;
 
@@ -25,6 +26,7 @@ class IEGameStopState : public IEGameState
     IEECSTransformSystem* transformSystem;
     QSharedPointer<ECSOnUpdateEvent> ecsUpdateEvent;
 
+    QSharedPointer<EPhysicsEngine> ePhysicsEngine;
     QSharedPointer<ERenderEngine> eRenderEngine;
     QSharedPointer<ECamera> eCamera;
 

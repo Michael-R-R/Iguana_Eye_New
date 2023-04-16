@@ -149,9 +149,9 @@ QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
     game.makeCurrent();
 
     in >> *game.time
-        >> *game.input
-        >> *game.scene
-        >> *game.ecs;
+       >> *game.input
+       >> *game.scene
+       >> *game.ecs;
 
     return in;
 }

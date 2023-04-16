@@ -54,6 +54,7 @@ public:
     const QVector4D& getRotation(const int index) const;
     const QVector3D& getScale(const int index) const;
     const QMatrix4x4& getTransform(const int index) const;
+    const Data& getData() const { return data; }
 
     void setPosition(const int index, const QVector3D& val);
     void setRotation(const int index, const QVector3D& val);

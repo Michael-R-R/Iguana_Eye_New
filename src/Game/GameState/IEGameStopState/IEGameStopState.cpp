@@ -7,9 +7,10 @@
 #include "IETime.h"
 #include "IEInput.h"
 #include "IERenderEngine.h"
-#include "ERenderEngine.h"
 #include "IEECSTransformSystem.h"
 #include "ECSOnUpdateEvent.h"
+#include "EPhysicsEngine.h"
+#include "ERenderEngine.h"
 #include "ECamera.h"
 #include "IEFile.h"
 #include "IESerialize.h"
@@ -22,6 +23,7 @@ IEGameStopState::IEGameStopState(IEGame& game) :
     gRenderEngine(game.getRenderEngine()),
     transformSystem(game.getECS().getComponent<IEECSTransformSystem>()),
     ecsUpdateEvent(QSharedPointer<ECSOnUpdateEvent>::create(&game.getECS())),
+    ePhysicsEngine(nullptr),
     eRenderEngine(nullptr),
     eCamera(nullptr)
 {
@@ -35,10 +37,13 @@ IEGameStopState::~IEGameStopState()
 
 void IEGameStopState::enter(IEGame& game)
 {
+    ePhysicsEngine = QSharedPointer<EPhysicsEngine>::create();
     eRenderEngine = QSharedPointer<ERenderEngine>::create();
     eCamera = QSharedPointer<ECamera>::create();
 
     deserializeGameStates(game);
+
+    ePhysicsEngine->startup(game);
 
     IEGameState::onResize(ApplicationProperties::viewportDimensions);
 }
@@ -46,14 +51,17 @@ void IEGameStopState::enter(IEGame& game)
 void IEGameStopState::exit(IEGame& game)
 {
     serializeGameStates(game);
+
+    ePhysicsEngine->shutdown();
 }
 
 void IEGameStopState::onUpdateFrame()
 {
     const float dt = time.getDeltaTime();
 
-    transformSystem->onUpdateFrame(&(*ecsUpdateEvent));
     eCamera->update(input, dt);
+    transformSystem->onUpdateFrame(&(*ecsUpdateEvent));
+    ePhysicsEngine->onUpdateFrame(input, *eCamera);
 }
 
 void IEGameStopState::onRenderFrame()

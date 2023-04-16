@@ -35,6 +35,10 @@ QDataStream& IEBoxRigidbody::serialize(QDataStream& out, const Serializable& obj
 
     const IEBoxRigidbody& body = static_cast<const IEBoxRigidbody&>(obj);
 
+    physx::PxVec3 p = body.getGlobalPos();
+    physx::PxQuat q = body.getGlobalQuat();
+    out << p.x << p.y << p.z;
+    out << q.x << q.y << q.z << q.w;
     out << body.extentX << body.extentY << body.extentZ;
 
     return out;

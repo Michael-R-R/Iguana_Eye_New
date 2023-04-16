@@ -18,10 +18,7 @@ class IEECSColliderSystem : public IEECSSystem
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entity;
-
-            int size = data.collider.size();
-            out << size;
+            out << data.entity << (int)data.collider.size();
 
             for(auto& i : data.collider)
             {

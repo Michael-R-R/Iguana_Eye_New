@@ -28,7 +28,16 @@ void IEPlaneRigidbody::create(const physx::PxTransform& t)
 
 QDataStream& IEPlaneRigidbody::serialize(QDataStream& out, const Serializable& obj) const
 {
-    return IEBaseRigidbody::serialize(out, obj);
+    IEBaseRigidbody::serialize(out, obj);
+
+    const IEPlaneRigidbody& body = static_cast<const IEPlaneRigidbody&>(obj);
+
+    physx::PxVec3 p = body.getGlobalPos();
+    physx::PxQuat q = body.getGlobalQuat();
+    out << p.x << p.y << p.z;
+    out << q.x << q.y << q.z << q.w;
+
+    return out;
 }
 
 QDataStream& IEPlaneRigidbody::deserialize(QDataStream& in, Serializable& obj)

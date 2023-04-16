@@ -28,7 +28,6 @@ public:
 
     IEEntity create();
     void remove(const IEEntity entity);
-
     int entityCount() const;
     void clearSystems();
 

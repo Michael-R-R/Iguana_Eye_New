@@ -34,6 +34,10 @@ QDataStream& IEBoxCollider::serialize(QDataStream& out, const Serializable& obj)
 
     const IEBoxCollider& collider = static_cast<const IEBoxCollider&>(obj);
 
+    physx::PxVec3 p = collider.getGlobalPos();
+    physx::PxQuat q = collider.getGlobalQuat();
+    out << p.x << p.y << p.z;
+    out << q.x << q.y << q.z << q.w;
     out << collider.extentX << collider.extentY << collider.extentZ;
 
     return out;

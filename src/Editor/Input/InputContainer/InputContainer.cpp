@@ -116,16 +116,16 @@ QDataStream& InputContainer::serialize(QDataStream& out, const Serializable& obj
 QDataStream& InputContainer::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& container = static_cast<InputContainer&>(obj);
+    container.clear();
 
     int size = 0;
     in >> size;
 
-    container.clear();
+    QString key = "";
+    InputKey value = InputKey();
+
     for(int i = 0; i < size; i++)
     {
-        QString key = "";
-        InputKey value = InputKey();
-
         in >> key >> value;
 
         container.keys[key] = value;

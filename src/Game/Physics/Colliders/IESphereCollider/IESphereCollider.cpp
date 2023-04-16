@@ -32,6 +32,10 @@ QDataStream& IESphereCollider::serialize(QDataStream& out, const Serializable& o
 
     const IESphereCollider& collider = static_cast<const IESphereCollider&>(obj);
 
+    physx::PxVec3 p = collider.getGlobalPos();
+    physx::PxQuat q = collider.getGlobalQuat();
+    out << p.x << p.y << p.z;
+    out << q.x << q.y << q.z << q.w;
     out << collider.radius;
 
     return out;

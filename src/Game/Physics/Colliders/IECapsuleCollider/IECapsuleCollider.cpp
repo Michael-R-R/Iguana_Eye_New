@@ -32,6 +32,10 @@ QDataStream& IECapsuleCollider::serialize(QDataStream& out, const Serializable& 
 
     const IECapsuleCollider& collider = static_cast<const IECapsuleCollider&>(obj);
 
+    physx::PxVec3 p = collider.getGlobalPos();
+    physx::PxQuat q = collider.getGlobalQuat();
+    out << p.x << p.y << p.z;
+    out << q.x << q.y << q.z << q.w;
     out << collider.radius << collider.halfHeight;
 
     return out;

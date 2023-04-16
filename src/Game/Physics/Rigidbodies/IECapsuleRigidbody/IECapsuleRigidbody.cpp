@@ -36,6 +36,10 @@ QDataStream& IECapsuleRigidbody::serialize(QDataStream& out, const Serializable&
 
     const IECapsuleRigidbody& body = static_cast<const IECapsuleRigidbody&>(obj);
 
+    physx::PxVec3 p = body.getGlobalPos();
+    physx::PxQuat q = body.getGlobalQuat();
+    out << p.x << p.y << p.z;
+    out << q.x << q.y << q.z << q.w;
     out << body.radius << body.halfHeight;
 
     return out;

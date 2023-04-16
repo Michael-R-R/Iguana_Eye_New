@@ -8,23 +8,28 @@
 #include "IEEntity.h"
 
 class IEGame;
+class IEInput;
+class ECamera;
 class IEBoxRigidbody;
 
 class EPhysicsEngine
 {
     physx::PxScene* pxScene;
-    physx::PxMaterial* pxMaterial;
+    physx::PxReal raycastDistance;
+    physx::PxQueryFilterData filterFlag;
 
     QMap<IEEntity, QSharedPointer<IEBoxRigidbody>> rigidbodies;
 
 public:
-    EPhysicsEngine(IEGame& game);
+    EPhysicsEngine();
     ~EPhysicsEngine();
 
-    void onUpdateFrame();
+    void startup(IEGame& game);
+    void shutdown();
+    void onUpdateFrame(IEInput& input, ECamera& camera);
 
 private:
-    void setup(IEGame& game);
-    void createRigidbodies();
+    void onInitRigidbodies(IEGame& game);
+    void castRay(IEInput& input, ECamera& camera);
 };
 

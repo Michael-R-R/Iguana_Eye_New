@@ -25,6 +25,9 @@ public:
     void update(IEInput& input, const float dt);
     void updateProjection(const float w, const float h);
 
+    const QVector3D& getPosition() const { return position; }
+    const QVector3D& getRotation() const { return rotation; }
+
 private:
     void updateMovement(IEInput& input, const float dt);
     void updateRotation(IEInput& input, const float dt);

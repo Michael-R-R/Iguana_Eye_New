@@ -27,8 +27,7 @@ IEBaseRigidbody::IEBaseRigidbody(RigidbodyType type,
 
 IEBaseRigidbody::~IEBaseRigidbody()
 {
-    if(rigidActor)
-        rigidActor->release();
+
 }
 
 bool IEBaseRigidbody::wakeup()
@@ -111,8 +110,6 @@ void IEBaseRigidbody::createAsStatic(const physx::PxTransform& t,
     rigidbodyType = RigidbodyType::Static;
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, false);
-
-    engine.addActorToScene(rigidActor);
 }
 
 void IEBaseRigidbody::createAsDynamic(const physx::PxTransform& t,
@@ -132,8 +129,6 @@ void IEBaseRigidbody::createAsDynamic(const physx::PxTransform& t,
     rigidbodyType = RigidbodyType::Dynamic;
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
-
-    engine.addActorToScene(rigidActor);
 }
 
 void IEBaseRigidbody::createAsKinematic(const physx::PxTransform& t,
@@ -153,20 +148,13 @@ void IEBaseRigidbody::createAsKinematic(const physx::PxTransform& t,
     rigidbodyType = RigidbodyType::Kinematic;
 
     rigidActor->setActorFlag(physx::PxActorFlag::eSEND_SLEEP_NOTIFIES, true);
-
-    engine.addActorToScene(rigidActor);
 }
 
 QDataStream& IEBaseRigidbody::serialize(QDataStream& out, const Serializable& obj) const
 {
     const IEBaseRigidbody& body = static_cast<const IEBaseRigidbody&>(obj);
 
-    physx::PxVec3 p = body.getGlobalPos();
-    physx::PxQuat q = body.getGlobalQuat();
-
     out << body.rigidbodyType << body.attachedId << body.density << body.sleepThreshold;
-    out << p.x << p.y << p.z;
-    out << q.x << q.y << q.z << q.w;
 
     return out;
 }

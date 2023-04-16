@@ -26,9 +26,9 @@ class IEECSRigidbody3DSystem : public IEECSSystem
         {
             out << data.entity << (int)data.rigidbody.size();
 
-            for(int i = 0; i < data.rigidbody.size(); i++)
+            for(auto& i : data.rigidbody)
             {
-                out << data.rigidbody[i]->getRigidbodyShape() << *data.rigidbody[i];
+                out << i->getRigidbodyShape() << *i;
             }
 
             return out;

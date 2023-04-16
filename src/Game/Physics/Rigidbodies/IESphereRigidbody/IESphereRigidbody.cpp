@@ -35,6 +35,10 @@ QDataStream& IESphereRigidbody::serialize(QDataStream& out, const Serializable& 
 
     const IESphereRigidbody& body = static_cast<const IESphereRigidbody&>(obj);
 
+    physx::PxVec3 p = body.getGlobalPos();
+    physx::PxQuat q = body.getGlobalQuat();
+    out << p.x << p.y << p.z;
+    out << q.x << q.y << q.z << q.w;
     out << body.radius;
 
     return out;
