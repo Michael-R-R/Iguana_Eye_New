@@ -1,13 +1,9 @@
 #pragma once
 
-#include <QSharedPointer>
-
 #include "IEGameSystem.h"
 #include "IESimulationCallback.h"
 #include "PxPhysics.h"
 #include "PxPhysicsAPI.h"
-
-class GameStartEvent;
 
 class IEPhysicsEngine : public IEGameSystem
 {
@@ -20,7 +16,7 @@ class IEPhysicsEngine : public IEGameSystem
     physx::PxScene* pxScene;
     physx::PxMaterial* pxMaterial;
 
-    QSharedPointer<IESimulationCallback> simulationCallback;
+    IESimulationCallback simulationCallback;
 
     float worldGravity;
 
@@ -28,7 +24,7 @@ class IEPhysicsEngine : public IEGameSystem
     float stepSize;
 
 public:
-    IEPhysicsEngine();
+    IEPhysicsEngine(QObject* parent = nullptr);
     ~IEPhysicsEngine();
 
     void startup(IEGame& game) override;
@@ -45,6 +41,6 @@ public:
     physx::PxDefaultCpuDispatcher& getCpuDispatcher() const { return *pxCpuDispatcher; }
     physx::PxPhysics& getPxPhysics() const { return *pxPhysics; }
     physx::PxMaterial& getPxMaterial() const { return *pxMaterial; }
-    IESimulationCallback& getSimulationCallback() const { return *simulationCallback; }
+    const IESimulationCallback& getSimulationCallback() const { return simulationCallback; }
 };
 

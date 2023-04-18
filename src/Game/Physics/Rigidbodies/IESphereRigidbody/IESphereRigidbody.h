@@ -7,12 +7,13 @@ class IESphereRigidbody : public IEBaseRigidbody
     float radius;
 
 public:
-    IESphereRigidbody();
+    IESphereRigidbody(QObject* parent = nullptr);
     IESphereRigidbody(RigidbodyType type,
                       const int id,
                       const float r,
                       const float d = 0.0f,
-                      const float st = 0.0f);
+                      const float st = 0.0f,
+                      QObject* parent = nullptr);
     ~IESphereRigidbody();
 
     void create(const physx::PxTransform& t) override;

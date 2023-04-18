@@ -72,12 +72,12 @@ class IEECSScriptSystem : public IEECSSystem
     Data data;
 
 public:
-    IEECSScriptSystem();
+    IEECSScriptSystem(QObject* parent = nullptr);
     ~IEECSScriptSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent* event) override;
+    void onUpdateFrame(ECSOnUpdateEvent& event) override;
     void initalize() override;
     void reset() override;
 

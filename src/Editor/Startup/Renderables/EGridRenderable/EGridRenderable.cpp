@@ -7,11 +7,12 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLExtraFunctions>
 
-EGridRenderable::EGridRenderable() :
-    gridMesh(QSharedPointer<EGridMesh>::create()),
-    gridShader(QSharedPointer<EGridShader>::create()),
-    vao(QSharedPointer<QOpenGLVertexArrayObject>::create()),
-    posBuffer(QSharedPointer<IEVertexBuffer<QVector3D>>::create(gridMesh->getPosVertices(), 12, 3, 0, 0, 0))
+EGridRenderable::EGridRenderable(QObject* parent) :
+    IEObject(parent),
+    gridMesh(new EGridMesh(this)),
+    gridShader(new EGridShader(this)),
+    vao(new QOpenGLVertexArrayObject(this)),
+    posBuffer(new IEVertexBuffer<QVector3D>(gridMesh->getPosVertices(), 12, 3, 0, 0, 0, this))
 {
     setup();
 }
@@ -35,7 +36,7 @@ void EGridRenderable::setup()
     posBuffer->release();
 }
 
-void EGridRenderable::draw(QOpenGLExtraFunctions* glFunc, QSharedPointer<IECamera> camera)
+void EGridRenderable::draw(QOpenGLExtraFunctions* glFunc, IECamera* camera)
 {
     gridShader->bind();
     vao->bind();

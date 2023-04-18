@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QSharedPointer>
 #include <QListView>
 
 #include "EWFileExplorerView.h"

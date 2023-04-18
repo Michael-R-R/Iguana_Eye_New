@@ -17,8 +17,8 @@ protected:
     QVector<unsigned> indices;
 
 public:
-    IEMesh();
-    IEMesh(const QString& path);
+    IEMesh(QObject* parent = nullptr);
+    IEMesh(const QString& path, QObject* parent = nullptr);
     IEMesh(const IEMesh&) = delete;
     ~IEMesh();
 

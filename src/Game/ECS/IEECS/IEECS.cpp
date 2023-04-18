@@ -14,9 +14,10 @@
 #include "IEECSShaderSystem.h"
 #include "IEECSRenderableSystem.h"
 
-IEECS::IEECS() :
+IEECS::IEECS(QObject* parent) :
+    IEGameSystem(parent),
     systems(),
-    entityManager(nullptr)
+    entityManager(new IEEntityManager(this))
 {
 
 }
@@ -28,7 +29,6 @@ IEECS::~IEECS()
 
 void IEECS::startup(IEGame&)
 {
-    entityManager = QSharedPointer<IEEntityManager>::create();
     initSystems();
 }
 
@@ -51,6 +51,14 @@ void IEECS::reset(IEGame&)
     for(auto& i : systems)
     {
         i->reset();
+    }
+}
+
+void IEECS::onUpdateFrame(ECSOnUpdateEvent& event)
+{
+    for(auto& i : systems)
+    {
+        i->onUpdateFrame(event);
     }
 }
 
@@ -79,7 +87,7 @@ void IEECS::remove(const IEEntity entity)
     }
 
     // Iterate through the systems, removing the entity from them
-    QMapIterator<size_t, QSharedPointer<IEECSSystem>> it(systems);
+    QMapIterator<size_t, IEECSSystem*> it(systems);
     while(it.hasNext())
     {
         it.next();
@@ -98,23 +106,28 @@ int IEECS::entityCount() const
 
 void IEECS::clearSystems()
 {
+    for(auto* i : systems)
+    {
+        delete i;
+    }
+
     systems.clear();
 }
 
 void IEECS::initSystems()
 {
-    systems[typeid(IEECSNameSystem).hash_code()] = QSharedPointer<IEECSNameSystem>::create();
-    systems[typeid(IEECSHierarchySystem).hash_code()] = QSharedPointer<IEECSHierarchySystem>::create();
-    systems[typeid(IEECSInputSystem).hash_code()] = QSharedPointer<IEECSInputSystem>::create();
-    systems[typeid(IEECSScriptSystem).hash_code()] = QSharedPointer<IEECSScriptSystem>::create();
-    systems[typeid(IEECSColliderSystem).hash_code()] = QSharedPointer<IEECSColliderSystem>::create();
-    systems[typeid(IEECSRigidbody3DSystem).hash_code()] = QSharedPointer<IEECSRigidbody3DSystem>::create();
-    systems[typeid(IEECSTransformSystem).hash_code()] = QSharedPointer<IEECSTransformSystem>::create();
-    systems[typeid(IEECSCameraSystem).hash_code()] = QSharedPointer<IEECSCameraSystem>::create();
-    systems[typeid(IEECSMeshSystem).hash_code()] = QSharedPointer<IEECSMeshSystem>::create();
-    systems[typeid(IEECSMaterialSystem).hash_code()] = QSharedPointer<IEECSMaterialSystem>::create();
-    systems[typeid(IEECSShaderSystem).hash_code()] = QSharedPointer<IEECSShaderSystem>::create();
-    systems[typeid(IEECSRenderableSystem).hash_code()] = QSharedPointer<IEECSRenderableSystem>::create();
+    systems[typeid(IEECSNameSystem).hash_code()] = new IEECSNameSystem(this);
+    systems[typeid(IEECSHierarchySystem).hash_code()] = new IEECSHierarchySystem(this);
+    systems[typeid(IEECSInputSystem).hash_code()] = new IEECSInputSystem(this);
+    systems[typeid(IEECSScriptSystem).hash_code()] = new IEECSScriptSystem(this);
+    systems[typeid(IEECSColliderSystem).hash_code()] = new IEECSColliderSystem(this);
+    systems[typeid(IEECSRigidbody3DSystem).hash_code()] = new IEECSRigidbody3DSystem(this);
+    systems[typeid(IEECSTransformSystem).hash_code()] = new IEECSTransformSystem(this);
+    systems[typeid(IEECSCameraSystem).hash_code()] = new IEECSCameraSystem(this);
+    systems[typeid(IEECSMeshSystem).hash_code()] = new IEECSMeshSystem(this);
+    systems[typeid(IEECSMaterialSystem).hash_code()] = new IEECSMaterialSystem(this);
+    systems[typeid(IEECSShaderSystem).hash_code()] = new IEECSShaderSystem(this);
+    systems[typeid(IEECSRenderableSystem).hash_code()] = new IEECSRenderableSystem(this);
 }
 
 bool IEECS::detachComponent(const IEEntity entity, const size_t& component)

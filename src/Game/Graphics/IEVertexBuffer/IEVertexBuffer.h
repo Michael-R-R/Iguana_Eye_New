@@ -6,10 +6,9 @@
 #include <QVector>
 
 #include "IEBuffer.h"
-#include "Serializable.h"
 
 template <class T>
-class IEVertexBuffer : public IEBuffer<T>, public Serializable
+class IEVertexBuffer : public IEBuffer<T>
 {
     int typeSize;
     int tuple;
@@ -19,8 +18,8 @@ class IEVertexBuffer : public IEBuffer<T>, public Serializable
     bool isInstanced;
 
 public:
-    IEVertexBuffer() :
-        IEBuffer<T>(QOpenGLBuffer::VertexBuffer),
+    IEVertexBuffer(QObject* parent = nullptr) :
+        IEBuffer<T>(QOpenGLBuffer::VertexBuffer, parent),
         typeSize(0), tuple(0), stride(0),
         divisor(0), ptrSize(0),
         isInstanced(false)
@@ -29,8 +28,9 @@ public:
     }
 
     IEVertexBuffer(const QVector<T>& data_, const int typeSize_, const int tuple_,
-                   const int stride_, const int divisor_, const int ptrSize_) :
-        IEBuffer<T>(QOpenGLBuffer::VertexBuffer, data_),
+                   const int stride_, const int divisor_, const int ptrSize_,
+                   QObject* parent = nullptr) :
+        IEBuffer<T>(QOpenGLBuffer::VertexBuffer, data_, parent),
         typeSize(typeSize_), tuple(tuple_), stride(stride_),
         divisor(divisor_), ptrSize(ptrSize_),
         isInstanced((divisor > 0))
@@ -117,9 +117,9 @@ public:
         auto& buffer = static_cast<IEVertexBuffer&>(obj);
 
         in >> buffer.bufferData >> buffer.typeSize
-           >> buffer.tuple >> buffer.stride
-           >> buffer.divisor >> buffer.ptrSize
-           >> buffer.isInstanced;
+            >> buffer.tuple >> buffer.stride
+            >> buffer.divisor >> buffer.ptrSize
+            >> buffer.isInstanced;
 
         return in;
     }

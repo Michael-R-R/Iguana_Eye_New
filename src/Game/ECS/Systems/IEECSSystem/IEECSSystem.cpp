@@ -1,6 +1,7 @@
 #include "IEECSSystem.h"
 
-IEECSSystem::IEECSSystem() :
+IEECSSystem::IEECSSystem(QObject* parent) :
+    IEObject(parent),
     entityMap()
 {
 

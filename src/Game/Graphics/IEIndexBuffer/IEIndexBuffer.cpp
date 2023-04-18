@@ -1,19 +1,18 @@
 #include "IEIndexBuffer.h"
 
-IEIndexBuffer::IEIndexBuffer() :
-    IEBuffer(QOpenGLBuffer::IndexBuffer)
+IEIndexBuffer::IEIndexBuffer(QObject* parent) :
+    IEBuffer(QOpenGLBuffer::IndexBuffer, parent)
 {
 
 }
 
-IEIndexBuffer::IEIndexBuffer(const QVector<unsigned>& data_) :
-    IEBuffer(QOpenGLBuffer::IndexBuffer, data_)
+IEIndexBuffer::IEIndexBuffer(const QVector<unsigned>& data_, QObject* parent) :
+    IEBuffer(QOpenGLBuffer::IndexBuffer, data_, parent)
 {
 
 }
 
-IEIndexBuffer::IEIndexBuffer(const IEIndexBuffer& other) :
-    IEBuffer(QOpenGLBuffer::IndexBuffer, other.bufferData)
+IEIndexBuffer::~IEIndexBuffer()
 {
 
 }

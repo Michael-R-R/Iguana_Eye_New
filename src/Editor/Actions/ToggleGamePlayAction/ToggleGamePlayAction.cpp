@@ -7,16 +7,16 @@ ToggleGamePlayAction::ToggleGamePlayAction(IEGame* game, InputKey& shortcut, QOb
     BaseAction("Play", shortcut, parent)
 {
     connect(this, &ToggleGamePlayAction::triggered, this, [this, game]()
-    {
-        game->initalize();
-        game->changeState(QSharedPointer<IEGamePlayState>::create(*game));
-
-        this->setEnabled(false);
-    });
-
-    connect(game, &IEGame::stateChanged, this, [this](QSharedPointer<IEGameState> state)
             {
-                if(dynamic_cast<IEGameStopState*>(&(*state)))
+                game->initalize();
+                game->changeState(new IEGamePlayState(*game));
+
+                this->setEnabled(false);
+            });
+
+    connect(game, &IEGame::stateChanged, this, [this](const IEGameState* state)
+            {
+                if(dynamic_cast<const IEGameStopState*>(state))
                     this->setEnabled(true);
             });
 }

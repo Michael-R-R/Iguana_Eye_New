@@ -4,25 +4,26 @@
 #include <QString>
 #include <QMap>
 
+#include "IEObject.h"
 #include "IEVertexBuffer.h"
-#include "Serializable.h"
 
 template <class T>
-class IEVertexBufferContainer : public Serializable
+class IEVertexBufferContainer : public IEObject
 {
-    QMap<QString, QSharedPointer<IEVertexBuffer<T>>> buffers;
+    QMap<QString, IEVertexBuffer<T>*> buffers;
 
 public:
-    IEVertexBufferContainer() : buffers() {}
+    IEVertexBufferContainer(QObject* parent = nullptr) : IEObject(parent), buffers() {}
     IEVertexBufferContainer(const IEVertexBufferContainer& other) = delete;
     ~IEVertexBufferContainer() {}
 
-    bool add(const QString key, QSharedPointer<IEVertexBuffer<T>> value)
+    bool add(const QString key, IEVertexBuffer<T>* value)
     {
         if(doesExist(key))
             return false;
 
         buffers[key] = value;
+        value->setParent(this);
 
         return true;
     }
@@ -32,19 +33,26 @@ public:
         if(!doesExist(key))
             return false;
 
+        auto* temp = buffers[key];
         buffers.remove(key);
+        delete temp;
 
         return true;
     }
 
     void clear()
     {
+        for(auto* i : buffers)
+        {
+            delete i;
+        }
+
         buffers.clear();
     }
 
     void releaseAllBuffers()
     {
-        for(auto& i : buffers)
+        for(auto* i : buffers)
         {
             i->release();
         }
@@ -55,7 +63,7 @@ public:
         return buffers.contains(key);
     }
 
-    QSharedPointer<IEVertexBuffer<T>> value(const QString& key) const
+    IEVertexBuffer<T>* value(const QString& key) const
     {
         if(!doesExist(key))
             return nullptr;
@@ -63,7 +71,7 @@ public:
         return buffers[key];
     }
 
-    const QMap<QString, QSharedPointer<IEVertexBuffer<T>>>& getBuffers() const { return buffers; }
+    const QMap<QString, IEVertexBuffer<T>*>& getBuffers() const { return buffers; }
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override
     {
@@ -71,7 +79,7 @@ public:
 
         out << (int)container.buffers.size();
 
-        QMapIterator<QString, QSharedPointer<IEVertexBuffer<T>>> it(container.buffers);
+        QMapIterator<QString, IEVertexBuffer<T>*> it(container.buffers);
         while(it.hasNext())
         {
             it.next();
@@ -95,11 +103,12 @@ public:
         {
             in >> key;
 
-            auto value = QSharedPointer<IEVertexBuffer<T>>::create();
+            auto value = new IEVertexBuffer<T>(&container);
 
             in >> *value;
 
-            container.buffers[key] = value;
+            if(!container.add(key, value))
+                delete value;
         }
 
         return in;

@@ -3,30 +3,24 @@
 #include <QSharedPointer>
 
 #include "IEGameState.h"
+#include "ECSOnUpdateEvent.h"
 
 class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
 class IETime;
 class IEPhysicsEngine;
 class IERenderEngine;
-class IEECSScriptSystem;
-class IEECSRigidbody3DSystem;
-class IEECSTransformSystem;
-class IEECSCameraSystem;
-class ECSOnUpdateEvent;
+class IEECS;
 
 class IEGamePlayState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
     IETime& time;
-    IEPhysicsEngine& physicsEngine;
-    IERenderEngine& gRenderEngine;
-    IEECSScriptSystem* scriptSystem;
-    IEECSRigidbody3DSystem* rigidbody3dSystem;
-    IEECSTransformSystem* transformSystem;
-    IEECSCameraSystem* cameraSystem;
-    QSharedPointer<ECSOnUpdateEvent> ecsUpdateEvent;
+    IEPhysicsEngine* physicsEngine;
+    IERenderEngine* renderEngine;
+    IEECS& ecs;
+    ECSOnUpdateEvent ecsUpdateEvent;
 
 public:
     IEGamePlayState(IEGame& game);

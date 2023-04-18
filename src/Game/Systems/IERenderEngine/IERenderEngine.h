@@ -14,7 +14,7 @@ class IERenderEngine : public IEGameSystem
 {
 
 public:
-    IERenderEngine();
+    IERenderEngine(QObject* parent = nullptr);
     ~IERenderEngine();
 
     void startup(IEGame& game) override;
@@ -22,7 +22,7 @@ public:
     void initalize(IEGame& game) override;
     void reset(IEGame& game) override;
 
-    void onRenderFrame(QOpenGLExtraFunctions* glFunc, QSharedPointer<IECamera> camera);
+    void onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera);
 
 private:
     void prepareShader(IEShader& shader);

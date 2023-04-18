@@ -1,7 +1,7 @@
 #include "IEMesh.h"
 
-IEMesh::IEMesh() :
-    IEResource(),
+IEMesh::IEMesh(QObject* parent) :
+    IEResource(parent),
     positionVertices(), normalVertices(),
     textureVertices(), tangentVertices(),
     bitangentVertices(), indices()
@@ -9,8 +9,8 @@ IEMesh::IEMesh() :
 
 }
 
-IEMesh::IEMesh(const QString& path) :
-    IEResource(path),
+IEMesh::IEMesh(const QString& path, QObject* parent) :
+    IEResource(path, parent),
     positionVertices(), normalVertices(),
     textureVertices(), tangentVertices(),
     bitangentVertices(), indices()

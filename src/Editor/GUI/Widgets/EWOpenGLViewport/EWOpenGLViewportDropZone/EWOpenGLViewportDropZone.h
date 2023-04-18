@@ -4,7 +4,6 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMimeData>
-#include <QSharedPointer>
 
 class EWOpenGLViewportDropZone : public QWidget
 {

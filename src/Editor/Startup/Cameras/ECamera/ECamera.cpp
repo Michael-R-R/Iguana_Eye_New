@@ -1,8 +1,8 @@
 #include "ECamera.h"
 #include "IEInput.h"
 
-ECamera::ECamera() :
-    IECamera(),
+ECamera::ECamera(QObject* parent) :
+    IECamera(parent),
     position(0.0f, 5.0f, 0.0f), rotation(0.0f, 0.0f, -1.0f),
     lastX(0.0f), lastY(0.0f), isCaptured(false),
     yaw(-90.0f), pitch(0.0f)

@@ -1,7 +1,7 @@
 #include "IESphereRigidbody.h"
 
-IESphereRigidbody::IESphereRigidbody() :
-    IEBaseRigidbody(RigidbodyType::None, RigidbodyShape::Sphere, 0),
+IESphereRigidbody::IESphereRigidbody(QObject* parent) :
+    IEBaseRigidbody(RigidbodyType::None, RigidbodyShape::Sphere, 0, 0.0f, 0.0f, parent),
     radius(1.0f)
 {
 
@@ -10,8 +10,9 @@ IESphereRigidbody::IESphereRigidbody() :
 IESphereRigidbody::IESphereRigidbody(RigidbodyType type,
                                      const int id,
                                      const float r,
-                                     const float d, const float st) :
-    IEBaseRigidbody(type, RigidbodyShape::Sphere, id, d, st),
+                                     const float d, const float st,
+                                     QObject* parent) :
+    IEBaseRigidbody(type, RigidbodyShape::Sphere, id, d, st, parent),
     radius(r)
 {
 

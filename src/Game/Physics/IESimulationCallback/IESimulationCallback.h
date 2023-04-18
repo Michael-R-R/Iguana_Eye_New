@@ -4,18 +4,14 @@
 #include "PxPhysics.h"
 #include "PxPhysicsAPI.h"
 
-class IEPhysicsEngine;
 class IEEntity;
 
 class IESimulationCallback : public IEObject, public physx::PxSimulationEventCallback
 {
     Q_OBJECT
 
-    // DOES NOT OWN THIS POINTER
-    IEPhysicsEngine* physicsEngine;
-
 public:
-    IESimulationCallback(IEPhysicsEngine* engine);
+    IESimulationCallback();
     ~IESimulationCallback();
 
     void onWake(physx::PxActor** actors, physx::PxU32 count) override;

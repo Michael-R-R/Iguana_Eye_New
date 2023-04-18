@@ -7,15 +7,15 @@
 #include "ECSOnUpdateEvent.h"
 #include "IEHash.h"
 
-IEECSScriptSystem::IEECSScriptSystem() :
-    IEECSSystem(),
+IEECSScriptSystem::IEECSScriptSystem(QObject* parent) :
+    IEECSSystem(parent),
     data()
 {
     IEECSScriptSystem::attach(IEEntity(-1));
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto& physicsEngine = game->getPhysicsEngine();
-    auto& simCallback = physicsEngine.getSimulationCallback();
+    auto* physicsEngine = game->getPhysicsEngine();
+    auto& simCallback = physicsEngine->getSimulationCallback();
     connect(&simCallback, &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
     connect(&simCallback, &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);
 }
@@ -70,7 +70,7 @@ bool IEECSScriptSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent*)
+void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent&)
 {
     for(int i = 1; i < entityMap.size(); i++)
     {

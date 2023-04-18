@@ -1,6 +1,7 @@
 #include "IEEntityManager.h"
 
-IEEntityManager::IEEntityManager() :
+IEEntityManager::IEEntityManager(QObject* parent) :
+    IEObject(parent),
     entityMap(),
     freeIdStack(),
     nextId(0)

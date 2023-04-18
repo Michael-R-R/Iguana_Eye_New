@@ -1,16 +1,14 @@
 #include "IESimulationCallback.h"
-#include "IEPhysicsEngine.h"
 #include "IEEntity.h"
 
-IESimulationCallback::IESimulationCallback(IEPhysicsEngine* engine) :
-    physicsEngine(engine)
+IESimulationCallback::IESimulationCallback()
 {
 
 }
 
 IESimulationCallback::~IESimulationCallback()
 {
-    physicsEngine = nullptr;
+
 }
 
 void IESimulationCallback::onWake(physx::PxActor** actors, physx::PxU32 count)

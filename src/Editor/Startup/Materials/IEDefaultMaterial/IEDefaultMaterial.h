@@ -6,8 +6,8 @@ class IEDefaultMaterial : public IEMaterial
 {
 
 public:
-    IEDefaultMaterial(const QString& path);
-    ~IEDefaultMaterial() {}
+    IEDefaultMaterial(const QString& path, QObject* parent = nullptr);
+    ~IEDefaultMaterial();
 
 };
 

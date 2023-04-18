@@ -1,24 +1,15 @@
 #pragma once
 
 #include "IEResourceManager.h"
-#include "IEMaterial.h"
 
-class IEMaterialManager: public IEResourceManager<IEMaterial>
+class IEMaterialManager: public IEResourceManager
 {
-    Q_OBJECT
 
 public:
-    IEMaterialManager();
+    IEMaterialManager(QObject* parent = nullptr);
     ~IEMaterialManager();
 
-    bool add(const unsigned long long key, QSharedPointer<IEMaterial> value) override;
-    bool remove(const unsigned long long key) override;
-    bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
-
-signals:
-    void added(const unsigned long long key, const QString& path);
-    void removed(const unsigned long long key);
-    void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
+    void startup() override;
 
 public:
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

@@ -1,17 +1,15 @@
 #pragma once
 
 #include "IEBuffer.h"
-#include "Serializable.h"
 
-class IEIndexBuffer : public IEBuffer<unsigned>, public Serializable
+class IEIndexBuffer : public IEBuffer<unsigned>
 {
 
 public:
-    IEIndexBuffer();
-    IEIndexBuffer(const QVector<unsigned>& data_);
-    IEIndexBuffer(const IEIndexBuffer& other);
-
-    ~IEIndexBuffer() {}
+    IEIndexBuffer(QObject* parent = nullptr);
+    IEIndexBuffer(const QVector<unsigned>& data_, QObject* parent = nullptr);
+    IEIndexBuffer(const IEIndexBuffer&) = delete;
+    ~IEIndexBuffer();
 
     void build(const int = -1) override;
 

@@ -2,8 +2,8 @@
 #include "IEShader.h"
 #include "IESerialize.h"
 
-IEMaterial::IEMaterial() :
-    IEResource(),
+IEMaterial::IEMaterial(QObject* parent) :
+    IEResource(parent),
     uniformData(), objectColor(),
     atlasTexId(0), diffuseTexId(0),
     specularTexId(0), normalTexId(0),
@@ -12,8 +12,8 @@ IEMaterial::IEMaterial() :
 
 }
 
-IEMaterial::IEMaterial(const QString& path) :
-    IEResource(path),
+IEMaterial::IEMaterial(const QString& path, QObject* parent) :
+    IEResource(path, parent),
     uniformData(), objectColor(),
     atlasTexId(0), diffuseTexId(0),
     specularTexId(0), normalTexId(0),

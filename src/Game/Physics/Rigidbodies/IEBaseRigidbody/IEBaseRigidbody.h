@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Serializable.h"
+#include "IEObject.h"
 #include "PxRigidActor.h"
 #include "PxRigidStatic.h"
 #include "PxRigidDynamic.h"
 
-class IEBaseRigidbody : public Serializable
+class IEBaseRigidbody : public IEObject
 {
 public:
     enum class RigidbodyType
@@ -28,12 +28,13 @@ protected:
     float sleepThreshold;
 
 public:
-    IEBaseRigidbody();
+    IEBaseRigidbody(QObject* parent = nullptr);
     IEBaseRigidbody(RigidbodyType type,
                     RigidbodyShape shape,
                     const int id,
                     const float d = 0.0f,
-                    const float st = 0.0f);
+                    const float st = 0.0f,
+                    QObject* parent = nullptr);
     IEBaseRigidbody(const IEBaseRigidbody&) = delete;
     virtual ~IEBaseRigidbody();
 

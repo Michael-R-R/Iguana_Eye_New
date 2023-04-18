@@ -3,10 +3,11 @@
 #include "IEGame.h"
 #include "IEScene.h"
 #include "IEMeshManager.h"
+#include "IEMesh.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSMeshSystem::IEECSMeshSystem() :
-    IEECSSystem(),
+IEECSMeshSystem::IEECSMeshSystem(QObject* parent) :
+    IEECSSystem(parent),
     data()
 {
     IEECSMeshSystem::attach(IEEntity(-1));
@@ -54,7 +55,7 @@ bool IEECSMeshSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSMeshSystem::onUpdateFrame(ECSOnUpdateEvent*)
+void IEECSMeshSystem::onUpdateFrame(ECSOnUpdateEvent&)
 {
     // Not used
 }
@@ -91,16 +92,16 @@ QVector<unsigned long long> IEECSMeshSystem::massPurgeMeshId(const unsigned long
     return result;
 }
 
-QSharedPointer<IEMesh> IEECSMeshSystem::getAttachedMesh(const int index)
+IEMesh* IEECSMeshSystem::getAttachedMesh(const int index)
 {
     if(!indexBoundCheck(index))
         return nullptr;
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto& scene = game->getScene();
-    auto& meshManager = scene.getMeshManager();
+    auto* scene = game->getScene();
+    auto* meshManager = scene->getMeshManager();
 
-    return meshManager.value(data.meshId[index]);
+    return meshManager->value<IEMesh>(data.meshId[index]);
 }
 
 unsigned long long IEECSMeshSystem::getMeshId(const int index)

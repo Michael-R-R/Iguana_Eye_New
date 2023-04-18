@@ -14,9 +14,9 @@ IEGame::IEGame(QWidget* parent) :
     format(),
     glFunc(nullptr),
     glExtraFunc(nullptr),
-    renderEngine(QSharedPointer<IERenderEngine>::create()),
-    physicsEngine(QSharedPointer<IEPhysicsEngine>::create()),
-    scene(QSharedPointer<IEScene>::create()),
+    renderEngine(new IERenderEngine(this)),
+    physicsEngine(new IEPhysicsEngine(this)),
+    scene(new IEScene(this)),
     ecs(QSharedPointer<IEECS>::create()),
     input(QSharedPointer<IEInput>::create()),
     scriptEngine(QSharedPointer<IEScriptEngine>::create()),
@@ -48,6 +48,7 @@ void IEGame::initializeGL()
     glExtraFunc->initializeOpenGLFunctions();
 
     glExtraFunc->glEnable(GL_DEPTH_TEST);
+    glExtraFunc->glEnable(GL_STENCIL_TEST);
     glExtraFunc->glEnable(GL_MULTISAMPLE);
     glExtraFunc->glEnable(GL_BLEND);
 
@@ -60,6 +61,8 @@ void IEGame::initializeGL()
 
 void IEGame::paintGL()
 {
+    glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
     state->onRenderFrame();
     time->processDeltaTime();
 }
@@ -109,12 +112,13 @@ void IEGame::reset()
     ecs->reset(*this);
 }
 
-void IEGame::changeState(QSharedPointer<IEGameState> val)
+void IEGame::changeState(IEGameState* val)
 {
     this->makeCurrent();
 
     if(state)
         state->exit(*this);
+    delete state;
     state = val;
     state->enter(*this);
 
@@ -138,7 +142,8 @@ QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const
     out << *game.time
         << *game.input
         << *game.scene
-        << *game.ecs;
+        << *game.ecs
+        << *game.state;
 
     return out;
 }
@@ -151,7 +156,8 @@ QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
     in >> *game.time
        >> *game.input
        >> *game.scene
-       >> *game.ecs;
+       >> *game.ecs
+       >> *game.state;
 
     return in;
 }

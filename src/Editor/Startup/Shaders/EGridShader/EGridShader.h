@@ -6,7 +6,7 @@ class EGridShader : public IEShader
 {
 
 public:
-    EGridShader();
+    EGridShader(QObject* parent = nullptr);
     ~EGridShader();
 };
 

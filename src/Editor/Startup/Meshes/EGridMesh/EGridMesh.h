@@ -6,7 +6,7 @@ class EGridMesh : public IEMesh
 {
 
 public:
-    EGridMesh();
+    EGridMesh(QObject* parent = nullptr);
     ~EGridMesh();
 };
 

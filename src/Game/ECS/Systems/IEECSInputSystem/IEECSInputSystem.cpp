@@ -1,8 +1,8 @@
 #include "IEECSInputSystem.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSInputSystem::IEECSInputSystem() :
-    IEECSSystem(),
+IEECSInputSystem::IEECSInputSystem(QObject* parent) :
+    IEECSSystem(parent),
     data()
 {
     IEECSInputSystem::attach(IEEntity(-1));
@@ -50,7 +50,7 @@ bool IEECSInputSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSInputSystem::onUpdateFrame(ECSOnUpdateEvent*)
+void IEECSInputSystem::onUpdateFrame(ECSOnUpdateEvent&)
 {
     // Not used
 }

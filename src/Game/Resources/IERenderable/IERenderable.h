@@ -1,12 +1,11 @@
 #pragma once
 
 #include <QOpenGLVertexArrayObject>
-#include <QSharedPointer>
 #include <QSet>
 #include <QVector2D>
 #include <QVector3D>
 #include <QVector4D>
-#include <QGenericMatrix>
+#include <QMatrix4x4>
 #include <gl/GL.h>
 
 #include "IEResource.h"
@@ -16,7 +15,7 @@
 
 class IEShader;
 
-class IERenderable : public QOpenGLVertexArrayObject, public IEResource
+class IERenderable : public IEResource
 {
 public:
     enum class RenderMode
@@ -32,11 +31,12 @@ protected:
     unsigned long long materialId;
     unsigned long long shaderId;
 
-    QSharedPointer<IEIndexBuffer> indexBuffer;
-    QSharedPointer<IEVertexBufferContainer<QVector2D>> vec2BufferContainer;
-    QSharedPointer<IEVertexBufferContainer<QVector3D>> vec3BufferContainer;
-    QSharedPointer<IEVertexBufferContainer<QVector4D>> vec4BufferContainer;
-    QSharedPointer<IEVertexBufferContainer<QMatrix4x4>> mat4BufferContainer;
+    QOpenGLVertexArrayObject* vao;
+    IEIndexBuffer* indexBuffer;
+    IEVertexBufferContainer<QVector2D>* vec2BufferContainer;
+    IEVertexBufferContainer<QVector3D>* vec3BufferContainer;
+    IEVertexBufferContainer<QVector4D>* vec4BufferContainer;
+    IEVertexBufferContainer<QMatrix4x4>* mat4BufferContainer;
     int shownCount;
     int hiddenCount;
 
@@ -48,11 +48,12 @@ protected:
     QSet<QString> dirtyMat4Buffers;
 
 public:
-    IERenderable();
+    IERenderable(QObject* parent = nullptr);
     IERenderable(const QString& path,
                  const unsigned long long meshId_,
                  const unsigned long long materialId_,
-                 const unsigned long long shaderId_);
+                 const unsigned long long shaderId_,
+                 QObject* parent = nullptr);
     IERenderable(const IERenderable&) = delete;
     ~IERenderable();
 
@@ -61,11 +62,14 @@ public:
     bool operator<(const IERenderable& other) { return IEResource::operator<(other); }
     bool operator>(const IERenderable& other) { return IEResource::operator>(other); }
 
-    void addIndexBuffer(QSharedPointer<IEIndexBuffer> buffer);
-    void addVec2Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QVector2D>> value);
-    void addVec3Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QVector3D>> value);
-    void addVec4Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QVector4D>> value);
-    void addMat4Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QMatrix4x4>> value);
+    void bind() { vao->bind(); }
+    void release() { vao->release(); }
+
+    void addIndexBuffer(IEIndexBuffer* buffer);
+    bool addVec2Buffer(const QString& key, IEVertexBuffer<QVector2D>* value);
+    bool addVec3Buffer(const QString& key, IEVertexBuffer<QVector3D>* value);
+    bool addVec4Buffer(const QString& key, IEVertexBuffer<QVector4D>* value);
+    bool addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>* value);
     void setVec2BufferData(const QString& key, const QVector<QVector2D>& data);
     void setVec3BufferData(const QString& key, const QVector<QVector3D>& data);
     void setVec4BufferData(const QString& key, const QVector<QVector4D>& data);

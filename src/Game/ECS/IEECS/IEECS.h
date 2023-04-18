@@ -9,22 +9,25 @@
 
 class IEGame;
 class IEECSSystem;
+class ECSOnUpdateEvent;
 
 class IEECS : public IEGameSystem
 {
     Q_OBJECT
 
-    QMap<size_t, QSharedPointer<IEECSSystem>> systems;
-    QSharedPointer<IEEntityManager> entityManager;
+    QMap<size_t, IEECSSystem*> systems;
+    IEEntityManager* entityManager;
 
 public:
-    IEECS();
+    IEECS(QObject* parent = nullptr);
     ~IEECS();
 
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;
     void initalize(IEGame& game) override;
     void reset(IEGame& game) override;
+
+    void onUpdateFrame(ECSOnUpdateEvent& event);
 
     IEEntity create();
     void remove(const IEEntity entity);

@@ -32,16 +32,16 @@ class IEECSMaterialSystem : public IEECSSystem
     Data data;
 
 public:
-    IEECSMaterialSystem();
+    IEECSMaterialSystem(QObject* parent = nullptr);
     ~IEECSMaterialSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent* event) override;
+    void onUpdateFrame(ECSOnUpdateEvent& event) override;
 
     QVector<unsigned long long> massReplaceMaterialId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeMaterialId(const unsigned long long idToPurge);
-    QSharedPointer<IEMaterial> getAttachedMaterial(const int index);
+    IEMaterial* getAttachedMaterial(const int index);
 
     unsigned long long getMaterialId(const int index);
     void setMaterialId(const int index, const unsigned long long val);

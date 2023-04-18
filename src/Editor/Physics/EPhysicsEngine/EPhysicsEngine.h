@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QSharedPointer>
 #include <QMap>
 
+#include "IEObject.h"
 #include "PxPhysics.h"
 #include "PxPhysicsAPI.h"
 #include "IEEntity.h"
@@ -12,16 +12,20 @@ class IEInput;
 class ECamera;
 class IEBoxRigidbody;
 
-class EPhysicsEngine
+class EPhysicsEngine: public IEObject
 {
+    Q_OBJECT
+
     physx::PxScene* pxScene;
     physx::PxReal raycastDistance;
     physx::PxQueryFilterData filterFlag;
 
-    QMap<IEEntity, QSharedPointer<IEBoxRigidbody>> rigidbodies;
+    QMap<IEEntity, IEBoxRigidbody*> rigidbodies;
+
+    bool isButtonHeld;
 
 public:
-    EPhysicsEngine();
+    EPhysicsEngine(QObject* parent = nullptr);
     ~EPhysicsEngine();
 
     void startup(IEGame& game);
@@ -30,6 +34,11 @@ public:
 
 private:
     void onInitRigidbodies(IEGame& game);
-    void castRay(IEInput& input, ECamera& camera);
+    std::tuple<bool, physx::PxRaycastBuffer> castRay(const IEInput& input,
+                                                     const ECamera& camera);
+
+signals:
+    void entitySelected(const IEEntity& entity);
+    void selectionCleared();
 };
 

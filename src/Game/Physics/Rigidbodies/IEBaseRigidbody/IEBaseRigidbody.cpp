@@ -4,7 +4,8 @@
 #include "IEPhysicsEngine.h"
 #include "physx/extensions/PxSimpleFactory.h"
 
-IEBaseRigidbody::IEBaseRigidbody() :
+IEBaseRigidbody::IEBaseRigidbody(QObject* parent) :
+    IEObject(parent),
     rigidActor(nullptr),
     rigidbodyType(RigidbodyType::None),
     rigidbodyShape(RigidbodyShape::None),
@@ -17,7 +18,9 @@ IEBaseRigidbody::IEBaseRigidbody(RigidbodyType type,
                                  RigidbodyShape shape,
                                  const int id,
                                  const float d,
-                                 const float st) :
+                                 const float st,
+                                 QObject* parent) :
+    IEObject(parent),
     rigidActor(nullptr),
     rigidbodyType(type), rigidbodyShape(shape),
     attachedId(id), density(d), sleepThreshold(st)
@@ -98,10 +101,10 @@ void IEBaseRigidbody::createAsStatic(const physx::PxTransform& t,
                                      const physx::PxGeometry& geometry)
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto& engine = game->getPhysicsEngine();
+    auto* engine = game->getPhysicsEngine();
 
-    auto& p = engine.getPxPhysics();
-    auto& m = engine.getPxMaterial();
+    auto& p = engine->getPxPhysics();
+    auto& m = engine->getPxMaterial();
 
     auto* actor = physx::PxCreateStatic(p, t, geometry, m);
 
@@ -116,10 +119,10 @@ void IEBaseRigidbody::createAsDynamic(const physx::PxTransform& t,
                                       const physx::PxGeometry& geometry)
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto& engine = game->getPhysicsEngine();
+    auto* engine = game->getPhysicsEngine();
 
-    auto& p = engine.getPxPhysics();
-    auto& m = engine.getPxMaterial();
+    auto& p = engine->getPxPhysics();
+    auto& m = engine->getPxMaterial();
 
     auto* actor = physx::PxCreateDynamic(p, t, geometry, m, density);
     actor->setSleepThreshold(sleepThreshold);
@@ -135,10 +138,10 @@ void IEBaseRigidbody::createAsKinematic(const physx::PxTransform& t,
                                         const physx::PxGeometry& geometry)
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto& engine = game->getPhysicsEngine();
+    auto* engine = game->getPhysicsEngine();
 
-    auto& p = engine.getPxPhysics();
-    auto& m = engine.getPxMaterial();
+    auto& p = engine->getPxPhysics();
+    auto& m = engine->getPxMaterial();
 
     auto* actor = physx::PxCreateKinematic(p, t, geometry, m, density);
     actor->setSleepThreshold(sleepThreshold);

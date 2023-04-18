@@ -112,6 +112,7 @@ INCLUDEPATH += $$PWD/src/Editor/Physics \
 
 INCLUDEPATH += $$PWD/src/Editor/Renderer \
     $$PWD/src/Editor/Renderer/ERenderEngine \
+    $$PWD/src/Editor/Renderer/ESelectedRenderable \
 
 INCLUDEPATH += $$PWD/src/Editor/Startup \
     $$PWD/src/Editor/Startup/EActionStartup \
@@ -130,7 +131,6 @@ INCLUDEPATH += $$PWD/src/Editor/Startup/Renderables \
 
 INCLUDEPATH += $$PWD/src/Editor/Startup/Shaders \
     $$PWD/src/Editor/Startup/Shaders/EGridShader \
-    $$PWD/src/Editor/Startup/Shaders/IEDefaultShader \
 
 INCLUDEPATH += $$PWD/src/Events \
     $$PWD/src/Events/ECSOnUpdateEvent \
@@ -256,6 +256,3 @@ INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IERandomNumber \
     $$PWD/src/Utility/IESerialize \
     $$PWD/src/Utility/IEStyleSheet \
-
-INCLUDEPATH += $$PWD/tests \
-    $$PWD/tests/IETCreateRenderable \

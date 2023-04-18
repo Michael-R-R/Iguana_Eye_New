@@ -30,7 +30,7 @@ public:
 
     void start(const IEEntity entity) const;
     void update() const;
-    void updateProjection(QSharedPointer<IECamera> camera, const float w, const float h) const;
+    void updateProjection(IECamera* camera, const float w, const float h) const;
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
     QDataStream& deserialize(QDataStream &in, Serializable &obj) override;

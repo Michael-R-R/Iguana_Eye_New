@@ -4,6 +4,7 @@
 #include "IEGame.h"
 #include "IEScene.h"
 #include "IEShaderManager.h"
+#include "IEShader.h"
 #include "IEGlslImporter.h"
 #include "IEGlslExporter.h"
 #include "IEFile.h"
@@ -76,10 +77,10 @@ void GlslFileHandler::handleGlslSave(const QString& path)
 
     // Check if a shader exist to update
     auto* game = ApplicationWindow::instance().getGame();
-    auto& scene = game->getScene();
-    auto& shaderManager = scene.getShaderManager();
+    auto* scene = game->getScene();
+    auto* shaderManager = scene->getShaderManager();
     unsigned long long id = IEHash::Compute(path);
-    auto shader = shaderManager.value(id);
+    auto* shader = shaderManager->value<IEShader>(id);
     if(!shader)
         return;
 

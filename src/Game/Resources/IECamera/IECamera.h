@@ -18,8 +18,8 @@ protected:
     float sensitivity;
 
 public:
-    IECamera();
-    IECamera(const QString& path);
+    IECamera(QObject* parent = nullptr);
+    IECamera(const QString& path, QObject* parent = nullptr);
     IECamera(const IECamera&) = delete;
     ~IECamera();
 

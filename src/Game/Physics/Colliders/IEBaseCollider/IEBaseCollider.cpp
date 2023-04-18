@@ -63,17 +63,15 @@ physx::PxQuat IEBaseCollider::getGlobalQuat() const
 void IEBaseCollider::create(const physx::PxTransform& t, const physx::PxGeometry& g)
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto& engine = game->getPhysicsEngine();
+    auto* engine = game->getPhysicsEngine();
 
-    auto& p = engine.getPxPhysics();
-    auto& m = engine.getPxMaterial();
+    auto& p = engine->getPxPhysics();
+    auto& m = engine->getPxMaterial();
 
     auto* actor = physx::PxCreateStatic(p, t, g, m);
 
     rigidActor = actor;
     rigidActor->userData = (void*)(size_t)attachedId;
-
-    engine.addActorToScene(rigidActor);
 }
 
 QDataStream& IEBaseCollider::serialize(QDataStream& out, const Serializable& obj) const

@@ -1,8 +1,9 @@
 #include "IECameraManager.h"
+#include "IECamera.h"
 #include "IESerialize.h"
 
-IECameraManager::IECameraManager() :
-    IEResourceManager()
+IECameraManager::IECameraManager(QObject* parent) :
+    IEResourceManager(parent)
 {
 
 }
@@ -12,49 +13,17 @@ IECameraManager::~IECameraManager()
 
 }
 
-bool IECameraManager::add(const unsigned long long key, QSharedPointer<IECamera> value)
-{
-    if(!IEResourceManager::add(key, value))
-        return false;
-
-    emit added(key, value->getFilePath());
-
-    return true;
-}
-
-bool IECameraManager::remove(const unsigned long long key)
-{
-    if(!IEResourceManager::remove(key))
-        return false;
-
-    emit removed(key);
-
-    return true;
-}
-
-bool IECameraManager::changeKey(const unsigned long long oldKey, const unsigned long long newKey)
-{
-    if(!IEResourceManager::changeKey(oldKey, newKey))
-        return false;
-
-    emit keyChanged(oldKey, newKey);
-
-    return true;
-}
-
 QDataStream& IECameraManager::serialize(QDataStream& out, const Serializable& obj) const
 {
     const auto& manager = static_cast<const IECameraManager&>(obj);
 
     out << (int)manager.resources.size();
 
-    for(auto& i : manager.resources)
+    for(auto* i : manager.resources)
     {
-        const QString& path = i->getFilePath();
+        out << i->getFilePath();
 
-        out << path;
-
-        IESerialize::write<IECamera>(path, &(*i));
+        IESerialize::write<IECamera>(i->getFilePath(), static_cast<IECamera*>(i));
     }
 
     return out;
@@ -73,11 +42,15 @@ QDataStream& IECameraManager::deserialize(QDataStream& in, Serializable& obj)
     {
         in >> path;
 
-        auto resource = QSharedPointer<IECamera>::create(path);
-        if(!IESerialize::read<IECamera>(path, &(*resource)))
+        auto camera = new IECamera(path, &manager);
+        if(!IESerialize::read<IECamera>(path, camera))
+        {
+            delete camera;
             continue;
+        }
 
-        manager.add(resource->getId(), resource);
+        if(!manager.add(camera->getId(), camera))
+            delete camera;
     }
 
     return in;

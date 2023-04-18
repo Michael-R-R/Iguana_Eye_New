@@ -38,12 +38,12 @@ class IEECSNameSystem : public IEECSSystem
     QMap<unsigned long long, QVector<IEEntity>> tagEntityMap;
 
 public:
-    IEECSNameSystem();
-    ~IEECSNameSystem() {}
+    IEECSNameSystem(QObject* parent = nullptr);
+    ~IEECSNameSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent* event) override;
+    void onUpdateFrame(ECSOnUpdateEvent& event) override;
 
     void addNameTag(const QString& name);
     void clearNameTag(const QString& name);

@@ -3,33 +3,32 @@
 #include <QOpenGLBuffer>
 #include <QVector>
 
+#include "IEObject.h"
+
 template <class T>
-class IEBuffer : public QOpenGLBuffer
+class IEBuffer : public IEObject, public QOpenGLBuffer
 {
 protected:
-   QVector<T> bufferData;
+    QVector<T> bufferData;
 
 public:
-   IEBuffer(QOpenGLBuffer::Type type) :
-       QOpenGLBuffer(type),
-       bufferData()
-   {
+    IEBuffer(QOpenGLBuffer::Type type, QObject* parent = nullptr) :
+        IEObject(parent),
+        QOpenGLBuffer(type),
+        bufferData()
+    {
 
-   }
+    }
 
-    IEBuffer(QOpenGLBuffer::Type type, const QVector<T>& data_) :
+    IEBuffer(QOpenGLBuffer::Type type, const QVector<T>& data_, QObject* parent = nullptr) :
+        IEObject(parent),
         QOpenGLBuffer(type),
         bufferData(data_)
     {
 
     }
 
-    IEBuffer(const IEBuffer& other) :
-        QOpenGLBuffer(other.type()),
-        bufferData(other.bufferData)
-    {
-
-    }
+    IEBuffer(const IEBuffer&) = delete;
 
     virtual ~IEBuffer()
     {

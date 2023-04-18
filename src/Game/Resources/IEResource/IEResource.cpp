@@ -1,13 +1,15 @@
 #include "IEResource.h"
 #include "IEHash.h"
 
-IEResource::IEResource() :
+IEResource::IEResource(QObject* parent) :
+    IEObject(parent),
     filePath(""), id(0)
 {
 
 }
 
-IEResource::IEResource(const QString& path) :
+IEResource::IEResource(const QString& path, QObject* parent) :
+    IEObject(parent),
     filePath(path), id(IEHash::Compute(path))
 {
 
@@ -25,6 +27,8 @@ unsigned long long IEResource::updatePath(const QString& path)
 
     filePath = path;
     id = IEHash::Compute(path);
+
+    emit pathUpdated(id, filePath);
 
     return id;
 }

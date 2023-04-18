@@ -2,8 +2,8 @@
 #include "ECSOnUpdateEvent.h"
 #include "IEHash.h"
 
-IEECSNameSystem::IEECSNameSystem() :
-    IEECSSystem(),
+IEECSNameSystem::IEECSNameSystem(QObject* parent) :
+    IEECSSystem(parent),
     data(),
     nameMap(),
     tagNameMap(), tagEntityMap()
@@ -12,6 +12,11 @@ IEECSNameSystem::IEECSNameSystem() :
     tagNameMap[0] = "Invalid";
     tagEntityMap[0] = QVector<IEEntity>();
     IEECSNameSystem::attach(IEEntity(-1));
+}
+
+IEECSNameSystem::~IEECSNameSystem()
+{
+
 }
 
 int IEECSNameSystem::attach(const IEEntity entity)
@@ -65,7 +70,7 @@ bool IEECSNameSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSNameSystem::onUpdateFrame(ECSOnUpdateEvent*)
+void IEECSNameSystem::onUpdateFrame(ECSOnUpdateEvent&)
 {
     // Not used
 }

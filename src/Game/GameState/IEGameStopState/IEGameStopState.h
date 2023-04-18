@@ -3,6 +3,7 @@
 #include <QSharedPointer>
 
 #include "IEGameState.h"
+#include "ECSOnUpdateEvent.h"
 
 class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
@@ -10,8 +11,6 @@ class IEGame;
 class IETime;
 class IEInput;
 class IERenderEngine;
-class IEECSTransformSystem;
-class ECSOnUpdateEvent;
 class EPhysicsEngine;
 class ERenderEngine;
 class ECamera;
@@ -22,13 +21,12 @@ class IEGameStopState : public IEGameState
     QOpenGLExtraFunctions* glExtraFunc;
     IETime& time;
     IEInput& input;
-    IERenderEngine& gRenderEngine;
-    IEECSTransformSystem* transformSystem;
-    QSharedPointer<ECSOnUpdateEvent> ecsUpdateEvent;
+    IERenderEngine* gRenderEngine;
+    ECSOnUpdateEvent ecsUpdateEvent;
 
-    QSharedPointer<EPhysicsEngine> ePhysicsEngine;
-    QSharedPointer<ERenderEngine> eRenderEngine;
-    QSharedPointer<ECamera> eCamera;
+    EPhysicsEngine* ePhysicsEngine;
+    ERenderEngine* eRenderEngine;
+    ECamera* eCamera;
 
 public:
     IEGameStopState(IEGame& game);
@@ -43,5 +41,9 @@ public:
 private:
     void serializeGameStates(IEGame& game);
     void deserializeGameStates(IEGame& game);
+
+public:
+    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 };
 

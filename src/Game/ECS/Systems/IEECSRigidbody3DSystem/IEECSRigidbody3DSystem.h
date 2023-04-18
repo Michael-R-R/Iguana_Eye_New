@@ -73,12 +73,12 @@ class IEECSRigidbody3DSystem : public IEECSSystem
     QSet<int> sleepingBodies;
 
 public:
-    IEECSRigidbody3DSystem();
+    IEECSRigidbody3DSystem(QObject* parent = nullptr);
     ~IEECSRigidbody3DSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent* event) override;
+    void onUpdateFrame(ECSOnUpdateEvent& event) override;
     void initalize() override;
     void reset() override;
 

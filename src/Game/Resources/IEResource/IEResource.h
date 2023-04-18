@@ -2,17 +2,20 @@
 
 #include <QString>
 
-#include "Serializable.h"
+#include "IEObject.h"
 
-class IEResource : public Serializable
+class IEResource : public IEObject
 {
+    Q_OBJECT
+
 protected:
     QString filePath;
     unsigned long long id;
 
 public:
-    IEResource();
-    IEResource(const QString& path);
+    IEResource(QObject* parent = nullptr);
+    IEResource(const QString& path, QObject* parent = nullptr);
+    IEResource(const IEResource&) = delete;
     virtual ~IEResource();
 
     bool operator==(const IEResource& other) { return (this->id == other.id); }
@@ -27,5 +30,8 @@ public:
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
+
+signals:
+    void pathUpdated(const unsigned long long id, const QString& path);
 };
 

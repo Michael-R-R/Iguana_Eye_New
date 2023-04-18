@@ -3,10 +3,11 @@
 #include "IEGame.h"
 #include "IEScene.h"
 #include "IEShaderManager.h"
+#include "IEShader.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSShaderSystem::IEECSShaderSystem() :
-    IEECSSystem(),
+IEECSShaderSystem::IEECSShaderSystem(QObject* parent) :
+    IEECSSystem(parent),
     data()
 {
     IEECSShaderSystem::attach(IEEntity(-1));
@@ -54,7 +55,7 @@ bool IEECSShaderSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSShaderSystem::onUpdateFrame(ECSOnUpdateEvent*)
+void IEECSShaderSystem::onUpdateFrame(ECSOnUpdateEvent&)
 {
     // Not used
 }
@@ -91,16 +92,16 @@ QVector<unsigned long long> IEECSShaderSystem::massPurgeShaderId(const unsigned 
     return result;
 }
 
-QSharedPointer<IEShader> IEECSShaderSystem::getAttachedShader(const int index) const
+IEShader* IEECSShaderSystem::getAttachedShader(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto& scene = game->getScene();
-    auto& shaderManager = scene.getShaderManager();
+    auto* scene = game->getScene();
+    auto* shaderManager = scene->getShaderManager();
 
-    return shaderManager.value(data.shaderId[index]);
+    return shaderManager->value<IEShader>(data.shaderId[index]);
 }
 
 unsigned long long IEECSShaderSystem::getShaderId(const int index) const

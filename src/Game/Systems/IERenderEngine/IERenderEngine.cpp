@@ -9,8 +9,13 @@
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
 #include "IECamera.h"
+#include "IEMesh.h"
+#include "IEMaterial.h"
+#include "IEShader.h"
+#include "IERenderable.h"
 
-IERenderEngine::IERenderEngine()
+IERenderEngine::IERenderEngine(QObject* parent) :
+    IEGameSystem(parent)
 {
 
 }
@@ -40,34 +45,35 @@ void IERenderEngine::reset(IEGame&)
 
 }
 
-void IERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, QSharedPointer<IECamera> camera)
+void IERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera)
 {
     if(!camera)
         return;
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto& scene = game->getScene();
-    auto& meshManager = scene.getMeshManager();
-    auto& materialManager = scene.getMaterialManager();;
-    auto& shaderManager = scene.getShaderManager();;
-    auto& renderableManager = scene.getRenderableManager();;
+    auto* scene = game->getScene();
+    auto* meshManager = scene->getMeshManager();
+    auto* materialManager = scene->getMaterialManager();;
+    auto* shaderManager = scene->getShaderManager();;
+    auto* renderableManager = scene->getRenderableManager();;
 
-    const auto renderables = renderableManager.getResources();
-    for(auto& i : renderables)
+    auto& renderables = renderableManager->getResources();
+    for(auto* i : renderables)
     {
-        auto mesh = meshManager.value(i->getMeshId());
-        auto material = materialManager.value(i->getMaterialId());
-        auto shader = shaderManager.value(i->getShaderId());
+        auto* renderable = static_cast<IERenderable*>(i);
+        auto* mesh = meshManager->value<IEMesh>(renderable->getMeshId());
+        auto* material = materialManager->value<IEMaterial>(renderable->getMaterialId());
+        auto* shader = shaderManager->value<IEShader>(renderable->getShaderId());
         if(!mesh || !material || !shader)
             continue;
 
         prepareShader(*shader);
-        prepareRenderable(*i);
+        prepareRenderable(*renderable);
         prepareViewProjection(*shader, *camera);
         prepareUniformData(*shader, *material);
-        prepareUniformData(*shader, *i);
-        draw(glFunc, *i, *mesh);
-        cleanup(*shader, *i);
+        prepareUniformData(*shader, *renderable);
+        draw(glFunc, *renderable, *mesh);
+        cleanup(*shader, *renderable);
     }
 }
 

@@ -4,17 +4,17 @@
 #include <QSet>
 #include <QStack>
 
+#include "IEObject.h"
 #include "IEEntity.h"
-#include "Serializable.h"
 
-class IEEntityManager : public Serializable
+class IEEntityManager : public IEObject
 {
     QMap<IEEntity, QSet<size_t>> entityMap; // <Entity, Attached components>
     QStack<int> freeIdStack;
     int nextId;
 
 public:
-    IEEntityManager();
+    IEEntityManager(QObject* parent = nullptr);
     ~IEEntityManager();
 
     IEEntity create();

@@ -17,8 +17,8 @@ protected:
     unsigned long long heightTexId;
 
 public:
-    IEMaterial();
-    IEMaterial(const QString& path);
+    IEMaterial(QObject* parent = nullptr);
+    IEMaterial(const QString& path, QObject* parent = nullptr);
     IEMaterial(const IEMaterial&) = delete;
     ~IEMaterial();
 

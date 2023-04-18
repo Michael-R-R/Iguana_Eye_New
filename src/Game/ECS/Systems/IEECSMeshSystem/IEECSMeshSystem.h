@@ -31,16 +31,16 @@ class IEECSMeshSystem : public IEECSSystem
     Data data;
 
 public:
-    IEECSMeshSystem();
+    IEECSMeshSystem(QObject* parent = nullptr);
     ~IEECSMeshSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent* event) override;
+    void onUpdateFrame(ECSOnUpdateEvent& event) override;
 
     QVector<unsigned long long> massReplaceMeshId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeMeshId(const unsigned long long idToPurge);
-    QSharedPointer<IEMesh> getAttachedMesh(const int index);
+    IEMesh* getAttachedMesh(const int index);
 
     unsigned long long getMeshId(const int index);
     void setMeshId(const int index, const unsigned long long val);

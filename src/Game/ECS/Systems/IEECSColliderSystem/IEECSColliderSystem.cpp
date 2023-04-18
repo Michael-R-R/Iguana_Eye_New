@@ -1,7 +1,8 @@
 #include "IEECSColliderSystem.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSColliderSystem::IEECSColliderSystem() :
+IEECSColliderSystem::IEECSColliderSystem(QObject* parent) :
+    IEECSSystem(parent),
     data()
 {
     IEECSColliderSystem::attach(IEEntity(-1));
@@ -48,7 +49,7 @@ bool IEECSColliderSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSColliderSystem::onUpdateFrame(ECSOnUpdateEvent*)
+void IEECSColliderSystem::onUpdateFrame(ECSOnUpdateEvent&)
 {
 
 }

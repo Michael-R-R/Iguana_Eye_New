@@ -5,12 +5,13 @@
 #include "IERenderableManager.h"
 #include "IECameraManager.h"
 
-IEScene::IEScene() :
-    meshManager(nullptr),
-    materialManager(nullptr),
-    shaderManager(nullptr),
-    renderableManager(nullptr),
-    cameraManager(nullptr)
+IEScene::IEScene(QObject* parent) :
+    IEGameSystem(parent),
+    meshManager(new IEMeshManager(this)),
+    materialManager(new IEMaterialManager(this)),
+    shaderManager(new IEShaderManager(this)),
+    renderableManager(new IERenderableManager(this)),
+    cameraManager(new IECameraManager(this))
 {
 
 }
@@ -22,20 +23,20 @@ IEScene::~IEScene()
 
 void IEScene::startup(IEGame&)
 {
-    meshManager = QSharedPointer<IEMeshManager>::create();
-    materialManager = QSharedPointer<IEMaterialManager>::create();
-    shaderManager = QSharedPointer<IEShaderManager>::create();
-    renderableManager = QSharedPointer<IERenderableManager>::create();
-    cameraManager = QSharedPointer<IECameraManager>::create();
+    meshManager->startup();
+    materialManager->startup();
+    shaderManager->startup();
+    renderableManager->startup();
+    cameraManager->startup();
 }
 
 void IEScene::shutdown(IEGame&)
 {
-    meshManager = nullptr;
-    materialManager = nullptr;
-    shaderManager = nullptr;
-    renderableManager = nullptr;
-    cameraManager = nullptr;
+    meshManager->shutdown();
+    materialManager->shutdown();
+    shaderManager->shutdown();
+    renderableManager->shutdown();
+    cameraManager->shutdown();
 }
 
 void IEScene::initalize(IEGame&)

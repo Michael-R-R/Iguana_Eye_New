@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QMainWindow>
-#include <QSharedPointer>
 
 #include "Serializable.h"
 #include "ApplicationFileHandler.h"
@@ -23,8 +22,8 @@ class ApplicationWindow : public QMainWindow, public Serializable
 
     ApplicationFileHandler appFileHandler;
 
-    QSharedPointer<IEGame> game;
-    QSharedPointer<Editor> editor;
+    IEGame* game;
+    Editor* editor;
 
     const QString permenentTitle;
     QString tempTitle;
@@ -47,8 +46,8 @@ public:
     void saveAsToFile(const QString& path);
     void openFromFile(const QString& path);
 
-    IEGame* getGame() const { return &(*game); }
-    Editor* getEditor() const { return &(*editor); }
+    IEGame* getGame() const { return game; }
+    Editor* getEditor() const { return editor; }
 
 private:
     void clearActions();

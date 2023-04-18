@@ -1,7 +1,7 @@
 #include "IECamera.h"
 
-IECamera::IECamera() :
-    IEResource(),
+IECamera::IECamera(QObject* parent) :
+    IEResource(parent),
     projection(), view(),
     up(0.0f, 1.0f, 0.0f),
     nearPlane(0.1f), farPlane(4000.0f), fov(75.0f),
@@ -10,8 +10,8 @@ IECamera::IECamera() :
 
 }
 
-IECamera::IECamera(const QString& path) :
-    IEResource(path),
+IECamera::IECamera(const QString& path, QObject* parent) :
+    IEResource(path, parent),
     projection(), view(),
     up(0.0f, 1.0f, 0.0f),
     nearPlane(0.1f), farPlane(4000.0f), fov(75.0f),

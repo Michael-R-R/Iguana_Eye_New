@@ -31,16 +31,16 @@ class IEECSShaderSystem : public IEECSSystem
     Data data;
 
 public:
-    IEECSShaderSystem();
+    IEECSShaderSystem(QObject* parent = nullptr);
     ~IEECSShaderSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent* event) override;
+    void onUpdateFrame(ECSOnUpdateEvent& event) override;
 
     QVector<unsigned long long> massReplaceShaderId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeShaderId(const unsigned long long idToPurge);
-    QSharedPointer<IEShader> getAttachedShader(const int index) const;
+    IEShader* getAttachedShader(const int index) const;
 
     unsigned long long getShaderId(const int index) const;
     void setShaderId(const int index, const unsigned long long val);

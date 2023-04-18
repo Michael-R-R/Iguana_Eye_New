@@ -5,10 +5,11 @@
 #include "IERenderableManager.h"
 #include "IEECSHierarchySystem.h"
 #include "IEECSRenderableSystem.h"
+#include "IERenderable.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSTransformSystem::IEECSTransformSystem() :
-    IEECSSystem(),
+IEECSTransformSystem::IEECSTransformSystem(QObject* parent) :
+    IEECSSystem(parent),
     data(),
     dirtyParentIndices()
 {
@@ -69,14 +70,14 @@ bool IEECSTransformSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
+void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent& event)
 {
-    auto hierarchySystem = event->getHierarchy();
-    auto renderableSystem = event->getRenderable();
+    auto& hierarchySystem = event.getHierarchy();
+    auto& renderableSystem = event.getRenderable();
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto& scene = game->getScene();
-    auto& renderableManager = scene.getRenderableManager();
+    auto* scene = game->getScene();
+    auto* renderableManager = scene->getRenderableManager();
 
     for(const auto& i : qAsConst(dirtyParentIndices))
     {
@@ -86,26 +87,26 @@ void IEECSTransformSystem::onUpdateFrame(ECSOnUpdateEvent* event)
         for(const auto& j : qAsConst(dirtyChildIndices))
         {
             const IEEntity& childEntity = data.entity[j];
-            const int childIndex = renderableSystem->lookUpIndex(childEntity);
-            const unsigned long long renderableId = renderableSystem->getRenderableId(childIndex);
-            auto renderable = renderableManager.value(renderableId);
+            const int childIndex = renderableSystem.lookUpIndex(childEntity);
+            const unsigned long long renderableId = renderableSystem.getRenderableId(childIndex);
+            auto renderable = renderableManager->value<IERenderable>(renderableId);
             if(!renderable)
                 continue;
 
             QMatrix4x4& transform = data.transform[j];
-            const int childInstanceIndex = renderableSystem->getShownInstanceIndex(childIndex);
+            const int childInstanceIndex = renderableSystem.getShownInstanceIndex(childIndex);
             renderable->setMat4InstanceValue("aModel", childInstanceIndex, transform);
         }
 
         const IEEntity& parentEntity = data.entity[i];
-        const int parentIndex = renderableSystem->lookUpIndex(parentEntity);
-        const unsigned long long renderableId = renderableSystem->getRenderableId(parentIndex);
-        auto renderable = renderableManager.value(renderableId);
+        const int parentIndex = renderableSystem.lookUpIndex(parentEntity);
+        const unsigned long long renderableId = renderableSystem.getRenderableId(parentIndex);
+        auto renderable = renderableManager->value<IERenderable>(renderableId);
         if(!renderable)
             continue;
 
         QMatrix4x4& transform = data.transform[i];
-        const int parentInstanceIndex = renderableSystem->getShownInstanceIndex(parentIndex);
+        const int parentInstanceIndex = renderableSystem.getShownInstanceIndex(parentIndex);
         renderable->setMat4InstanceValue("aModel", parentInstanceIndex, transform);
     }
 
@@ -186,15 +187,15 @@ void IEECSTransformSystem::setScale(const int index, const QVector3D& val)
 
 void IEECSTransformSystem::updateTransform(const int index,
                                            QSet<int>& dirtyChildren,
-                                           const IEECSHierarchySystem* hierarchySystem)
+                                           const IEECSHierarchySystem& hierarchySystem)
 {
     if(!indexBoundCheck(index))
         return;
 
     IEEntity entity = data.entity[index];
 
-    int hierarchyIndex = hierarchySystem->lookUpIndex(entity);
-    IEEntity parentEntity = hierarchySystem->getParent(hierarchyIndex);
+    int hierarchyIndex = hierarchySystem.lookUpIndex(entity);
+    IEEntity parentEntity = hierarchySystem.getParent(hierarchyIndex);
     int parentTransformIndex = this->lookUpIndex(parentEntity);
 
     if(parentTransformIndex > 0)
@@ -209,7 +210,7 @@ void IEECSTransformSystem::updateTransform(const int index,
         data.transform[index] = calcModelMatrix(index);
     }
 
-    for(auto& childEntity : hierarchySystem->getChildrenList(hierarchyIndex))
+    for(auto& childEntity : hierarchySystem.getChildrenList(hierarchyIndex))
     {
         int childIndex = this->lookUpIndex(childEntity);
         this->updateTransform(childIndex, dirtyChildren, hierarchySystem);

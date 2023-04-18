@@ -9,11 +9,13 @@
 #include "IEMath.h"
 #include "ApplicationProperties.h"
 
-EPhysicsEngine::EPhysicsEngine() :
+EPhysicsEngine::EPhysicsEngine(QObject* parent) :
+    IEObject(parent),
     pxScene(nullptr),
     raycastDistance(10000.0f),
     filterFlag(physx::PxQueryFlag::eSTATIC),
-    rigidbodies()
+    rigidbodies(),
+    isButtonHeld(false)
 {
 
 }
@@ -25,9 +27,9 @@ EPhysicsEngine::~EPhysicsEngine()
 
 void EPhysicsEngine::startup(IEGame& game)
 {
-    auto& engine = game.getPhysicsEngine();
-    auto& p = engine.getPxPhysics();
-    auto& cpuDispatcher = engine.getCpuDispatcher();
+    auto* engine = game.getPhysicsEngine();
+    auto& p = engine->getPxPhysics();
+    auto& cpuDispatcher = engine->getCpuDispatcher();
 
     physx::PxSceneDesc sceneDesc(p.getTolerancesScale());
     sceneDesc.gravity = physx::PxVec3(0.0f, 0.0f, 0.0f);
@@ -48,8 +50,23 @@ void EPhysicsEngine::onUpdateFrame(IEInput& input, ECamera& camera)
 {
     if(input.isPressed("Left Click"))
     {
-        castRay(input, camera);
+        if(!isButtonHeld)
+        {
+            isButtonHeld = true;
+
+            const auto [status, hit] = castRay(input, camera);
+            if(status)
+            {
+                physx::PxActor* actor = hit.block.actor;
+                const int id = (int)(size_t)actor->userData;
+                emit entitySelected(IEEntity(id));
+            }
+            else
+                emit selectionCleared();
+        }
     }
+    else
+        isButtonHeld = false;
 }
 
 void EPhysicsEngine::onInitRigidbodies(IEGame& game)
@@ -68,7 +85,7 @@ void EPhysicsEngine::onInitRigidbodies(IEGame& game)
         const auto& rot = data.rotation[i];
         const auto& scl = data.scale[i];
 
-        auto box = QSharedPointer<IEBoxRigidbody>::create(type, id, scl.x(), scl.y(), scl.z());
+        auto* box = new IEBoxRigidbody(type, id, scl.x(), scl.y(), scl.z(), 0.0f, 0.0f, this);
 
         physx::PxTransform pt(pos.x(), pos.y(), pos.z());
         physx::PxTransform pq(physx::PxQuat(rot.x(), rot.y(), rot.z(), rot.w()));
@@ -81,7 +98,7 @@ void EPhysicsEngine::onInitRigidbodies(IEGame& game)
     }
 }
 
-void EPhysicsEngine::castRay(IEInput& input, ECamera& camera)
+std::tuple<bool, physx::PxRaycastBuffer> EPhysicsEngine::castRay(const IEInput& input, const ECamera& camera)
 {
     const QVector3D& pos = camera.getPosition();
     const QVector2D& dimensions = ApplicationProperties::viewportDimensions;
@@ -95,12 +112,6 @@ void EPhysicsEngine::castRay(IEInput& input, ECamera& camera)
     physx::PxRaycastBuffer hit;
 
     bool status = pxScene->raycast(origin, dir, raycastDistance, hit, physx::PxHitFlag::eDEFAULT, filterFlag);
-    if(status)
-    {
-        auto* actor = hit.block.actor;
-        if(actor)
-            qDebug() << "Hit: " << (int)(size_t)actor->userData;
-    }
-    else
-        qDebug() << "No hit";
+
+    return std::make_tuple(status, hit);
 }

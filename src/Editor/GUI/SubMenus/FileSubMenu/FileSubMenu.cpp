@@ -46,13 +46,13 @@ void FileSubMenu::startup()
 void FileSubMenu::setupConnections()
 {
     auto& application = ApplicationWindow::instance();
-    auto game = application.getGame();
+    auto* game = application.getGame();
 
-    connect(&(*game), &IEGame::stateChanged, this, [this](QSharedPointer<IEGameState> state)
+    connect(game, &IEGame::stateChanged, this, [this](const IEGameState* state)
             {
-                if(dynamic_cast<IEGamePlayState*>(&(*state)))
+                if(dynamic_cast<const IEGamePlayState*>(state))
                     this->setAllEnabled(false);
-                else if(dynamic_cast<IEGameStopState*>(&(*state)))
+                else if(dynamic_cast<const IEGameStopState*>(state))
                     this->setAllEnabled(true);
             });
 }

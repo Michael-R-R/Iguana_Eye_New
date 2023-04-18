@@ -43,12 +43,12 @@ class IEECSTransformSystem : public IEECSSystem
     QSet<int> dirtyParentIndices;
 
 public:
-    IEECSTransformSystem();
+    IEECSTransformSystem(QObject* parent = nullptr);
     ~IEECSTransformSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent* event) override;
+    void onUpdateFrame(ECSOnUpdateEvent& event) override;
 
     const QVector3D& getPosition(const int index) const;
     const QVector4D& getRotation(const int index) const;
@@ -64,7 +64,7 @@ public:
 private:
     void updateTransform(const int index,
                          QSet<int>& dirtyChildren,
-                         const IEECSHierarchySystem* hierarchySystem);
+                         const IEECSHierarchySystem& hierarchySystem);
     QMatrix4x4 calcModelMatrix(const int index);
 
 public:

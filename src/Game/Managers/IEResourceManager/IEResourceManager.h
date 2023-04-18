@@ -5,112 +5,47 @@
 
 #include "IEObject.h"
 
-template <class T>
+class IEResource;
+
 class IEResourceManager : public IEObject
 {
+    Q_OBJECT
+
 protected:
-    QMap<unsigned long long, QSharedPointer<T>> resources;
+    QMap<unsigned long long, IEResource*> resources;
     unsigned long long defaultId;
 
 public:
-    IEResourceManager() : resources(), defaultId(0)
-    {
+    IEResourceManager(QObject* parent = nullptr);
+    virtual ~IEResourceManager();
 
-    }
+    virtual void startup() {}
+    virtual void shutdown() {}
 
-    virtual ~IEResourceManager()
-    {
+    virtual bool add(const unsigned long long key, IEResource* value);
+    virtual bool remove(const unsigned long long key);
+    virtual bool changeKey(const unsigned long long oldKey, const unsigned long long newKey);
 
-    }
+    bool doesExist(const unsigned long long key) const;
+    void clear();
 
-    virtual bool add(const unsigned long long key, QSharedPointer<T> value)
-    {
-        if(!value || doesExist(key))
-            return false;
+    unsigned long long getDefaultId() const { return defaultId; }
+    QMap<unsigned long long, IEResource*>& getResources() { return resources; }
 
-        resources[key] = value;
+    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 
-        return true;
-    }
-
-    virtual bool remove(const unsigned long long key)
-    {
-        if(!doesExist(key))
-            return false;
-
-        resources.remove(key);
-
-        return true;
-    }
-
-    virtual bool changeKey(const unsigned long long oldKey, const unsigned long long newKey)
-    {
-        if(!doesExist(oldKey) || doesExist(newKey))
-            return false;
-
-        auto temp = resources[oldKey];
-        resources.remove(oldKey);
-        resources[newKey] = temp;
-
-        return true;
-    }
-
-    QSharedPointer<T> value(const unsigned long long key) const
+    template<class T>
+    T* value(const unsigned long long key)
     {
         if(!doesExist(key))
             return nullptr;
 
-        return resources[key];
+        return static_cast<T*>(resources[key]);
     }
 
-    bool doesExist(const unsigned long long key) const
-    {
-        return resources.contains(key);
-    }
-
-    void clear()
-    {
-        resources.clear();
-    }
-
-    const QMap<unsigned long long, QSharedPointer<T>>& getResources() const
-    {
-        return resources;
-    }
-
-    unsigned long long getDefaultId() const { return defaultId; }
-
-    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override
-    {
-        const auto& manager = static_cast<const IEResourceManager&>(obj);
-
-        out << (int)manager.resources.size();
-
-        for(auto& i : manager.resources)
-        {
-            out << *i;
-        }
-
-        return out;
-    }
-
-    QDataStream& deserialize(QDataStream& in, Serializable& obj) override
-    {
-        auto& manager = static_cast<IEResourceManager&>(obj);
-        manager.clear();
-
-        int size = 0;
-        in >> size;
-
-        for(int i = 0; i < size; i++)
-        {
-            auto resource = QSharedPointer<T>::create();
-
-            in >> *resource;
-
-            manager.add(resource->getId(), resource);
-        }
-
-        return in;
-    }
+signals:
+    void added(const unsigned long long key, const QString& path);
+    void removed(const unsigned long long key);
+    void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
 };

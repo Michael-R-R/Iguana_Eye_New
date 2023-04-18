@@ -15,33 +15,32 @@ class IEECSRenderableSystem;
 
 class ECSOnUpdateEvent
 {
-    // Does not own these pointers
-    IEECSNameSystem* name;
-    IEECSHierarchySystem* hierarchy;
-    IEECSInputSystem* input;
-    IEECSScriptSystem* script;
-    IEECSRigidbody3DSystem* rigidbody3d;
-    IEECSTransformSystem* transform;
-    IEECSCameraSystem* camera;
-    IEECSMeshSystem* mesh;
-    IEECSMaterialSystem* material;
-    IEECSShaderSystem* shader;
-    IEECSRenderableSystem* renderable;
+    IEECSNameSystem& name;
+    IEECSHierarchySystem& hierarchy;
+    IEECSInputSystem& input;
+    IEECSScriptSystem& script;
+    IEECSRigidbody3DSystem& rigidbody3d;
+    IEECSTransformSystem& transform;
+    IEECSCameraSystem& camera;
+    IEECSMeshSystem& mesh;
+    IEECSMaterialSystem& material;
+    IEECSShaderSystem& shader;
+    IEECSRenderableSystem& renderable;
 
 public:
-    ECSOnUpdateEvent(IEECS* ecs);
+    ECSOnUpdateEvent(IEECS& ecs);
     ~ECSOnUpdateEvent();
 
-    IEECSNameSystem* getName() const;
-    IEECSHierarchySystem* getHierarchy() const;
-    IEECSInputSystem* getInput() const;
-    IEECSScriptSystem* getScript() const;
-    IEECSRigidbody3DSystem* getRigidbody3D() const;
-    IEECSTransformSystem* getTransform() const;
-    IEECSCameraSystem* getCamera() const;
-    IEECSMeshSystem* getMesh() const;
-    IEECSMaterialSystem* getMaterial() const;
-    IEECSShaderSystem* getShader() const;
-    IEECSRenderableSystem* getRenderable() const;
+    IEECSNameSystem& getName() const;
+    IEECSHierarchySystem& getHierarchy() const;
+    IEECSInputSystem& getInput() const;
+    IEECSScriptSystem& getScript() const;
+    IEECSRigidbody3DSystem& getRigidbody3D() const;
+    IEECSTransformSystem& getTransform() const;
+    IEECSCameraSystem& getCamera() const;
+    IEECSMeshSystem& getMesh() const;
+    IEECSMaterialSystem& getMaterial() const;
+    IEECSShaderSystem& getShader() const;
+    IEECSRenderableSystem& getRenderable() const;
 };
 

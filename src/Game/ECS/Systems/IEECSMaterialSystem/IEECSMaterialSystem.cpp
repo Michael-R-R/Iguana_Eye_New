@@ -2,11 +2,12 @@
 #include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScene.h"
+#include "IEMaterial.h"
 #include "IEMaterialManager.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSMaterialSystem::IEECSMaterialSystem() :
-    IEECSSystem(),
+IEECSMaterialSystem::IEECSMaterialSystem(QObject* parent) :
+    IEECSSystem(parent),
     data()
 {
     IEECSMaterialSystem::attach(IEEntity(-1));
@@ -54,7 +55,7 @@ bool IEECSMaterialSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSMaterialSystem::onUpdateFrame(ECSOnUpdateEvent*)
+void IEECSMaterialSystem::onUpdateFrame(ECSOnUpdateEvent&)
 {
     // Not used
 }
@@ -91,16 +92,16 @@ QVector<unsigned long long> IEECSMaterialSystem::massPurgeMaterialId(const unsig
     return result;
 }
 
-QSharedPointer<IEMaterial> IEECSMaterialSystem::getAttachedMaterial(const int index)
+IEMaterial* IEECSMaterialSystem::getAttachedMaterial(const int index)
 {
     if(!indexBoundCheck(index))
         return nullptr;
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto& scene = game->getScene();
-    auto& materialManager = scene.getMaterialManager();
+    auto* scene = game->getScene();
+    auto* materialManager = scene->getMaterialManager();
 
-    return materialManager.value(data.materialId[index]);
+    return materialManager->value<IEMaterial>(data.materialId[index]);
 }
 
 unsigned long long IEECSMaterialSystem::getMaterialId(const int index)

@@ -1,7 +1,7 @@
 #include "IECapsuleRigidbody.h"
 
-IECapsuleRigidbody::IECapsuleRigidbody() :
-    IEBaseRigidbody(RigidbodyType::None, RigidbodyShape::Capsule, 0),
+IECapsuleRigidbody::IECapsuleRigidbody(QObject* parent) :
+    IEBaseRigidbody(RigidbodyType::None, RigidbodyShape::Capsule, 0, 0.0f, 0.0f, parent),
     radius(1.0f), halfHeight(1.0f)
 {
 
@@ -10,8 +10,9 @@ IECapsuleRigidbody::IECapsuleRigidbody() :
 IECapsuleRigidbody::IECapsuleRigidbody(RigidbodyType type,
                                        const int id,
                                        const float r, const float hh,
-                                       const float d, const float st) :
-    IEBaseRigidbody(type, RigidbodyShape::Capsule, id, d, st),
+                                       const float d, const float st,
+                                       QObject* parent) :
+    IEBaseRigidbody(type, RigidbodyShape::Capsule, id, d, st, parent),
     radius(r), halfHeight(hh)
 {
 

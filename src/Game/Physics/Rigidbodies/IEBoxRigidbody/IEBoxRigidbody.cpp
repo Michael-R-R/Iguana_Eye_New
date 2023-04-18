@@ -1,7 +1,7 @@
 #include "IEBoxRigidBody.h"
 
-IEBoxRigidbody::IEBoxRigidbody() :
-    IEBaseRigidbody(RigidbodyType::None, RigidbodyShape::Box, 0),
+IEBoxRigidbody::IEBoxRigidbody(QObject* parent) :
+    IEBaseRigidbody(RigidbodyType::None, RigidbodyShape::Box, 0, 0.0f, 0.0f, parent),
     extentX(1.0f), extentY(1.0f), extentZ(1.0f)
 {
 
@@ -10,8 +10,9 @@ IEBoxRigidbody::IEBoxRigidbody() :
 IEBoxRigidbody::IEBoxRigidbody(RigidbodyType type,
                                const int id,
                                const float x, const float y, const float z,
-                               const float d, const float st) :
-    IEBaseRigidbody(type, RigidbodyShape::Box, id, d, st),
+                               const float d, const float st,
+                               QObject* parent) :
+    IEBaseRigidbody(type, RigidbodyShape::Box, id, d, st, parent),
     extentX(x), extentY(y), extentZ(z)
 {
 

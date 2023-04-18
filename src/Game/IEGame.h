@@ -25,14 +25,14 @@ class IEGame : public QOpenGLWidget, public Serializable
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
 
-    QSharedPointer<IERenderEngine> renderEngine;
-    QSharedPointer<IEPhysicsEngine> physicsEngine;
-    QSharedPointer<IEScene> scene;
+    IERenderEngine* renderEngine;
+    IEPhysicsEngine* physicsEngine;
+    IEScene* scene;
     QSharedPointer<IEECS> ecs;
     QSharedPointer<IEInput> input;
     QSharedPointer<IEScriptEngine> scriptEngine;
     QSharedPointer<IETime> time;
-    QSharedPointer<IEGameState> state;
+    IEGameState* state;
 
 public:
     IEGame(QWidget* parent = nullptr);
@@ -50,13 +50,13 @@ public:
     void shutdown();
     void initalize();
     void reset();
-    void changeState(QSharedPointer<IEGameState> val);
+    void changeState(IEGameState* val);
 
     QOpenGLFunctions* getGlFunc() const { return glFunc; }
     QOpenGLExtraFunctions* getGlExtraFunc() const { return glExtraFunc; }
-    IERenderEngine& getRenderEngine() const { return *renderEngine; }
-    IEPhysicsEngine& getPhysicsEngine() const { return *physicsEngine; }
-    IEScene& getScene() const { return *scene; }
+    IERenderEngine* getRenderEngine() const { return renderEngine; }
+    IEPhysicsEngine* getPhysicsEngine() const { return physicsEngine; }
+    IEScene* getScene() const { return scene; }
     IEECS& getECS() const { return *ecs; }
     IEInput& getInput() const { return *input; }
     IEScriptEngine& getScriptEngine() const { return *scriptEngine; }
@@ -72,5 +72,5 @@ public:
 
 signals:
     void initialized();
-    void stateChanged(QSharedPointer<IEGameState> state);
+    void stateChanged(const IEGameState* state);
 };

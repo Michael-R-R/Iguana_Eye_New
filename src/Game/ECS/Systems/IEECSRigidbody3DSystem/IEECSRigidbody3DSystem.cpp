@@ -6,7 +6,8 @@
 #include "IEECSTransformSystem.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSRigidbody3DSystem::IEECSRigidbody3DSystem() :
+IEECSRigidbody3DSystem::IEECSRigidbody3DSystem(QObject* parent) :
+    IEECSSystem(parent),
     data(),
     awakeBodies(),
     sleepingBodies()
@@ -14,8 +15,8 @@ IEECSRigidbody3DSystem::IEECSRigidbody3DSystem() :
     IEECSRigidbody3DSystem::attach(IEEntity(-1));
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto& engine = game->getPhysicsEngine();
-    auto& simCallback = engine.getSimulationCallback();
+    auto* engine = game->getPhysicsEngine();
+    auto& simCallback = engine->getSimulationCallback();
     connect(&simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
     connect(&simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
 }
@@ -76,9 +77,9 @@ bool IEECSRigidbody3DSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
+void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent& event)
 {
-    auto* transformSystem = event->getTransform();
+    auto& transformSystem = event.getTransform();
 
     for(const auto& i : awakeBodies)
     {
@@ -94,9 +95,9 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
         physx::PxVec3 pxRot;
         pxQuat.toRadiansAndUnitAxis(angle, pxRot);
 
-        const int transformIndex = transformSystem->lookUpIndex(data.entity[i]);
-        transformSystem->setPosition(transformIndex, QVector3D(pxPos.x, pxPos.y, pxPos.z));
-        transformSystem->setRotation(transformIndex, QVector4D(pxRot.x, pxRot.y, pxRot.z, qRadiansToDegrees(angle)));
+        const int transformIndex = transformSystem.lookUpIndex(data.entity[i]);
+        transformSystem.setPosition(transformIndex, QVector3D(pxPos.x, pxPos.y, pxPos.z));
+        transformSystem.setRotation(transformIndex, QVector4D(pxRot.x, pxRot.y, pxRot.z, qRadiansToDegrees(angle)));
 
         qDebug() << pxPos.x << pxPos.y << pxPos.z;
     }
@@ -105,12 +106,12 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent* event)
 void IEECSRigidbody3DSystem::initalize()
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto& engine = game->getPhysicsEngine();
+    auto* engine = game->getPhysicsEngine();
 
     for(int i = 1; i < data.rigidbody.size(); i++)
     {
         awakeBodies.insert(i);
-        engine.addActorToScene(data.rigidbody[i]->getActor());
+        engine->addActorToScene(data.rigidbody[i]->getActor());
     }
 }
 

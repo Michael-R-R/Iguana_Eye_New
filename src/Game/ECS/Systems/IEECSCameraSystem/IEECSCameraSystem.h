@@ -56,18 +56,18 @@ class IEECSCameraSystem : public IEECSSystem
     int activeIndex;
 
 public:
-    IEECSCameraSystem();
+    IEECSCameraSystem(QObject* parent = nullptr);
     ~IEECSCameraSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent* event) override;
+    void onUpdateFrame(ECSOnUpdateEvent& event) override;
     void initalize() override;
 
     int getActiveIndex() const;
     IEEntity getActiveEntity() const;
-    QSharedPointer<IECamera> getActiveCamera() const;
-    QSharedPointer<IECamera> getAttachedCamera(const int index) const;
+    IECamera* getActiveCamera() const;
+    IECamera* getAttachedCamera(const int index) const;
     void setActiveIndex(const int val);
 
     const QSharedPointer<IECameraScript> getScript(const int index) const;

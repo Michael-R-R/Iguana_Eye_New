@@ -19,7 +19,7 @@ class ECamera : public IECamera
     float pitch;
 
 public:
-    ECamera();
+    ECamera(QObject* parent = nullptr);
     ~ECamera();
 
     void update(IEInput& input, const float dt);

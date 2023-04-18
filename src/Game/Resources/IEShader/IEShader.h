@@ -13,8 +13,8 @@ protected:
     QString fragmentSource;
 
 public:
-    IEShader();
-    IEShader(const QString& path);
+    IEShader(QObject* parent = nullptr);
+    IEShader(const QString& path, QObject* parent = nullptr);
     IEShader(const IEShader&) = delete;
     ~IEShader();
 

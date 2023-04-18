@@ -1,15 +1,16 @@
 #include "IEPlaneRigidbody.h"
 
-IEPlaneRigidbody::IEPlaneRigidbody() :
-    IEBaseRigidbody(RigidbodyType::None, RigidbodyShape::Plane, 0)
+IEPlaneRigidbody::IEPlaneRigidbody(QObject* parent) :
+    IEBaseRigidbody(RigidbodyType::None, RigidbodyShape::Plane, 0, 0.0f, 0.0f, parent)
 {
 
 }
 
 IEPlaneRigidbody::IEPlaneRigidbody(RigidbodyType type,
                                    const int id,
-                                   const float d, const float st) :
-    IEBaseRigidbody(type, RigidbodyShape::Plane, id, d, st)
+                                   const float d, const float st,
+                                   QObject* parent) :
+    IEBaseRigidbody(type, RigidbodyShape::Plane, id, d, st, parent)
 {
 
 }

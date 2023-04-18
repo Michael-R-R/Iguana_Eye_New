@@ -15,12 +15,12 @@ protected:
     QMap<IEEntity, int> entityMap; // Entity, index
 
 public:
-    IEECSSystem();
+    IEECSSystem(QObject* parent = nullptr);
     virtual ~IEECSSystem();
 
     virtual int attach(const IEEntity entity) = 0;
     virtual bool detach(const IEEntity entity) = 0;
-    virtual void onUpdateFrame(ECSOnUpdateEvent* event) = 0;
+    virtual void onUpdateFrame(ECSOnUpdateEvent& event) = 0;
     virtual void initalize() {}
     virtual void reset() {}
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;

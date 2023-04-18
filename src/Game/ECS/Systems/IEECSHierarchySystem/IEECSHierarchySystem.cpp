@@ -1,8 +1,8 @@
 #include "IEECSHierarchySystem.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSHierarchySystem::IEECSHierarchySystem() :
-    IEECSSystem(),
+IEECSHierarchySystem::IEECSHierarchySystem(QObject* parent) :
+    IEECSSystem(parent),
     data()
 {
     IEECSHierarchySystem::attach(IEEntity(-1));
@@ -57,7 +57,7 @@ bool IEECSHierarchySystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSHierarchySystem::onUpdateFrame(ECSOnUpdateEvent*)
+void IEECSHierarchySystem::onUpdateFrame(ECSOnUpdateEvent&)
 {
     // Not used
 }

@@ -56,12 +56,12 @@ class IEECSRenderableSystem : public IEECSSystem
     QMap<unsigned long long, QVector<IEEntity>> hiddenEntityList;
 
 public:
-    IEECSRenderableSystem();
+    IEECSRenderableSystem(QObject* parent = nullptr);
     ~IEECSRenderableSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent* event) override;
+    void onUpdateFrame(ECSOnUpdateEvent& event) override;
 
     int addShown(const int index);
     int addHidden(const int index);
@@ -73,7 +73,7 @@ public:
 
     QVector<unsigned long long> massReplaceRenderableId(const unsigned long long oldId, const unsigned long long newId);
     QVector<unsigned long long> massPurgeRenderableId(const unsigned long long idToPurge);
-    QSharedPointer<IERenderable> getAttachedRenderable(const int index) const;
+    IERenderable* getAttachedRenderable(const int index) const;
 
     unsigned long long getRenderableId(const int index) const;
     int getShownInstanceIndex(const int index) const;

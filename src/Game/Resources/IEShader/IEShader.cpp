@@ -1,17 +1,17 @@
 #include "IEShader.h"
 #include "IEFile.h"
 
-IEShader::IEShader() :
+IEShader::IEShader(QObject* parent) :
     QOpenGLShaderProgram(),
-    IEResource(),
+    IEResource(parent),
     vertexSource(), fragmentSource()
 {
 
 }
 
-IEShader::IEShader(const QString& path) :
+IEShader::IEShader(const QString& path, QObject* parent) :
     QOpenGLShaderProgram(),
-    IEResource(path),
+    IEResource(path, parent),
     vertexSource(),
     fragmentSource()
 {
@@ -33,7 +33,6 @@ void IEShader::build()
     this->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentSource);
     this->link();
 }
-
 
 QDataStream& IEShader::serialize(QDataStream& out, const Serializable& obj) const
 {

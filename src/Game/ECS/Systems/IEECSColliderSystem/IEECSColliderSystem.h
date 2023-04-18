@@ -63,12 +63,12 @@ class IEECSColliderSystem : public IEECSSystem
     Data data;
 
 public:
-    IEECSColliderSystem();
+    IEECSColliderSystem(QObject* parent = nullptr);
     ~IEECSColliderSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent* event) override;
+    void onUpdateFrame(ECSOnUpdateEvent& event) override;
 
     void release(const int index);
 

@@ -11,14 +11,14 @@ ToggleGameStopAction::ToggleGameStopAction(IEGame* game, InputKey& shortcut, QOb
     connect(this, &ToggleGameStopAction::triggered, this, [this, game]()
             {
                 game->reset();
-                game->changeState(QSharedPointer<IEGameStopState>::create(*game));
+                game->changeState(new IEGameStopState(*game));
 
                 this->setEnabled(false);
             });
 
-    connect(game, &IEGame::stateChanged, this, [this](QSharedPointer<IEGameState> state)
+    connect(game, &IEGame::stateChanged, this, [this](const IEGameState* state)
             {
-                if(dynamic_cast<IEGamePlayState*>(&(*state)))
+                if(dynamic_cast<const IEGamePlayState*>(state))
                     this->setEnabled(true);
             });
 }

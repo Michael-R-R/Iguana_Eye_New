@@ -1,27 +1,15 @@
 #pragma once
 
 #include "IEResourceManager.h"
-#include "IEShader.h"
 
-class IEShaderManager : public IEResourceManager<IEShader>
+class IEShaderManager : public IEResourceManager
 {
-    Q_OBJECT
 
 public:
-    IEShaderManager();
+    IEShaderManager(QObject* parent = nullptr);
     ~IEShaderManager();
 
-    bool add(const unsigned long long key, QSharedPointer<IEShader> value) override;
-    bool remove(const unsigned long long key) override;
-    bool changeKey(const unsigned long long oldKey, const unsigned long long newKey) override;
-
-private:
-    void importAll();
-
-signals:
-    void added(const unsigned long long key, const QString& path);
-    void removed(const unsigned long long key);
-    void keyChanged(const unsigned long long oldKey, const unsigned long long newKey);
+    void startup() override;
 
 public:
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

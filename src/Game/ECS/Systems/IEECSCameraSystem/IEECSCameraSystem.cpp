@@ -4,10 +4,12 @@
 #include "IEScriptEngine.h"
 #include "IEScene.h"
 #include "IECameraManager.h"
+#include "IECamera.h"
 #include "IEECSTransformSystem.h"
 #include "ECSOnUpdateEvent.h"
 
-IEECSCameraSystem::IEECSCameraSystem() :
+IEECSCameraSystem::IEECSCameraSystem(QObject* parent) :
+    IEECSSystem(parent),
     data(),
     activeIndex(-1)
 {
@@ -62,7 +64,7 @@ bool IEECSCameraSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
+void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent& event)
 {
     if(!indexBoundCheck(activeIndex))
         return;
@@ -72,16 +74,16 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent* event)
 
     data.cameraScript[activeIndex]->update();
 
-    auto transformSystem = event->getTransform();
-    int transformIndex = transformSystem->lookUpIndex(activeEntity);
-    auto& pos = transformSystem->getPosition(transformIndex);
-    auto& rot = transformSystem->getRotation(transformIndex);
+    auto& transformSystem = event.getTransform();
+    int transformIndex = transformSystem.lookUpIndex(activeEntity);
+    auto& pos = transformSystem.getPosition(transformIndex);
+    auto& rot = transformSystem.getRotation(transformIndex);
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto& scene = game->getScene();
-    auto& cameraManager = scene.getCameraManager();
+    auto* scene = game->getScene();
+    auto* cameraManager = scene->getCameraManager();
 
-    auto activeCamera = cameraManager.value(activeId);
+    auto* activeCamera = cameraManager->value<IECamera>(activeId);
     activeCamera->updateView(pos, rot.toVector3D());
 }
 
@@ -111,28 +113,28 @@ IEEntity IEECSCameraSystem::getActiveEntity() const
     return data.entity[activeIndex];
 }
 
-QSharedPointer<IECamera> IEECSCameraSystem::getActiveCamera() const
+IECamera* IEECSCameraSystem::getActiveCamera() const
 {
     if(!indexBoundCheck(activeIndex))
         return nullptr;
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto& scene = game->getScene();
-    auto& cameraManager = scene.getCameraManager();
+    auto* scene = game->getScene();
+    auto* cameraManager = scene->getCameraManager();
 
-    return cameraManager.value(data.cameraId[activeIndex]);
+    return cameraManager->value<IECamera>(data.cameraId[activeIndex]);
 }
 
-QSharedPointer<IECamera> IEECSCameraSystem::getAttachedCamera(const int index) const
+IECamera* IEECSCameraSystem::getAttachedCamera(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto& scene = game->getScene();
-    auto& cameraManager = scene.getCameraManager();
+    auto* scene = game->getScene();
+    auto* cameraManager = scene->getCameraManager();
 
-    return cameraManager.value(data.cameraId[index]);
+    return cameraManager->value<IECamera>(data.cameraId[index]);
 }
 
 void IEECSCameraSystem::setActiveIndex(const int val)

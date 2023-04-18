@@ -3,13 +3,15 @@
 #include <QSharedPointer>
 #include <QVector2D>
 
+#include "IEObject.h"
+
 class IEGame;
 
-class IEGameState
+class IEGameState : public IEObject
 {
 
 public:
-    IEGameState() {}
+    IEGameState(QObject* parent = nullptr) : IEObject(parent) {}
     virtual ~IEGameState() {}
 
     virtual void enter(IEGame& game) = 0;
@@ -18,5 +20,8 @@ public:
     virtual void onRenderFrame() = 0;
     virtual void onResize(const float w, const float h) = 0;
     virtual void onResize(const QVector2D& val) { onResize(val.x(), val.y()); }
+
+    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 };
 

@@ -6,6 +6,8 @@ class IEGame;
 
 class IEGameSystem : public IEObject
 {
+    Q_OBJECT
+
 public:
     IEGameSystem(QObject* parent = nullptr) : IEObject(parent) {}
     virtual ~IEGameSystem() {}

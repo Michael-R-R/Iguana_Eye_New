@@ -53,18 +53,18 @@ void ApplicationWindow::setModified(const bool isModified)
 
 void ApplicationWindow::startup()
 {
-    game = QSharedPointer<IEGame>::create(this);
-    connect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
-    this->setCentralWidget(&(*game));
+    game = new IEGame(this);
+    connect(game, &IEGame::initialized, this, &ApplicationWindow::initalize);
+    this->setCentralWidget(game);
 }
 
 void ApplicationWindow::initalize()
 {
-    disconnect(&(*game), &IEGame::initialized, this, &ApplicationWindow::initalize);
+    disconnect(game, &IEGame::initialized, this, &ApplicationWindow::initalize);
     game->startup();
-    game->changeState(QSharedPointer<IEGameStopState>::create(*game));
+    game->changeState(new IEGameStopState(*game));
 
-    editor = QSharedPointer<Editor>::create(this);
+    editor = new Editor(this);
     editor->startup();
 }
 
@@ -72,9 +72,11 @@ void ApplicationWindow::shutdown()
 {
     clearActions();
     editor->shutdown();
+    delete editor;
     editor = nullptr;
 
     game->shutdown();
+    delete game;
     game = nullptr;
 }
 
@@ -127,7 +129,8 @@ QDataStream& ApplicationWindow::deserialize(QDataStream& in, Serializable& obj)
 
     app.clearActions();
     app.editor->shutdown();
-    app.editor = QSharedPointer<Editor>::create(this);
+    delete app.editor;
+    app.editor = new Editor(&app);
     app.editor->startup();
 
     return in;

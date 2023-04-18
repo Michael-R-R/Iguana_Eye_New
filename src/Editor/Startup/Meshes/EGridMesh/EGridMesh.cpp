@@ -1,7 +1,7 @@
 #include "EGridMesh.h"
 
-EGridMesh::EGridMesh() :
-    IEMesh()
+EGridMesh::EGridMesh(QObject* parent) :
+    IEMesh(parent)
 {
     positionVertices =
     {

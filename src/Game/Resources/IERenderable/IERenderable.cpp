@@ -1,16 +1,16 @@
 #include "IERenderable.h"
 #include "IEShader.h"
 
-IERenderable::IERenderable() :
-    QOpenGLVertexArrayObject(),
-    IEResource(),
+IERenderable::IERenderable(QObject* parent) :
+    IEResource(parent),
     renderMode(RenderMode::None), drawMode(GL_TRIANGLES),
     meshId(0), materialId(0), shaderId(0),
-    indexBuffer(QSharedPointer<IEIndexBuffer>::create()),
-    vec2BufferContainer(QSharedPointer<IEVertexBufferContainer<QVector2D>>::create()),
-    vec3BufferContainer(QSharedPointer<IEVertexBufferContainer<QVector3D>>::create()),
-    vec4BufferContainer(QSharedPointer<IEVertexBufferContainer<QVector4D>>::create()),
-    mat4BufferContainer(QSharedPointer<IEVertexBufferContainer<QMatrix4x4>>::create()),
+    vao(new QOpenGLVertexArrayObject(this)),
+    indexBuffer(new IEIndexBuffer(this)),
+    vec2BufferContainer(new IEVertexBufferContainer<QVector2D>(this)),
+    vec3BufferContainer(new IEVertexBufferContainer<QVector3D>(this)),
+    vec4BufferContainer(new IEVertexBufferContainer<QVector4D>(this)),
+    mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>(this)),
     shownCount(0), hiddenCount(0),
     uniformData(),
     dirtyVec2Buffers(), dirtyVec3Buffers(),
@@ -22,16 +22,17 @@ IERenderable::IERenderable() :
 IERenderable::IERenderable(const QString& path,
                            const unsigned long long meshId_,
                            const unsigned long long materialId_,
-                           const unsigned long long shaderId_) :
-    QOpenGLVertexArrayObject(),
-    IEResource(path),
+                           const unsigned long long shaderId_,
+                           QObject* parent) :
+    IEResource(path, parent),
     renderMode(RenderMode::None), drawMode(GL_TRIANGLES),
     meshId(meshId_), materialId(materialId_), shaderId(shaderId_),
-    indexBuffer(QSharedPointer<IEIndexBuffer>::create()),
-    vec2BufferContainer(QSharedPointer<IEVertexBufferContainer<QVector2D>>::create()),
-    vec3BufferContainer(QSharedPointer<IEVertexBufferContainer<QVector3D>>::create()),
-    vec4BufferContainer(QSharedPointer<IEVertexBufferContainer<QVector4D>>::create()),
-    mat4BufferContainer(QSharedPointer<IEVertexBufferContainer<QMatrix4x4>>::create()),
+    vao(new QOpenGLVertexArrayObject(this)),
+    indexBuffer(new IEIndexBuffer(this)),
+    vec2BufferContainer(new IEVertexBufferContainer<QVector2D>(this)),
+    vec3BufferContainer(new IEVertexBufferContainer<QVector3D>(this)),
+    vec4BufferContainer(new IEVertexBufferContainer<QVector4D>(this)),
+    mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>(this)),
     shownCount(0), hiddenCount(0),
     uniformData(),
     dirtyVec2Buffers(), dirtyVec3Buffers(),
@@ -42,37 +43,54 @@ IERenderable::IERenderable(const QString& path,
 
 IERenderable::~IERenderable()
 {
-    if(this->isCreated())
-        this->destroy();
+    if(vao->isCreated())
+        vao->destroy();
 }
 
-void IERenderable::addIndexBuffer(QSharedPointer<IEIndexBuffer> buffer)
+void IERenderable::addIndexBuffer(IEIndexBuffer* buffer)
 {
     indexBuffer = buffer;
 }
 
-void IERenderable::addVec2Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QVector2D>> value)
+bool IERenderable::addVec2Buffer(const QString& key, IEVertexBuffer<QVector2D>* value)
 {
-    vec2BufferContainer->add(key, value);
+    if(!vec2BufferContainer->add(key, value))
+        return false;
+
     dirtyVec2Buffers.insert(key);
+
+    return true;
 }
 
-void IERenderable::addVec3Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QVector3D>> value)
+bool IERenderable::addVec3Buffer(const QString& key, IEVertexBuffer<QVector3D>* value)
 {
-    vec3BufferContainer->add(key, value);
+    if(!vec3BufferContainer->add(key, value))
+        return false;
+
+
     dirtyVec3Buffers.insert(key);
+
+    return true;
 }
 
-void IERenderable::addVec4Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QVector4D>> value)
+bool IERenderable::addVec4Buffer(const QString& key, IEVertexBuffer<QVector4D>* value)
 {
-    vec4BufferContainer->add(key, value);
+    if(!vec4BufferContainer->add(key, value))
+        return false;
+
     dirtyVec4Buffers.insert(key);
+
+    return true;
 }
 
-void IERenderable::addMat4Buffer(const QString& key, QSharedPointer<IEVertexBuffer<QMatrix4x4>> value)
+bool IERenderable::addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>* value)
 {
-    mat4BufferContainer->add(key, value);
+    if(!mat4BufferContainer->add(key, value))
+        return false;
+
     dirtyMat4Buffers.insert(key);
+
+    return true;
 }
 
 void IERenderable::setVec2BufferData(const QString& key, const QVector<QVector2D>& data)
@@ -155,7 +173,7 @@ void IERenderable::fetchBufferDataAtIndex(const int index,
                                           QMap<QString, QVector4D>& vec4Data,
                                           QMap<QString, QMatrix4x4>& mat4Data)
 {
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector2D>>> it1(vec2BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector2D>*> it1(vec2BufferContainer->getBuffers());
     while(it1.hasNext())
     {
         it1.next();
@@ -166,7 +184,7 @@ void IERenderable::fetchBufferDataAtIndex(const int index,
         vec2Data[key] = buffer->getBufferValue(index);
     }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector3D>>> it2(vec3BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector3D>*> it2(vec3BufferContainer->getBuffers());
     while(it2.hasNext())
     {
         it2.next();
@@ -177,7 +195,7 @@ void IERenderable::fetchBufferDataAtIndex(const int index,
         vec3Data[key] = buffer->getBufferValue(index);
     }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector4D>>> it3(vec4BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector4D>*> it3(vec4BufferContainer->getBuffers());
     while(it3.hasNext())
     {
         it3.next();
@@ -188,7 +206,7 @@ void IERenderable::fetchBufferDataAtIndex(const int index,
         vec4Data[key] = buffer->getBufferValue(index);
     }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QMatrix4x4>>> it4(mat4BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it4(mat4BufferContainer->getBuffers());
     while(it4.hasNext())
     {
         it4.next();
@@ -332,27 +350,27 @@ void IERenderable::build(IEShader& shader)
 {
     shader.bind();
 
-    if(!this->isCreated())
-        this->create();
+    if(!vao->isCreated())
+        vao->create();
 
-    this->bind();
+    vao->bind();
 
     indexBuffer->build();
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector2D>>> it1(vec2BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector2D>*> it1(vec2BufferContainer->getBuffers());
     while(it1.hasNext()) { it1.next(); it1.value()->build(shader.attributeLocation(it1.key())); }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector3D>>> it2(vec3BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector3D>*> it2(vec3BufferContainer->getBuffers());
     while(it2.hasNext()) { it2.next(); it2.value()->build(shader.attributeLocation(it2.key())); }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector4D>>> it3(vec4BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector4D>*> it3(vec4BufferContainer->getBuffers());
     while(it3.hasNext()) { it3.next(); it3.value()->build(shader.attributeLocation(it3.key())); }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QMatrix4x4>>> it4(mat4BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it4(mat4BufferContainer->getBuffers());
     while(it4.hasNext()) { it4.next(); it4.value()->build(shader.attributeLocation(it4.key())); }
 
     shader.release();
-    this->release();
+    vao->release();
     indexBuffer->release();
     vec2BufferContainer->releaseAllBuffers();
     vec3BufferContainer->releaseAllBuffers();
@@ -400,7 +418,7 @@ bool IERenderable::equals(const unsigned long long meshId,
 
 void IERenderable::appendInstanceValues()
 {
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector2D>>> it1(vec2BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector2D>*> it1(vec2BufferContainer->getBuffers());
     while(it1.hasNext())
     {
         it1.next();
@@ -410,7 +428,7 @@ void IERenderable::appendInstanceValues()
         dirtyVec2Buffers.insert(it1.key());
     }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector3D>>> it2(vec3BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector3D>*> it2(vec3BufferContainer->getBuffers());
     while(it2.hasNext())
     {
         it2.next();
@@ -420,7 +438,7 @@ void IERenderable::appendInstanceValues()
         dirtyVec3Buffers.insert(it2.key());
     }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector4D>>> it3(vec4BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector4D>*> it3(vec4BufferContainer->getBuffers());
     while(it3.hasNext())
     {
         it3.next();
@@ -430,7 +448,7 @@ void IERenderable::appendInstanceValues()
         dirtyVec4Buffers.insert(it3.key());
     }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QMatrix4x4>>> it4(mat4BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it4(mat4BufferContainer->getBuffers());
     while(it4.hasNext())
     {
         it4.next();
@@ -443,16 +461,16 @@ void IERenderable::appendInstanceValues()
 
 void IERenderable::purgeInstanceValues(const int index)
 {
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector2D>>> it1(vec2BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector2D>*> it1(vec2BufferContainer->getBuffers());
     while(it1.hasNext()) { it1.next(); removeVec2InstanceValue(it1.key(), index); }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector3D>>> it2(vec3BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector3D>*> it2(vec3BufferContainer->getBuffers());
     while(it2.hasNext()) { it2.next(); removeVec3InstanceValue(it2.key(), index); }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QVector4D>>> it3(vec4BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QVector4D>*> it3(vec4BufferContainer->getBuffers());
     while(it3.hasNext()) { it3.next(); removeVec4InstanceValue(it3.key(), index); }
 
-    QMapIterator<QString, QSharedPointer<IEVertexBuffer<QMatrix4x4>>> it4(mat4BufferContainer->getBuffers());
+    QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it4(mat4BufferContainer->getBuffers());
     while(it4.hasNext()) { it4.next(); removeMat4InstanceValue(it4.key(), index); }
 }
 
