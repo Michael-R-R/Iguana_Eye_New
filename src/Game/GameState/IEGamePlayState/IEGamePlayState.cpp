@@ -14,7 +14,7 @@ IEGamePlayState::IEGamePlayState(IEGame& game) :
     physicsEngine(game.getPhysicsEngine()),
     renderEngine(game.getRenderEngine()),
     ecs(game.getECS()),
-    ecsUpdateEvent(ecs)
+    ecsUpdateEvent(*ecs)
 {
 
 }
@@ -36,10 +36,10 @@ void IEGamePlayState::exit(IEGame&)
 
 void IEGamePlayState::onUpdateFrame()
 {
-    const float dt = time.getDeltaTime();
+    const float dt = time->getDeltaTime();
 
     physicsEngine->onUpdateFrame(dt);
-    ecs.onUpdateFrame(ecsUpdateEvent);
+    ecs->onUpdateFrame(ecsUpdateEvent);
 }
 
 void IEGamePlayState::onRenderFrame()

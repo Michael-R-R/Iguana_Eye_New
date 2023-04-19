@@ -71,8 +71,8 @@ void EPhysicsEngine::onUpdateFrame(IEInput& input, ECamera& camera)
 
 void EPhysicsEngine::onInitRigidbodies(IEGame& game)
 {
-    auto& ecs = game.getECS();
-    auto* system = ecs.getComponent<IEECSTransformSystem>();
+    auto* ecs = game.getECS();
+    auto* system = ecs->getComponent<IEECSTransformSystem>();
     const auto& data = system->getData();
 
     auto type = IEBaseRigidbody::RigidbodyType::Static;
@@ -98,7 +98,7 @@ void EPhysicsEngine::onInitRigidbodies(IEGame& game)
     }
 }
 
-std::tuple<bool, physx::PxRaycastBuffer> EPhysicsEngine::castRay(const IEInput& input, const ECamera& camera)
+std::tuple<bool, physx::PxRaycastBuffer> EPhysicsEngine::castRay(IEInput& input, ECamera& camera)
 {
     const QVector3D& pos = camera.getPosition();
     const QVector2D& dimensions = ApplicationProperties::viewportDimensions;

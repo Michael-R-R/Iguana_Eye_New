@@ -34,8 +34,8 @@ public:
 
 private:
     void onInitRigidbodies(IEGame& game);
-    std::tuple<bool, physx::PxRaycastBuffer> castRay(const IEInput& input,
-                                                     const ECamera& camera);
+    std::tuple<bool, physx::PxRaycastBuffer> castRay(IEInput& input,
+                                                     ECamera& camera);
 
 signals:
     void entitySelected(const IEEntity& entity);

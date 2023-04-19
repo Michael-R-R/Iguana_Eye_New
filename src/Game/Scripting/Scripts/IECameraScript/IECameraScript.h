@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QSharedPointer>
 #include <QString>
 #include <sol/sol.hpp>
 
@@ -16,8 +15,8 @@ class IECameraScript : public IEScript
     sol::function updateProjectionFunc;
 
 public:
-    IECameraScript();
-    IECameraScript(const QString& path);
+    IECameraScript(QObject* parent = nullptr);
+    IECameraScript(const QString& path, QObject* parent = nullptr);
     IECameraScript(const IECameraScript&) = delete;
     ~IECameraScript();
 

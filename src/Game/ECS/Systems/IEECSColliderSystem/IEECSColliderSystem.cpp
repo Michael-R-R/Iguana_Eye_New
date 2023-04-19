@@ -23,7 +23,7 @@ int IEECSColliderSystem::attach(const IEEntity entity)
     entityMap[entity] = index;
 
     data.entity.push_back(entity);
-    data.collider.push_back(QSharedPointer<IEBaseCollider>::create());
+    data.collider.push_back(new IEBaseCollider(&data));
 
     return index;
 }
@@ -37,6 +37,8 @@ bool IEECSColliderSystem::detach(const IEEntity entity)
 
     const int lastIndex = entityMap.size() - 1;
     const IEEntity lastEntity = data.entity[lastIndex];
+
+    this->removeCollider(indexToRemove);
 
     data.entity[indexToRemove] = data.entity[lastIndex];
     data.collider[indexToRemove] = data.collider[lastIndex];
@@ -54,15 +56,17 @@ void IEECSColliderSystem::onUpdateFrame(ECSOnUpdateEvent&)
 
 }
 
-void IEECSColliderSystem::release(const int index)
+void IEECSColliderSystem::removeCollider(const int index)
 {
     if(!indexBoundCheck(index))
         return;
 
     data.collider[index]->release();
+    delete data.collider[index];
+    data.collider[index] = new IEBaseCollider(&data);
 }
 
-QSharedPointer<IEBaseCollider> IEECSColliderSystem::getCollider(const int index)
+IEBaseCollider* IEECSColliderSystem::getCollider(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
@@ -70,12 +74,14 @@ QSharedPointer<IEBaseCollider> IEECSColliderSystem::getCollider(const int index)
     return data.collider[index];
 }
 
-void IEECSColliderSystem::setCollider(const int index, QSharedPointer<IEBaseCollider> val)
+void IEECSColliderSystem::setCollider(const int index, IEBaseCollider* val)
 {
     if(!indexBoundCheck(index))
         return;
 
+    delete data.collider[index];
     data.collider[index] = val;
+    val->setParent(&data);
 }
 
 void IEECSColliderSystem::setIsTrigger(const int index, const bool val)

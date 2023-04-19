@@ -15,7 +15,7 @@ class IETime : public IEGameSystem
     DeltaTime dt;
 
 public:
-    IETime();
+    IETime(QObject* parent = nullptr);
     ~IETime();
 
     void startup(IEGame& game) override;

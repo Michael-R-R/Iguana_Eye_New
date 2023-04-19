@@ -9,7 +9,7 @@ class IEScriptEngine : public IEGameSystem
     sol::state lua;
 
 public:
-    IEScriptEngine();
+    IEScriptEngine(QObject* parent = nullptr);
     ~IEScriptEngine();
 
     void startup(IEGame& game) override;

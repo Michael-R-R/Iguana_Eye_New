@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QMap>
-#include <QSharedPointer>
 
 #include "IEObject.h"
 

@@ -19,8 +19,8 @@ class IEEntityScript : public IEScript
     IEScriptData scriptData;
 
 public:
-    IEEntityScript();
-    IEEntityScript(const QString& path);
+    IEEntityScript(QObject* parent = nullptr);
+    IEEntityScript(const QString& path, QObject* parent = nullptr);
     IEEntityScript(const IEEntityScript&) = delete;
     ~IEEntityScript();
 

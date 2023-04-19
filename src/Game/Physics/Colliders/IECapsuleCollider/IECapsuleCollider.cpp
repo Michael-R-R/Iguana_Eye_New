@@ -1,14 +1,15 @@
 #include "IECapsuleCollider.h"
 
-IECapsuleCollider::IECapsuleCollider() :
-    IEBaseCollider(ColliderShape::Capsule, 0),
+IECapsuleCollider::IECapsuleCollider(QObject* parent) :
+    IEBaseCollider(ColliderShape::Capsule, 0, parent),
     radius(1.0f), halfHeight(1.0f)
 {
 
 }
 
-IECapsuleCollider::IECapsuleCollider(const int id, const float r, const float hh) :
-    IEBaseCollider(ColliderShape::Capsule, id),
+IECapsuleCollider::IECapsuleCollider(const int id, const float r, const float hh,
+                                     QObject* parent) :
+    IEBaseCollider(ColliderShape::Capsule, id, parent),
     radius(r), halfHeight(hh)
 {
 

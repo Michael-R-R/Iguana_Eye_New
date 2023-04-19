@@ -1,15 +1,16 @@
 #include "IEBoxCollider.h"
 
-IEBoxCollider::IEBoxCollider() :
-    IEBaseCollider(ColliderShape::Box, 0),
+IEBoxCollider::IEBoxCollider(QObject* parent) :
+    IEBaseCollider(ColliderShape::Box, 0, parent),
     extentX(1.0f), extentY(1.0f), extentZ(1.0f)
 {
 
 }
 
 IEBoxCollider::IEBoxCollider(const int id,
-                             const float x, const float y, const float z) :
-    IEBaseCollider(ColliderShape::Box, id),
+                             const float x, const float y, const float z,
+                             QObject* parent) :
+    IEBaseCollider(ColliderShape::Box, id, parent),
     extentX(x), extentY(y), extentZ(z)
 {
 
@@ -26,7 +27,6 @@ void IEBoxCollider::create(const physx::PxTransform& t)
 
     IEBaseCollider::create(t, box);
 }
-
 
 QDataStream& IEBoxCollider::serialize(QDataStream& out, const Serializable& obj) const
 {

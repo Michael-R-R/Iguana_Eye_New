@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QSharedPointer>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
@@ -28,10 +27,10 @@ class IEGame : public QOpenGLWidget, public Serializable
     IERenderEngine* renderEngine;
     IEPhysicsEngine* physicsEngine;
     IEScene* scene;
-    QSharedPointer<IEECS> ecs;
-    QSharedPointer<IEInput> input;
-    QSharedPointer<IEScriptEngine> scriptEngine;
-    QSharedPointer<IETime> time;
+    IEECS* ecs;
+    IEInput* input;
+    IEScriptEngine* scriptEngine;
+    IETime* time;
     IEGameState* state;
 
 public:
@@ -57,10 +56,10 @@ public:
     IERenderEngine* getRenderEngine() const { return renderEngine; }
     IEPhysicsEngine* getPhysicsEngine() const { return physicsEngine; }
     IEScene* getScene() const { return scene; }
-    IEECS& getECS() const { return *ecs; }
-    IEInput& getInput() const { return *input; }
-    IEScriptEngine& getScriptEngine() const { return *scriptEngine; }
-    IETime& getTime() const { return *time; }
+    IEECS* getECS() const { return ecs; }
+    IEInput* getInput() const { return input; }
+    IEScriptEngine* getScriptEngine() const { return scriptEngine; }
+    IETime* getTime() const { return time; }
 
 public slots:
     void onUpdateFrame();

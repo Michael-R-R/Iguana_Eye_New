@@ -2,15 +2,15 @@
 #include "IECamera.h"
 #include <QDebug>
 
-IECameraScript::IECameraScript() :
-    IEScript(),
+IECameraScript::IECameraScript(QObject* parent) :
+    IEScript(parent),
     startFunc(), updateFunc(), updateProjectionFunc()
 {
 
 }
 
-IECameraScript::IECameraScript(const QString& path) :
-    IEScript(path),
+IECameraScript::IECameraScript(const QString& path, QObject* parent) :
+    IEScript(path, parent),
     startFunc(), updateFunc(), updateProjectionFunc()
 {
 

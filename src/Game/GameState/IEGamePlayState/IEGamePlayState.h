@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QSharedPointer>
-
 #include "IEGameState.h"
 #include "ECSOnUpdateEvent.h"
 
@@ -16,10 +14,10 @@ class IEGamePlayState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
-    IETime& time;
+    IETime* time;
     IEPhysicsEngine* physicsEngine;
     IERenderEngine* renderEngine;
-    IEECS& ecs;
+    IEECS* ecs;
     ECSOnUpdateEvent ecsUpdateEvent;
 
 public:

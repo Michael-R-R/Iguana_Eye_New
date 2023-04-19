@@ -32,7 +32,7 @@ int IEECSCameraSystem::attach(const IEEntity entity)
 
     data.entity.append(entity);
     data.cameraId.append(0);
-    data.cameraScript.append(QSharedPointer<IECameraScript>::create());
+    data.cameraScript.append(new IECameraScript(&data));
 
     return index;
 }
@@ -49,6 +49,8 @@ bool IEECSCameraSystem::detach(const IEEntity entity)
 
     const int lastIndex = entityMap.size() - 1;
     const IEEntity lastEntity = data.entity[lastIndex];
+
+    this->removeScript(indexToRemove);
 
     data.entity[indexToRemove] = data.entity[lastIndex];
     data.cameraId[indexToRemove] = data.cameraId[lastIndex];
@@ -90,14 +92,23 @@ void IEECSCameraSystem::onUpdateFrame(ECSOnUpdateEvent& event)
 void IEECSCameraSystem::initalize()
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto& scriptEngine = game->getScriptEngine();
-    auto& lua = scriptEngine.getLua();
+    auto* scriptEngine = game->getScriptEngine();
+    auto& lua = scriptEngine->getLua();
 
     for(int i = 1; i < entityMap.size(); i++)
     {
         data.cameraScript[i]->initalize(lua);
         data.cameraScript[i]->start(data.entity[i]);
     }
+}
+
+void IEECSCameraSystem::removeScript(const int index)
+{
+    if(!indexBoundCheck(index))
+        return;
+
+    delete data.cameraScript[index];
+    data.cameraScript[index] = new IECameraScript(&data);
 }
 
 int IEECSCameraSystem::getActiveIndex() const
@@ -150,7 +161,7 @@ unsigned long long IEECSCameraSystem::getCameraId(const int index) const
     return data.cameraId[index];
 }
 
-const QSharedPointer<IECameraScript> IEECSCameraSystem::getScript(const int index) const
+const IECameraScript* IEECSCameraSystem::getScript(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
@@ -166,12 +177,14 @@ void IEECSCameraSystem::setCameraId(const int index, const unsigned long long va
     data.cameraId[index] = val;
 }
 
-void IEECSCameraSystem::setScript(const int index, const QSharedPointer<IECameraScript> val)
+void IEECSCameraSystem::setScript(const int index, IECameraScript* val)
 {
     if(!indexBoundCheck(index))
         return;
 
+    delete data.cameraScript[index];
     data.cameraScript[index] = val;
+    val->setParent(&data);
 }
 
 QDataStream& IEECSCameraSystem::serialize(QDataStream& out, const Serializable& obj) const

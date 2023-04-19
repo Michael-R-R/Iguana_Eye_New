@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QSharedPointer>
 #include <QVector2D>
 
 #include "IEObject.h"

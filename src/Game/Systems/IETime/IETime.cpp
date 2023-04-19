@@ -1,7 +1,8 @@
 #include "IETime.h"
 #include "IEGame.h"
 
-IETime::IETime() :
+IETime::IETime(QObject* parent) :
+    IEGameSystem(parent),
     updateTimer(this),
     renderTimer(this),
     updateRefresh(16), renderRefresh(16),

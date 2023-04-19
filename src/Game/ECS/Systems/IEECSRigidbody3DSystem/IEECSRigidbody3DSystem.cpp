@@ -36,7 +36,7 @@ int IEECSRigidbody3DSystem::attach(const IEEntity entity)
     entityMap[entity] = index;
 
     data.entity.push_back(entity);
-    data.rigidbody.push_back(QSharedPointer<IEBaseRigidbody>::create());
+    data.rigidbody.push_back(new IEBaseRigidbody(&data));
 
     return index;
 }
@@ -51,7 +51,7 @@ bool IEECSRigidbody3DSystem::detach(const IEEntity entity)
     const int lastIndex = entityMap.size() - 1;
     const IEEntity lastEntity = data.entity[lastIndex];
 
-    this->release(indexToRemove);
+    this->remove(indexToRemove);
 
     data.entity[indexToRemove] = data.entity[lastIndex];
     data.rigidbody[indexToRemove] = data.rigidbody[lastIndex];
@@ -145,18 +145,20 @@ void IEECSRigidbody3DSystem::putToSleep(const int index)
     sleepingBodies.insert(index);
 }
 
-void IEECSRigidbody3DSystem::release(const int index)
+void IEECSRigidbody3DSystem::remove(const int index)
 {
     if(!indexBoundCheck(index))
         return;
 
     data.rigidbody[index]->release();
+    delete data.rigidbody[index];
+    data.rigidbody[index] = new IEBaseRigidbody(&data);
 
     awakeBodies.remove(index);
     sleepingBodies.remove(index);
 }
 
-QSharedPointer<IEBaseRigidbody> IEECSRigidbody3DSystem::getRigidbody(const int index) const
+IEBaseRigidbody* IEECSRigidbody3DSystem::getRigidbody(const int index) const
 {
     if(!indexBoundCheck(index))
         return nullptr;
@@ -164,12 +166,14 @@ QSharedPointer<IEBaseRigidbody> IEECSRigidbody3DSystem::getRigidbody(const int i
     return data.rigidbody[index];
 }
 
-void IEECSRigidbody3DSystem::setRigidbody(const int index, const QSharedPointer<IEBaseRigidbody> val)
+void IEECSRigidbody3DSystem::setRigidbody(const int index, IEBaseRigidbody* val)
 {
     if(!indexBoundCheck(index))
         return;
 
+    delete data.rigidbody[index];
     data.rigidbody[index] = val;
+    val->setParent(&data);
 }
 
 void IEECSRigidbody3DSystem::activateRigidbody(const IEEntity& entity)

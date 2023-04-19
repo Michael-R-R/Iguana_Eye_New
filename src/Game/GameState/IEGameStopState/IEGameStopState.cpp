@@ -21,7 +21,7 @@ IEGameStopState::IEGameStopState(IEGame& game) :
     time(game.getTime()),
     input(game.getInput()),
     gRenderEngine(game.getRenderEngine()),
-    ecsUpdateEvent(game.getECS()),
+    ecsUpdateEvent(*game.getECS()),
     ePhysicsEngine(nullptr),
     eRenderEngine(nullptr),
     eCamera(nullptr)
@@ -57,11 +57,11 @@ void IEGameStopState::exit(IEGame& game)
 
 void IEGameStopState::onUpdateFrame()
 {
-    const float dt = time.getDeltaTime();
+    const float dt = time->getDeltaTime();
 
     eCamera->update(input, dt);
     ecsUpdateEvent.getTransform().onUpdateFrame(ecsUpdateEvent);
-    ePhysicsEngine->onUpdateFrame(input, *eCamera);
+    ePhysicsEngine->onUpdateFrame(*input, *eCamera);
 }
 
 void IEGameStopState::onRenderFrame()
@@ -78,13 +78,13 @@ void IEGameStopState::onResize(const float w, const float h)
 
 void IEGameStopState::serializeGameStates(IEGame& game)
 {
-    IESerialize::write<IEECS>("./resources/temp/backup/ecs.iedat", &game.getECS());
+    IESerialize::write<IEECS>("./resources/temp/backup/ecs.iedat", game.getECS());
     IESerialize::write<ECamera>("./resources/temp/backup/camera.iedat", &(*eCamera));
 }
 
 void IEGameStopState::deserializeGameStates(IEGame& game)
 {
-    IESerialize::read<IEECS>("./resources/temp/backup/ecs.iedat", &game.getECS());
+    IESerialize::read<IEECS>("./resources/temp/backup/ecs.iedat", game.getECS());
     IESerialize::read<ECamera>("./resources/temp/backup/camera.iedat", &(*eCamera));
 
     IEFile::removeAllFiles("./resources/temp/backup/");

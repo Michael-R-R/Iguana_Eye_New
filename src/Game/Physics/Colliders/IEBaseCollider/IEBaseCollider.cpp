@@ -4,7 +4,8 @@
 #include "IEPhysicsEngine.h"
 #include "physx/extensions/PxSimpleFactory.h"
 
-IEBaseCollider::IEBaseCollider() :
+IEBaseCollider::IEBaseCollider(QObject* parent) :
+    IEObject(parent),
     rigidActor(nullptr),
     colliderShape(ColliderShape::None), attachedId(0)
 {
@@ -12,7 +13,9 @@ IEBaseCollider::IEBaseCollider() :
 }
 
 IEBaseCollider::IEBaseCollider(ColliderShape shape,
-                               const int id) :
+                               const int id,
+                               QObject* parent) :
+    IEObject(parent),
     rigidActor(nullptr),
     colliderShape(shape), attachedId(id)
 {

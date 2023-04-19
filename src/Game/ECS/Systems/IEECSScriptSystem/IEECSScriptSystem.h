@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QSharedPointer>
 #include <QVector>
 #include <QSet>
 
@@ -14,10 +13,10 @@ class IEECSScriptSystem : public IEECSSystem
 {
     Q_OBJECT
 
-    struct Data
+    struct Data : public IEObject
     {
         QVector<IEEntity> entity;
-        QVector<QMap<unsigned long long, QSharedPointer<IEEntityScript>>> scriptCollection;
+        QVector<QMap<unsigned long long, IEEntityScript*>> scriptCollection;
         QVector<QSet<unsigned long long>> sleepingScripts;
         QVector<QSet<unsigned long long>> awakenedScripts;
 
@@ -49,14 +48,14 @@ class IEECSScriptSystem : public IEECSSystem
 
             for(int i = 0; i < vecSize; i++)
             {
-                QMap<unsigned long long, QSharedPointer<IEEntityScript>> tempMap;
+                QMap<unsigned long long, IEEntityScript*> tempMap;
 
                 int mapSize = 0;
                 in >> mapSize;
 
                 for(int j = 0; j < mapSize; j++)
                 {
-                    auto script = QSharedPointer<IEEntityScript>::create();
+                    auto script = new IEEntityScript(&data);
                     in >> *script;
 
                     tempMap.insert(script->getId(), script);
@@ -86,13 +85,13 @@ public:
     void clearSleepingScripts();
     void clearAwakenScripts();
 
-    void attachScript(const int index, const QSharedPointer<IEEntityScript> script);
+    void attachScript(const int index, IEEntityScript* script);
     void removeScript(const int index, const unsigned long long id);
 
     bool hasScript(const int index, const unsigned long long id);
 
-    QSharedPointer<IEEntityScript> getScript(const int index, const unsigned long long id);
-    QSharedPointer<IEEntityScript> getScript(const int index, const char* name);
+    IEEntityScript* getScript(const int index, const unsigned long long id);
+    IEEntityScript* getScript(const int index, const char* name);
 
 private:
     void deserializeScripts();

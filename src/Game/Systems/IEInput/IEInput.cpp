@@ -1,7 +1,8 @@
 #include "IEInput.h"
 #include "IEGame.h"
 
-IEInput::IEInput() :
+IEInput::IEInput(QObject* parent) :
+    IEGameSystem(parent),
     inputCapture(nullptr)
 {
 
@@ -14,7 +15,7 @@ IEInput::~IEInput()
 
 void IEInput::startup(IEGame& game)
 {
-    inputCapture = QSharedPointer<InputCapture>::create(&game);
+    inputCapture = new InputCapture(&game);
     setupInputContainer();
 }
 

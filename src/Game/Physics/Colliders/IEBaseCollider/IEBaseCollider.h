@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Serializable.h"
+#include "IEObject.h"
 #include "PxShape.h"
 #include "PxRigidActor.h"
 #include "PxRigidStatic.h"
 
-class IEBaseCollider : public Serializable
+class IEBaseCollider : public IEObject
 {
 public:
     enum class ColliderShape
@@ -20,9 +20,10 @@ protected:
     int attachedId;
 
 public:
-    IEBaseCollider();
+    IEBaseCollider(QObject* parent = nullptr);
     IEBaseCollider(ColliderShape shape,
-                   const int id);
+                   const int id,
+                   QObject* parent = nullptr);
     virtual ~IEBaseCollider();
 
     virtual void create(const physx::PxTransform&) {}

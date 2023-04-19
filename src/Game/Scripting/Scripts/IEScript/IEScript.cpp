@@ -1,14 +1,14 @@
 #include "IEScript.h"
 
-IEScript::IEScript() :
-    IEResource(),
+IEScript::IEScript(QObject* parent) :
+    IEResource(parent),
     env()
 {
 
 }
 
-IEScript::IEScript(const QString& path) :
-    IEResource(path),
+IEScript::IEScript(const QString& path, QObject* parent) :
+    IEResource(path, parent),
     env()
 {
 

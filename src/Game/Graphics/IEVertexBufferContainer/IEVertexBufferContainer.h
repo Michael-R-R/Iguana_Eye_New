@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QSharedPointer>
 #include <QString>
 #include <QMap>
 

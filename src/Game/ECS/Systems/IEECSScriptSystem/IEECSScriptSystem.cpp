@@ -35,7 +35,7 @@ int IEECSScriptSystem::attach(const IEEntity entity)
     entityMap[entity] = index;
 
     data.entity.append(entity);
-    data.scriptCollection.append(QMap<unsigned long long, QSharedPointer<IEEntityScript>>());
+    data.scriptCollection.append(QMap<unsigned long long, IEEntityScript*>());
     data.sleepingScripts.append(QSet<unsigned long long>());
     data.awakenedScripts.append(QSet<unsigned long long>());
 
@@ -84,8 +84,8 @@ void IEECSScriptSystem::onUpdateFrame(ECSOnUpdateEvent&)
 void IEECSScriptSystem::initalize()
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto& scriptEngine = game->getScriptEngine();
-    auto& lua = scriptEngine.getLua();
+    auto* scriptEngine = game->getScriptEngine();
+    auto& lua = scriptEngine->getLua();
 
     for(int i = 1; i < entityMap.size(); i++)
     {
@@ -136,11 +136,12 @@ void IEECSScriptSystem::clearAwakenScripts()
     }
 }
 
-void IEECSScriptSystem::attachScript(const int index, const QSharedPointer<IEEntityScript> script)
+void IEECSScriptSystem::attachScript(const int index, IEEntityScript* script)
 {
     if(hasScript(index, script->getId()))
         return;
 
+    delete data.scriptCollection[index][script->getId()];
     data.scriptCollection[index][script->getId()] = script;
 }
 
@@ -149,6 +150,7 @@ void IEECSScriptSystem::removeScript(const int index, const unsigned long long i
     if(!hasScript(index, id))
         return;
 
+    delete data.scriptCollection[index][id];
     data.scriptCollection[index].remove(id);
     data.sleepingScripts[index].remove(id);
     data.awakenedScripts[index].remove(id);
@@ -162,7 +164,7 @@ bool IEECSScriptSystem::hasScript(const int index, const unsigned long long id)
     return data.scriptCollection[index].contains(id);
 }
 
-QSharedPointer<IEEntityScript> IEECSScriptSystem::getScript(const int index, const unsigned long long id)
+IEEntityScript* IEECSScriptSystem::getScript(const int index, const unsigned long long id)
 {
     if(!hasScript(index, id))
         return nullptr;
@@ -170,7 +172,7 @@ QSharedPointer<IEEntityScript> IEECSScriptSystem::getScript(const int index, con
     return data.scriptCollection[index][id];
 }
 
-QSharedPointer<IEEntityScript> IEECSScriptSystem::getScript(const int index, const char* name)
+IEEntityScript* IEECSScriptSystem::getScript(const int index, const char* name)
 {
     const unsigned long long id = IEHash::Compute(name);
     if(!hasScript(index, id))

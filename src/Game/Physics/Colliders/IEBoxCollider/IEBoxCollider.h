@@ -7,9 +7,10 @@ class IEBoxCollider : public IEBaseCollider
     float extentX, extentY, extentZ;
 
 public:
-    IEBoxCollider();
+    IEBoxCollider(QObject* parent = nullptr);
     IEBoxCollider(const int id,
-                  const float x, const float y, const float z);
+                  const float x, const float y, const float z,
+                  QObject* parent = nullptr);
     IEBoxCollider(const IEBoxCollider&) = delete;
     ~IEBoxCollider();
 

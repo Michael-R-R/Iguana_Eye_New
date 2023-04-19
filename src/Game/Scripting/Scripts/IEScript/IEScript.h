@@ -11,8 +11,8 @@ protected:
     sol::environment env;
 
 public:
-    IEScript();
-    IEScript(const QString& path);
+    IEScript(QObject* parent = nullptr);
+    IEScript(const QString& path, QObject* parent = nullptr);
     IEScript(const IEScript&) = delete;
     virtual ~IEScript();
 

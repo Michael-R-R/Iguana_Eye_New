@@ -1,20 +1,20 @@
 #include "IESphereCollider.h"
 
-IESphereCollider::IESphereCollider() :
-    IEBaseCollider(ColliderShape::Sphere, 0),
+IESphereCollider::IESphereCollider(QObject* parent) :
+    IEBaseCollider(ColliderShape::Sphere, 0, parent),
     radius(1.0f)
 {
 
 }
 
-IESphereCollider::~IESphereCollider()
+IESphereCollider::IESphereCollider(const int id, const float r, QObject* parent) :
+    IEBaseCollider(ColliderShape::Sphere, id, parent),
+    radius(r)
 {
 
 }
 
-IESphereCollider::IESphereCollider(const int id, const float r) :
-    IEBaseCollider(ColliderShape::Sphere, id),
-    radius(r)
+IESphereCollider::~IESphereCollider()
 {
 
 }

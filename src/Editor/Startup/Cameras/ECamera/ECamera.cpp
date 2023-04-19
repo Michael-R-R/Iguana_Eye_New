@@ -1,5 +1,5 @@
 #include "ECamera.h"
-#include "IEInput.h"
+#include "IEinput.h"
 
 ECamera::ECamera(QObject* parent) :
     IECamera(parent),
@@ -15,7 +15,7 @@ ECamera::~ECamera()
 
 }
 
-void ECamera::update(IEInput& input, const float dt)
+void ECamera::update(IEInput* input, const float dt)
 {
     updateMovement(input, dt);
     updateRotation(input, dt);
@@ -28,34 +28,34 @@ void ECamera::updateProjection(const float w, const float h)
     projection.perspective(fov, (w / h), nearPlane, farPlane);
 }
 
-void ECamera::updateMovement(IEInput& input, const float dt)
+void ECamera::updateMovement(IEInput* input, const float dt)
 {
     const float speed = this->speed * dt;
 
-    if(input.isPressed("Forward"))
+    if(input->isPressed("Forward"))
         position = position + (rotation * speed);
 
-    if(input.isPressed("Backward"))
+    if(input->isPressed("Backward"))
         position = position - (rotation * speed);
 
-    if(input.isPressed("Left"))
+    if(input->isPressed("Left"))
         position = position - (QVector3D::crossProduct(rotation, up).normalized() * speed);
 
-    if(input.isPressed("Right"))
+    if(input->isPressed("Right"))
         position = position + (QVector3D::crossProduct(rotation, up).normalized() * speed);
 
-    if(input.isPressed("Up"))
+    if(input->isPressed("Up"))
         position = position + (up * speed);
 
-    if(input.isPressed("Down"))
+    if(input->isPressed("Down"))
         position = position - (up * speed);
 }
 
-void ECamera::updateRotation(IEInput& input, const float dt)
+void ECamera::updateRotation(IEInput* input, const float dt)
 {
-    if(input.isPressed("Right Click"))
+    if(input->isPressed("Right Click"))
     {
-        const auto& cursorPos = input.cursorPos();
+        const auto& cursorPos = input->cursorPos();
         const float x = qFloor(cursorPos.x());
         const float y = qFloor(cursorPos.y());
 

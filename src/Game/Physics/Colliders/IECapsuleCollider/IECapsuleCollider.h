@@ -8,8 +8,9 @@ class IECapsuleCollider : public IEBaseCollider
     float halfHeight;
 
 public:
-    IECapsuleCollider();
-    IECapsuleCollider(const int id, const float r, const float hh);
+    IECapsuleCollider(QObject* parent = nullptr);
+    IECapsuleCollider(const int id, const float r, const float hh,
+                      QObject* parent = nullptr);
     IECapsuleCollider(const IECapsuleCollider&) = delete;
     ~IECapsuleCollider();
 

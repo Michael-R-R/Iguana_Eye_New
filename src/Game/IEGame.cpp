@@ -17,10 +17,10 @@ IEGame::IEGame(QWidget* parent) :
     renderEngine(new IERenderEngine(this)),
     physicsEngine(new IEPhysicsEngine(this)),
     scene(new IEScene(this)),
-    ecs(QSharedPointer<IEECS>::create()),
-    input(QSharedPointer<IEInput>::create()),
-    scriptEngine(QSharedPointer<IEScriptEngine>::create()),
-    time(QSharedPointer<IETime>::create()),
+    ecs(new IEECS(this)),
+    input(new IEInput(this)),
+    scriptEngine(new IEScriptEngine(this)),
+    time(new IETime(this)),
     state(nullptr)
 {
     this->setFocusPolicy(Qt::StrongFocus);

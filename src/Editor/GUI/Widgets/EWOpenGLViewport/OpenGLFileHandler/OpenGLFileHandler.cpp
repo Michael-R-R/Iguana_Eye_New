@@ -83,17 +83,17 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
     }
 
     // --- Create entity and attach components --- //
-    auto& ecs = game->getECS();
-    auto* meSystem = ecs.getComponent<IEECSMeshSystem>();
-    auto* maSystem = ecs.getComponent<IEECSMaterialSystem>();
-    auto* sSystem = ecs.getComponent<IEECSShaderSystem>();
-    auto* rSystem = ecs.getComponent<IEECSRenderableSystem>();
+    auto* ecs = game->getECS();
+    auto* meSystem = ecs->getComponent<IEECSMeshSystem>();
+    auto* maSystem = ecs->getComponent<IEECSMaterialSystem>();
+    auto* sSystem = ecs->getComponent<IEECSShaderSystem>();
+    auto* rSystem = ecs->getComponent<IEECSRenderableSystem>();
 
-    IEEntity entity = ecs.create();
-    const int meIndex = ecs.attachComponent<IEECSMeshSystem>(entity);
-    const int maIndex = ecs.attachComponent<IEECSMaterialSystem>(entity);
-    const int sIndex = ecs.attachComponent<IEECSShaderSystem>(entity);
-    const int rIndex = ecs.attachComponent<IEECSRenderableSystem>(entity);
+    IEEntity entity = ecs->create();
+    const int meIndex = ecs->attachComponent<IEECSMeshSystem>(entity);
+    const int maIndex = ecs->attachComponent<IEECSMaterialSystem>(entity);
+    const int sIndex = ecs->attachComponent<IEECSShaderSystem>(entity);
+    const int rIndex = ecs->attachComponent<IEECSRenderableSystem>(entity);
 
     meSystem->setMeshId(meIndex, meshId);
     maSystem->setMaterialId(maIndex, materialId);

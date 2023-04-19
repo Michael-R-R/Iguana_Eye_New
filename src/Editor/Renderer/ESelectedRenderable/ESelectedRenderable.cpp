@@ -47,10 +47,10 @@ void ESelectedRenderable::draw(QOpenGLExtraFunctions* glFunc, IECamera* camera)
     glFunc->glDisable(GL_DEPTH_TEST);
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto& ecs = game->getECS();
-    auto* tSystem = ecs.getComponent<IEECSTransformSystem>();
-    auto* mSystem = ecs.getComponent<IEECSMeshSystem>();
-    auto* rSystem = ecs.getComponent<IEECSRenderableSystem>();
+    auto* ecs = game->getECS();
+    auto* tSystem = ecs->getComponent<IEECSTransformSystem>();
+    auto* mSystem = ecs->getComponent<IEECSMeshSystem>();
+    auto* rSystem = ecs->getComponent<IEECSRenderableSystem>();
 
     for(auto& i : entities)
     {

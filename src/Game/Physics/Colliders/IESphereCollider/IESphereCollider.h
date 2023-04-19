@@ -7,8 +7,8 @@ class IESphereCollider : public IEBaseCollider
     float radius;
 
 public:
-    IESphereCollider();
-    IESphereCollider(const int id, const float r);
+    IESphereCollider(QObject* parent = nullptr);
+    IESphereCollider(const int id, const float r, QObject* parent = nullptr);
     IESphereCollider(const IESphereCollider&) = delete;
     ~IESphereCollider();
 

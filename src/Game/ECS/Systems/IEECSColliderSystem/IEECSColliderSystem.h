@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QSharedPointer>
 #include <QVector>
 
 #include "IEECSSystem.h"
@@ -11,10 +10,10 @@
 
 class IEECSColliderSystem : public IEECSSystem
 {
-    struct Data
+    struct Data : public IEObject
     {
         QVector<IEEntity> entity;
-        QVector<QSharedPointer<IEBaseCollider>> collider;
+        QVector<IEBaseCollider*> collider;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
@@ -37,7 +36,7 @@ class IEECSColliderSystem : public IEECSSystem
             in >> data.entity >> size;
 
             IEBaseCollider::ColliderShape shape;
-            QSharedPointer<IEBaseCollider> collider = nullptr;
+            IEBaseCollider* collider = nullptr;
 
             for(int i = 0; i < size; i++)
             {
@@ -45,10 +44,10 @@ class IEECSColliderSystem : public IEECSSystem
 
                 switch(shape)
                 {
-                case IEBaseCollider::ColliderShape::None: { collider = QSharedPointer<IEBaseCollider>::create(); break; }
-                case IEBaseCollider::ColliderShape::Box: { collider = QSharedPointer<IEBoxCollider>::create(); break; }
-                case IEBaseCollider::ColliderShape::Sphere: { collider = QSharedPointer<IESphereCollider>::create(); break; }
-                case IEBaseCollider::ColliderShape::Capsule: { collider = QSharedPointer<IECapsuleCollider>::create(); break; }
+                case IEBaseCollider::ColliderShape::None: { collider = new IEBaseCollider(&data); break; }
+                case IEBaseCollider::ColliderShape::Box: { collider = new IEBoxCollider(&data); break; }
+                case IEBaseCollider::ColliderShape::Sphere: { collider = new IESphereCollider(&data); break; }
+                case IEBaseCollider::ColliderShape::Capsule: { collider = new IECapsuleCollider(&data); break; }
                 }
 
                 in >> *collider;
@@ -70,10 +69,10 @@ public:
     bool detach(const IEEntity entity) override;
     void onUpdateFrame(ECSOnUpdateEvent& event) override;
 
-    void release(const int index);
+    void removeCollider(const int index);
 
-    QSharedPointer<IEBaseCollider> getCollider(const int index);
-    void setCollider(const int index, QSharedPointer<IEBaseCollider> val);
+    IEBaseCollider* getCollider(const int index) const;
+    void setCollider(const int index, IEBaseCollider* val);
     void setIsTrigger(const int index, const bool val);
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;

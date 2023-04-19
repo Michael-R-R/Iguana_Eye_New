@@ -1,8 +1,8 @@
 #include "IEEntityScript.h"
 #include <QDebug>
 
-IEEntityScript::IEEntityScript() :
-    IEScript(),
+IEEntityScript::IEEntityScript(QObject* parent) :
+    IEScript(parent),
     startFunc(), updateFunc(),
     wakeFunc(), sleepFunc(),
     onTriggerEnterFunc(), onTriggerLeaveFunc(),
@@ -11,8 +11,8 @@ IEEntityScript::IEEntityScript() :
 
 }
 
-IEEntityScript::IEEntityScript(const QString& path) :
-    IEScript(path),
+IEEntityScript::IEEntityScript(const QString& path, QObject* parent) :
+    IEScript(path, parent),
     startFunc(), updateFunc(),
     wakeFunc(), sleepFunc(),
     onTriggerEnterFunc(),
