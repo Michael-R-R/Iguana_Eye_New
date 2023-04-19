@@ -21,6 +21,5 @@ public:
 private:
     bool isPressed(const char* key);
     QVector2D cursorPos();
-    QVector2D wheelDelta();
 };
 

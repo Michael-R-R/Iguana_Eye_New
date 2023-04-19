@@ -52,17 +52,14 @@ void IEGame::initializeGL()
     glExtraFunc->glEnable(GL_MULTISAMPLE);
     glExtraFunc->glEnable(GL_BLEND);
 
+    glExtraFunc->glDepthFunc(GL_LESS);
     glExtraFunc->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glExtraFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
     emit initialized();
 }
 
 void IEGame::paintGL()
 {
-    glExtraFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
     state->onRenderFrame();
     time->processDeltaTime();
 }

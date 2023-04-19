@@ -1,27 +1,28 @@
 #include "EWFileExplorer.h"
+#include "IEFile.h"
 
 EWFileExplorer::EWFileExplorer(QWidget* parent) :
     QWidget(parent),
     vMainLayout(new QVBoxLayout(this)),
     hSplitter(new QSplitter(this)),
-    rootDir(QDir::currentPath() + "/resources/root"),
+    rootDir(IEFile::absolutePath("./resources/root")),
     fileModel(new QFileSystemModel(this)),
-    fileIconProvider(new EWFileExplorerIconProvider()),
+    fileIconProvider(),
     treeView(new EWFileExplorerTreeView(fileModel, this)),
     listView(new EWFileExplorerListView(fileModel, this)),
-    dirHistoryBar(new EWDirectoryHistoryBar(rootDir.filePath() + "/Content", this))
+    dirHistoryBar(new EWDirectoryHistoryBar(IEFile::absolutePath("./resources/root/Content"), this))
 {
     setup();
 }
 
 EWFileExplorer::~EWFileExplorer()
 {
-    delete fileIconProvider;
+
 }
 
 void EWFileExplorer::startup()
 {
-    fileModel->setIconProvider(fileIconProvider);
+    fileModel->setIconProvider(&fileIconProvider);
     QModelIndex rootIndex = fileModel->setRootPath(rootDir.filePath());
 
     treeView->startup(rootIndex);

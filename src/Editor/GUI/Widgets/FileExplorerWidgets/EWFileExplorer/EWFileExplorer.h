@@ -17,7 +17,7 @@ class EWFileExplorer : public QWidget
 
     QFileInfo rootDir;
     QFileSystemModel* fileModel;
-    EWFileExplorerIconProvider* fileIconProvider;
+    EWFileExplorerIconProvider fileIconProvider;
     EWFileExplorerTreeView* treeView;
     EWFileExplorerListView* listView;
     EWDirectoryHistoryBar* dirHistoryBar;

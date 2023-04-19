@@ -52,11 +52,6 @@ const QVector2D& IEInput::cursorPos() const
     return inputCapture->getCursorPos();
 }
 
-const QVector2D& IEInput::wheelDelta() const
-{
-    return inputCapture->getWheelDelta();
-}
-
 void IEInput::setupInputContainer()
 {
     inputContainer.addValue("Forward", InputKey(0, Qt::Key_W));

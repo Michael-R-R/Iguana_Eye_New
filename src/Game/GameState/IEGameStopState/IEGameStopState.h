@@ -9,7 +9,6 @@ class IEGame;
 class IETime;
 class IEInput;
 class IERenderEngine;
-class EPhysicsEngine;
 class ERenderEngine;
 class ECamera;
 
@@ -22,7 +21,6 @@ class IEGameStopState : public IEGameState
     IERenderEngine* gRenderEngine;
     ECSOnUpdateEvent ecsUpdateEvent;
 
-    EPhysicsEngine* ePhysicsEngine;
     ERenderEngine* eRenderEngine;
     ECamera* eCamera;
 

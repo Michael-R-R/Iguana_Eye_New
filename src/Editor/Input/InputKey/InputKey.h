@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QKeySequence>
 #include <QDataStream>
+#include <QDebug>
 
 #include "Serializable.h"
 
@@ -27,6 +28,7 @@ public:
     bool operator >=(const InputKey& other) const { return (this->keySequence >= other.keySequence); }
     bool operator <(const InputKey& other) const { return (this->keySequence < other.keySequence); }
     bool operator >(const InputKey& other) const { return (this->keySequence > other.keySequence); }
+    friend QDebug operator<<(QDebug d, const InputKey& key) { d << key.mod << key.key; return d; }
 
     void update(const int mod, const int key);
 

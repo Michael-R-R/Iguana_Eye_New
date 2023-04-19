@@ -47,6 +47,9 @@ void IERenderEngine::reset(IEGame&)
 
 void IERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera)
 {
+    glFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+
     if(!camera)
         return;
 

@@ -1,14 +1,11 @@
 #include "IEGameStopState.h"
 #include "ApplicationProperties.h"
 #include "IEGame.h"
-#include "IEPhysicsEngine.h"
-#include "IEScriptEngine.h"
-#include "IEECS.h"
 #include "IETime.h"
 #include "IEInput.h"
 #include "IERenderEngine.h"
+#include "IEECS.h"
 #include "IEECSTransformSystem.h"
-#include "EPhysicsEngine.h"
 #include "ERenderEngine.h"
 #include "ECamera.h"
 #include "IEFile.h"
@@ -22,7 +19,6 @@ IEGameStopState::IEGameStopState(IEGame& game) :
     input(game.getInput()),
     gRenderEngine(game.getRenderEngine()),
     ecsUpdateEvent(*game.getECS()),
-    ePhysicsEngine(nullptr),
     eRenderEngine(nullptr),
     eCamera(nullptr)
 {
@@ -36,14 +32,12 @@ IEGameStopState::~IEGameStopState()
 
 void IEGameStopState::enter(IEGame& game)
 {
-    ePhysicsEngine = new EPhysicsEngine(this);
     eRenderEngine = new ERenderEngine(this);
     eCamera = new ECamera(this);
 
     deserializeGameStates(game);
 
-    ePhysicsEngine->startup(game);
-    eRenderEngine->startup(ePhysicsEngine);
+    eRenderEngine->startup(game);
 
     IEGameState::onResize(ApplicationProperties::viewportDimensions);
 }
@@ -51,8 +45,6 @@ void IEGameStopState::enter(IEGame& game)
 void IEGameStopState::exit(IEGame& game)
 {
     serializeGameStates(game);
-
-    ePhysicsEngine->shutdown();
 }
 
 void IEGameStopState::onUpdateFrame()
@@ -61,12 +53,10 @@ void IEGameStopState::onUpdateFrame()
 
     eCamera->update(input, dt);
     ecsUpdateEvent.getTransform().onUpdateFrame(ecsUpdateEvent);
-    ePhysicsEngine->onUpdateFrame(*input, *eCamera);
 }
 
 void IEGameStopState::onRenderFrame()
 {
-    eRenderEngine->onRenderPreFrame(glExtraFunc);
     gRenderEngine->onRenderFrame(glExtraFunc, eCamera);
     eRenderEngine->onRenderFrame(glExtraFunc, eCamera);
 }

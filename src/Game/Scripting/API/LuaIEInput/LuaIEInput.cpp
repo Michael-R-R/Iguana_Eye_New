@@ -21,8 +21,7 @@ void LuaIEInput::addToLua(IEInput* val, sol::table& gameTable)
     gameTable["IEInput"] = instance;
     gameTable.new_usertype<LuaIEInput>("", sol::no_constructor,
                                     "isPressed", &LuaIEInput::isPressed,
-                                    "getCursorPos", &LuaIEInput::cursorPos,
-                                    "getWheelDelta", &LuaIEInput::wheelDelta);
+                                    "getCursorPos", &LuaIEInput::cursorPos);
 }
 
 bool LuaIEInput::isPressed(const char* key)
@@ -33,10 +32,5 @@ bool LuaIEInput::isPressed(const char* key)
 QVector2D LuaIEInput::cursorPos()
 {
     return input->cursorPos();
-}
-
-QVector2D LuaIEInput::wheelDelta()
-{
-    return input->wheelDelta();
 }
 

@@ -21,7 +21,8 @@ public:
     bool isPressed(const InputKey& key);
     bool isPressed(const char* keyName);
     const QVector2D& cursorPos() const;
-    const QVector2D& wheelDelta() const;
+
+    InputCapture* getInputCapture() const { return inputCapture; }
 
 protected:
     void setupInputContainer() override;

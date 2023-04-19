@@ -21,7 +21,6 @@ class InputCapture : public QWidget
     int lastMod;
 
     QVector2D cursorPos;
-    QVector2D wheelDelta;
 
 public:
     InputCapture(QWidget* parent = nullptr);
@@ -31,7 +30,6 @@ public:
     bool checkStatus(const InputKey& key);
 
     const QVector2D& getCursorPos() const { return cursorPos; }
-    const QVector2D& getWheelDelta() const { return wheelDelta; }
 
 protected:
     bool eventFilter(QObject* watched, QEvent* event) override;
@@ -45,5 +43,10 @@ protected:
 
 private:
     void checkEvent(QEvent* event);
+
+signals:
+    void inputPressed(const InputKey& key);
+    void inputReleased(const InputKey& key);
+    void wheelDeltaChanged(const QPoint& delta);
 };
 

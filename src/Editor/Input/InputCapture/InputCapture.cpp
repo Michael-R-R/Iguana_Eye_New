@@ -6,7 +6,7 @@ InputCapture::InputCapture(QWidget* parent) :
     capturedInput(),
     lastKey(), currKey(),
     lastMod(Qt::NoModifier),
-    cursorPos(), wheelDelta()
+    cursorPos()
 {
     parent->setFocusPolicy(Qt::StrongFocus);
     parent->setFocus();
@@ -23,7 +23,6 @@ void InputCapture::clear()
 {
     currKey = InputKey();
     cursorPos = QVector2D();
-    wheelDelta = QVector2D();
     capturedInput.clear();
 }
 
@@ -51,6 +50,8 @@ void InputCapture::mousePressEvent(QMouseEvent* event)
     lastKey = currKey;
     currKey = InputKey(mods, key);
     capturedInput[currKey] = true;
+
+    emit inputPressed(currKey);
 }
 
 void InputCapture::mouseReleaseEvent(QMouseEvent* event)
@@ -65,22 +66,22 @@ void InputCapture::mouseReleaseEvent(QMouseEvent* event)
     lastKey = currKey;
     currKey = InputKey(mods, key);
     capturedInput[currKey] = false;
+
+    emit inputReleased(currKey);
 }
 
 void InputCapture::mouseMoveEvent(QMouseEvent* event)
 {
     if(!event) { return; }
 
-    QPoint pos = event->pos();
-    cursorPos = QVector2D(pos.x(), pos.y());
+    cursorPos = QVector2D(event->pos());
 }
 
 void InputCapture::wheelEvent(QWheelEvent* event)
 {
     if(!event) { return; }
 
-    QPoint pos = event->angleDelta();
-    wheelDelta = QVector2D(pos.x(), pos.y());
+    emit wheelDeltaChanged(event->angleDelta());
 }
 
 void InputCapture::keyPressEvent(QKeyEvent* event)
@@ -96,6 +97,8 @@ void InputCapture::keyPressEvent(QKeyEvent* event)
     lastKey = currKey;
     currKey = InputKey(mods, key);
     capturedInput[currKey] = true;
+
+    emit inputPressed(currKey);
 }
 
 void InputCapture::keyReleaseEvent(QKeyEvent* event)
@@ -111,6 +114,8 @@ void InputCapture::keyReleaseEvent(QKeyEvent* event)
     lastKey = currKey;
     currKey = InputKey(mods, key);
     capturedInput[currKey] = false;
+
+    emit inputReleased(currKey);
 }
 
 void InputCapture::focusOutEvent(QFocusEvent* event)
