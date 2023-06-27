@@ -3,7 +3,6 @@
 #include "IEECSSystem.h"
 #include "IEECSNameSystem.h"
 #include "IEECSHierarchySystem.h"
-#include "IEECSInputSystem.h"
 #include "IEECSScriptSystem.h"
 #include "IEECSColliderSystem.h"
 #include "IEECSRigidbody3DSystem.h"
@@ -27,9 +26,14 @@ IEECS::~IEECS()
 
 }
 
-void IEECS::startup(IEGame&)
+void IEECS::startup(IEGame& game)
 {
     initSystems();
+
+    foreach (auto* i, systems)
+    {
+        i->startUp(game);
+    }
 }
 
 void IEECS::shutdown(IEGame&)
@@ -38,27 +42,27 @@ void IEECS::shutdown(IEGame&)
     clearSystems();
 }
 
-void IEECS::initalize(IEGame&)
+void IEECS::onSerialize(IEGame& game)
 {
-    for(auto& i : systems)
+    foreach (auto* i, systems)
     {
-        i->initalize();
+        i->onSerialize(game);
     }
 }
 
-void IEECS::reset(IEGame&)
+void IEECS::onDeserialize(IEGame& game)
 {
-    for(auto& i : systems)
+    foreach (auto* i, systems)
     {
-        i->reset();
+        i->onDeserialize(game);
     }
 }
 
-void IEECS::onUpdateFrame(ECSOnUpdateEvent& event)
+void IEECS::onUpdateFrame()
 {
     for(auto& i : systems)
     {
-        i->onUpdateFrame(event);
+        i->onUpdateFrame();
     }
 }
 
@@ -118,7 +122,6 @@ void IEECS::initSystems()
 {
     systems[typeid(IEECSNameSystem).hash_code()] = new IEECSNameSystem(this);
     systems[typeid(IEECSHierarchySystem).hash_code()] = new IEECSHierarchySystem(this);
-    systems[typeid(IEECSInputSystem).hash_code()] = new IEECSInputSystem(this);
     systems[typeid(IEECSScriptSystem).hash_code()] = new IEECSScriptSystem(this);
     systems[typeid(IEECSColliderSystem).hash_code()] = new IEECSColliderSystem(this);
     systems[typeid(IEECSRigidbody3DSystem).hash_code()] = new IEECSRigidbody3DSystem(this);

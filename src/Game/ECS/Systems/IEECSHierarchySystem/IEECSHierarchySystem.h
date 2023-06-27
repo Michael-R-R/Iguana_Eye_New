@@ -5,8 +5,6 @@
 
 #include "IEECSSystem.h"
 
-class ECSOnUpdateEvent;
-
 class IEECSHierarchySystem : public IEECSSystem
 {
     struct Data
@@ -36,7 +34,6 @@ public:
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent& event) override;
 
     void addChild(const int parentIndex, const IEEntity childEntity);
     void removeChild(const int parentIndex, IEEntity childEntity);

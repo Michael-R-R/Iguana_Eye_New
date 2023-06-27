@@ -102,7 +102,7 @@ void EWGlslEditor::glslRenamedSlot(const unsigned long long, const unsigned long
     if(!shader)
         return;
 
-    QString path = shader->getFilePath();
+    QString path = shader->getName();
     QString name = IEFile::extractName(path);
     currShaderNameLabel->setText(name);
     currShaderPathLabel->setText(path);

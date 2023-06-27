@@ -4,11 +4,10 @@
 
 #include "IEGameSystem.h"
 #include "IEEntityManager.h"
+#include "IEECSSystem.h"
 #include "IEEntity.h"
 
 class IEGame;
-class IEECSSystem;
-class ECSOnUpdateEvent;
 
 class IEECS : public IEGameSystem
 {
@@ -23,10 +22,9 @@ public:
 
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;
-    void initalize(IEGame& game) override;
-    void reset(IEGame& game) override;
-
-    void onUpdateFrame(ECSOnUpdateEvent& event);
+    void onSerialize(IEGame& game) override;
+    void onDeserialize(IEGame& game) override;
+    void onUpdateFrame() override;
 
     IEEntity create();
     void remove(const IEEntity entity);

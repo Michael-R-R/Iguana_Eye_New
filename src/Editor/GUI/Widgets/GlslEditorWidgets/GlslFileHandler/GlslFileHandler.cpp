@@ -5,8 +5,8 @@
 #include "IEScene.h"
 #include "IEShaderManager.h"
 #include "IEShader.h"
-#include "IEGlslImporter.h"
-#include "IEGlslExporter.h"
+#include "IEShaderImport.h"
+#include "IEShaderExport.h"
 #include "IEFile.h"
 #include "IEHash.h"
 #include <QMessageBox>
@@ -34,7 +34,7 @@ void GlslFileHandler::handleGlslNew(const QString& path)
 
     QString vSrc = "#version 430 core\n\nint main()\n{\n\t\n}\n";
     QString fSrc = "#version 430 core\n\nint main()\n{\n\t\n}\n";
-    IEGlslExporter::exportGlsl(path, vSrc, fSrc);
+    IEShaderExport::exportShader(path, vSrc, fSrc);
 
     glslEditor->getCurrShaderNameLabel()->setText("");
     glslEditor->getCurrShaderPathLabel()->setText("");
@@ -54,7 +54,7 @@ void GlslFileHandler::handleGlslOpen(const QString& path)
 
     QString vSrc = "";
     QString fSrc = "";
-    IEGlslImporter::importGlsl(path, vSrc, fSrc);
+    IEShaderImport::importGlsl(path, vSrc, fSrc);
 
     QString name = IEFile::extractName(path);
     glslEditor->getCurrShaderNameLabel()->setText(name);
@@ -72,7 +72,7 @@ void GlslFileHandler::handleGlslSave(const QString& path)
     // Save source to file
     QString vSrc = glslEditor->getVertexSource();
     QString fSrc = glslEditor->getFragmentSource();
-    if(!IEGlslExporter::exportGlsl(path, vSrc, fSrc))
+    if(!IEShaderExport::exportShader(path, vSrc, fSrc))
         return;
 
     // Check if a shader exist to update
@@ -101,7 +101,7 @@ void GlslFileHandler::handleGlslSaveAs(const QString& path)
 
     QString vSrc = glslEditor->getVertexSource();
     QString fSrc = glslEditor->getFragmentSource();
-    IEGlslExporter::exportGlsl(path, vSrc, fSrc);
+    IEShaderExport::exportShader(path, vSrc, fSrc);
 
     glslEditor->getCurrShaderNameLabel()->setText("");
     glslEditor->getCurrShaderPathLabel()->setText("");

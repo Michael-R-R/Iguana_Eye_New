@@ -1,6 +1,6 @@
 #include "IEMeshManager.h"
 #include "IEMesh.h"
-#include "IEObjImporter.h"
+#include "IEMeshImport.h"
 
 IEMeshManager::IEMeshManager(QObject* parent) :
     IEResourceManager(parent)
@@ -43,7 +43,7 @@ QDataStream& IEMeshManager::deserialize(QDataStream& in, Serializable& obj)
 
         in >> *mesh;
 
-        if(!IEObjImporter::importMesh(mesh->getFilePath(), *mesh))
+        if(!IEMeshImport::importMesh(mesh->getName(), *mesh))
         {
             delete mesh;
             continue;

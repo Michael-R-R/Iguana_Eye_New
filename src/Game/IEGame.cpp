@@ -99,14 +99,14 @@ void IEGame::shutdown()
 
 void IEGame::initalize()
 {
-    ecs->initalize(*this);
+    ecs->onSerialize(*this);
 }
 
 void IEGame::reset()
 {
-    physicsEngine->reset(*this);
-    scriptEngine->reset(*this);
-    ecs->reset(*this);
+    physicsEngine->onDeserialize(*this);
+    scriptEngine->onDeserialize(*this);
+    ecs->onDeserialize(*this);
 }
 
 void IEGame::changeState(IEGameState* val)

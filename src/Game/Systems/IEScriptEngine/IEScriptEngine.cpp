@@ -46,12 +46,12 @@ void IEScriptEngine::shutdown(IEGame&)
     lua = nullptr;
 }
 
-void IEScriptEngine::initalize(IEGame&)
+void IEScriptEngine::onSerialize(IEGame&)
 {
 
 }
 
-void IEScriptEngine::reset(IEGame& game)
+void IEScriptEngine::onDeserialize(IEGame& game)
 {
     shutdown(game);
     startup(game);

@@ -1,7 +1,7 @@
 #include "IEShaderManager.h"
 #include "IEShader.h"
 #include "IEFile.h"
-#include "IEGlslImporter.h"
+#include "IEShaderImport.h"
 
 IEShaderManager::IEShaderManager(QObject* parent) :
     IEResourceManager(parent)
@@ -17,7 +17,7 @@ IEShaderManager::~IEShaderManager()
 void IEShaderManager::startup()
 {
     auto shader = new IEShader(IEFile::absolutePath("./resources/shaders/game/default.glsl"), this);
-    IEGlslImporter::importGlsl(shader->getFilePath(), *shader);
+    IEShaderImport::importGlsl(shader->getName(), *shader);
     shader->build();
     defaultId = shader->getId();
     this->add(defaultId, shader);
@@ -53,7 +53,7 @@ QDataStream& IEShaderManager::deserialize(QDataStream& in, Serializable& obj)
 
         in >> *shader;
 
-        if(!IEGlslImporter::importGlsl(shader->getFilePath(), *shader))
+        if(!IEShaderImport::importGlsl(shader->getName(), *shader))
         {
             delete shader;
             continue;

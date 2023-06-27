@@ -53,12 +53,12 @@ void IEPhysicsEngine::shutdown(IEGame&)
     pxFoundation->release();
 }
 
-void IEPhysicsEngine::initalize(IEGame&)
+void IEPhysicsEngine::onSerialize(IEGame&)
 {
 
 }
 
-void IEPhysicsEngine::reset(IEGame& game)
+void IEPhysicsEngine::onDeserialize(IEGame& game)
 {
     shutdown(game);
     startup(game);

@@ -30,9 +30,9 @@ QDataStream& IEMaterialManager::serialize(QDataStream& out, const Serializable& 
 
     for(auto& i : manager.resources)
     {
-        out << i->getFilePath();
+        out << i->getName();
 
-        IESerialize::write<IEMaterial>(i->getFilePath(), static_cast<IEMaterial*>(i));
+        IESerialize::write<IEMaterial>(i->getName(), static_cast<IEMaterial*>(i));
     }
 
     return out;

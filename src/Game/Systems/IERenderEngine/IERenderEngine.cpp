@@ -35,12 +35,12 @@ void IERenderEngine::shutdown(IEGame&)
 
 }
 
-void IERenderEngine::initalize(IEGame&)
+void IERenderEngine::onSerialize(IEGame&)
 {
 
 }
 
-void IERenderEngine::reset(IEGame&)
+void IERenderEngine::onDeserialize(IEGame&)
 {
 
 }

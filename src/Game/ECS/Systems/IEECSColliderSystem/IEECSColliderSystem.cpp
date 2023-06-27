@@ -1,5 +1,4 @@
 #include "IEECSColliderSystem.h"
-#include "ECSOnUpdateEvent.h"
 
 IEECSColliderSystem::IEECSColliderSystem(QObject* parent) :
     IEECSSystem(parent),
@@ -49,11 +48,6 @@ bool IEECSColliderSystem::detach(const IEEntity entity)
     entityMap.remove(entity);
 
     return true;
-}
-
-void IEECSColliderSystem::onUpdateFrame(ECSOnUpdateEvent&)
-{
-
 }
 
 void IEECSColliderSystem::removeCollider(const int index)

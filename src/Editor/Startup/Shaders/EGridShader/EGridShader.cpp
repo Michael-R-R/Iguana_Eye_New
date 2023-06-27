@@ -1,10 +1,10 @@
 #include "EGridShader.h"
-#include "IEGlslImporter.h"
+#include "IEShaderImport.h"
 
 EGridShader::EGridShader(QObject* parent) :
     IEShader(parent)
 {
-    IEGlslImporter::importGlsl("./resources/shaders/editor/persp_grid.glsl", *this);
+    IEShaderImport::importGlsl("./resources/shaders/editor/persp_grid.glsl", *this);
 }
 
 EGridShader::~EGridShader()

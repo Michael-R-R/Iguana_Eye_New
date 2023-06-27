@@ -34,12 +34,12 @@ void IETime::shutdown(IEGame& game)
     this->stopRenderTimer();
 }
 
-void IETime::initalize(IEGame&)
+void IETime::onSerialize(IEGame&)
 {
 
 }
 
-void IETime::reset(IEGame& game)
+void IETime::onDeserialize(IEGame& game)
 {
     shutdown(game);
     startup(game);

@@ -1,6 +1,6 @@
 #include "NewShaderAction.h"
 #include "EWGlslEditor.h"
-#include "IEGlslExporter.h"
+#include "IEShaderExport.h"
 #include <QFileDialog>
 
 NewShaderAction::NewShaderAction(EWGlslEditor* editor, InputKey& shortcut, QObject* parent) :

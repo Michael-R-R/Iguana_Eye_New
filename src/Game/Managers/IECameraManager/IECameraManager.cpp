@@ -21,9 +21,9 @@ QDataStream& IECameraManager::serialize(QDataStream& out, const Serializable& ob
 
     for(auto* i : manager.resources)
     {
-        out << i->getFilePath();
+        out << i->getName();
 
-        IESerialize::write<IECamera>(i->getFilePath(), static_cast<IECamera*>(i));
+        IESerialize::write<IECamera>(i->getName(), static_cast<IECamera*>(i));
     }
 
     return out;

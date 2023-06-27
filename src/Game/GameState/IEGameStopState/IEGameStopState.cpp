@@ -17,8 +17,8 @@ IEGameStopState::IEGameStopState(IEGame& game) :
     glExtraFunc(game.getGlExtraFunc()),
     time(game.getTime()),
     input(game.getInput()),
+    ecs(game.getECS()),
     gRenderEngine(game.getRenderEngine()),
-    ecsUpdateEvent(*game.getECS()),
     eRenderEngine(nullptr),
     eCamera(nullptr)
 {
@@ -51,8 +51,10 @@ void IEGameStopState::onUpdateFrame()
 {
     const float dt = time->getDeltaTime();
 
+    auto* tSystem = ecs->getComponent<IEECSTransformSystem>();
+
     eCamera->update(input, dt);
-    ecsUpdateEvent.getTransform().onUpdateFrame(ecsUpdateEvent);
+    tSystem->onUpdateFrame();
 }
 
 void IEGameStopState::onRenderFrame()

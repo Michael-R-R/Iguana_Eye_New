@@ -1,24 +1,17 @@
 #include "IEECSRigidbody3DSystem.h"
-#include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEPhysicsEngine.h"
 #include "IESimulationCallback.h"
+#include "IEECS.h"
 #include "IEECSTransformSystem.h"
-#include "ECSOnUpdateEvent.h"
 
 IEECSRigidbody3DSystem::IEECSRigidbody3DSystem(QObject* parent) :
     IEECSSystem(parent),
     data(),
-    awakeBodies(),
-    sleepingBodies()
+    awakeBodies(), sleepingBodies(),
+    pEngine(nullptr), tSystem(nullptr)
 {
     IEECSRigidbody3DSystem::attach(IEEntity(-1));
-
-    auto* game = ApplicationWindow::instance().getGame();
-    auto* engine = game->getPhysicsEngine();
-    auto& simCallback = engine->getSimulationCallback();
-    connect(&simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
-    connect(&simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
 }
 
 IEECSRigidbody3DSystem::~IEECSRigidbody3DSystem()
@@ -77,10 +70,18 @@ bool IEECSRigidbody3DSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent& event)
+void IEECSRigidbody3DSystem::startUp(const IEGame& game)
 {
-    auto& transformSystem = event.getTransform();
+    auto* engine = game.getPhysicsEngine();
+    auto& simCallback = engine->getSimulationCallback();
+    connect(&simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
+    connect(&simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
 
+    tSystem = game.getECS()->getComponent<IEECSTransformSystem>();
+}
+
+void IEECSRigidbody3DSystem::onUpdateFrame()
+{
     for(const auto& i : awakeBodies)
     {
         if(!data.rigidbody[i])
@@ -95,30 +96,12 @@ void IEECSRigidbody3DSystem::onUpdateFrame(ECSOnUpdateEvent& event)
         physx::PxVec3 pxRot;
         pxQuat.toRadiansAndUnitAxis(angle, pxRot);
 
-        const int transformIndex = transformSystem.lookUpIndex(data.entity[i]);
-        transformSystem.setPosition(transformIndex, QVector3D(pxPos.x, pxPos.y, pxPos.z));
-        transformSystem.setRotation(transformIndex, QVector4D(pxRot.x, pxRot.y, pxRot.z, qRadiansToDegrees(angle)));
+        const int transformIndex = tSystem->lookUpIndex(data.entity[i]);
+        tSystem->setPosition(transformIndex, QVector3D(pxPos.x, pxPos.y, pxPos.z));
+        tSystem->setRotation(transformIndex, QVector4D(pxRot.x, pxRot.y, pxRot.z, qRadiansToDegrees(angle)));
 
         qDebug() << pxPos.x << pxPos.y << pxPos.z;
     }
-}
-
-void IEECSRigidbody3DSystem::initalize()
-{
-    auto* game = ApplicationWindow::instance().getGame();
-    auto* engine = game->getPhysicsEngine();
-
-    for(int i = 1; i < data.rigidbody.size(); i++)
-    {
-        awakeBodies.insert(i);
-        engine->addActorToScene(data.rigidbody[i]->getActor());
-    }
-}
-
-void IEECSRigidbody3DSystem::reset()
-{
-    sleepingBodies.clear();
-    awakeBodies.clear();
 }
 
 void IEECSRigidbody3DSystem::wakeup(const int index)

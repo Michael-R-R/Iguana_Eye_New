@@ -24,12 +24,12 @@ void IEInput::shutdown(IEGame&)
     inputCapture = nullptr;
 }
 
-void IEInput::initalize(IEGame&)
+void IEInput::onSerialize(IEGame&)
 {
 
 }
 
-void IEInput::reset(IEGame& game)
+void IEInput::onDeserialize(IEGame& game)
 {
     shutdown(game);
     startup(game);

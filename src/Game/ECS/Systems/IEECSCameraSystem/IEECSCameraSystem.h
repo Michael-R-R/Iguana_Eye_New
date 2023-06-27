@@ -4,10 +4,12 @@
 #include <QMap>
 
 #include "IEECSSystem.h"
-#include "IECameraScript.h"
+#include "IEScript.h"
 
 class IECamera;
-class ECSOnUpdateEvent;
+class IECameraManager;
+class IEScriptEngine;
+class IEECSTransformSystem;
 
 class IEECSCameraSystem : public IEECSSystem
 {
@@ -15,16 +17,18 @@ class IEECSCameraSystem : public IEECSSystem
     {
         QVector<IEEntity> entity;
         QVector<unsigned long long> cameraId;
-        QVector<IECameraScript*> cameraScript;
+        QVector<IEScript*> script;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entity << data.cameraId;
-            out << (int)data.cameraScript.size();
+            int size = data.script.size();
 
-            foreach(auto& i, data.cameraScript)
+            out << data.entity << data.cameraId;
+            out << size;
+
+            for(int i = 0; i < size; i++)
             {
-                out << *i;
+                out << *data.script[i];
             }
 
             return out;
@@ -32,18 +36,23 @@ class IEECSCameraSystem : public IEECSSystem
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            data.cameraScript.clear();
+            foreach (auto* script, data.script)
+            {
+                delete script;
+                script = nullptr;
+            }
+            data.script.clear();
 
             int size = 0;
             in >> data.entity >> data.cameraId >> size;
 
             for(int i = 0; i < size; i++)
             {
-                auto script = new IECameraScript(&data);
+                auto script = new IEScript(&data);
 
                 in >> *script;
 
-                data.cameraScript.append(script);
+                data.script.append(script);
             }
 
             return in;
@@ -54,15 +63,25 @@ class IEECSCameraSystem : public IEECSSystem
 
     int activeIndex;
 
+    IECameraManager* cameraManager;
+    IEScriptEngine* sEngine;
+    IEECSTransformSystem* tSystem;
+
 public:
     IEECSCameraSystem(QObject* parent = nullptr);
     ~IEECSCameraSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent& event) override;
-    void initalize() override;
+    void startUp(const IEGame& game) override;
+    void onSerialize(const IEGame& game) override;
+    void onDeserialize(const IEGame& game) override;
+    void onUpdateFrame() override;
 
+    void initAllScripts();
+    void startAllScripts();
+    void initScript(const int index);
+    void startScript(const int index);
     void removeScript(const int index);
 
     int getActiveIndex() const;
@@ -71,11 +90,14 @@ public:
     IECamera* getAttachedCamera(const int index) const;
     void setActiveIndex(const int val);
 
-    const IECameraScript* getScript(const int index) const;
+    const IEScript* getScript(const int index) const;
     unsigned long long getCameraId(const int index) const;
 
-    void setScript(const int index, IECameraScript* val);
+    void setScript(const int index, IEScript* val);
     void setCameraId(const int index, const unsigned long long val);
+
+    void cacheScriptData();
+    void decacheScriptData();
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
     QDataStream& deserialize(QDataStream &in, Serializable &obj) override;

@@ -8,6 +8,8 @@
 #include "IESphereCollider.h"
 #include "IECapsuleCollider.h"
 
+class IEGame;
+
 class IEECSColliderSystem : public IEECSSystem
 {
     struct Data : public IEObject
@@ -29,6 +31,11 @@ class IEECSColliderSystem : public IEECSSystem
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
+            foreach (auto* i, data.collider)
+            {
+                delete i;
+                i = nullptr;
+            }
             data.collider.clear();
 
             int size = 0;
@@ -67,7 +74,6 @@ public:
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent& event) override;
 
     void removeCollider(const int index);
 

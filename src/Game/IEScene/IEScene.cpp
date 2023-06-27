@@ -39,12 +39,12 @@ void IEScene::shutdown(IEGame&)
     cameraManager->shutdown();
 }
 
-void IEScene::initalize(IEGame&)
+void IEScene::onSerialize(IEGame&)
 {
 
 }
 
-void IEScene::reset(IEGame& game)
+void IEScene::onDeserialize(IEGame& game)
 {
     shutdown(game);
     startup(game);

@@ -22,7 +22,7 @@ bool IEResourceManager::add(const unsigned long long key, IEResource* value)
     resources[key] = value;
     value->setParent(this);
 
-    emit added(key, value->getFilePath());
+    emit added(key, value->getName());
 
     return true;
 }

@@ -1,13 +1,13 @@
 #pragma once
 
 #include "IEGameState.h"
-#include "ECSOnUpdateEvent.h"
 
 class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
 class IEGame;
 class IETime;
 class IEInput;
+class IEECS;
 class IERenderEngine;
 class ERenderEngine;
 class ECamera;
@@ -18,8 +18,8 @@ class IEGameStopState : public IEGameState
     QOpenGLExtraFunctions* glExtraFunc;
     IETime* time;
     IEInput* input;
+    IEECS* ecs;
     IERenderEngine* gRenderEngine;
-    ECSOnUpdateEvent ecsUpdateEvent;
 
     ERenderEngine* eRenderEngine;
     ECamera* eCamera;

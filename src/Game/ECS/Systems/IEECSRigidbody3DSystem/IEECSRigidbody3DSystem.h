@@ -11,6 +11,8 @@
 #include "IEPlaneRigidbody.h"
 
 class IEGame;
+class IEPhysicsEngine;
+class IEECSTransformSystem;
 
 class IEECSRigidbody3DSystem : public IEECSSystem
 {
@@ -35,6 +37,11 @@ class IEECSRigidbody3DSystem : public IEECSSystem
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
+            foreach (auto* i, data.rigidbody)
+            {
+                delete i;
+                i = nullptr;
+            }
             data.rigidbody.clear();
 
             int size = 0;
@@ -71,15 +78,17 @@ class IEECSRigidbody3DSystem : public IEECSSystem
     QSet<int> awakeBodies;
     QSet<int> sleepingBodies;
 
+    IEPhysicsEngine* pEngine;
+    IEECSTransformSystem* tSystem;
+
 public:
     IEECSRigidbody3DSystem(QObject* parent = nullptr);
     ~IEECSRigidbody3DSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent& event) override;
-    void initalize() override;
-    void reset() override;
+    void startUp(const IEGame& game) override;
+    void onUpdateFrame() override;
 
     void wakeup(const int index);
     void putToSleep(const int index);

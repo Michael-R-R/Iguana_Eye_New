@@ -35,4 +35,6 @@
 *.vcxproj
 *.sln
 *.stash
+
+# Folders
 /required

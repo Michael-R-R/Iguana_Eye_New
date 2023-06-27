@@ -1,5 +1,4 @@
 #include "IEECSHierarchySystem.h"
-#include "ECSOnUpdateEvent.h"
 
 IEECSHierarchySystem::IEECSHierarchySystem(QObject* parent) :
     IEECSSystem(parent),
@@ -55,11 +54,6 @@ bool IEECSHierarchySystem::detach(const IEEntity entity)
     entityMap.remove(entity);
 
     return true;
-}
-
-void IEECSHierarchySystem::onUpdateFrame(ECSOnUpdateEvent&)
-{
-    // Not used
 }
 
 void IEECSHierarchySystem::addChild(const int parentIndex, const IEEntity childEntity)

@@ -6,6 +6,7 @@
 #include "IEPhysicsEngine.h"
 #include "IERenderEngine.h"
 #include "IEECSCameraSystem.h"
+#include "IECamera.h"
 
 IEGamePlayState::IEGamePlayState(IEGame& game) :
     glFunc(game.getGlFunc()),
@@ -13,8 +14,7 @@ IEGamePlayState::IEGamePlayState(IEGame& game) :
     time(game.getTime()),
     physicsEngine(game.getPhysicsEngine()),
     renderEngine(game.getRenderEngine()),
-    ecs(game.getECS()),
-    ecsUpdateEvent(*ecs)
+    ecs(game.getECS())
 {
 
 }
@@ -39,28 +39,29 @@ void IEGamePlayState::onUpdateFrame()
     const float dt = time->getDeltaTime();
 
     physicsEngine->onUpdateFrame(dt);
-    ecs->onUpdateFrame(ecsUpdateEvent);
+    ecs->onUpdateFrame();
 }
 
 void IEGamePlayState::onRenderFrame()
 {
-    auto& cameraSystem = ecsUpdateEvent.getCamera();
-    auto* camera = cameraSystem.getActiveCamera();
+    auto* cameraSystem = ecs->getComponent<IEECSCameraSystem>();
+    auto* camera = cameraSystem->getActiveCamera();
 
     renderEngine->onRenderFrame(glExtraFunc, camera);
 }
 
 void IEGamePlayState::onResize(const float w, const float h)
 {
-    auto& cameraSystem = ecsUpdateEvent.getCamera();
+    auto* cameraSystem = ecs->getComponent<IEECSCameraSystem>();
 
-    const int index = cameraSystem.getActiveIndex();
-    auto camera = cameraSystem.getActiveCamera();
-    auto script = cameraSystem.getScript(index);
+    const int index = cameraSystem->getActiveIndex();
+    auto* camera = cameraSystem->getActiveCamera();
+    auto* script = cameraSystem->getScript(index);
     if(!camera || !script)
         return;
 
-    script->updateProjection(camera, w, h);
+    auto func = script->getCustomFunc("updateProjection");
+    func(camera, w, h);
 }
 
 

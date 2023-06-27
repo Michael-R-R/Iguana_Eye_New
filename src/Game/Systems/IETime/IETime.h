@@ -20,8 +20,8 @@ public:
 
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;
-    void initalize(IEGame& game) override;
-    void reset(IEGame& game) override;
+    void onSerialize(IEGame& game) override;
+    void onDeserialize(IEGame& game) override;
 
     void startUpdateTimer();
     void startRenderTimer();

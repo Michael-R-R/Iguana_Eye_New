@@ -22,8 +22,8 @@ public:
 
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;
-    void initalize(IEGame& game) override;
-    void reset(IEGame& game) override;
+    void onSerialize(IEGame& game) override;
+    void onDeserialize(IEGame& game) override;
 
     IEMeshManager* getMeshManager() const { return meshManager; }
     IEMaterialManager* getMaterialManager() const { return materialManager; }

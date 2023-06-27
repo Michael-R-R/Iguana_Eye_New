@@ -1,5 +1,4 @@
 #include "IEECSNameSystem.h"
-#include "ECSOnUpdateEvent.h"
 #include "IEHash.h"
 
 IEECSNameSystem::IEECSNameSystem(QObject* parent) :
@@ -68,11 +67,6 @@ bool IEECSNameSystem::detach(const IEEntity entity)
     entityMap.remove(entity);
 
     return true;
-}
-
-void IEECSNameSystem::onUpdateFrame(ECSOnUpdateEvent&)
-{
-    // Not used
 }
 
 void IEECSNameSystem::addNameTag(const QString& name)

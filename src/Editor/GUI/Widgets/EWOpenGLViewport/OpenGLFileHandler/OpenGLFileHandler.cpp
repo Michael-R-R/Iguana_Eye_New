@@ -18,7 +18,7 @@
 #include "IEEntity.h"
 #include "IEFile.h"
 #include "IEHash.h"
-#include "IEObjImporter.h"
+#include "IEMeshImport.h"
 #include "Editor.h"
 #include "EGUI.h"
 #include "EWindowManager.h"
@@ -68,7 +68,7 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
     if(!meManager->doesExist(meshId))
     {
         mesh = new IEMesh(path, meManager);
-        if(!IEObjImporter::importMesh(path, *mesh))
+        if(!IEMeshImport::importMesh(path, *mesh))
             return;
 
         if(!meManager->add(meshId, mesh))
@@ -95,9 +95,9 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
     const int sIndex = ecs->attachComponent<IEECSShaderSystem>(entity);
     const int rIndex = ecs->attachComponent<IEECSRenderableSystem>(entity);
 
-    meSystem->setMeshId(meIndex, meshId);
-    maSystem->setMaterialId(maIndex, materialId);
-    sSystem->setShaderId(sIndex, shaderId);
+    meSystem->setResourceId(meIndex, meshId);
+    maSystem->setResourceId(maIndex, materialId);
+    sSystem->setResourceId(sIndex, shaderId);
 
     // --- Create renderable or create instance --- //
     QString rPath = QString("./resources/renderables/%1/%2/%3/r.ierend").arg(QString::number(meshId),
@@ -126,12 +126,12 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
             return;
         }
 
-        rSystem->setRenderableId(rIndex, rID);
+        rSystem->setResourceId(rIndex, rID);
         rSystem->addShown(rIndex);
     }
     else
     {
-        rSystem->setRenderableId(rIndex, rID);
+        rSystem->setResourceId(rIndex, rID);
         rSystem->addShown(rIndex);
     }
 }

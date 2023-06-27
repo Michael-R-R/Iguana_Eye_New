@@ -11,7 +11,8 @@
 
 class IEGame;
 class IEECSHierarchySystem;
-class ECSOnUpdateEvent;
+class IEECSRenderableSystem;
+class IERenderableManager;
 
 class IEECSTransformSystem : public IEECSSystem
 {
@@ -42,13 +43,18 @@ class IEECSTransformSystem : public IEECSSystem
 
     QSet<int> dirtyParentIndices;
 
+    IEECSHierarchySystem* hSystem;
+    IEECSRenderableSystem* rSystem;
+    IERenderableManager* renderableManager;
+
 public:
     IEECSTransformSystem(QObject* parent = nullptr);
     ~IEECSTransformSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-    void onUpdateFrame(ECSOnUpdateEvent& event) override;
+    void startUp(const IEGame& game) override;
+    void onUpdateFrame() override;
 
     const QVector3D& getPosition(const int index) const;
     const QVector4D& getRotation(const int index) const;
@@ -63,8 +69,7 @@ public:
 
 private:
     void updateTransform(const int index,
-                         QSet<int>& dirtyChildren,
-                         const IEECSHierarchySystem& hierarchySystem);
+                         QSet<int>& dirtyChildren);
     QMatrix4x4 calcModelMatrix(const int index);
 
 public:

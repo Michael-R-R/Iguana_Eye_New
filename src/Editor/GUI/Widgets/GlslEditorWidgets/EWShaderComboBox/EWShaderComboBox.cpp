@@ -73,7 +73,7 @@ void EWShaderComboBox::initialBuild(IEShaderManager* shaderManager)
     auto& resources = shaderManager->getResources();
     for(auto* i : resources)
     {
-        this->addShader(i->getId(), i->getFilePath());
+        this->addShader(i->getId(), i->getName());
     }
 }
 
@@ -176,7 +176,7 @@ void EWShaderComboBox::changeShaderKey(const unsigned long long oldKey, const un
 
     auto* shader = shaderManager->value<IEShader>(newKey);
 
-    QString extractedName = IEFile::extractName(shader->getFilePath());
+    QString extractedName = IEFile::extractName(shader->getName());
     extractedName = checkForDuplicateName(extractedName);
 
     this->setItemText(index, extractedName);

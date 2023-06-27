@@ -1,6 +1,6 @@
 #include "SaveAsShaderAction.h"
 #include "EWGlslEditor.h"
-#include "IEGlslExporter.h"
+#include "IEShaderExport.h"
 #include <QFileDialog>
 
 SaveAsShaderAction::SaveAsShaderAction(EWGlslEditor* editor, InputKey& shortcut, QObject* parent) :

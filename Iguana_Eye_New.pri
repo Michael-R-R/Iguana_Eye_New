@@ -128,9 +128,6 @@ INCLUDEPATH += $$PWD/src/Editor/Startup/Renderables \
 INCLUDEPATH += $$PWD/src/Editor/Startup/Shaders \
     $$PWD/src/Editor/Startup/Shaders/EGridShader \
 
-INCLUDEPATH += $$PWD/src/Events \
-    $$PWD/src/Events/ECSOnUpdateEvent \
-
 INCLUDEPATH += $$PWD/src/Game \
     $$PWD/src/Game/IEScene \
 
@@ -143,16 +140,17 @@ INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
     $$PWD/src/Game/ECS/Systems/IEECSCameraSystem \
     $$PWD/src/Game/ECS/Systems/IEECSColliderSystem \
     $$PWD/src/Game/ECS/Systems/IEECSHierarchySystem \
-    $$PWD/src/Game/ECS/Systems/IEECSInputSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSMaterialSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSMeshSystem \
     $$PWD/src/Game/ECS/Systems/IEECSNameSystem \
     $$PWD/src/Game/ECS/Systems/IEECSRigidbody3DSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSRenderableSystem \
     $$PWD/src/Game/ECS/Systems/IEECSScriptSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSShaderSystem \
     $$PWD/src/Game/ECS/Systems/IEECSSystem \
     $$PWD/src/Game/ECS/Systems/IEECSTransformSystem \
+
+INCLUDEPATH += $$PWD/src/Game/ECS/Systems/ResourceSystem \
+    $$PWD/src/Game/ECS/Systems/ResourceSystem/IEECSMaterialSystem \
+    $$PWD/src/Game/ECS/Systems/ResourceSystem/IEECSMeshSystem \
+    $$PWD/src/Game/ECS/Systems/ResourceSystem/IEECSRenderableSystem \
+    $$PWD/src/Game/ECS/Systems/ResourceSystem/IEECSShaderSystem \
 
 INCLUDEPATH += $$PWD/src/Game/GameState \
     $$PWD/src/Game/GameState/IEGamePlayState \
@@ -192,14 +190,22 @@ INCLUDEPATH += $$PWD/src/Game/Physics/Rigidbodies \
     $$PWD/src/Game/Physics/Rigidbodies/IESphereRigidbody \
 
 INCLUDEPATH += $$PWD/src/Game/Resources \
-    $$PWD/src/Game/Resources/IECamera \
-    $$PWD/src/Game/Resources/IEMaterial \
-    $$PWD/src/Game/Resources/IEMesh \
-    $$PWD/src/Game/Resources/IERenderable \
     $$PWD/src/Game/Resources/IEResource \
-    $$PWD/src/Game/Resources/IEShader \
+
+INCLUDEPATH += $$PWD/src/Game/Resources/FileResource \
+    $$PWD/src/Game/Resources/FileResource/IEFileResource \
+    $$PWD/src/Game/Resources/FileResource/IEMaterial \
+    $$PWD/src/Game/Resources/FileResource/IEMesh \
+    $$PWD/src/Game/Resources/FileResource/IERenderable \
+    $$PWD/src/Game/Resources/FileResource/IEShader \
+    $$PWD/src/Game/Resources/FileResource/IEScript \
+
+INCLUDEPATH += $$PWD/src/Game/Resources/SceneResource \
+    $$PWD/src/Game/Resources/SceneResource/IECamera \
+    $$PWD/src/Game/Resources/SceneResource/IESceneResource \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting \
+    $$PWD/src/Game/Scripting/IEScriptData \
 
 INCLUDEPATH += $$PWD/src/Game/Scripting/API \
     $$PWD/src/Game/Scripting/API/LuaApplication \
@@ -208,7 +214,6 @@ INCLUDEPATH += $$PWD/src/Game/Scripting/API \
     $$PWD/src/Game/Scripting/API/LuaUtility \
     $$PWD/src/Game/Scripting/API/LuaIEECS \
     $$PWD/src/Game/Scripting/API/LuaIEECSCameraSystem \
-    $$PWD/src/Game/Scripting/API/LuaIEECSInputSystem \
     $$PWD/src/Game/Scripting/API/LuaIEECSScriptSystem \
     $$PWD/src/Game/Scripting/API/LuaIEECSTransformSystem \
     $$PWD/src/Game/Scripting/API/LuaIEEntity \
@@ -221,12 +226,6 @@ INCLUDEPATH += $$PWD/src/Game/Scripting/API/LuaCommonType \
     $$PWD/src/Game/Scripting/API/LuaCommonType/LuaVec3Wrapper \
     $$PWD/src/Game/Scripting/API/LuaCommonType/LuaVec4Wrapper \
     $$PWD/src/Game/Scripting/API/LuaCommonType/LuaMat4Wrapper \
-
-INCLUDEPATH += $$PWD/src/Game/Scripting/Scripts \
-    $$PWD/src/Game/Scripting/Scripts/IECameraScript \
-    $$PWD/src/Game/Scripting/Scripts/IEEntityScript \
-    $$PWD/src/Game/Scripting/Scripts/IEScript \
-    $$PWD/src/Game/Scripting/Scripts/IEScriptData \
 
 INCLUDEPATH += $$PWD/src/Game/Systems \
     $$PWD/src/Game/Systems/IEGameSystem \
@@ -243,12 +242,16 @@ INCLUDEPATH += $$PWD/src/Serialize \
 
 INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \
-    $$PWD/src/Utility/IEGlslExporter \
-    $$PWD/src/Utility/IEGlslImporter \
     $$PWD/src/Utility/IEHash \
     $$PWD/src/Utility/IEMath \
-    $$PWD/src/Utility/IEObjExporter \
-    $$PWD/src/Utility/IEObjImporter \
     $$PWD/src/Utility/IERandomNumber \
     $$PWD/src/Utility/IESerialize \
     $$PWD/src/Utility/IEStyleSheet \
+
+INCLUDEPATH += $$PWD/src/Utility/Export \
+    $$PWD/src/Utility/Export/IEMeshExport \
+    $$PWD/src/Utility/Export/IEShaderExport \
+
+INCLUDEPATH += $$PWD/src/Utility/Import \
+    $$PWD/src/Utility/Import/IEMeshImport \
+    $$PWD/src/Utility/Import/IEShaderImport \

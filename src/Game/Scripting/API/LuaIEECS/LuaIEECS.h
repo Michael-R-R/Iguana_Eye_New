@@ -5,7 +5,6 @@
 #include "IEECS.h"
 
 class IEECSNameSystem;
-class IEECSInputSystem;
 class IEECSScriptSystem;
 class IEECSTransformSystem;
 class IEECSCameraSystem;
@@ -25,7 +24,6 @@ public:
 
 private:
     IEECSNameSystem* nameComponent();
-    IEECSInputSystem* inputComponent();
     IEECSScriptSystem* scriptComponent();
     IEECSTransformSystem* transformComponent();
     IEECSCameraSystem* cameraComponent();

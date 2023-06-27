@@ -1,7 +1,6 @@
 #pragma once
 
 #include "IEGameState.h"
-#include "ECSOnUpdateEvent.h"
 
 class QOpenGLFunctions;
 class QOpenGLExtraFunctions;
@@ -18,7 +17,6 @@ class IEGamePlayState : public IEGameState
     IEPhysicsEngine* physicsEngine;
     IERenderEngine* renderEngine;
     IEECS* ecs;
-    ECSOnUpdateEvent ecsUpdateEvent;
 
 public:
     IEGamePlayState(IEGame& game);

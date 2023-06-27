@@ -72,8 +72,8 @@ void ECamera::updateRotation(IEInput* input, const float dt)
         lastX = x;
         lastY = y;
 
-        xoffset = xoffset * (sensitivity * dt);
-        yoffset = yoffset * (sensitivity * dt);
+        xoffset *= sensitivity;
+        yoffset *= sensitivity;
 
         yaw += xoffset;
         pitch -= yoffset;
