@@ -36,9 +36,9 @@ void IEScriptEngine::startup(IEGame& game)
     LuaEnum::addToLua(enumTable);
     LuaUtility::addToLua(utilTable);
     LuaApplication::addToLua(gameTable);
-    LuaIETime::addToLua(game.getTime(), gameTable);
-    LuaIEInput::addToLua(game.getInput(), gameTable);
-    LuaIEECS::addToLua(game.getECS(), lua, gameTable);
+    LuaIETime::addToLua(game.getSystem<IETime>(), gameTable);
+    LuaIEInput::addToLua(game.getSystem<IEInput>(), gameTable);
+    LuaIEECS::addToLua(game.getSystem<IEECS>(), lua, gameTable);
 }
 
 void IEScriptEngine::shutdown(IEGame&)

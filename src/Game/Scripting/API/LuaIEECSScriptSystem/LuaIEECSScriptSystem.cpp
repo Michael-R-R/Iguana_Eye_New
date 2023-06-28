@@ -11,6 +11,6 @@ void LuaIEECSScriptSystem::addToLua(sol::state& lua)
                                         "hasScript", &IEECSScriptSystem::hasScript,
                                         "wakeScript", &IEECSScriptSystem::wakeScript,
                                         "sleepScript", &IEECSScriptSystem::sleepScript,
-                                        "getScript", sol::overload(sol::resolve<const int, const unsigned long long>(&IEECSScriptSystem::getScript),
+                                        "getScript", sol::overload(sol::resolve<const int, const uint64_t>(&IEECSScriptSystem::getScript),
                                                                    sol::resolve<const int, const char*>(&IEECSScriptSystem::getScript)));
 }

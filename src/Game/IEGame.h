@@ -3,8 +3,11 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
+#include <QVector>
+#include <QMap>
 
 #include "Serializable.h"
+#include "IEGameSystem.h"
 
 class ApplicationWindow;
 class IERenderEngine;
@@ -24,20 +27,16 @@ class IEGame : public QOpenGLWidget, public Serializable
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
 
-    IERenderEngine* renderEngine;
-    IEPhysicsEngine* physicsEngine;
-    IEScene* scene;
-    IEECS* ecs;
-    IEInput* input;
-    IEScriptEngine* scriptEngine;
-    IETime* time;
+    QVector<IEGameSystem*> systems;
+    QHash<size_t, int> systemsIndex;
+
     IEGameState* state;
 
 public:
     IEGame(QWidget* parent = nullptr);
     IEGame(const IEGame&) = delete;
     void operator=(const IEGame&) = delete;
-    ~IEGame();
+    virtual ~IEGame();
 
 protected:
     void initializeGL() override;
@@ -45,21 +44,15 @@ protected:
     void resizeGL(int w, int h) override;
 
 public:
-    void startup();
+    void startUp();
     void shutdown();
-    void initalize();
-    void reset();
+    void onSerialize();
+    void onDeserialize();
     void changeState(IEGameState* val);
+    bool doesSystemExist(size_t key) const;
 
     QOpenGLFunctions* getGlFunc() const { return glFunc; }
     QOpenGLExtraFunctions* getGlExtraFunc() const { return glExtraFunc; }
-    IERenderEngine* getRenderEngine() const { return renderEngine; }
-    IEPhysicsEngine* getPhysicsEngine() const { return physicsEngine; }
-    IEScene* getScene() const { return scene; }
-    IEECS* getECS() const { return ecs; }
-    IEInput* getInput() const { return input; }
-    IEScriptEngine* getScriptEngine() const { return scriptEngine; }
-    IETime* getTime() const { return time; }
 
 public slots:
     void onUpdateFrame();
@@ -72,4 +65,28 @@ public:
 signals:
     void initialized();
     void stateChanged(const IEGameState* state);
+
+public:
+    template<class T>
+    void appendSystem(IEGameSystem* system)
+    {
+        size_t key = typeid(T).hash_code();
+        if(!system || doesSystemExist(key))
+                return;
+
+            const int index = systems.size();
+            systems.append(system);
+            systemsIndex.insert(key, index);
+    }
+
+    template<class T>
+    T* getSystem() const
+    {
+        size_t key = typeid(T).hash_code();
+
+        if(!doesSystemExist(key))
+            return nullptr;
+
+        return static_cast<T*>(systems[systemsIndex[key]]);
+    }
 };

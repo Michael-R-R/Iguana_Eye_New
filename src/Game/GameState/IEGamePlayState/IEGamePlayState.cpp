@@ -8,13 +8,15 @@
 #include "IEECSCameraSystem.h"
 #include "IECamera.h"
 
-IEGamePlayState::IEGamePlayState(IEGame& game) :
-    glFunc(game.getGlFunc()),
-    glExtraFunc(game.getGlExtraFunc()),
-    time(game.getTime()),
-    physicsEngine(game.getPhysicsEngine()),
-    renderEngine(game.getRenderEngine()),
-    ecs(game.getECS())
+IEGamePlayState::IEGamePlayState(QObject* parent) :
+    IEGameState(parent),
+    glFunc(nullptr),
+    glExtraFunc(nullptr),
+    time(nullptr),
+    pEngine(nullptr),
+    rEngine(nullptr),
+    ecs(nullptr),
+    cameraSystem(nullptr)
 {
 
 }
@@ -24,8 +26,17 @@ IEGamePlayState::~IEGamePlayState()
 
 }
 
-void IEGamePlayState::enter(IEGame&)
+void IEGamePlayState::enter(IEGame& game)
 {
+    glFunc = game.getGlFunc();
+    glExtraFunc = game.getGlExtraFunc();
+    time = game.getSystem<IETime>();
+    pEngine = game.getSystem<IEPhysicsEngine>();
+    rEngine = game.getSystem<IERenderEngine>();
+    ecs = game.getSystem<IEECS>();
+
+    cameraSystem = ecs->getComponent<IEECSCameraSystem>();
+
     IEGameState::onResize(ApplicationProperties::viewportDimensions);
 }
 
@@ -38,22 +49,20 @@ void IEGamePlayState::onUpdateFrame()
 {
     const float dt = time->getDeltaTime();
 
-    physicsEngine->onUpdateFrame(dt);
+    pEngine->onUpdateFrame(dt);
     ecs->onUpdateFrame();
 }
 
 void IEGamePlayState::onRenderFrame()
 {
-    auto* cameraSystem = ecs->getComponent<IEECSCameraSystem>();
     auto* camera = cameraSystem->getActiveCamera();
 
-    renderEngine->onRenderFrame(glExtraFunc, camera);
+    rEngine->onRenderFrame(glExtraFunc, camera);
+    time->processDeltaTime();
 }
 
 void IEGamePlayState::onResize(const float w, const float h)
 {
-    auto* cameraSystem = ecs->getComponent<IEECSCameraSystem>();
-
     const int index = cameraSystem->getActiveIndex();
     auto* camera = cameraSystem->getActiveCamera();
     auto* script = cameraSystem->getScript(index);

@@ -14,7 +14,7 @@ SaveAsGameFileAction::SaveAsGameFileAction(ApplicationWindow* window, InputKey& 
                 if(path.isEmpty())
                     return;
 
-                window->saveAsToFile(path);
+                window->saveAsFile(path);
             });
 }
 

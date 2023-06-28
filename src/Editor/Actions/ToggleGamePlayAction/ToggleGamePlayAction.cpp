@@ -8,8 +8,8 @@ ToggleGamePlayAction::ToggleGamePlayAction(IEGame* game, InputKey& shortcut, QOb
 {
     connect(this, &ToggleGamePlayAction::triggered, this, [this, game]()
             {
-                game->initalize();
-                game->changeState(new IEGamePlayState(*game));
+                game->onSerialize();
+                game->changeState(new IEGamePlayState(game));
 
                 this->setEnabled(false);
             });

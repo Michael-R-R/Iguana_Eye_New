@@ -131,27 +131,6 @@ INCLUDEPATH += $$PWD/src/Editor/Startup/Shaders \
 INCLUDEPATH += $$PWD/src/Game \
     $$PWD/src/Game/IEScene \
 
-INCLUDEPATH += $$PWD/src/Game/ECS \
-    $$PWD/src/Game/ECS/IEECS \
-    $$PWD/src/Game/ECS/IEEntity \
-    $$PWD/src/Game/ECS/IEEntityManager \
-
-INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
-    $$PWD/src/Game/ECS/Systems/IEECSCameraSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSColliderSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSHierarchySystem \
-    $$PWD/src/Game/ECS/Systems/IEECSNameSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSRigidbody3DSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSScriptSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSSystem \
-    $$PWD/src/Game/ECS/Systems/IEECSTransformSystem \
-
-INCLUDEPATH += $$PWD/src/Game/ECS/Systems/ResourceSystem \
-    $$PWD/src/Game/ECS/Systems/ResourceSystem/IEECSMaterialSystem \
-    $$PWD/src/Game/ECS/Systems/ResourceSystem/IEECSMeshSystem \
-    $$PWD/src/Game/ECS/Systems/ResourceSystem/IEECSRenderableSystem \
-    $$PWD/src/Game/ECS/Systems/ResourceSystem/IEECSShaderSystem \
-
 INCLUDEPATH += $$PWD/src/Game/GameState \
     $$PWD/src/Game/GameState/IEGamePlayState \
     $$PWD/src/Game/GameState/IEGameState \
@@ -164,14 +143,6 @@ INCLUDEPATH += $$PWD/src/Game/Graphics \
     $$PWD/src/Game/Graphics/IEIndexBuffer \
     $$PWD/src/Game/Graphics/IEUniform \
     $$PWD/src/Game/Graphics/IEVertexBuffer \
-
-INCLUDEPATH += $$PWD/src/Game/Managers \
-    $$PWD/src/Game/Managers/IECameraManager \
-    $$PWD/src/Game/Managers/IEMaterialManager \
-    $$PWD/src/Game/Managers/IEMeshManager \
-    $$PWD/src/Game/Managers/IERenderableManager \
-    $$PWD/src/Game/Managers/IEResourceManager \
-    $$PWD/src/Game/Managers/IEShaderManager \
 
 INCLUDEPATH += $$PWD/src/Game/Physics \
     $$PWD/src/Game/Physics/IESimulationCallback \
@@ -234,8 +205,37 @@ INCLUDEPATH += $$PWD/src/Game/Systems \
     $$PWD/src/Game/Systems/IEScriptEngine \
     $$PWD/src/Game/Systems/IEPhysicsEngine \
 
+INCLUDEPATH += $$PWD/src/Game/Systems/ECS \
+    $$PWD/src/Game/Systems/ECS/IEECS \
+    $$PWD/src/Game/Systems/ECS/IEEntity \
+    $$PWD/src/Game/Systems/ECS/IEEntityManager \
+
+INCLUDEPATH += $$PWD/src/Game/ECS/Systems \
+    $$PWD/src/Game/Systems/ECS/Systems/IEECSCameraSystem \
+    $$PWD/src/Game/Systems/ECS/Systems/IEECSColliderSystem \
+    $$PWD/src/Game/Systems/ECS/Systems/IEECSHierarchySystem \
+    $$PWD/src/Game/Systems/ECS/Systems/IEECSNameSystem \
+    $$PWD/src/Game/Systems/ECS/Systems/IEECSRigidbody3DSystem \
+    $$PWD/src/Game/Systems/ECS/Systems/IEECSScriptSystem \
+    $$PWD/src/Game/Systems/ECS/Systems/IEECSSystem \
+    $$PWD/src/Game/Systems/ECS/Systems/IEECSTransformSystem \
+
+INCLUDEPATH += $$PWD/src/Game/Systems/ECS/Systems/ResourceSystem \
+    $$PWD/src/Game/Systems/ECS/Systems/ResourceSystem/IEECSMaterialSystem \
+    $$PWD/src/Game/Systems/ECS/Systems/ResourceSystem/IEECSMeshSystem \
+    $$PWD/src/Game/Systems/ECS/Systems/ResourceSystem/IEECSRenderableSystem \
+    $$PWD/src/Game/Systems/ECS/Systems/ResourceSystem/IEECSShaderSystem \
+
 INCLUDEPATH += $$PWD/src/Game/Systems/IETime \
     $$PWD/src/Game/Systems/IETime/DeltaTime
+
+INCLUDEPATH += $$PWD/src/Game/Systems/Managers \
+    $$PWD/src/Game/Systems/Managers/IECameraManager \
+    $$PWD/src/Game/Systems/Managers/IEMaterialManager \
+    $$PWD/src/Game/Systems/Managers/IEMeshManager \
+    $$PWD/src/Game/Systems/Managers/IERenderableManager \
+    $$PWD/src/Game/Systems/Managers/IEResourceManager \
+    $$PWD/src/Game/Systems/Managers/IEShaderManager \
 
 INCLUDEPATH += $$PWD/src/Serialize \
     $$PWD/src/Serialize/Serializable \

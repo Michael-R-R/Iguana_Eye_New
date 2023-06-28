@@ -2,7 +2,7 @@
 #include "IEShader.h"
 #include "IEFile.h"
 
-bool IEShaderImport::importGlsl(const QString& path, IEShader& shader)
+bool IEShaderImport::importShader(const QString& path, IEShader& shader)
 {
     if(path.lastIndexOf(".glsl") < 0)
         return false;
@@ -20,7 +20,7 @@ bool IEShaderImport::importGlsl(const QString& path, IEShader& shader)
     return true;
 }
 
-bool IEShaderImport::importGlsl(const QString& path, QString& vSrc, QString& fSrc)
+bool IEShaderImport::importShader(const QString& path, QString& vSrc, QString& fSrc)
 {
     if(path.lastIndexOf(".glsl") < 0)
         return false;

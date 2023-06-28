@@ -17,10 +17,10 @@ ApplicationFileHandler::~ApplicationFileHandler()
     cleanTempFiles();
 }
 
-void ApplicationFileHandler::handleFileNew()
+void ApplicationFileHandler::handleNewFile()
 {
     if(askToSaveFile())
-        this->handleFileSaved();
+        this->handleSaveFile();
 
     savePath = "";
     application->modifyTitle(savePath);
@@ -28,7 +28,7 @@ void ApplicationFileHandler::handleFileNew()
     application->startup();
 }
 
-void ApplicationFileHandler::handleFileSaved()
+void ApplicationFileHandler::handleSaveFile()
 {
     if(savePath.isEmpty())
     {
@@ -42,10 +42,10 @@ void ApplicationFileHandler::handleFileSaved()
     IESerialize::write<ApplicationWindow>(savePath, application);
 }
 
-void ApplicationFileHandler::handleFileSavedAs(const QString& path)
+void ApplicationFileHandler::handleSaveAsFile(const QString& path)
 {
     if(askToSaveFile())
-        this->handleFileSaved();
+        this->handleSaveFile();
 
     if(!IESerialize::write<ApplicationWindow>(path, application))
         return;
@@ -54,10 +54,10 @@ void ApplicationFileHandler::handleFileSavedAs(const QString& path)
     application->modifyTitle(savePath);
 }
 
-void ApplicationFileHandler::handleFileOpened(const QString& path)
+void ApplicationFileHandler::handleOpenFile(const QString& path)
 {
     if(askToSaveFile())
-        this->handleFileSaved();
+        this->handleSaveFile();
 
     if(!IESerialize::read<ApplicationWindow>(path, application))
         return;

@@ -48,9 +48,9 @@ public:
     EWGlslSrcEditor* getFragSrcEditor() const { return fSrcEditor; }
 
 public slots:
-    void openGlslFileSlot(const unsigned long long key, const QString& path);
-    void glslRemovedSlot(const unsigned long long key);
-    void glslRenamedSlot(const unsigned long long oldKey, const unsigned long long newKey);
+    void openGlslFileSlot(const uint64_t key, const QString& path);
+    void glslRemovedSlot(const uint64_t key);
+    void glslRenamedSlot(const uint64_t oldKey, const uint64_t newKey);
     void clear();
     void changeView();
 

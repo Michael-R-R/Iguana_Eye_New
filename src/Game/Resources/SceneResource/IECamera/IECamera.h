@@ -21,7 +21,7 @@ public:
     IECamera(QObject* parent = nullptr);
     IECamera(const QString& path, QObject* parent = nullptr);
     IECamera(const IECamera&) = delete;
-    ~IECamera();
+    virtual ~IECamera();
 
     bool operator==(const IECamera& other) { return IEResource::operator==(other); }
     bool operator!=(const IECamera& other) { return IEResource::operator!=(other); }

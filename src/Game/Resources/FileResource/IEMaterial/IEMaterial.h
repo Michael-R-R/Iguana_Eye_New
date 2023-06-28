@@ -10,11 +10,11 @@ class IEMaterial : public IEFileResource
 protected:
     IEUniform uniformData;
     QColor objectColor;
-    unsigned long long atlasTexId;
-    unsigned long long diffuseTexId;
-    unsigned long long specularTexId;
-    unsigned long long normalTexId;
-    unsigned long long heightTexId;
+    uint64_t atlasTexId;
+    uint64_t diffuseTexId;
+    uint64_t specularTexId;
+    uint64_t normalTexId;
+    uint64_t heightTexId;
 
 public:
     IEMaterial(QObject* parent = nullptr);
@@ -30,19 +30,19 @@ public:
     void bindUniformData(IEShader& shader) const;
 
     QColor getObjectColor() const { return objectColor; }
-    unsigned long long getAtlasTexId() const { return atlasTexId; }
-    unsigned long long getDiffuseTexId() const { return diffuseTexId; }
-    unsigned long long getSpecularTexId() const { return specularTexId; }
-    unsigned long long getNormalTexId() const { return normalTexId; }
-    unsigned long long getHeightTexId() const { return heightTexId; }
+    uint64_t getAtlasTexId() const { return atlasTexId; }
+    uint64_t getDiffuseTexId() const { return diffuseTexId; }
+    uint64_t getSpecularTexId() const { return specularTexId; }
+    uint64_t getNormalTexId() const { return normalTexId; }
+    uint64_t getHeightTexId() const { return heightTexId; }
 
     void setUniformData(const IEUniform& val) { uniformData = val; }
     void setObjectColor(const QColor val) { objectColor = val; }
-    void setAtlasTexId(const unsigned long long val) { atlasTexId = val; }
-    void setDiffuseTexId(const unsigned long long val) { diffuseTexId = val; }
-    void setSpecularTexId(const unsigned long long val) { specularTexId = val; }
-    void setNormalTexId(const unsigned long long val) { normalTexId = val; }
-    void setHeightTexId(const unsigned long long val) { heightTexId = val; }
+    void setAtlasTexId(const uint64_t val) { atlasTexId = val; }
+    void setDiffuseTexId(const uint64_t val) { diffuseTexId = val; }
+    void setSpecularTexId(const uint64_t val) { specularTexId = val; }
+    void setNormalTexId(const uint64_t val) { normalTexId = val; }
+    void setHeightTexId(const uint64_t val) { heightTexId = val; }
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
     QDataStream& deserialize(QDataStream &in, Serializable &obj) override;

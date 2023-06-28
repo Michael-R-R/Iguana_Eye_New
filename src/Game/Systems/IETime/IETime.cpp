@@ -34,11 +34,6 @@ void IETime::shutdown(IEGame& game)
     this->stopRenderTimer();
 }
 
-void IETime::onSerialize(IEGame&)
-{
-
-}
-
 void IETime::onDeserialize(IEGame& game)
 {
     shutdown(game);

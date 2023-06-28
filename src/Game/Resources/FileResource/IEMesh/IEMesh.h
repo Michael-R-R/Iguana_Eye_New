@@ -24,7 +24,7 @@ public:
     IEMesh(QObject* parent = nullptr);
     IEMesh(const QString& path, QObject* parent = nullptr);
     IEMesh(const IEMesh&) = delete;
-    ~IEMesh();
+    virtual ~IEMesh();
 
     bool operator==(const IEMesh& other) { return IEResource::operator==(other); }
     bool operator!=(const IEMesh& other) { return IEResource::operator!=(other); }

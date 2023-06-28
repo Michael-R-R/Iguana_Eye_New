@@ -16,17 +16,18 @@ class IEGameStopState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
+
     IETime* time;
     IEInput* input;
     IEECS* ecs;
-    IERenderEngine* gRenderEngine;
+    IERenderEngine* grEngine;
 
-    ERenderEngine* eRenderEngine;
+    ERenderEngine* erEngine;
     ECamera* eCamera;
 
 public:
-    IEGameStopState(IEGame& game);
-    ~IEGameStopState();
+    IEGameStopState(QObject* parent = nullptr);
+    virtual ~IEGameStopState();
 
     void enter(IEGame& game) override;
     void exit(IEGame& game) override;
@@ -35,8 +36,8 @@ public:
     void onResize(const float w, const float h) override;
 
 private:
-    void serializeGameStates(IEGame& game);
-    void deserializeGameStates(IEGame& game);
+    void serializeTemporary();
+    void deserializeTemporary(IEGame& game);
 
 public:
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;

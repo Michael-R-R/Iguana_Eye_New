@@ -6,6 +6,6 @@ class IEHash
 {
 
 public:
-    static unsigned long long Compute(const QString& str);
+    static uint64_t Compute(const QString& str);
 };
 

@@ -4,7 +4,7 @@
 EGridShader::EGridShader(QObject* parent) :
     IEShader(parent)
 {
-    IEShaderImport::importGlsl("./resources/shaders/editor/persp_grid.glsl", *this);
+    IEShaderImport::importShader("./resources/shaders/editor/persp_grid.glsl", *this);
 }
 
 EGridShader::~EGridShader()

@@ -20,9 +20,9 @@ IERenderable::IERenderable(QObject* parent) :
 }
 
 IERenderable::IERenderable(const QString& path,
-                           const unsigned long long meshId_,
-                           const unsigned long long materialId_,
-                           const unsigned long long shaderId_,
+                           const uint64_t meshId_,
+                           const uint64_t materialId_,
+                           const uint64_t shaderId_,
                            QObject* parent) :
     IEFileResource(path, parent),
     renderMode(RenderMode::None), drawMode(GL_TRIANGLES),
@@ -407,9 +407,9 @@ void IERenderable::checkForDirtyBuffers()
     dirtyMat4Buffers.clear();
 }
 
-bool IERenderable::equals(const unsigned long long meshId,
-                          const unsigned long long materialId,
-                          const unsigned long long shaderId)
+bool IERenderable::equals(const uint64_t meshId,
+                          const uint64_t materialId,
+                          const uint64_t shaderId)
 {
     return (this->meshId == meshId &&
             this->materialId == materialId &&

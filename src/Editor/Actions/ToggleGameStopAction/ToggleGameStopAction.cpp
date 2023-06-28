@@ -10,8 +10,8 @@ ToggleGameStopAction::ToggleGameStopAction(IEGame* game, InputKey& shortcut, QOb
 
     connect(this, &ToggleGameStopAction::triggered, this, [this, game]()
             {
-                game->reset();
-                game->changeState(new IEGameStopState(*game));
+                game->onDeserialize();
+                game->changeState(new IEGameStopState(game));
 
                 this->setEnabled(false);
             });

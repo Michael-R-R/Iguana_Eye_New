@@ -14,10 +14,10 @@ public:
     ApplicationFileHandler(ApplicationWindow* app);
     ~ApplicationFileHandler();
 
-    void handleFileNew();
-    void handleFileOpened(const QString& path);
-    void handleFileSaved();
-    void handleFileSavedAs(const QString& path);
+    void handleNewFile();
+    void handleOpenFile(const QString& path);
+    void handleSaveFile();
+    void handleSaveAsFile(const QString& path);
 
     const QString& getSavePath() const { return savePath; }
     void setSavePath(const QString val) { savePath = val; }

@@ -33,7 +33,7 @@ void EWGlslEditor::startup()
     menuBar->startup(this);
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto* scene = game->getScene();
+    auto* scene = game->getSystem<IEScene>();
     auto* shaderManager = scene->getShaderManager();
     connect(shaderManager, &IEShaderManager::added, this, &EWGlslEditor::openGlslFileSlot);
     connect(shaderManager, &IEShaderManager::removed, this, &EWGlslEditor::glslRemovedSlot);
@@ -82,21 +82,21 @@ QString EWGlslEditor::getFragmentSource() const
     return fSrcEditor->getTextContent();
 }
 
-void EWGlslEditor::openGlslFileSlot(const unsigned long long, const QString& path)
+void EWGlslEditor::openGlslFileSlot(const uint64_t, const QString& path)
 {
     openGlslFile(path);
 }
 
-void EWGlslEditor::glslRemovedSlot(const unsigned long long key)
+void EWGlslEditor::glslRemovedSlot(const uint64_t key)
 {
     if(key == IEHash::Compute(getCurrShaderPath()))
         clear();
 }
 
-void EWGlslEditor::glslRenamedSlot(const unsigned long long, const unsigned long long newKey)
+void EWGlslEditor::glslRenamedSlot(const uint64_t, const uint64_t newKey)
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto* scene = game->getScene();
+    auto* scene = game->getSystem<IEScene>();
     auto* shaderManager = scene->getShaderManager();
     auto* shader = shaderManager->value<IEShader>(newKey);
     if(!shader)

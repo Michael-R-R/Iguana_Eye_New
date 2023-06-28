@@ -27,9 +27,9 @@ protected:
     RenderMode renderMode;
     GLenum drawMode;
 
-    unsigned long long meshId;
-    unsigned long long materialId;
-    unsigned long long shaderId;
+    uint64_t meshId;
+    uint64_t materialId;
+    uint64_t shaderId;
 
     QOpenGLVertexArrayObject* vao;
     IEIndexBuffer* indexBuffer;
@@ -50,12 +50,12 @@ protected:
 public:
     IERenderable(QObject* parent = nullptr);
     IERenderable(const QString& path,
-                 const unsigned long long meshId_,
-                 const unsigned long long materialId_,
-                 const unsigned long long shaderId_,
+                 const uint64_t meshId_,
+                 const uint64_t materialId_,
+                 const uint64_t shaderId_,
                  QObject* parent = nullptr);
     IERenderable(const IERenderable&) = delete;
-    ~IERenderable();
+    virtual ~IERenderable();
 
     bool operator==(const IERenderable& other) { return IEResource::operator==(other); }
     bool operator!=(const IERenderable& other) { return IEResource::operator!=(other); }
@@ -103,21 +103,21 @@ public:
     void build(IEShader& shader);
     void bindUniformData(IEShader& shader);
     void checkForDirtyBuffers();
-    bool equals(const unsigned long long meshId,
-                const unsigned long long materialId,
-                const unsigned long long shaderId);
+    bool equals(const uint64_t meshId,
+                const uint64_t materialId,
+                const uint64_t shaderId);
 
     RenderMode getRenderMode() const { return renderMode; }
     GLenum getDrawMode() const { return drawMode; }
-    unsigned long long getMeshId() const { return meshId; }
-    unsigned long long getMaterialId() const { return materialId; }
-    unsigned long long getShaderId() const { return shaderId; }
+    uint64_t getMeshId() const { return meshId; }
+    uint64_t getMaterialId() const { return materialId; }
+    uint64_t getShaderId() const { return shaderId; }
 
     void setRenderMode(const RenderMode val) { renderMode = val; }
     void setDrawType(const GLenum val) { drawMode = val; }
-    void setMeshId(const unsigned long long val) { meshId = val; }
-    void setMaterialId(const unsigned long long val) { materialId = val; }
-    void setShaderId(const unsigned long long val) { shaderId = val; }
+    void setMeshId(const uint64_t val) { meshId = val; }
+    void setMaterialId(const uint64_t val) { materialId = val; }
+    void setShaderId(const uint64_t val) { shaderId = val; }
     void setUniformData(const IEUniform& val) { uniformData = val; }
 
 private:

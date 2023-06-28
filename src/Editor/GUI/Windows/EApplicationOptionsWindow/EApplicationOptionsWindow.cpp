@@ -29,7 +29,7 @@ void EApplicationOptionsWindow::startup()
     auto* game = application.getGame();
     auto* editor = application.getEditor();
 
-    BaseInput* gameInput = game->getInput();
+    BaseInput* gameInput = game->getSystem<IEInput>();
     BaseInput* editorInput = editor->getInput();
 
     selectOptionsWidget->setupGameGroupBox(gameInput);

@@ -15,7 +15,9 @@
 #include "IERenderable.h"
 
 IERenderEngine::IERenderEngine(QObject* parent) :
-    IEGameSystem(parent)
+    IEGameSystem(parent),
+    meshManager(nullptr), materialManager(nullptr),
+    shaderManager(nullptr), renderableManager(nullptr)
 {
 
 }
@@ -25,24 +27,13 @@ IERenderEngine::~IERenderEngine()
 
 }
 
-void IERenderEngine::startup(IEGame&)
+void IERenderEngine::startup(IEGame& game)
 {
-
-}
-
-void IERenderEngine::shutdown(IEGame&)
-{
-
-}
-
-void IERenderEngine::onSerialize(IEGame&)
-{
-
-}
-
-void IERenderEngine::onDeserialize(IEGame&)
-{
-
+    auto* scene = game.getSystem<IEScene>();
+    meshManager = scene->getMeshManager();
+    materialManager = scene->getMaterialManager();
+    shaderManager = scene->getShaderManager();
+    renderableManager = scene->getRenderableManager();
 }
 
 void IERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera)
@@ -52,13 +43,6 @@ void IERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* came
 
     if(!camera)
         return;
-
-    auto* game = ApplicationWindow::instance().getGame();
-    auto* scene = game->getScene();
-    auto* meshManager = scene->getMeshManager();
-    auto* materialManager = scene->getMaterialManager();;
-    auto* shaderManager = scene->getShaderManager();;
-    auto* renderableManager = scene->getRenderableManager();;
 
     auto& renderables = renderableManager->getResources();
     for(auto* i : renderables)

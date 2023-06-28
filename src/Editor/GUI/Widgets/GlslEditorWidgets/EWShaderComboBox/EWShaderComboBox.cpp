@@ -40,7 +40,7 @@ bool EWShaderComboBox::eventFilter(QObject*, QEvent* event)
 void EWShaderComboBox::startup()
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto* scene = game->getScene();
+    auto* scene = game->getSystem<IEScene>();
     auto* shaderManager = scene->getShaderManager();
 
     this->initialBuild(shaderManager);
@@ -54,7 +54,7 @@ void EWShaderComboBox::startup()
     contextMenu->startup(shaderManager);
 }
 
-void EWShaderComboBox::selectShader(const unsigned long long key)
+void EWShaderComboBox::selectShader(const uint64_t key)
 {
     int index = fullIdList.indexOf(key);
     if(!indexBoundCheck(index))
@@ -63,7 +63,7 @@ void EWShaderComboBox::selectShader(const unsigned long long key)
     this->setCurrentIndex(index);
 }
 
-unsigned long long EWShaderComboBox::getSelectedId()
+uint64_t EWShaderComboBox::getSelectedId()
 {
     return fullIdList[this->currentIndex()];
 }
@@ -82,7 +82,7 @@ bool EWShaderComboBox::indexBoundCheck(const int index)
     return (index > 0 && index < fullIdList.size());
 }
 
-bool EWShaderComboBox::doesExist(const unsigned long long key)
+bool EWShaderComboBox::doesExist(const uint64_t key)
 {
     return (fullIdList.indexOf(key) > -1);
 }
@@ -116,7 +116,7 @@ void EWShaderComboBox::currentShaderChanged(int index)
     auto resourceId = fullIdList[index];
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto* scene = game->getScene();
+    auto* scene = game->getSystem<IEScene>();
     auto* shaderManager = scene->getShaderManager();
 
     auto* shader = shaderManager->value<IEShader>(resourceId);
@@ -130,7 +130,7 @@ void EWShaderComboBox::currentShaderChanged(int index)
     emit fragmentSrcSelected(shader->getFragmentSrc());
 }
 
-void EWShaderComboBox::addShader(const unsigned long long key, const QString& path)
+void EWShaderComboBox::addShader(const uint64_t key, const QString& path)
 {
     if(doesExist(key))
         return;
@@ -146,7 +146,7 @@ void EWShaderComboBox::addShader(const unsigned long long key, const QString& pa
     this->setCurrentIndex(index);
 }
 
-void EWShaderComboBox::removeShader(const unsigned long long key)
+void EWShaderComboBox::removeShader(const uint64_t key)
 {
     int index = fullIdList.indexOf(key);
     if(!indexBoundCheck(index))
@@ -162,7 +162,7 @@ void EWShaderComboBox::removeShader(const unsigned long long key)
     fullIdList.removeAt(index);
 }
 
-void EWShaderComboBox::changeShaderKey(const unsigned long long oldKey, const unsigned long long newKey)
+void EWShaderComboBox::changeShaderKey(const uint64_t oldKey, const uint64_t newKey)
 {
     int index = fullIdList.indexOf(oldKey);
     if(!indexBoundCheck(index))
@@ -171,7 +171,7 @@ void EWShaderComboBox::changeShaderKey(const unsigned long long oldKey, const un
     fullIdList[index] = newKey;
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto* scene = game->getScene();
+    auto* scene = game->getSystem<IEScene>();
     auto* shaderManager = scene->getShaderManager();
 
     auto* shader = shaderManager->value<IEShader>(newKey);
@@ -192,7 +192,7 @@ void EWShaderComboBox::showCustomContextMenu(const QPoint& pos)
     if(!indexBoundCheck(index))
         return;
 
-    unsigned long long id = fullIdList[index];
+    uint64_t id = fullIdList[index];
     contextMenu->setSelectedId(id);
     contextMenu->exec(this->view()->mapToGlobal(pos));
 }

@@ -21,33 +21,40 @@ IEScene::~IEScene()
 
 }
 
-void IEScene::startup(IEGame&)
+void IEScene::startup(IEGame& game)
 {
-    meshManager->startup();
-    materialManager->startup();
-    shaderManager->startup();
-    renderableManager->startup();
-    cameraManager->startup();
+    meshManager->startup(game);
+    materialManager->startup(game);
+    shaderManager->startup(game);
+    renderableManager->startup(game);
+    cameraManager->startup(game);
 }
 
-void IEScene::shutdown(IEGame&)
+void IEScene::shutdown(IEGame& game)
 {
-    meshManager->shutdown();
-    materialManager->shutdown();
-    shaderManager->shutdown();
-    renderableManager->shutdown();
-    cameraManager->shutdown();
+    meshManager->shutdown(game);
+    materialManager->shutdown(game);
+    shaderManager->shutdown(game);
+    renderableManager->shutdown(game);
+    cameraManager->shutdown(game);
 }
 
-void IEScene::onSerialize(IEGame&)
+void IEScene::onSerialize(IEGame& game)
 {
-
+    meshManager->onSerialize(game);
+    materialManager->onSerialize(game);
+    shaderManager->onSerialize(game);
+    renderableManager->onSerialize(game);
+    cameraManager->onSerialize(game);
 }
 
 void IEScene::onDeserialize(IEGame& game)
 {
-    shutdown(game);
-    startup(game);
+    meshManager->onDeserialize(game);
+    materialManager->onDeserialize(game);
+    shaderManager->onDeserialize(game);
+    renderableManager->onDeserialize(game);
+    cameraManager->onDeserialize(game);
 }
 
 QDataStream& IEScene::serialize(QDataStream& out, const Serializable& obj) const

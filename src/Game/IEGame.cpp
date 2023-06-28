@@ -14,13 +14,7 @@ IEGame::IEGame(QWidget* parent) :
     format(),
     glFunc(nullptr),
     glExtraFunc(nullptr),
-    renderEngine(new IERenderEngine(this)),
-    physicsEngine(new IEPhysicsEngine(this)),
-    scene(new IEScene(this)),
-    ecs(new IEECS(this)),
-    input(new IEInput(this)),
-    scriptEngine(new IEScriptEngine(this)),
-    time(new IETime(this)),
+    systems(), systemsIndex(),
     state(nullptr)
 {
     this->setFocusPolicy(Qt::StrongFocus);
@@ -61,7 +55,6 @@ void IEGame::initializeGL()
 void IEGame::paintGL()
 {
     state->onRenderFrame();
-    time->processDeltaTime();
 }
 
 void IEGame::resizeGL(int w, int h)
@@ -73,40 +66,54 @@ void IEGame::resizeGL(int w, int h)
     if(state) { state->onResize((float)w, (float)h); }
 }
 
-void IEGame::startup()
+void IEGame::startUp()
 {
     this->makeCurrent();
-    renderEngine->startup(*this);
-    physicsEngine->startup(*this);
-    scene->startup(*this);
-    ecs->startup(*this);
-    input->startup(*this);
-    scriptEngine->startup(*this);
-    time->startup(*this);
+
+    appendSystem<IEInput>(new IEInput(this));
+    appendSystem<IEScene>(new IEScene(this));
+    appendSystem<IEScriptEngine>(new IEScriptEngine(this));
+    appendSystem<IEPhysicsEngine>(new IEPhysicsEngine(this));
+    appendSystem<IERenderEngine>(new IERenderEngine(this));
+    appendSystem<IEECS>(new IEECS(this));
+    appendSystem<IETime>(new IETime(this));
+
+    foreach (auto* i, qAsConst(systems))
+    {
+        i->startup(*this);
+    }
 }
 
 void IEGame::shutdown()
 {
     this->makeCurrent();
-    time->shutdown(*this);
-    scriptEngine->shutdown(*this);
-    input->shutdown(*this);
-    ecs->shutdown(*this);
-    scene->shutdown(*this);
-    physicsEngine->shutdown(*this);
-    renderEngine->shutdown(*this);
+
+    for(int i = systems.size() - 1; i >= 0; i--)
+    {
+        auto* system = systems[i];
+        system->shutdown(*this);
+        delete system;
+        system = nullptr;
+    }
+
+    systems.clear();
+    systemsIndex.clear();
 }
 
-void IEGame::initalize()
+void IEGame::onSerialize()
 {
-    ecs->onSerialize(*this);
+    foreach (auto* i, qAsConst(systems))
+    {
+        i->onSerialize(*this);
+    }
 }
 
-void IEGame::reset()
+void IEGame::onDeserialize()
 {
-    physicsEngine->onDeserialize(*this);
-    scriptEngine->onDeserialize(*this);
-    ecs->onDeserialize(*this);
+    foreach (auto* i, qAsConst(systems))
+    {
+        i->onDeserialize(*this);
+    }
 }
 
 void IEGame::changeState(IEGameState* val)
@@ -120,6 +127,11 @@ void IEGame::changeState(IEGameState* val)
     state->enter(*this);
 
     emit stateChanged(val);
+}
+
+bool IEGame::doesSystemExist(size_t key) const
+{
+    return systemsIndex.contains(key);
 }
 
 void IEGame::onUpdateFrame()
@@ -136,11 +148,12 @@ QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const
 {
     const IEGame& game = static_cast<const IEGame&>(obj);
 
-    out << *game.time
-        << *game.input
-        << *game.scene
-        << *game.ecs
-        << *game.state;
+    foreach (auto* i, qAsConst(systems))
+    {
+        out << *i;
+    }
+
+    out << *game.state;
 
     return out;
 }
@@ -150,11 +163,12 @@ QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
     IEGame& game = static_cast<IEGame&>(obj);
     game.makeCurrent();
 
-    in >> *game.time
-       >> *game.input
-       >> *game.scene
-       >> *game.ecs
-       >> *game.state;
+    foreach (auto* i, qAsConst(systems))
+    {
+        in >> *i;
+    }
+
+    in >> *game.state;
 
     return in;
 }

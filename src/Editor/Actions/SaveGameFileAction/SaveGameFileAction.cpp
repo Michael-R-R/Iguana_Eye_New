@@ -6,7 +6,7 @@ SaveGameFileAction::SaveGameFileAction(ApplicationWindow* window, InputKey& shor
 {
     connect(this, &SaveGameFileAction::triggered, window, [window]()
             {
-                window->saveToFile();
+                window->saveFile();
             });
 }
 

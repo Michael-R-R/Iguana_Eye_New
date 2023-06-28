@@ -8,7 +8,7 @@ class ShaderComboBoxContextMenu : public ContextMenu
 {
     // Does not own this pointer
     IEShaderManager* shaderManager;
-    unsigned long long selectedId;
+    uint64_t selectedId;
 
 public:
     ShaderComboBoxContextMenu(QWidget* parent = nullptr);
@@ -16,7 +16,7 @@ public:
 
     void startup(IEShaderManager* shaderManager);
 
-    void setSelectedId(const unsigned long long val) { selectedId = val; }
+    void setSelectedId(const uint64_t val) { selectedId = val; }
 
 private:
     void setupDeleteShaderAction();

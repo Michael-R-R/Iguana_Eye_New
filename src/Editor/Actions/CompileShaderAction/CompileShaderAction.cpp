@@ -15,10 +15,10 @@ CompileShaderAction::CompileShaderAction(EWGlslEditor* editor, InputKey& shortcu
     connect(this, &CompileShaderAction::triggered, this, [editor]()
             {
                 auto* game = ApplicationWindow::instance().getGame();
-                auto* scene = game->getScene();
+                auto* scene = game->getSystem<IEScene>();
                 auto* shaderManager = scene->getShaderManager();
 
-                unsigned long long id = IEHash::Compute(editor->getCurrShaderPath());
+                uint64_t id = IEHash::Compute(editor->getCurrShaderPath());
                 auto* shader = shaderManager->value<IEShader>(id);
                 if(!shader)
                     return;

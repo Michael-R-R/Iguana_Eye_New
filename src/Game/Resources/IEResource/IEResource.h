@@ -10,7 +10,7 @@ class IEResource : public IEObject
 
 protected:
     QString name;
-    unsigned long long id;
+    uint64_t id;
 
 public:
     IEResource(QObject* parent = nullptr);
@@ -22,15 +22,15 @@ public:
     bool operator<(const IEResource& other) { return (this->id < other.id); }
     bool operator>(const IEResource& other) { return (this->id > other.id); }
 
-    virtual unsigned long long updateId(const QString& path) = 0;
+    virtual uint64_t updateId(const QString& path) = 0;
 
     const QString& getName() const { return name; }
-    unsigned long long getId() const { return id; }
+    uint64_t getId() const { return id; }
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 
 signals:
-    void nameUpdated(const unsigned long long id, const QString& path);
+    void nameUpdated(const uint64_t id, const QString& path);
 };
 

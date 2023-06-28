@@ -54,7 +54,7 @@ void GlslFileHandler::handleGlslOpen(const QString& path)
 
     QString vSrc = "";
     QString fSrc = "";
-    IEShaderImport::importGlsl(path, vSrc, fSrc);
+    IEShaderImport::importShader(path, vSrc, fSrc);
 
     QString name = IEFile::extractName(path);
     glslEditor->getCurrShaderNameLabel()->setText(name);
@@ -77,9 +77,9 @@ void GlslFileHandler::handleGlslSave(const QString& path)
 
     // Check if a shader exist to update
     auto* game = ApplicationWindow::instance().getGame();
-    auto* scene = game->getScene();
+    auto* scene = game->getSystem<IEScene>();
     auto* shaderManager = scene->getShaderManager();
-    unsigned long long id = IEHash::Compute(path);
+    uint64_t id = IEHash::Compute(path);
     auto* shader = shaderManager->value<IEShader>(id);
     if(!shader)
         return;

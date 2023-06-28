@@ -61,8 +61,8 @@ void ApplicationWindow::startup()
 void ApplicationWindow::initalize()
 {
     disconnect(game, &IEGame::initialized, this, &ApplicationWindow::initalize);
-    game->startup();
-    game->changeState(new IEGameStopState(*game));
+    game->startUp();
+    game->changeState(new IEGameStopState(game));
 
     editor = new Editor(this);
     editor->startup();
@@ -80,24 +80,34 @@ void ApplicationWindow::shutdown()
     game = nullptr;
 }
 
+void ApplicationWindow::onSerialize() const
+{
+    game->onSerialize();
+}
+
+void ApplicationWindow::onDeserialize() const
+{
+    game->onDeserialize();
+}
+
 void ApplicationWindow::newFile()
 {
-    appFileHandler.handleFileNew();
+    appFileHandler.handleNewFile();
 }
 
-void ApplicationWindow::saveToFile()
+void ApplicationWindow::saveFile()
 {
-    appFileHandler.handleFileSaved();
+    appFileHandler.handleSaveFile();
 }
 
-void ApplicationWindow::saveAsToFile(const QString& path)
+void ApplicationWindow::saveAsFile(const QString& path)
 {
-    appFileHandler.handleFileSavedAs(path);
+    appFileHandler.handleSaveAsFile(path);
 }
 
-void ApplicationWindow::openFromFile(const QString& path)
+void ApplicationWindow::openFile(const QString& path)
 {
-    appFileHandler.handleFileOpened(path);
+    appFileHandler.handleOpenFile(path);
 }
 
 void ApplicationWindow::clearActions()
@@ -108,13 +118,15 @@ void ApplicationWindow::clearActions()
         delete i;
         i = nullptr;
     }
-    actionList.clear();
-    this->addActions(actionList);
+
+    this->addActions(QList<QAction*>());
 }
 
 QDataStream& ApplicationWindow::serialize(QDataStream& out, const Serializable& obj) const
 {
     const ApplicationWindow& app = static_cast<const ApplicationWindow&>(obj);
+
+    app.onSerialize();
 
     out << *app.game;
 
@@ -124,6 +136,8 @@ QDataStream& ApplicationWindow::serialize(QDataStream& out, const Serializable& 
 QDataStream& ApplicationWindow::deserialize(QDataStream& in, Serializable& obj)
 {
     ApplicationWindow& app = static_cast<ApplicationWindow&>(obj);
+
+    app.onDeserialize();
 
     in >> *app.game;
 

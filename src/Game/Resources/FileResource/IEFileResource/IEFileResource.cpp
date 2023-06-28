@@ -20,7 +20,7 @@ IEFileResource::~IEFileResource()
 
 }
 
-unsigned long long IEFileResource::updateId(const QString& path)
+uint64_t IEFileResource::updateId(const QString& path)
 {
     name = IEFile::absolutePath(path);
     id = IEHash::Compute(name);

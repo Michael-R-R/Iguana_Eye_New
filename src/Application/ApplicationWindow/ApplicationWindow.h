@@ -40,11 +40,13 @@ public:
     void startup();
     void initalize();
     void shutdown();
+    void onSerialize() const;
+    void onDeserialize() const;
 
     void newFile();
-    void saveToFile();
-    void saveAsToFile(const QString& path);
-    void openFromFile(const QString& path);
+    void saveFile();
+    void saveAsFile(const QString& path);
+    void openFile(const QString& path);
 
     IEGame* getGame() const { return game; }
     Editor* getEditor() const { return editor; }

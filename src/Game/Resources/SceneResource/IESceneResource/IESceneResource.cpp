@@ -19,7 +19,7 @@ IESceneResource::~IESceneResource()
 
 }
 
-unsigned long long IESceneResource::updateId(const QString& path)
+uint64_t IESceneResource::updateId(const QString& path)
 {
     name = path;
     id = IEHash::Compute(name);

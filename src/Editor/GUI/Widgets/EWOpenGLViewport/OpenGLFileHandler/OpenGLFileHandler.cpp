@@ -54,15 +54,15 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
     game->makeCurrent();
 
     // --- Create or get mesh --- //
-    auto* scene = game->getScene();
+    auto* scene = game->getSystem<IEScene>();
     auto* meManager = scene->getMeshManager();
     auto* maMaterial = scene->getMaterialManager();
     auto* sManager = scene->getShaderManager();
     auto* rManager = scene->getRenderableManager();
 
-    const unsigned long long meshId = IEHash::Compute(path);
-    const unsigned long long materialId = maMaterial->getDefaultId();
-    const unsigned long long shaderId = sManager->getDefaultId();
+    const uint64_t meshId = IEHash::Compute(path);
+    const uint64_t materialId = maMaterial->getDefaultId();
+    const uint64_t shaderId = sManager->getDefaultId();
 
     IEMesh* mesh = nullptr;
     if(!meManager->doesExist(meshId))
@@ -83,7 +83,7 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
     }
 
     // --- Create entity and attach components --- //
-    auto* ecs = game->getECS();
+    auto* ecs = game->getSystem<IEECS>();
     auto* meSystem = ecs->getComponent<IEECSMeshSystem>();
     auto* maSystem = ecs->getComponent<IEECSMaterialSystem>();
     auto* sSystem = ecs->getComponent<IEECSShaderSystem>();
@@ -103,7 +103,7 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
     QString rPath = QString("./resources/renderables/%1/%2/%3/r.ierend").arg(QString::number(meshId),
                                                                              QString::number(materialId),
                                                                              QString::number(shaderId));
-    const unsigned long long rID = IEHash::Compute(rPath);
+    const uint64_t rID = IEHash::Compute(rPath);
 
     if(!rManager->doesExist(rID))
     {

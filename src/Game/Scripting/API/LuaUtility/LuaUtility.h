@@ -13,6 +13,6 @@ public:
     static void addToLua(sol::table& utilityTable);
 
 private:
-    unsigned long long computeHash(const char* str);
+    uint64_t computeHash(const char* str);
 };
 

@@ -3,9 +3,9 @@
 #include <cstring>
 
 // https://en.wikipedia.org/wiki/Jenkins_hash_function
-unsigned long long IEHash::Compute(const QString& str)
+uint64_t IEHash::Compute(const QString& str)
 {
-    unsigned long long value = 0;
+    uint64_t value = 0;
     for(int i = 0; i < str.length(); i++)
     {
         value += str[i].toLatin1();

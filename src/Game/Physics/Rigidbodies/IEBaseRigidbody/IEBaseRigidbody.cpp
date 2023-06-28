@@ -101,7 +101,7 @@ void IEBaseRigidbody::createAsStatic(const physx::PxTransform& t,
                                      const physx::PxGeometry& geometry)
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto* engine = game->getPhysicsEngine();
+    auto* engine = game->getSystem<IEPhysicsEngine>();
 
     auto& p = engine->getPxPhysics();
     auto& m = engine->getPxMaterial();
@@ -119,7 +119,7 @@ void IEBaseRigidbody::createAsDynamic(const physx::PxTransform& t,
                                       const physx::PxGeometry& geometry)
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto* engine = game->getPhysicsEngine();
+    auto* engine = game->getSystem<IEPhysicsEngine>();
 
     auto& p = engine->getPxPhysics();
     auto& m = engine->getPxMaterial();
@@ -138,7 +138,7 @@ void IEBaseRigidbody::createAsKinematic(const physx::PxTransform& t,
                                         const physx::PxGeometry& geometry)
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto* engine = game->getPhysicsEngine();
+    auto* engine = game->getSystem<IEPhysicsEngine>();
 
     auto& p = engine->getPxPhysics();
     auto& m = engine->getPxMaterial();

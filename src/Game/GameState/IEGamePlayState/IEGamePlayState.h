@@ -8,19 +8,22 @@ class IETime;
 class IEPhysicsEngine;
 class IERenderEngine;
 class IEECS;
+class IEECSCameraSystem;
 
 class IEGamePlayState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
     IETime* time;
-    IEPhysicsEngine* physicsEngine;
-    IERenderEngine* renderEngine;
+    IEPhysicsEngine* pEngine;
+    IERenderEngine* rEngine;
     IEECS* ecs;
 
+    IEECSCameraSystem* cameraSystem;
+
 public:
-    IEGamePlayState(IEGame& game);
-    ~IEGamePlayState();
+    IEGamePlayState(QObject* parent = nullptr);
+    virtual ~IEGamePlayState();
 
     void enter(IEGame& game) override;
     void exit(IEGame& game) override;

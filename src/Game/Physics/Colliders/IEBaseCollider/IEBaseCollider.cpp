@@ -66,7 +66,7 @@ physx::PxQuat IEBaseCollider::getGlobalQuat() const
 void IEBaseCollider::create(const physx::PxTransform& t, const physx::PxGeometry& g)
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto* engine = game->getPhysicsEngine();
+    auto* engine = game->getSystem<IEPhysicsEngine>();
 
     auto& p = engine->getPxPhysics();
     auto& m = engine->getPxMaterial();

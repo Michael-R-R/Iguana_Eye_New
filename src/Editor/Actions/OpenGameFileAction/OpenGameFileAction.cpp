@@ -15,7 +15,7 @@ OpenGameFileAction::OpenGameFileAction(ApplicationWindow* window, InputKey& shor
                 if(path.isEmpty())
                     return;
 
-                window->openFromFile(path);
+                window->openFile(path);
             });
 }
 
