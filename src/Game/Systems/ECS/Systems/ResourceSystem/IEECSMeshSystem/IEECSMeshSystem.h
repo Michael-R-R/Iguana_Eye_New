@@ -17,6 +17,7 @@ public:
     ~IEECSMeshSystem();
 
     void startUp(const IEGame& game) override;
+    void shutdown(const IEGame& game) override;
     IEMesh* getAttachedResource(const int index);
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

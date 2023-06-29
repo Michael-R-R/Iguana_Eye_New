@@ -3,7 +3,6 @@
 #include <QMenuBar>
 
 #include "EWGlslEditorFileMenu.h"
-#include "EWGlslEditorEditMenu.h"
 #include "EWGlslEditorViewMenu.h"
 
 class EWGlslEditor;
@@ -11,7 +10,6 @@ class EWGlslEditor;
 class EWGlslEditorMenuBar : public QMenuBar
 {
     EWGlslEditorFileMenu* fileMenu;
-    EWGlslEditorEditMenu* editMenu;
     EWGlslEditorViewMenu* viewMenu;
 
 public:
@@ -22,7 +20,6 @@ public:
 
 private:
     void setupFileMenu(EWGlslEditor* editor);
-    void setupEditMenu(EWGlslEditor* editor);
     void setupViewMenu(EWGlslEditor* editor);
 };
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QVector>
+#include <QHash>
 #include <QSet>
 
 #include "IEECSSystem.h"
@@ -16,7 +17,7 @@ class IEECSScriptSystem : public IEECSSystem
     struct Data : public IEObject
     {
         QVector<IEEntity> entity;
-        QVector<QMap<uint64_t, IEScript*>> scripts;
+        QVector<QHash<uint64_t, IEScript*>> scripts;
         QVector<QSet<uint64_t>> sleepingScripts;
         QVector<QSet<uint64_t>> awakenedScripts;
 
@@ -40,30 +41,22 @@ class IEECSScriptSystem : public IEECSSystem
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            foreach (auto& collection, data.scripts)
-            {
-                foreach (auto* i, collection)
-                {
-                    delete i;
-                    i = nullptr;
-                }
-            }
-            data.scripts.clear();
-
             int vecSize = 0;
             in >> data.entity >> data.sleepingScripts >> data.awakenedScripts;
             in >> vecSize;
 
+            data.scripts.clear();
             for(int i = 0; i < vecSize; i++)
             {
-                QMap<uint64_t, IEScript*> tempMap;
+                QHash<uint64_t, IEScript*> tempMap;
 
                 int mapSize = 0;
                 in >> mapSize;
 
                 for(int j = 0; j < mapSize; j++)
                 {
-                    auto script = new IEScript(&data);
+                    auto* script = new IEScript(&data);
+
                     in >> *script;
 
                     tempMap.insert(script->getId(), script);
@@ -78,7 +71,7 @@ class IEECSScriptSystem : public IEECSSystem
 
     Data data;
 
-    IEScriptEngine* scriptEngine;
+    IEScriptEngine* sEngine;
 
 public:
     IEECSScriptSystem(QObject* parent = nullptr);
@@ -87,15 +80,21 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void startUp(const IEGame& game) override;
+    void shutdown(const IEGame& game) override;
+    void onDeserialize(const IEGame& game) override;
     void onUpdateFrame() override;
 
-    void wakeScript(const int index, const uint64_t id);
-    void sleepScript(const int index, const uint64_t id);
-    void clearSleepingScripts();
-    void clearAwakenScripts();
+    void initAll();
+    void startAll();
+    void wakeAll();
+    void sleepAll();
+    void init(const int index, const uint64_t id);
+    void start(const int index, const uint64_t id);
+    void wake(const int index, const uint64_t id);
+    void sleep(const int index, const uint64_t id);
 
-    void attachScript(const int index, IEScript* script);
-    void removeScript(const int index, const uint64_t id);
+    void attach(const int index, IEScript* script);
+    void remove(const int index, const uint64_t id);
 
     bool hasScript(const int index, const uint64_t id);
 
@@ -103,7 +102,8 @@ public:
     IEScript* getScript(const int index, const char* name);
 
 private:
-    void deserializeScripts();
+    void cacheScripts();
+    void decacheScripts();
     void removeAll();
     void removeAll(const int index);
 

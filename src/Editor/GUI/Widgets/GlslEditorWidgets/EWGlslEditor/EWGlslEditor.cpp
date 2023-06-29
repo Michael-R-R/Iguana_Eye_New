@@ -35,7 +35,6 @@ void EWGlslEditor::startup()
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
     auto* shaderManager = scene->getShaderManager();
-    connect(shaderManager, &IEShaderManager::added, this, &EWGlslEditor::openGlslFileSlot);
     connect(shaderManager, &IEShaderManager::removed, this, &EWGlslEditor::glslRemovedSlot);
     connect(shaderManager, &IEShaderManager::keyChanged, this, &EWGlslEditor::glslRenamedSlot);
 }
@@ -49,7 +48,7 @@ void EWGlslEditor::openGlslFile(const QString& path)
 {
     fileHandler.handleGlslOpen(path);
 
-    emit glslPathChanged(path);
+    emit glslFileOpened(path);
 }
 
 void EWGlslEditor::saveGlslFile()
@@ -115,7 +114,7 @@ void EWGlslEditor::clear()
     vSrcEditor->clear();
     fSrcEditor->clear();
 
-    emit glslPathChanged("");
+    emit glslFileOpened("");
 }
 
 void EWGlslEditor::changeView()

@@ -13,7 +13,6 @@ INCLUDEPATH += $$PWD/src/Common \
 INCLUDEPATH += $$PWD/src/Editor \
 
 INCLUDEPATH += $$PWD/src/Editor/Actions \
-    $$PWD/src/Editor/Actions/CompileShaderAction \
     $$PWD/src/Editor/Actions/BaseAction \
     $$PWD/src/Editor/Actions/NewGameFileAction \
     $$PWD/src/Editor/Actions/NewShaderAction \
@@ -73,7 +72,6 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditor \
-    $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditorEditMenu \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditorFileMenu \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditorMenuBar \
     $$PWD/src/Editor/GUI/Widgets/GlslEditorWidgets/EWGlslEditorViewMenu \

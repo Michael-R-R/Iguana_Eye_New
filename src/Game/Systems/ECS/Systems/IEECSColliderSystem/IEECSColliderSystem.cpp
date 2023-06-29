@@ -50,14 +50,14 @@ bool IEECSColliderSystem::detach(const IEEntity entity)
     return true;
 }
 
-void IEECSColliderSystem::removeCollider(const int index)
+void IEECSColliderSystem::shutdown(const IEGame&)
 {
-    if(!indexBoundCheck(index))
-        return;
+    removeAll();
+}
 
-    data.collider[index]->release();
-    delete data.collider[index];
-    data.collider[index] = new IEBaseCollider(&data);
+void IEECSColliderSystem::onDeserialize(const IEGame&)
+{
+    removeAll();
 }
 
 IEBaseCollider* IEECSColliderSystem::getCollider(const int index) const
@@ -84,6 +84,25 @@ void IEECSColliderSystem::setIsTrigger(const int index, const bool val)
         return;
 
     data.collider[index]->setIsTrigger(val);
+}
+
+void IEECSColliderSystem::removeCollider(const int index)
+{
+    if(!indexBoundCheck(index))
+        return;
+
+    data.collider[index]->release();
+    delete data.collider[index];
+    data.collider[index] = nullptr;
+}
+
+void IEECSColliderSystem::removeAll()
+{
+    foreach (auto* i, data.collider)
+    {
+        delete i;
+        i = nullptr;
+    }
 }
 
 QDataStream& IEECSColliderSystem::serialize(QDataStream& out, const Serializable& obj) const

@@ -21,6 +21,11 @@ void IEECSShaderSystem::startUp(const IEGame& game)
     shaderManager = game.getSystem<IEScene>()->getShaderManager();
 }
 
+void IEECSShaderSystem::shutdown(const IEGame&)
+{
+    shaderManager = nullptr;
+}
+
 IEShader* IEECSShaderSystem::getAttachedResource(const int index)
 {
     return IEECSResourceSystem::getAttachedResource<IEShader>(index, shaderManager);

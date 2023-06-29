@@ -31,13 +31,6 @@ class IEECSColliderSystem : public IEECSSystem
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            foreach (auto* i, data.collider)
-            {
-                delete i;
-                i = nullptr;
-            }
-            data.collider.clear();
-
             int size = 0;
 
             in >> data.entity >> size;
@@ -45,6 +38,7 @@ class IEECSColliderSystem : public IEECSSystem
             IEBaseCollider::ColliderShape shape;
             IEBaseCollider* collider = nullptr;
 
+            data.collider.clear();
             for(int i = 0; i < size; i++)
             {
                 in >> shape;
@@ -74,12 +68,14 @@ public:
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
-
-    void removeCollider(const int index);
+    void shutdown(const IEGame& game) override;
+    void onDeserialize(const IEGame& game) override;
 
     IEBaseCollider* getCollider(const int index) const;
     void setCollider(const int index, IEBaseCollider* val);
     void setIsTrigger(const int index, const bool val);
+    void removeCollider(const int index);
+    void removeAll();
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, Serializable& obj) override;

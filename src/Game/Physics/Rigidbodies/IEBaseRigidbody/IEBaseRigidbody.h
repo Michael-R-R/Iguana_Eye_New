@@ -41,7 +41,7 @@ public:
     virtual void create(const physx::PxTransform&) {}
 
     bool wakeup();
-    bool putToSleep();
+    bool sleep();
     void release();
 
     physx::PxVec3 getGlobalPos() const;

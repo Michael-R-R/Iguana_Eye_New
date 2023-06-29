@@ -35,10 +35,6 @@ public:
     void onRenderFrame() override;
     void onResize(const float w, const float h) override;
 
-private:
-    void serializeTemporary();
-    void deserializeTemporary(IEGame& game);
-
 public:
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, Serializable& obj) override;

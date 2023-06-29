@@ -44,7 +44,7 @@ bool IEECSRigidbody3DSystem::detach(const IEEntity entity)
     const int lastIndex = entityMap.size() - 1;
     const IEEntity lastEntity = data.entity[lastIndex];
 
-    this->remove(indexToRemove);
+    this->removeRigidbody(indexToRemove);
 
     data.entity[indexToRemove] = data.entity[lastIndex];
     data.rigidbody[indexToRemove] = data.rigidbody[lastIndex];
@@ -72,12 +72,29 @@ bool IEECSRigidbody3DSystem::detach(const IEEntity entity)
 
 void IEECSRigidbody3DSystem::startUp(const IEGame& game)
 {
-    auto* engine = game.getSystem<IEPhysicsEngine>();
-    auto& simCallback = engine->getSimulationCallback();
-    connect(&simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::activateRigidbody);
-    connect(&simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::deactivateRigidbody);
+    pEngine = game.getSystem<IEPhysicsEngine>();
+    auto& simCallback = pEngine->getSimulationCallback();
+    connect(&simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::wakeRigidbody);
+    connect(&simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::sleepRigidbody);
 
     tSystem = game.getSystem<IEECS>()->getComponent<IEECSTransformSystem>();
+}
+
+void IEECSRigidbody3DSystem::shutdown(const IEGame&)
+{
+    removeAll();
+
+    auto& simCallback = pEngine->getSimulationCallback();
+    disconnect(&simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::wakeRigidbody);
+    disconnect(&simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::sleepRigidbody);
+
+    pEngine = nullptr;
+    tSystem = nullptr;
+}
+
+void IEECSRigidbody3DSystem::onDeserialize(const IEGame&)
+{
+    removeAll();
 }
 
 void IEECSRigidbody3DSystem::onUpdateFrame()
@@ -104,6 +121,38 @@ void IEECSRigidbody3DSystem::onUpdateFrame()
     }
 }
 
+void IEECSRigidbody3DSystem::wakeAll()
+{
+    for(int i = 1; i < data.rigidbody.size(); i++)
+    {
+        auto* rigidbody = data.rigidbody[i];
+        if(!rigidbody)
+            continue;
+
+        if(!rigidbody->wakeup())
+            return;
+
+        sleepingBodies.remove(i);
+        awakeBodies.insert(i);
+    }
+}
+
+void IEECSRigidbody3DSystem::sleepAll()
+{
+    for(int i = 1; i < data.rigidbody.size(); i++)
+    {
+        auto* rigidbody = data.rigidbody[i];
+        if(!rigidbody)
+            continue;
+
+        if(!rigidbody->sleep())
+            return;
+
+        sleepingBodies.insert(i);
+        awakeBodies.remove(i);
+    }
+}
+
 void IEECSRigidbody3DSystem::wakeup(const int index)
 {
     if(!indexBoundCheck(index))
@@ -116,29 +165,42 @@ void IEECSRigidbody3DSystem::wakeup(const int index)
     awakeBodies.insert(index);
 }
 
-void IEECSRigidbody3DSystem::putToSleep(const int index)
+void IEECSRigidbody3DSystem::sleep(const int index)
 {
     if(!indexBoundCheck(index))
         return;
 
-    if(!data.rigidbody[index]->putToSleep())
+    if(!data.rigidbody[index]->sleep())
         return;
 
     awakeBodies.remove(index);
     sleepingBodies.insert(index);
 }
 
-void IEECSRigidbody3DSystem::remove(const int index)
+void IEECSRigidbody3DSystem::removeRigidbody(const int index)
 {
     if(!indexBoundCheck(index))
         return;
 
     data.rigidbody[index]->release();
     delete data.rigidbody[index];
-    data.rigidbody[index] = new IEBaseRigidbody(&data);
+    data.rigidbody[index] = nullptr;
 
     awakeBodies.remove(index);
     sleepingBodies.remove(index);
+}
+
+void IEECSRigidbody3DSystem::removeAll()
+{
+    for (int i = 0; i < data.rigidbody.size(); i++)
+    {
+        data.rigidbody[i]->release();
+        delete data.rigidbody[i];
+        data.rigidbody[i] = nullptr;
+
+        awakeBodies.remove(i);
+        sleepingBodies.remove(i);
+    }
 }
 
 IEBaseRigidbody* IEECSRigidbody3DSystem::getRigidbody(const int index) const
@@ -159,7 +221,7 @@ void IEECSRigidbody3DSystem::setRigidbody(const int index, IEBaseRigidbody* val)
     val->setParent(&data);
 }
 
-void IEECSRigidbody3DSystem::activateRigidbody(const IEEntity& entity)
+void IEECSRigidbody3DSystem::wakeRigidbody(const IEEntity& entity)
 {
     const int index = this->lookUpIndex(entity);
     if(!indexBoundCheck(index))
@@ -169,7 +231,7 @@ void IEECSRigidbody3DSystem::activateRigidbody(const IEEntity& entity)
     awakeBodies.insert(index);
 }
 
-void IEECSRigidbody3DSystem::deactivateRigidbody(const IEEntity& entity)
+void IEECSRigidbody3DSystem::sleepRigidbody(const IEEntity& entity)
 {
     const int index = this->lookUpIndex(entity);
     if(!indexBoundCheck(index))

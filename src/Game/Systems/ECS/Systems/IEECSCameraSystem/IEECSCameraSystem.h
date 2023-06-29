@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QVector>
-#include <QMap>
 
 #include "IEECSSystem.h"
 #include "IEScript.h"
@@ -36,16 +35,10 @@ class IEECSCameraSystem : public IEECSSystem
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            foreach (auto* script, data.script)
-            {
-                delete script;
-                script = nullptr;
-            }
-            data.script.clear();
-
             int size = 0;
             in >> data.entity >> data.cameraId >> size;
 
+            data.script.clear();
             for(int i = 0; i < size; i++)
             {
                 auto script = new IEScript(&data);
@@ -74,15 +67,16 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void startUp(const IEGame& game) override;
-    void onSerialize(const IEGame& game) override;
+    void shutdown(const IEGame& game) override;
     void onDeserialize(const IEGame& game) override;
     void onUpdateFrame() override;
 
-    void initAllScripts();
-    void startAllScripts();
-    void initScript(const int index);
-    void startScript(const int index);
+    void initAll();
+    void startAll();
+    void init(const int index);
+    void start(const int index);
     void removeScript(const int index);
+    void removeAll();
 
     int getActiveIndex() const;
     IEEntity getActiveEntity() const;
@@ -96,9 +90,11 @@ public:
     void setScript(const int index, IEScript* val);
     void setCameraId(const int index, const uint64_t val);
 
-    void cacheScriptData();
-    void decacheScriptData();
+private:
+    void cacheScripts();
+    void decacheScripts();
 
+public:
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
     QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
 };

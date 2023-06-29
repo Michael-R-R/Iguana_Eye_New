@@ -47,7 +47,7 @@ bool IEBaseRigidbody::wakeup()
     return true;
 }
 
-bool IEBaseRigidbody::putToSleep()
+bool IEBaseRigidbody::sleep()
 {
     if(!rigidActor)
         return false;
@@ -63,6 +63,9 @@ bool IEBaseRigidbody::putToSleep()
 
 void IEBaseRigidbody::release()
 {
+    if(!rigidActor)
+        return;
+
     rigidActor->release();
     rigidActor = nullptr;
     rigidbodyType = RigidbodyType::None;

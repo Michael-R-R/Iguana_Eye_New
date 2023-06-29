@@ -11,7 +11,7 @@ class IEInput : public IEGameSystem, public BaseInput
 
 public:
     IEInput(QObject* parent = nullptr);
-    ~IEInput();
+    virtual ~IEInput();
 
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;

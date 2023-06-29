@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QVector>
-#include <QMap>
+#include <QHash>
 #include <QSet>
 
 #include "IEECSSystem.h"
@@ -30,11 +30,11 @@ protected:
     };
 
     Data data;
-    QMap<uint64_t, QSet<int>> idIndexPair;
+    QHash<uint64_t, QSet<int>> idIndexPair;
 
 public:
     IEECSResourceSystem(size_t id, QObject* parent = nullptr);
-    ~IEECSResourceSystem();
+    virtual ~IEECSResourceSystem();
 
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;

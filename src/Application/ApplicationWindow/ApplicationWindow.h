@@ -37,8 +37,8 @@ public:
     void modifyTitle(const QString& text);
     void setModified(const bool isModified);
 
-    void startup();
-    void initalize();
+    void init();
+    void startUp();
     void shutdown();
     void onSerialize() const;
     void onDeserialize() const;

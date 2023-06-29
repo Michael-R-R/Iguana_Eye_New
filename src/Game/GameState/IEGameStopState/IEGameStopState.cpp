@@ -44,14 +44,14 @@ void IEGameStopState::enter(IEGame& game)
 
     erEngine->startup(game);
 
-    deserializeTemporary(game);
-
     IEGameState::onResize(ApplicationProperties::viewportDimensions);
+
+    deserializeTemporary(game);
 }
 
-void IEGameStopState::exit(IEGame&)
+void IEGameStopState::exit(IEGame& game)
 {
-    serializeTemporary();
+    serializeTemporary(game);
 }
 
 void IEGameStopState::onUpdateFrame()
@@ -75,22 +75,6 @@ void IEGameStopState::onRenderFrame()
 void IEGameStopState::onResize(const float w, const float h)
 {
     eCamera->updateProjection(w, h);
-}
-
-void IEGameStopState::serializeTemporary()
-{
-    IESerialize::write<IEECS>("./resources/temp/backup/ecs.iedat", ecs);
-    IESerialize::write<ECamera>("./resources/temp/backup/camera.iedat", eCamera);
-}
-
-void IEGameStopState::deserializeTemporary(IEGame& game)
-{
-    ecs->onDeserialize(game);
-
-    IESerialize::read<IEECS>("./resources/temp/backup/ecs.iedat", ecs);
-    IESerialize::read<ECamera>("./resources/temp/backup/camera.iedat", eCamera);
-
-    IEFile::removeAllFiles("./resources/temp/backup/");
 }
 
 QDataStream& IEGameStopState::serialize(QDataStream& out, const Serializable& obj) const

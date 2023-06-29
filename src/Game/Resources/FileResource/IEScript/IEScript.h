@@ -34,7 +34,7 @@ public:
     bool operator<(const IEScript& other) { return IEResource::operator<(other); }
     bool operator>(const IEScript& other) { return IEResource::operator>(other); }
 
-    virtual bool initalize(sol::state& lua, const IEEntity& entity);
+    virtual bool init(sol::state& lua, const IEEntity& entity);
     virtual void start();
     virtual void update();
     virtual void wake();

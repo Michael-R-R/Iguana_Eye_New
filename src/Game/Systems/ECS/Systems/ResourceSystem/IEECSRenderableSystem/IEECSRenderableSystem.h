@@ -58,6 +58,7 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void startUp(const IEGame& game) override;
+    void shutdown(const IEGame& game) override;
 
     int addShown(const int index);
     int addHidden(const int index);

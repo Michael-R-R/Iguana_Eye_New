@@ -74,15 +74,18 @@ void IEECSCameraSystem::startUp(const IEGame& game)
     tSystem = game.getSystem<IEECS>()->getComponent<IEECSTransformSystem>();
 }
 
-void IEECSCameraSystem::onSerialize(const IEGame&)
+void IEECSCameraSystem::shutdown(const IEGame&)
 {
-    cacheScriptData();
+    removeAll();
+
+    cameraManager = nullptr;
+    sEngine = nullptr;
+    tSystem = nullptr;
 }
 
 void IEECSCameraSystem::onDeserialize(const IEGame&)
 {
-    initAllScripts();
-    decacheScriptData();
+    removeAll();
 }
 
 void IEECSCameraSystem::onUpdateFrame()
@@ -103,15 +106,15 @@ void IEECSCameraSystem::onUpdateFrame()
     activeCamera->updateView(pos, rot.toVector3D());
 }
 
-void IEECSCameraSystem::initAllScripts()
+void IEECSCameraSystem::initAll()
 {
     for (int i = 1; i < entityMap.size(); i++)
     {
-        data.script[i]->initalize(sEngine->getLua(), data.entity[i]);
+        data.script[i]->init(sEngine->getLua(), data.entity[i]);
     }
 }
 
-void IEECSCameraSystem::startAllScripts()
+void IEECSCameraSystem::startAll()
 {
     for (int i = 1; i < entityMap.size(); i++)
     {
@@ -119,15 +122,15 @@ void IEECSCameraSystem::startAllScripts()
     }
 }
 
-void IEECSCameraSystem::initScript(const int index)
+void IEECSCameraSystem::init(const int index)
 {
     if(!indexBoundCheck(index))
         return;
 
-    data.script[index]->initalize(sEngine->getLua(), data.entity[index]);
+    data.script[index]->init(sEngine->getLua(), data.entity[index]);
 }
 
-void IEECSCameraSystem::startScript(const int index)
+void IEECSCameraSystem::start(const int index)
 {
     if(!indexBoundCheck(index))
         return;
@@ -141,7 +144,16 @@ void IEECSCameraSystem::removeScript(const int index)
         return;
 
     delete data.script[index];
-    data.script[index] = new IEScript(&data);
+    data.script[index] = nullptr;
+}
+
+void IEECSCameraSystem::removeAll()
+{
+    foreach(auto* i, data.script)
+    {
+        delete i;
+        i = nullptr;
+    }
 }
 
 int IEECSCameraSystem::getActiveIndex() const
@@ -212,7 +224,7 @@ void IEECSCameraSystem::setCameraId(const int index, const uint64_t val)
     data.cameraId[index] = val;
 }
 
-void IEECSCameraSystem::cacheScriptData()
+void IEECSCameraSystem::cacheScripts()
 {
     foreach (auto* i, data.script)
     {
@@ -220,7 +232,7 @@ void IEECSCameraSystem::cacheScriptData()
     }
 }
 
-void IEECSCameraSystem::decacheScriptData()
+void IEECSCameraSystem::decacheScripts()
 {
     foreach (auto* i, data.script)
     {
@@ -234,6 +246,8 @@ QDataStream& IEECSCameraSystem::serialize(QDataStream& out, const Serializable& 
 
     out << system.entityMap << system.data << system.activeIndex;
 
+    const_cast<IEECSCameraSystem&>(system).cacheScripts();
+
     return out;
 }
 
@@ -242,6 +256,9 @@ QDataStream& IEECSCameraSystem::deserialize(QDataStream& in, Serializable& obj)
     auto& system = static_cast<IEECSCameraSystem&>(obj);
 
     in >> system.entityMap >> system.data >> system.activeIndex;
+
+    system.initAll();
+    system.decacheScripts();
 
     return in;
 }

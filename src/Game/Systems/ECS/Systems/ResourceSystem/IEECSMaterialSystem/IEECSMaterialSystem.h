@@ -17,6 +17,7 @@ public:
     ~IEECSMaterialSystem();
 
     void startUp(const IEGame& game);
+    void shutdown(const IEGame& game) override;
     IEMaterial* getAttachedResource(const int index);
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

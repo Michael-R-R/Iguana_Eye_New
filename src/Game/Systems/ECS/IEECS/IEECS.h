@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QMap>
+#include <QHash>
 
 #include "IEGameSystem.h"
 #include "IEEntityManager.h"
@@ -14,12 +14,12 @@ class IEECS : public IEGameSystem
     Q_OBJECT
 
     QVector<IEECSSystem*> systems;
-    QMap<size_t, int> systemIndex;
+    QHash<size_t, int> systemIndex;
     IEEntityManager* entityManager;
 
 public:
     IEECS(QObject* parent = nullptr);
-    ~IEECS();
+    virtual ~IEECS();
 
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;
@@ -35,7 +35,6 @@ public:
     void clearSystems();
 
 private:
-    void initSystems();
     bool detachComponent(const IEEntity entity, const size_t& component);
     bool doesSystemExist(const size_t& component) const;
 

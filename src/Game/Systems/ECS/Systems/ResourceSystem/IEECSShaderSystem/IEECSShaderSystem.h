@@ -16,6 +16,7 @@ public:
     ~IEECSShaderSystem();
 
     void startUp(const IEGame& game) override;
+    void shutdown(const IEGame& game) override;
 
     IEShader* getAttachedResource(const int index);
 

@@ -21,6 +21,11 @@ void IEECSMeshSystem::startUp(const IEGame& game)
     meshManager = game.getSystem<IEScene>()->getMeshManager();
 }
 
+void IEECSMeshSystem::shutdown(const IEGame&)
+{
+    meshManager = nullptr;
+}
+
 IEMesh* IEECSMeshSystem::getAttachedResource(const int index)
 {
     return IEECSResourceSystem::getAttachedResource<IEMesh>(index, meshManager);

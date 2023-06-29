@@ -34,6 +34,15 @@ bool IEFile::read(const QString& path, QString* inData)
     return true;
 }
 
+bool IEFile::removeFile(const QString& path)
+{
+    if(path.isEmpty())
+        return false;
+
+    QFile file(path);
+    return file.remove();
+}
+
 bool IEFile::removeAllFiles(const QString& path)
 {
     if(path.isEmpty())
@@ -67,11 +76,17 @@ bool IEFile::removePath(const QString& path)
     return dir.rmpath(tempPath);
 }
 
+bool IEFile::doesFileExist(const QString& path)
+{
+    QFile file(path);
+    return file.exists();
+}
+
 bool IEFile::doesPathExist(const QString& path)
 {
-    QString tempPath = removeFileName(path);
+    QString temp = removeFileName(path);
 
-    QDir dir(tempPath);
+    QDir dir(temp);
     return dir.exists();
 }
 

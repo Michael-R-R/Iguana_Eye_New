@@ -27,7 +27,7 @@ IEScript::~IEScript()
 
 }
 
-bool IEScript::initalize(sol::state& lua, const IEEntity& entity)
+bool IEScript::init(sol::state& lua, const IEEntity& entity)
 {
     env = sol::environment(lua, sol::create, lua.globals());
 
@@ -126,8 +126,6 @@ QDataStream& IEScript::serialize(QDataStream& out, const Serializable& obj) cons
     IEFileResource::serialize(out, obj);
 
     const auto& script = static_cast<const IEScript&>(obj);
-
-    const_cast<IEScript&>(script).dataFrom();
 
     out << script.scriptData;
 

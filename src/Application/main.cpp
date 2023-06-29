@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     IEStyleSheet::setStyle(&application, "./resources/style/stylevars.qss", "./resources/style/stylesheet.qss");
 
     ApplicationWindow& window = ApplicationWindow::instance();
-    window.startup();
+    window.init();
     window.show();
     const int val = application.exec();
     window.shutdown();

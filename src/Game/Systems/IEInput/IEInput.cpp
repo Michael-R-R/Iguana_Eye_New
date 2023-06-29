@@ -21,6 +21,7 @@ void IEInput::startup(IEGame& game)
 
 void IEInput::shutdown(IEGame&)
 {
+    delete inputCapture;
     inputCapture = nullptr;
 }
 
@@ -29,10 +30,9 @@ void IEInput::onSerialize(IEGame&)
 
 }
 
-void IEInput::onDeserialize(IEGame& game)
+void IEInput::onDeserialize(IEGame&)
 {
-    shutdown(game);
-    startup(game);
+
 }
 
 bool IEInput::isPressed(const InputKey& key)

@@ -58,6 +58,6 @@ private:
     void setup();
 
 signals:
-    void glslPathChanged(const QString& path);
+    void glslFileOpened(const QString& path);
 };
 

@@ -25,7 +25,7 @@ void ApplicationFileHandler::handleNewFile()
     savePath = "";
     application->modifyTitle(savePath);
     application->shutdown();
-    application->startup();
+    application->init();
 }
 
 void ApplicationFileHandler::handleSaveFile()

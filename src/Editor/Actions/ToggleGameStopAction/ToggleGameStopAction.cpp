@@ -10,7 +10,6 @@ ToggleGameStopAction::ToggleGameStopAction(IEGame* game, InputKey& shortcut, QOb
 
     connect(this, &ToggleGameStopAction::triggered, this, [this, game]()
             {
-                game->onDeserialize();
                 game->changeState(new IEGameStopState(game));
 
                 this->setEnabled(false);
@@ -18,8 +17,10 @@ ToggleGameStopAction::ToggleGameStopAction(IEGame* game, InputKey& shortcut, QOb
 
     connect(game, &IEGame::stateChanged, this, [this](const IEGameState* state)
             {
-                if(dynamic_cast<const IEGamePlayState*>(state))
-                    this->setEnabled(true);
+                if(!static_cast<const IEGamePlayState*>(state))
+                    return;
+
+                this->setEnabled(true);
             });
 }
 

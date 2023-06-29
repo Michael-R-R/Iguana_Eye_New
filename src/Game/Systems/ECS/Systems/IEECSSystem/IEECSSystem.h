@@ -12,7 +12,7 @@ class ECSOnUpdateEvent;
 class IEECSSystem : public IEObject
 {
 protected:
-    size_t id;
+    size_t id; // id comes from dervied type hash code
     QMap<IEEntity, int> entityMap; // Entity, index
 
 public:
@@ -23,6 +23,7 @@ public:
     virtual bool detach(const IEEntity entity) = 0;
 
     virtual void startUp(const IEGame&) { }
+    virtual void shutdown(const IEGame&) { }
     virtual void onSerialize(const IEGame&) { }
     virtual void onDeserialize(const IEGame&) { }
     virtual void onUpdateFrame() { }

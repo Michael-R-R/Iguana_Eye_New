@@ -77,6 +77,13 @@ void IEECSTransformSystem::startUp(const IEGame& game)
     renderableManager = game.getSystem<IEScene>()->getRenderableManager();
 }
 
+void IEECSTransformSystem::shutdown(const IEGame&)
+{
+    hSystem = nullptr;
+    rSystem = nullptr;
+    renderableManager = nullptr;
+}
+
 void IEECSTransformSystem::onUpdateFrame()
 {
     for(const auto& i : qAsConst(dirtyParentIndices))

@@ -66,6 +66,11 @@ void IEECSRenderableSystem::startUp(const IEGame& game)
     renderableManager = game.getSystem<IEScene>()->getRenderableManager();
 }
 
+void IEECSRenderableSystem::shutdown(const IEGame&)
+{
+    renderableManager = nullptr;
+}
+
 int IEECSRenderableSystem::addShown(const int index)
 {
     if(doesExistShown(index))

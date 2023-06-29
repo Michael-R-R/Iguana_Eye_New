@@ -37,19 +37,13 @@ class IEECSRigidbody3DSystem : public IEECSSystem
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            foreach (auto* i, data.rigidbody)
-            {
-                delete i;
-                i = nullptr;
-            }
-            data.rigidbody.clear();
-
             int size = 0;
             in >> data.entity >> size;
 
             IEBaseRigidbody::RigidbodyShape shape;
             IEBaseRigidbody* rigidbody = nullptr;
 
+            data.rigidbody.clear();
             for(int i = 0; i < size; i++)
             {
                 in >> shape;
@@ -88,18 +82,23 @@ public:
     int attach(const IEEntity entity) override;
     bool detach(const IEEntity entity) override;
     void startUp(const IEGame& game) override;
+    void shutdown(const IEGame& game) override;
+    void onDeserialize(const IEGame& game) override;
     void onUpdateFrame() override;
 
+    void wakeAll();
+    void sleepAll();
     void wakeup(const int index);
-    void putToSleep(const int index);
-    void remove(const int index);
+    void sleep(const int index);
+    void removeRigidbody(const int index);
+    void removeAll();
 
     IEBaseRigidbody* getRigidbody(const int index) const;
     void setRigidbody(const int index, IEBaseRigidbody* val);
 
 private slots:
-    void activateRigidbody(const IEEntity& entity);
-    void deactivateRigidbody(const IEEntity& entity);
+    void wakeRigidbody(const IEEntity& entity);
+    void sleepRigidbody(const IEEntity& entity);
 
 public:
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;

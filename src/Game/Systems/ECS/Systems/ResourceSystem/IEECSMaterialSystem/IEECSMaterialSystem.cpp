@@ -21,6 +21,11 @@ void IEECSMaterialSystem::startUp(const IEGame& game)
     materialManager = game.getSystem<IEScene>()->getMaterialManager();
 }
 
+void IEECSMaterialSystem::shutdown(const IEGame& game)
+{
+    materialManager = nullptr;
+}
+
 IEMaterial* IEECSMaterialSystem::getAttachedResource(const int index)
 {
     return IEECSResourceSystem::getAttachedResource<IEMaterial>(index, materialManager);

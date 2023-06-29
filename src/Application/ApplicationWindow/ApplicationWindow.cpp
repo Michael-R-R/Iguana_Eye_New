@@ -51,16 +51,16 @@ void ApplicationWindow::setModified(const bool isModified)
     this->setWindowTitle(tempTitle);
 }
 
-void ApplicationWindow::startup()
+void ApplicationWindow::init()
 {
     game = new IEGame(this);
-    connect(game, &IEGame::initialized, this, &ApplicationWindow::initalize);
+    connect(game, &IEGame::initialized, this, &ApplicationWindow::startUp);
     this->setCentralWidget(game);
 }
 
-void ApplicationWindow::initalize()
+void ApplicationWindow::startUp()
 {
-    disconnect(game, &IEGame::initialized, this, &ApplicationWindow::initalize);
+    disconnect(game, &IEGame::initialized, this, &ApplicationWindow::init);
     game->startUp();
     game->changeState(new IEGameStopState(game));
 
@@ -70,7 +70,6 @@ void ApplicationWindow::initalize()
 
 void ApplicationWindow::shutdown()
 {
-    clearActions();
     editor->shutdown();
     delete editor;
     editor = nullptr;
@@ -78,6 +77,8 @@ void ApplicationWindow::shutdown()
     game->shutdown();
     delete game;
     game = nullptr;
+
+    clearActions();
 }
 
 void ApplicationWindow::onSerialize() const

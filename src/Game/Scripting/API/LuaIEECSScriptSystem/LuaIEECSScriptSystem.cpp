@@ -9,8 +9,8 @@ void LuaIEECSScriptSystem::addToLua(sol::state& lua)
     lua.new_usertype<IEECSScriptSystem>("", sol::no_constructor,
                                         "lookUpIndex", &IEECSScriptSystem::lookUpIndex,
                                         "hasScript", &IEECSScriptSystem::hasScript,
-                                        "wakeScript", &IEECSScriptSystem::wakeScript,
-                                        "sleepScript", &IEECSScriptSystem::sleepScript,
+                                        "wakeScript", &IEECSScriptSystem::wake,
+                                        "sleepScript", &IEECSScriptSystem::sleep,
                                         "getScript", sol::overload(sol::resolve<const int, const uint64_t>(&IEECSScriptSystem::getScript),
                                                                    sol::resolve<const int, const char*>(&IEECSScriptSystem::getScript)));
 }

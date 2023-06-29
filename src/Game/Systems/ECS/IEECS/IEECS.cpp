@@ -28,7 +28,17 @@ IEECS::~IEECS()
 
 void IEECS::startup(IEGame& game)
 {
-    initSystems();
+    appendSystem(new IEECSNameSystem(this));
+    appendSystem(new IEECSHierarchySystem(this));
+    appendSystem(new IEECSScriptSystem(this));
+    appendSystem(new IEECSColliderSystem(this));
+    appendSystem(new IEECSRigidbody3DSystem(this));
+    appendSystem(new IEECSTransformSystem(this));
+    appendSystem(new IEECSCameraSystem(this));
+    appendSystem(new IEECSMeshSystem(this));
+    appendSystem(new IEECSMaterialSystem(this));
+    appendSystem(new IEECSShaderSystem(this));
+    appendSystem(new IEECSRenderableSystem(this));
 
     foreach (auto* i, qAsConst(systems))
     {
@@ -36,12 +46,16 @@ void IEECS::startup(IEGame& game)
     }
 }
 
-void IEECS::shutdown(IEGame&)
+void IEECS::shutdown(IEGame& game)
 {
+    for(int i = systems.size() - 1; i >= 0; i--)
+    {
+        systems[i]->shutdown(game);
+    }
+    clearSystems();
+
     delete entityManager;
     entityManager = nullptr;
-
-    clearSystems();
 }
 
 void IEECS::onSerialize(IEGame& game)
@@ -128,21 +142,6 @@ void IEECS::clearSystems()
 
     systems.clear();
     systemIndex.clear();
-}
-
-void IEECS::initSystems()
-{
-    appendSystem(new IEECSNameSystem(this));
-    appendSystem(new IEECSHierarchySystem(this));
-    appendSystem(new IEECSScriptSystem(this));
-    appendSystem(new IEECSColliderSystem(this));
-    appendSystem(new IEECSRigidbody3DSystem(this));
-    appendSystem(new IEECSTransformSystem(this));
-    appendSystem(new IEECSCameraSystem(this));
-    appendSystem(new IEECSMeshSystem(this));
-    appendSystem(new IEECSMaterialSystem(this));
-    appendSystem(new IEECSShaderSystem(this));
-    appendSystem(new IEECSRenderableSystem(this));
 }
 
 bool IEECS::detachComponent(const IEEntity entity, const size_t& component)
