@@ -46,7 +46,7 @@ QString InputContainer::getKey(const int mod, const int key) const
 {
     auto temp = InputKey(mod, key);
 
-    QMapIterator<QString, InputKey> it(keys);
+    QHashIterator<QString, InputKey> it(keys);
     while(it.hasNext())
     {
         it.next();
@@ -76,7 +76,7 @@ bool InputContainer::doesExist(const int mod, const int key) const
 {
     auto temp = InputKey(mod, key);
 
-    QMapIterator<QString, InputKey> it(keys);
+    QHashIterator<QString, InputKey> it(keys);
     while(it.hasNext())
     {
         it.next();
@@ -103,7 +103,7 @@ QDataStream& InputContainer::serialize(QDataStream& out, const Serializable& obj
     int size = (int)container.keys.size();
     out << size;
 
-    QMapIterator<QString, InputKey> it(container.keys);
+    QHashIterator<QString, InputKey> it(container.keys);
     while(it.hasNext())
     {
         it.next();
@@ -116,16 +116,16 @@ QDataStream& InputContainer::serialize(QDataStream& out, const Serializable& obj
 QDataStream& InputContainer::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& container = static_cast<InputContainer&>(obj);
-    container.clear();
 
     int size = 0;
     in >> size;
 
-    QString key = "";
-    InputKey value = InputKey();
-
+    container.clear();
     for(int i = 0; i < size; i++)
     {
+        QString key = "";
+        InputKey value = InputKey();
+
         in >> key >> value;
 
         container.keys[key] = value;

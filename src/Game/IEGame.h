@@ -68,15 +68,17 @@ signals:
 
 public:
     template<class T>
-    void appendSystem(IEGameSystem* system)
+    bool appendSystem(IEGameSystem* system)
     {
         size_t key = typeid(T).hash_code();
         if(!system || doesSystemExist(key))
-                return;
+                return false;
 
-            const int index = systems.size();
-            systems.append(system);
-            systemsIndex.insert(key, index);
+        const int index = systems.size();
+        systems.append(system);
+        systemsIndex.insert(key, index);
+
+        return true;
     }
 
     template<class T>

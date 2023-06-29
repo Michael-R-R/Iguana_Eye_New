@@ -14,8 +14,6 @@ public:
 
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;
-    void onSerialize(IEGame& game) override;
-    void onDeserialize(IEGame& game) override;
 
     sol::state& getLua() { return lua; }
 

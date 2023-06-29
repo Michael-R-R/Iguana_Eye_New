@@ -18,7 +18,7 @@ IEECSShaderSystem::~IEECSShaderSystem()
 
 void IEECSShaderSystem::startUp(const IEGame& game)
 {
-    shaderManager = game.getSystem<IEScene>()->getShaderManager();
+    shaderManager = game.getSystem<IEScene>()->getManager<IEShaderManager>();
 }
 
 void IEECSShaderSystem::shutdown(const IEGame&)

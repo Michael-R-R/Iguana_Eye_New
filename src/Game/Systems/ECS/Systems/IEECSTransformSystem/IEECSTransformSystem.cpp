@@ -74,7 +74,7 @@ void IEECSTransformSystem::startUp(const IEGame& game)
     auto* ecs = game.getSystem<IEECS>();
     hSystem = ecs->getComponent<IEECSHierarchySystem>();
     rSystem = ecs->getComponent<IEECSRenderableSystem>();
-    renderableManager = game.getSystem<IEScene>()->getRenderableManager();
+    renderableManager = game.getSystem<IEScene>()->getManager<IERenderableManager>();
 }
 
 void IEECSTransformSystem::shutdown(const IEGame&)

@@ -15,7 +15,7 @@ LuaApplication::~LuaApplication()
 
 void LuaApplication::addToLua(sol::table gameTable)
 {
-    gameTable["Application"] = instance;
+    gameTable["IEApplication"] = instance;
     gameTable.new_usertype<LuaApplication>("", sol::no_constructor,
                                            "width", &LuaApplication::viewportWidth,
                                            "height", &LuaApplication::viewportHeight);

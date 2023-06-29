@@ -69,7 +69,7 @@ bool IEECSCameraSystem::detach(const IEEntity entity)
 
 void IEECSCameraSystem::startUp(const IEGame& game)
 {
-    cameraManager = game.getSystem<IEScene>()->getCameraManager();
+    cameraManager = game.getSystem<IEScene>()->getManager<IECameraManager>();
     sEngine = game.getSystem<IEScriptEngine>();
     tSystem = game.getSystem<IEECS>()->getComponent<IEECSTransformSystem>();
 }

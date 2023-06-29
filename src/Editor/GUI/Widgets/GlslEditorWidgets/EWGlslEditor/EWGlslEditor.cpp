@@ -34,7 +34,7 @@ void EWGlslEditor::startup()
 
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* shaderManager = scene->getShaderManager();
+    auto* shaderManager = scene->getManager<IEShaderManager>();
     connect(shaderManager, &IEShaderManager::removed, this, &EWGlslEditor::glslRemovedSlot);
     connect(shaderManager, &IEShaderManager::keyChanged, this, &EWGlslEditor::glslRenamedSlot);
 }
@@ -96,7 +96,7 @@ void EWGlslEditor::glslRenamedSlot(const uint64_t, const uint64_t newKey)
 {
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* shaderManager = scene->getShaderManager();
+    auto* shaderManager = scene->getManager<IEShaderManager>();
     auto* shader = shaderManager->value<IEShader>(newKey);
     if(!shader)
         return;

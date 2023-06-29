@@ -45,9 +45,9 @@ QDataStream& IERenderableManager::deserialize(QDataStream& in, Serializable& obj
 
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* meshManager = scene->getMeshManager();
-    auto* materialManager = scene->getMaterialManager();
-    auto* shaderManager = scene->getShaderManager();
+    auto* meshManager = scene->getManager<IEMeshManager>();
+    auto* materialManager = scene->getManager<IEMaterialManager>();
+    auto* shaderManager = scene->getManager<IEShaderManager>();
 
     for(int i = 0; i < size; i++)
     {

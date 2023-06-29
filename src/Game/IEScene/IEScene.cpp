@@ -7,11 +7,7 @@
 
 IEScene::IEScene(QObject* parent) :
     IEGameSystem(parent),
-    meshManager(new IEMeshManager(this)),
-    materialManager(new IEMaterialManager(this)),
-    shaderManager(new IEShaderManager(this)),
-    renderableManager(new IERenderableManager(this)),
-    cameraManager(new IECameraManager(this))
+    managers(), managerIndices()
 {
 
 }
@@ -23,49 +19,59 @@ IEScene::~IEScene()
 
 void IEScene::startup(IEGame& game)
 {
-    meshManager->startup(game);
-    materialManager->startup(game);
-    shaderManager->startup(game);
-    renderableManager->startup(game);
-    cameraManager->startup(game);
+    appendManager<IEMeshManager>(new IEMeshManager(this));
+    appendManager<IEMaterialManager>(new IEMaterialManager(this));
+    appendManager<IEShaderManager>(new IEShaderManager(this));
+    appendManager<IERenderableManager>(new IERenderableManager(this));
+    appendManager<IECameraManager>(new IECameraManager(this));
+
+    foreach (auto* i, managers)
+    {
+        i->startup(game);
+    }
 }
 
 void IEScene::shutdown(IEGame& game)
 {
-    meshManager->shutdown(game);
-    materialManager->shutdown(game);
-    shaderManager->shutdown(game);
-    renderableManager->shutdown(game);
-    cameraManager->shutdown(game);
+    foreach (auto* i, managers)
+    {
+        i->shutdown(game);
+        delete i;
+        i = nullptr;
+    }
 }
 
 void IEScene::onSerialize(IEGame& game)
 {
-    meshManager->onSerialize(game);
-    materialManager->onSerialize(game);
-    shaderManager->onSerialize(game);
-    renderableManager->onSerialize(game);
-    cameraManager->onSerialize(game);
+    foreach (auto* i, managers)
+    {
+        i->onSerialize(game);
+    }
 }
 
 void IEScene::onDeserialize(IEGame& game)
 {
-    meshManager->onDeserialize(game);
-    materialManager->onDeserialize(game);
-    shaderManager->onDeserialize(game);
-    renderableManager->onDeserialize(game);
-    cameraManager->onDeserialize(game);
+    foreach (auto* i, managers)
+    {
+        i->onDeserialize(game);
+    }
+}
+
+bool IEScene::doesManagerExist(const size_t key) const
+{
+    return managerIndices.contains(key);
 }
 
 QDataStream& IEScene::serialize(QDataStream& out, const Serializable& obj) const
 {
     const auto& scene = static_cast<const IEScene&>(obj);
 
-    out << *scene.meshManager
-        << *scene.materialManager
-        << *scene.shaderManager
-        << *scene.renderableManager
-        << *scene.cameraManager;
+    foreach (auto* i, scene.managers)
+    {
+        out << *i;
+    }
+
+    out << scene.managerIndices;
 
     return out;
 }
@@ -74,11 +80,12 @@ QDataStream& IEScene::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& scene = static_cast<IEScene&>(obj);
 
-    in >> *scene.meshManager
-       >> *scene.materialManager
-       >> *scene.shaderManager
-       >> *scene.renderableManager
-       >> *scene.cameraManager;
+    foreach (auto* i, scene.managers)
+    {
+        in >> *i;
+    }
+
+    in >> scene.managerIndices;
 
     return in;
 }

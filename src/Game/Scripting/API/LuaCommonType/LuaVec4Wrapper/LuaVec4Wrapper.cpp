@@ -31,7 +31,7 @@ LuaVec4Wrapper::~LuaVec4Wrapper()
 
 void LuaVec4Wrapper::addToLua(sol::state& lua)
 {
-    lua.new_usertype<LuaVec4Wrapper>("Vec4", sol::constructors<LuaVec4Wrapper(),
+    lua.new_usertype<LuaVec4Wrapper>("IEVec4", sol::constructors<LuaVec4Wrapper(),
                                      LuaVec4Wrapper(float, float, float, float),
                                      LuaVec4Wrapper(const QVector4D&),
                                      LuaVec4Wrapper(const LuaVec4Wrapper&)>(),

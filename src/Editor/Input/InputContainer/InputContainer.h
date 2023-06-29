@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <QMap>
+#include <QHash>
 #include <QString>
 
 #include "InputKey.h"
@@ -11,11 +11,11 @@ class InputContainer : public QObject, public Serializable
 {
     Q_OBJECT
 
-    QMap<QString, InputKey> keys;
+    QHash<QString, InputKey> keys;
 
 public:
     InputContainer();
-    ~InputContainer();
+    virtual ~InputContainer();
 
     bool addValue(const QString key, InputKey value);
     bool removeValue(const QString& key);
@@ -26,8 +26,8 @@ public:
     bool doesExist(const int mod, const int key) const;
     void clear();
 
-    const QMap<QString, InputKey>& getKeys() const { return keys; }
-    void setKeys(const QMap<QString, InputKey>& val) { keys = val; }
+    const QHash<QString, InputKey>& getKeys() const { return keys; }
+    void setKeys(const QHash<QString, InputKey>& val) { keys = val; }
 
 signals:
     void cleared();

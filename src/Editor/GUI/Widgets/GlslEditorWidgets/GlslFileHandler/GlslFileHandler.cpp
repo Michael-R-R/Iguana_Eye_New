@@ -78,7 +78,7 @@ void GlslFileHandler::handleGlslSave(const QString& path)
     // Check if a shader exist to update
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* shaderManager = scene->getShaderManager();
+    auto* shaderManager = scene->getManager<IEShaderManager>();
     uint64_t id = IEHash::Compute(path);
     auto* shader = shaderManager->value<IEShader>(id);
     if(!shader)

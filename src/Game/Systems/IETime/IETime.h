@@ -20,7 +20,6 @@ public:
 
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;
-    void onDeserialize(IEGame& game) override;
 
     void startUpdateTimer();
     void startRenderTimer();

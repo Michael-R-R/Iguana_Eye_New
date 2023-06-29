@@ -153,7 +153,7 @@ QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const
         out << *i;
     }
 
-    out << *game.state;
+    out << game.systemsIndex << *game.state;
 
     return out;
 }
@@ -168,7 +168,7 @@ QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
         in >> *i;
     }
 
-    in >> *game.state;
+    in >> game.systemsIndex >> *game.state;
 
     return in;
 }

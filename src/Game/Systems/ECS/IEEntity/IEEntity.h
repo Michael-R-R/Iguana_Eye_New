@@ -13,7 +13,7 @@ public:
     ~IEEntity() {}
 
     IEEntity& operator=(const IEEntity& other) { this->id = other.id; return *this; }
-    bool operator==(const IEEntity& other) { return this->id == other.id; }
+    bool operator==(const IEEntity other) { return this->id == other.id; }
     bool operator!=(const IEEntity& other) { return this->id != other.id; }
     bool operator<(const IEEntity& other) const { return this->id < other.id; }
     bool operator>(const IEEntity& other) const { return this->id > other.id; }

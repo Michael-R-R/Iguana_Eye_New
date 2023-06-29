@@ -7,7 +7,7 @@ class IEMaterialManager: public IEResourceManager
 
 public:
     IEMaterialManager(QObject* parent = nullptr);
-    ~IEMaterialManager();
+    virtual ~IEMaterialManager();
 
     void startup(IEGame&) override;
 

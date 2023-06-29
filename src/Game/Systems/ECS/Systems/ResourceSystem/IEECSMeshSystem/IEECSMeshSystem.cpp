@@ -18,7 +18,7 @@ IEECSMeshSystem::~IEECSMeshSystem()
 
 void IEECSMeshSystem::startUp(const IEGame& game)
 {
-    meshManager = game.getSystem<IEScene>()->getMeshManager();
+    meshManager = game.getSystem<IEScene>()->getManager<IEMeshManager>();
 }
 
 void IEECSMeshSystem::shutdown(const IEGame&)

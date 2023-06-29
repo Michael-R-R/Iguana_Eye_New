@@ -31,7 +31,7 @@ public:
     void remove(const IEEntity entity);
     int entityCount() const;
 
-    void appendSystem(IEECSSystem* system);
+    bool appendSystem(IEECSSystem* system);
     void clearSystems();
 
 private:

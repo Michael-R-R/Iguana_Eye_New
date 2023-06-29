@@ -1,5 +1,4 @@
 #include "InputCapture.h"
-#include <QDebug>
 
 InputCapture::InputCapture(QWidget* parent) :
     QWidget(parent),

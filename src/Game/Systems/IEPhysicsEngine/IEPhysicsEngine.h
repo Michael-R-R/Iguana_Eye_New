@@ -19,7 +19,6 @@ class IEPhysicsEngine : public IEGameSystem
     IESimulationCallback simulationCallback;
 
     float worldGravity;
-
     float accumulator;
     float stepSize;
 
@@ -29,7 +28,6 @@ public:
 
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;
-    void onSerialize(IEGame& game) override;
     void onDeserialize(IEGame& game) override;
 
     void onUpdateFrame(const float dt);
@@ -42,5 +40,8 @@ public:
     physx::PxPhysics& getPxPhysics() const { return *pxPhysics; }
     physx::PxMaterial& getPxMaterial() const { return *pxMaterial; }
     const IESimulationCallback& getSimulationCallback() const { return simulationCallback; }
+
+private:
+    physx::PxSceneDesc createSceneDesc();
 };
 

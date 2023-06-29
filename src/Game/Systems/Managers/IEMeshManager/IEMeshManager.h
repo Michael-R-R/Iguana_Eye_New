@@ -7,7 +7,7 @@ class IEMeshManager : public IEResourceManager
 
 public:
     IEMeshManager(QObject* parent = nullptr);
-    ~IEMeshManager();
+    virtual ~IEMeshManager();
 
 public:
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

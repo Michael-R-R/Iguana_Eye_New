@@ -21,7 +21,7 @@ void LuaIEInput::addToLua(IEInput* val, sol::table& gameTable)
     gameTable["IEInput"] = instance;
     gameTable.new_usertype<LuaIEInput>("", sol::no_constructor,
                                     "isPressed", &LuaIEInput::isPressed,
-                                    "getCursorPos", &LuaIEInput::cursorPos);
+                                    "cursorPos", &LuaIEInput::cursorPos);
 }
 
 bool LuaIEInput::isPressed(const char* key)

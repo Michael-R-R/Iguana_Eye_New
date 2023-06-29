@@ -1,7 +1,6 @@
 #include "IERenderEngine.h"
 #include <QOpenGLExtraFunctions>
 #include <QMatrix4x4>
-#include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScene.h"
 #include "IEMeshManager.h"
@@ -30,10 +29,18 @@ IERenderEngine::~IERenderEngine()
 void IERenderEngine::startup(IEGame& game)
 {
     auto* scene = game.getSystem<IEScene>();
-    meshManager = scene->getMeshManager();
-    materialManager = scene->getMaterialManager();
-    shaderManager = scene->getShaderManager();
-    renderableManager = scene->getRenderableManager();
+    meshManager = scene->getManager<IEMeshManager>();
+    materialManager = scene->getManager<IEMaterialManager>();
+    shaderManager = scene->getManager<IEShaderManager>();
+    renderableManager = scene->getManager<IERenderableManager>();
+}
+
+void IERenderEngine::shutdown(IEGame&)
+{
+    meshManager = nullptr;
+    materialManager = nullptr;
+    shaderManager = nullptr;
+    renderableManager = nullptr;
 }
 
 void IERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera)

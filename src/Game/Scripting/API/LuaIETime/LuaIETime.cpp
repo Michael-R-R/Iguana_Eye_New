@@ -21,7 +21,7 @@ void LuaIETime::addToLua(IETime* val, sol::table& gameTable)
     gameTable["IETime"] = instance;
     gameTable.new_usertype<LuaIETime>("", sol::no_constructor,
                                       "fps", &LuaIETime::fps,
-                                      "deltaTime", &LuaIETime::deltaTime);
+                                      "dt", &LuaIETime::deltaTime);
 }
 
 float LuaIETime::fps()

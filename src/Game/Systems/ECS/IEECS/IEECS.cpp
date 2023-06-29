@@ -122,14 +122,16 @@ int IEECS::entityCount() const
     return entityManager->count();
 }
 
-void IEECS::appendSystem(IEECSSystem* system)
+bool IEECS::appendSystem(IEECSSystem* system)
 {
-    if(!system)
-        return;
+    if(!system || doesSystemExist(system->getID()))
+        return false;
 
     const int index = systems.size();
     systems.append(system);
     systemIndex.insert(system->getID(), index);
+
+    return true;
 }
 
 void IEECS::clearSystems()
@@ -166,12 +168,13 @@ QDataStream& IEECS::serialize(QDataStream& out, const Serializable& obj) const
 {
     const auto& ecs = static_cast<const IEECS&>(obj);
 
-    out << *ecs.entityManager;
-
     for(auto& i : qAsConst(ecs.systems))
     {
         out << *i;
     }
+
+    out << ecs.systemIndex << *ecs.entityManager;
+
 
     return out;
 }
@@ -180,12 +183,12 @@ QDataStream& IEECS::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& ecs = static_cast<IEECS&>(obj);
 
-    in >> *ecs.entityManager;
-
     for(auto& i : qAsConst(ecs.systems))
     {
         in >> *i;
     }
+
+    in >> ecs.systemIndex >> *ecs.entityManager;
 
     return in;
 }

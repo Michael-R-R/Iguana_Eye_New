@@ -26,6 +26,7 @@ public:
     ~IERenderEngine();
 
     void startup(IEGame& game) override;
+    void shutdown(IEGame& game) override;
 
     void onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera);
 

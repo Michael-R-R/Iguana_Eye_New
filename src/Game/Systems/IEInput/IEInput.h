@@ -15,7 +15,6 @@ public:
 
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;
-    void onSerialize(IEGame& game) override;
     void onDeserialize(IEGame& game) override;
 
     bool isPressed(const InputKey& key);

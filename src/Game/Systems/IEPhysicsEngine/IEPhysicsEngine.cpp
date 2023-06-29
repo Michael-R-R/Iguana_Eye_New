@@ -35,13 +35,7 @@ void IEPhysicsEngine::startup(IEGame&)
 
     pxCpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
 
-    physx::PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
-    sceneDesc.gravity = physx::PxVec3(0.0f, worldGravity, 0.0f);
-    sceneDesc.cpuDispatcher = pxCpuDispatcher;
-    sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
-    sceneDesc.simulationEventCallback = &simulationCallback;
-
-    pxScene = pxPhysics->createScene(sceneDesc);
+    pxScene = pxPhysics->createScene(createSceneDesc());
     pxMaterial = pxPhysics->createMaterial(1.0f, 1.0f, 0.5f);
 }
 
@@ -53,15 +47,10 @@ void IEPhysicsEngine::shutdown(IEGame&)
     pxFoundation->release();
 }
 
-void IEPhysicsEngine::onSerialize(IEGame&)
+void IEPhysicsEngine::onDeserialize(IEGame&)
 {
-
-}
-
-void IEPhysicsEngine::onDeserialize(IEGame& game)
-{
-    shutdown(game);
-    startup(game);
+    pxScene->release();
+    pxScene = pxPhysics->createScene(createSceneDesc());
 }
 
 void IEPhysicsEngine::onUpdateFrame(const float dt)
@@ -99,4 +88,15 @@ void IEPhysicsEngine::releaseActor(physx::PxActor* actor)
 
     pxScene->removeActor(*actor);
     actor->release();
+}
+
+physx::PxSceneDesc IEPhysicsEngine::createSceneDesc()
+{
+    physx::PxSceneDesc sceneDesc(pxPhysics->getTolerancesScale());
+    sceneDesc.gravity = physx::PxVec3(0.0f, worldGravity, 0.0f);
+    sceneDesc.cpuDispatcher = pxCpuDispatcher;
+    sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
+    sceneDesc.simulationEventCallback = &simulationCallback;
+
+    return sceneDesc;
 }

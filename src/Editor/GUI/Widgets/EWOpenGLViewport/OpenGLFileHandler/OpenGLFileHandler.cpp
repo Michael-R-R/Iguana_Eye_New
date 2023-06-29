@@ -55,10 +55,10 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
 
     // --- Create or get mesh --- //
     auto* scene = game->getSystem<IEScene>();
-    auto* meManager = scene->getMeshManager();
-    auto* maMaterial = scene->getMaterialManager();
-    auto* sManager = scene->getShaderManager();
-    auto* rManager = scene->getRenderableManager();
+    auto* meManager = scene->getManager<IEMeshManager>();
+    auto* maMaterial = scene->getManager<IEMaterialManager>();
+    auto* sManager = scene->getManager<IEShaderManager>();
+    auto* rManager = scene->getManager<IERenderableManager>();
 
     const uint64_t meshId = IEHash::Compute(path);
     const uint64_t materialId = maMaterial->getDefaultId();

@@ -15,7 +15,7 @@ LuaUtility::~LuaUtility()
 
 void LuaUtility::addToLua(sol::table& utilityTable)
 {
-    utilityTable["hashing"] = instance;
+    utilityTable["IEHash"] = instance;
     utilityTable.new_usertype<LuaUtility>("", sol::no_constructor,
                                           "compute", &LuaUtility::computeHash);
 }

@@ -25,7 +25,7 @@ LuaMat4Wrapper::~LuaMat4Wrapper()
 
 void LuaMat4Wrapper::addToLua(sol::state& lua)
 {
-    lua.new_usertype<LuaMat4Wrapper>("Mat4", sol::constructors<LuaMat4Wrapper(),
+    lua.new_usertype<LuaMat4Wrapper>("IEMat4", sol::constructors<LuaMat4Wrapper(),
                                      LuaMat4Wrapper(const QMatrix4x4&),
                                      LuaMat4Wrapper(const LuaMat4Wrapper&)>(),
                                      "inverted", &LuaMat4Wrapper::inverted,

@@ -30,7 +30,7 @@ void LuaIEECS::addToLua(IEECS* val, sol::state& lua, sol::table& gameTable)
 
     instance.ecs = val;
 
-    gameTable["ECS"] = instance;
+    gameTable["IEECS"] = instance;
     gameTable.new_usertype<LuaIEECS>("", sol::no_constructor,
                                      "nameComponent", &LuaIEECS::nameComponent,
                                      "scriptComponent", &LuaIEECS::scriptComponent,

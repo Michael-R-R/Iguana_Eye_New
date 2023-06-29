@@ -18,7 +18,7 @@ IEECSMaterialSystem::~IEECSMaterialSystem()
 
 void IEECSMaterialSystem::startUp(const IEGame& game)
 {
-    materialManager = game.getSystem<IEScene>()->getMaterialManager();
+    materialManager = game.getSystem<IEScene>()->getManager<IEMaterialManager>();
 }
 
 void IEECSMaterialSystem::shutdown(const IEGame& game)
