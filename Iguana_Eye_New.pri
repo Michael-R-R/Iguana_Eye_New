@@ -6,6 +6,7 @@ INCLUDEPATH += $$PWD/src/Application \
     $$PWD/src/Application/ApplicationFileHandler \
     $$PWD/src/Application/ApplicationProperties \
     $$PWD/src/Application/ApplicationWindow \
+    $$PWD/src/Application/GlobalEnum \
 
 INCLUDEPATH += $$PWD/src/Common \
     $$PWD/src/Common/IEObject \
@@ -114,9 +115,6 @@ INCLUDEPATH += $$PWD/src/Editor/Startup \
 INCLUDEPATH += $$PWD/src/Editor/Startup/Cameras \
     $$PWD/src/Editor/Startup/Cameras/ECamera \
 
-INCLUDEPATH += $$PWD/src/Editor/Startup/Materials \
-    $$PWD/src/Editor/Startup/Materials/IEDefaultMaterial \
-
 INCLUDEPATH += $$PWD/src/Editor/Startup/Meshes \
     $$PWD/src/Editor/Startup/Meshes/EGridMesh \
 
@@ -126,8 +124,7 @@ INCLUDEPATH += $$PWD/src/Editor/Startup/Renderables \
 INCLUDEPATH += $$PWD/src/Editor/Startup/Shaders \
     $$PWD/src/Editor/Startup/Shaders/EGridShader \
 
-INCLUDEPATH += $$PWD/src/Game \
-    $$PWD/src/Game/IEScene \
+INCLUDEPATH += $$PWD/src/Game/ \
 
 INCLUDEPATH += $$PWD/src/Game/GameState \
     $$PWD/src/Game/GameState/IEGamePlayState \
@@ -200,6 +197,7 @@ INCLUDEPATH += $$PWD/src/Game/Systems \
     $$PWD/src/Game/Systems/IEGameSystem \
     $$PWD/src/Game/Systems/IEInput \
     $$PWD/src/Game/Systems/IERenderEngine \
+    $$PWD/src/Game/Systems/IEScene \
     $$PWD/src/Game/Systems/IEScriptEngine \
     $$PWD/src/Game/Systems/IEPhysicsEngine \
 

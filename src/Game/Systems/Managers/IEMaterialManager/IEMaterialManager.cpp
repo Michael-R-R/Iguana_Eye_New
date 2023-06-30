@@ -1,6 +1,5 @@
 #include "IEMaterialManager.h"
 #include "IEMaterial.h"
-#include "IEDefaultMaterial.h"
 #include "IEFile.h"
 #include "IESerialize.h"
 
@@ -13,15 +12,6 @@ IEMaterialManager::IEMaterialManager(QObject* parent) :
 IEMaterialManager::~IEMaterialManager()
 {
 
-}
-
-void IEMaterialManager::startup(IEGame&)
-{
-    QString path = IEFile::absolutePath("./resources/materials/game/default.iemat");
-    auto* defaultMat = new IEDefaultMaterial(path, this);
-    defaultId = defaultMat->getId();
-
-    this->add(defaultId, defaultMat);
 }
 
 QDataStream& IEMaterialManager::serialize(QDataStream& out, const Serializable& obj) const

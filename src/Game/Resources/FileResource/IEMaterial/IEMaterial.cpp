@@ -4,22 +4,16 @@
 
 IEMaterial::IEMaterial(QObject* parent) :
     IEFileResource(parent),
-    uniformData(), objectColor(),
-    atlasTexId(0), diffuseTexId(0),
-    specularTexId(0), normalTexId(0),
-    heightTexId(0)
+    colors(), textureIDs(), uData()
 {
-
+    setup();
 }
 
 IEMaterial::IEMaterial(const QString& path, QObject* parent) :
     IEFileResource(path, parent),
-    uniformData(), objectColor(),
-    atlasTexId(0), diffuseTexId(0),
-    specularTexId(0), normalTexId(0),
-    heightTexId(0)
+    colors(), textureIDs(), uData()
 {
-
+    setup();
 }
 
 IEMaterial::~IEMaterial()
@@ -27,9 +21,71 @@ IEMaterial::~IEMaterial()
 
 }
 
-void IEMaterial::bindUniformData(IEShader& shader) const
+void IEMaterial::appendColor(IEColorType type, const QVector4D& val)
 {
-    uniformData.bind(shader);
+    colors[type].append(val);
+}
+
+void IEMaterial::removeColor(IEColorType type, const int index)
+{
+    if(index < 0 || index > colors[type].size())
+        return;
+
+    colors[type].removeAt(index);
+}
+
+void IEMaterial::setColor(IEColorType type, const int index, const QVector4D& val)
+{
+    if(index < 0 || index > colors[type].size())
+        return;
+
+    colors[type][index] = val;
+}
+
+void IEMaterial::appendTextureID(IETextureType type, const uint64_t val)
+{
+    textureIDs[type].append(val);
+}
+
+void IEMaterial::removeTextureID(IETextureType type, const int index)
+{
+    if(index < 0 || index > textureIDs[type].size())
+        return;
+
+    textureIDs[type].removeAt(index);
+}
+
+void IEMaterial::setTextureID(IETextureType type, const int index, const uint64_t val)
+{
+    if(index < 0 || index > textureIDs[type].size())
+        return;
+
+    textureIDs[type][index] = val;
+}
+
+void IEMaterial::bindData(IEShader& shader) const
+{
+    uData.bind(shader);
+}
+
+const QHash<IEColorType, QVector<QVector4D> >& IEMaterial::getColors() const
+{
+    return colors;
+}
+
+const QHash<IETextureType, QVector<uint64_t> >& IEMaterial::getTexIDs() const
+{
+    return textureIDs;
+}
+
+IEUniform& IEMaterial::getUniformData()
+{
+    return uData;
+}
+
+void IEMaterial::setUniformData(const IEUniform& val)
+{
+    uData = val;
 }
 
 QDataStream& IEMaterial::serialize(QDataStream& out, const Serializable& obj) const
@@ -38,13 +94,7 @@ QDataStream& IEMaterial::serialize(QDataStream& out, const Serializable& obj) co
 
     const auto& material = static_cast<const IEMaterial&>(obj);
 
-    out << material.uniformData
-        << material.objectColor
-        << material.atlasTexId
-        << material.diffuseTexId
-        << material.specularTexId
-        << material.normalTexId
-        << material.heightTexId;
+    out << material.colors << material.textureIDs << material.uData;
 
     return out;
 }
@@ -55,13 +105,29 @@ QDataStream& IEMaterial::deserialize(QDataStream& in, Serializable& obj)
 
     auto& material = static_cast<IEMaterial&>(obj);
 
-    in >> material.uniformData
-       >> material.objectColor
-       >> material.atlasTexId
-       >> material.diffuseTexId
-       >> material.specularTexId
-       >> material.normalTexId
-       >> material.heightTexId;
+    in >> material.colors >> material.textureIDs >> material.uData;
 
     return in;
+}
+
+void IEMaterial::setup()
+{
+    colors.insert(IEColorType::Ambient, QVector<QVector4D>());
+    colors.insert(IEColorType::Diffuse, QVector<QVector4D>());
+    colors.insert(IEColorType::Specular, QVector<QVector4D>());
+    colors.insert(IEColorType::Emissive, QVector<QVector4D>());
+    colors.insert(IEColorType::Reflective, QVector<QVector4D>());
+    colors.insert(IEColorType::Transparent, QVector<QVector4D>());
+
+    textureIDs.insert(IETextureType::Ambient, QVector<uint64_t>());
+    textureIDs.insert(IETextureType::Diffuse, QVector<uint64_t>());
+    textureIDs.insert(IETextureType::Specular, QVector<uint64_t>());
+    textureIDs.insert(IETextureType::Normals, QVector<uint64_t>());
+    textureIDs.insert(IETextureType::Height, QVector<uint64_t>());
+    textureIDs.insert(IETextureType::Emissive, QVector<uint64_t>());
+    textureIDs.insert(IETextureType::Shininess, QVector<uint64_t>());
+    textureIDs.insert(IETextureType::Opacity, QVector<uint64_t>());
+    textureIDs.insert(IETextureType::Displacement, QVector<uint64_t>());
+    textureIDs.insert(IETextureType::Lightmap, QVector<uint64_t>());
+    textureIDs.insert(IETextureType::Unknown, QVector<uint64_t>());
 }

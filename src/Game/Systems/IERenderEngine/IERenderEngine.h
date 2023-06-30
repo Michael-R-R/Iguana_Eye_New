@@ -28,15 +28,12 @@ public:
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;
 
+    void onPreRenderFrame();
     void onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera);
+    void onPostRenderFrame();
 
 private:
-    void prepareShader(IEShader& shader);
-    void prepareRenderable(IERenderable& renderable);
-    void prepareViewProjection(IEShader& shader, IECamera& camera);
-    void prepareUniformData(IEShader& shader, IEMaterial& material);
-    void prepareUniformData(IEShader& shader, IERenderable& renderable);
-    void draw(QOpenGLExtraFunctions* glFunc, IERenderable& renderable, IEMesh& mesh);
-    void cleanup(IEShader& shader, IERenderable& renderable);
+    void prepareViewProjection();
+    void draw(IEShader* shader, IEMaterial* material, IERenderable* renderable);
 };
 
