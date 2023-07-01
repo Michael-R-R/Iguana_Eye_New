@@ -1,7 +1,7 @@
-#include "IEUniform.h"
+#include "IEUniformData.h"
 #include "IEShader.h"
 
-IEUniform::IEUniform() :
+IEUniformData::IEUniformData() :
     intData(), floatData(),
     vec2Data(), vec3Data(),
     vec4Data(), mat2Data(),
@@ -11,7 +11,7 @@ IEUniform::IEUniform() :
 
 }
 
-IEUniform::IEUniform(const IEUniform& other) :
+IEUniformData::IEUniformData(const IEUniformData& other) :
     intData(other.intData), floatData(other.floatData),
     vec2Data(other.vec2Data), vec3Data(other.vec3Data),
     vec4Data(other.vec4Data), mat2Data(other.mat2Data),
@@ -21,12 +21,12 @@ IEUniform::IEUniform(const IEUniform& other) :
 
 }
 
-IEUniform::~IEUniform()
+IEUniformData::~IEUniformData()
 {
 
 }
 
-void IEUniform::bind(IEShader& shader) const
+void IEUniformData::bind(IEShader& shader) const
 {
     QMapIterator<QString, int> it1(intData);
     while(it1.hasNext()) { it1.next(); shader.setUniformValue(shader.uniformLocation(it1.key()), it1.value()); }
@@ -56,117 +56,117 @@ void IEUniform::bind(IEShader& shader) const
     while(it9.hasNext()) { it9.next(); shader.setUniformValue(shader.uniformLocation(it9.key()), it9.value()); }
 }
 
-void IEUniform::add(const QString& name, const int data)
+void IEUniformData::add(const QString& name, const int data)
 {
     if(name.isEmpty())
         return;
     intData[name] = data;
 }
 
-void IEUniform::add(const QString& name, const float data)
+void IEUniformData::add(const QString& name, const float data)
 {
     if(name.isEmpty())
         return;
     floatData[name] = data;
 }
 
-void IEUniform::add(const QString& name, const QVector2D data)
+void IEUniformData::add(const QString& name, const QVector2D data)
 {
     if(name.isEmpty())
         return;
     vec2Data[name] = data;
 }
 
-void IEUniform::add(const QString& name, const QVector3D data)
+void IEUniformData::add(const QString& name, const QVector3D data)
 {
     if(name.isEmpty())
         return;
     vec3Data[name] = data;
 }
 
-void IEUniform::add(const QString& name, const QVector4D data)
+void IEUniformData::add(const QString& name, const QVector4D data)
 {
     if(name.isEmpty())
         return;
     vec4Data[name] = data;
 }
 
-void IEUniform::add(const QString& name, const QMatrix2x2 data)
+void IEUniformData::add(const QString& name, const QMatrix2x2 data)
 {
     if(name.isEmpty())
         return;
     mat2Data[name] = data;
 }
 
-void IEUniform::add(const QString& name, const QMatrix3x3 data)
+void IEUniformData::add(const QString& name, const QMatrix3x3 data)
 {
     if(name.isEmpty())
         return;
     mat3Data[name] = data;
 }
 
-void IEUniform::add(const QString& name, const QMatrix4x4 data)
+void IEUniformData::add(const QString& name, const QMatrix4x4 data)
 {
     if(name.isEmpty())
         return;
     mat4Data[name] = data;
 }
 
-void IEUniform::add(const QString& name, const QColor data)
+void IEUniformData::add(const QString& name, const QColor data)
 {
     if(name.isEmpty())
         return;
     colData[name] = data;
 }
 
-void IEUniform::removeInt(const QString& name)
+void IEUniformData::removeInt(const QString& name)
 {
     intData.remove(name);
 }
 
-void IEUniform::removeFloat(const QString& name)
+void IEUniformData::removeFloat(const QString& name)
 {
     floatData.remove(name);
 }
 
-void IEUniform::removeVec2(const QString& name)
+void IEUniformData::removeVec2(const QString& name)
 {
     vec2Data.remove(name);
 }
 
-void IEUniform::removeVec3(const QString& name)
+void IEUniformData::removeVec3(const QString& name)
 {
     vec3Data.remove(name);
 }
 
-void IEUniform::removeVec4(const QString& name)
+void IEUniformData::removeVec4(const QString& name)
 {
     vec4Data.remove(name);
 }
 
-void IEUniform::removeMat2(const QString& name)
+void IEUniformData::removeMat2(const QString& name)
 {
     mat2Data.remove(name);
 }
 
-void IEUniform::removeMat3(const QString& name)
+void IEUniformData::removeMat3(const QString& name)
 {
     mat3Data.remove(name);
 }
 
-void IEUniform::removeMat4(const QString& name)
+void IEUniformData::removeMat4(const QString& name)
 {
     mat4Data.remove(name);
 }
 
-void IEUniform::removeCol(const QString& name)
+void IEUniformData::removeCol(const QString& name)
 {
     colData.remove(name);
 }
 
-QDataStream& IEUniform::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEUniformData::serialize(QDataStream& out, const Serializable& obj) const
 {
-    const auto& uniform = static_cast<const IEUniform&>(obj);
+    const auto& uniform = static_cast<const IEUniformData&>(obj);
 
     out << uniform.intData << uniform.floatData
         << uniform.vec2Data << uniform.vec3Data
@@ -177,9 +177,9 @@ QDataStream& IEUniform::serialize(QDataStream& out, const Serializable& obj) con
     return out;
 }
 
-QDataStream& IEUniform::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEUniformData::deserialize(QDataStream& in, Serializable& obj)
 {
-    auto& uniform = static_cast<IEUniform&>(obj);
+    auto& uniform = static_cast<IEUniformData&>(obj);
 
     in >> uniform.intData >> uniform.floatData >> uniform.vec2Data
        >> uniform.vec3Data >> uniform.vec4Data >> uniform.mat2Data

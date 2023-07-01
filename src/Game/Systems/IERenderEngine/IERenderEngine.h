@@ -4,11 +4,9 @@
 
 class QOpenGLExtraFunctions;
 class IEGame;
-class IEMeshManager;
 class IEMaterialManager;
 class IEShaderManager;
 class IERenderableManager;
-class IEMesh;
 class IEMaterial;
 class IEShader;
 class IERenderable;
@@ -16,7 +14,6 @@ class IECamera;
 
 class IERenderEngine : public IEGameSystem
 {
-    IEMeshManager* meshManager;
     IEMaterialManager* materialManager;
     IEShaderManager* shaderManager;
     IERenderableManager* renderableManager;

@@ -3,19 +3,17 @@
 #include <QMatrix4x4>
 #include "IEGame.h"
 #include "IEScene.h"
-#include "IEMeshManager.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
 #include "IECamera.h"
-#include "IEMesh.h"
 #include "IEMaterial.h"
 #include "IEShader.h"
 #include "IERenderable.h"
 
 IERenderEngine::IERenderEngine(QObject* parent) :
     IEGameSystem(parent),
-    meshManager(nullptr), materialManager(nullptr),
+    materialManager(nullptr),
     shaderManager(nullptr), renderableManager(nullptr)
 {
 
@@ -29,7 +27,6 @@ IERenderEngine::~IERenderEngine()
 void IERenderEngine::startup(IEGame& game)
 {
     auto* scene = game.getSystem<IEScene>();
-    meshManager = scene->getManager<IEMeshManager>();
     materialManager = scene->getManager<IEMaterialManager>();
     shaderManager = scene->getManager<IEShaderManager>();
     renderableManager = scene->getManager<IERenderableManager>();
@@ -37,7 +34,6 @@ void IERenderEngine::startup(IEGame& game)
 
 void IERenderEngine::shutdown(IEGame&)
 {
-    meshManager = nullptr;
     materialManager = nullptr;
     shaderManager = nullptr;
     renderableManager = nullptr;
@@ -60,10 +56,9 @@ void IERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* came
     for(auto* i : renderables)
     {
         auto* renderable = static_cast<IERenderable*>(i);
-        auto* mesh = meshManager->value<IEMesh>(renderable->getMeshId());
         auto* material = materialManager->value<IEMaterial>(renderable->getMaterialId());
         auto* shader = shaderManager->value<IEShader>(renderable->getShaderId());
-        if(!mesh || !material || !shader)
+        if(!material || !shader)
             continue;
 
         draw(shader, material, renderable);

@@ -78,12 +78,12 @@ const QHash<IETextureType, QVector<uint64_t> >& IEMaterial::getTexIDs() const
     return textureIDs;
 }
 
-IEUniform& IEMaterial::getUniformData()
+IEUniformData& IEMaterial::getUniformData()
 {
     return uData;
 }
 
-void IEMaterial::setUniformData(const IEUniform& val)
+void IEMaterial::setUniformData(const IEUniformData& val)
 {
     uData = val;
 }

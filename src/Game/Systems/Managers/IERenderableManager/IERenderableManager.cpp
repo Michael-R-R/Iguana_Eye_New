@@ -3,7 +3,6 @@
 #include "IERenderable.h"
 #include "IEGame.h"
 #include "IEScene.h"
-#include "IEMeshManager.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IEShader.h"
@@ -45,50 +44,12 @@ QDataStream& IERenderableManager::deserialize(QDataStream& in, Serializable& obj
 
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* meshManager = scene->getManager<IEMeshManager>();
     auto* materialManager = scene->getManager<IEMaterialManager>();
     auto* shaderManager = scene->getManager<IEShaderManager>();
 
     for(int i = 0; i < size; i++)
     {
-        QString path = "";
-
-        in >> path;
-
-        auto* renderable = new IERenderable(&manager);
-        if(!IESerialize::read<IERenderable>(path, renderable))
-        {
-            delete renderable;
-            continue;
-        }
-
-        if(!meshManager->doesExist(renderable->getMeshId()))
-        {
-            delete renderable;
-            continue;
-        }
-
-        if(!materialManager->doesExist(renderable->getMaterialId()))
-        {
-            delete renderable;
-            continue;
-        }
-
-        if(!shaderManager->doesExist(renderable->getShaderId()))
-        {
-            delete renderable;
-            continue;
-        }
-
-        if(manager.add(renderable->getId(), renderable))
-        {
-            auto* shader = shaderManager->value<IEShader>(renderable->getShaderId());
-            renderable->build(*shader);
-        }
-        else
-        {
-            delete renderable;
-        }
+        // TODO implement
     }
 
     return in;

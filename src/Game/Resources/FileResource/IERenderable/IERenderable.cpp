@@ -1,477 +1,160 @@
 #include "IERenderable.h"
+#include "IEBufferObject.h"
+#include "IEVertexBufferObject.h"
 #include "IEShader.h"
+#include <stdexcept>
 
 IERenderable::IERenderable(QObject* parent) :
     IEFileResource(parent),
-    renderMode(RenderMode::None), drawMode(GL_TRIANGLES),
-    meshId(0), materialId(0), shaderId(0),
-    vao(new QOpenGLVertexArrayObject(this)),
-    indexBuffer(new IEIndexBuffer(this)),
-    vec2BufferContainer(new IEVertexBufferContainer<QVector2D>(this)),
-    vec3BufferContainer(new IEVertexBufferContainer<QVector3D>(this)),
-    vec4BufferContainer(new IEVertexBufferContainer<QVector4D>(this)),
-    mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>(this)),
-    shownCount(0), hiddenCount(0),
-    uniformData(),
-    dirtyVec2Buffers(), dirtyVec3Buffers(),
-    dirtyVec4Buffers(), dirtyMat4Buffers()
+    VAOs(), buffers(), dirtyAllocations(),
+    primitiveMode(GL_TRIANGLES),
+    materialId(0),
+    shaderId(0),
+    uData()
 {
 
 }
 
 IERenderable::IERenderable(const QString& path,
-                           const uint64_t meshId_,
-                           const uint64_t materialId_,
-                           const uint64_t shaderId_,
+                           const uint64_t mID,
+                           const uint64_t sID,
                            QObject* parent) :
     IEFileResource(path, parent),
-    renderMode(RenderMode::None), drawMode(GL_TRIANGLES),
-    meshId(meshId_), materialId(materialId_), shaderId(shaderId_),
-    vao(new QOpenGLVertexArrayObject(this)),
-    indexBuffer(new IEIndexBuffer(this)),
-    vec2BufferContainer(new IEVertexBufferContainer<QVector2D>(this)),
-    vec3BufferContainer(new IEVertexBufferContainer<QVector3D>(this)),
-    vec4BufferContainer(new IEVertexBufferContainer<QVector4D>(this)),
-    mat4BufferContainer(new IEVertexBufferContainer<QMatrix4x4>(this)),
-    shownCount(0), hiddenCount(0),
-    uniformData(),
-    dirtyVec2Buffers(), dirtyVec3Buffers(),
-    dirtyVec4Buffers(), dirtyMat4Buffers()
+    VAOs(), buffers(), dirtyAllocations(),
+    primitiveMode(GL_TRIANGLES),
+    materialId(mID),
+    shaderId(sID),
+    uData()
 {
 
 }
 
 IERenderable::~IERenderable()
 {
-    if(vao->isCreated())
-        vao->destroy();
+    cleanup();
 }
 
-void IERenderable::addIndexBuffer(IEIndexBuffer* buffer)
+void IERenderable::draw(const int index)
 {
-    indexBuffer = buffer;
+    bind(index);
+    updateDirtyBuffers(index);
+    handleDraw(index);
 }
 
-bool IERenderable::addVec2Buffer(const QString& key, IEVertexBuffer<QVector2D>* value)
+void IERenderable::bind(const int index)
 {
-    if(!vec2BufferContainer->add(key, value))
-        return false;
+    if(index < 0 || index >= VAOs.size())
+        throw std::exception("IERenderable::bind()::Index_out_of_bounds");
 
-    dirtyVec2Buffers.insert(key);
-
-    return true;
+    VAOs[index]->bind();
 }
 
-bool IERenderable::addVec3Buffer(const QString& key, IEVertexBuffer<QVector3D>* value)
+void IERenderable::bindData(IEShader& shader)
 {
-    if(!vec3BufferContainer->add(key, value))
-        return false;
-
-
-    dirtyVec3Buffers.insert(key);
-
-    return true;
+    uData.bind(shader);
 }
 
-bool IERenderable::addVec4Buffer(const QString& key, IEVertexBuffer<QVector4D>* value)
+int IERenderable::addVAO()
 {
-    if(!vec4BufferContainer->add(key, value))
-        return false;
+    const int index = VAOs.size();
 
-    dirtyVec4Buffers.insert(key);
+    VAOs.append(new QOpenGLVertexArrayObject(this));
+    buffers.append(QHash<QString, IEBufferObject*>());
+    dirtyAllocations.append(QSet<QString>());
 
-    return true;
+    return index;
 }
 
-bool IERenderable::addMat4Buffer(const QString& key, IEVertexBuffer<QMatrix4x4>* value)
+void IERenderable::addBuffer(const int index, const QString& name, IEBufferObject* buffer)
 {
-    if(!mat4BufferContainer->add(key, value))
-        return false;
+    if(index < 0 || index >= VAOs.size())
+        throw std::exception("IERenderable::addBuffer()::Index_out_of_bounds");
 
-    dirtyMat4Buffers.insert(key);
-
-    return true;
-}
-
-void IERenderable::setVec2BufferData(const QString& key, const QVector<QVector2D>& data)
-{
-    auto buffer = vec2BufferContainer->value(key);
     if(!buffer)
-        return;
+        throw std::exception("IERenderable::addBuffer()::null_buffer");
 
-    buffer->setBufferData(data);
-    dirtyVec2Buffers.insert(key);
+    buffers[index].insert(name, buffer);
+    dirtyAllocations[index].insert(name);
 }
 
-void IERenderable::setVec3BufferData(const QString& key, const QVector<QVector3D>& data)
+void IERenderable::removeBuffer(const QString& name)
 {
-    auto buffer = vec3BufferContainer->value(key);
-    if(!buffer)
-        return;
-
-    buffer->setBufferData(data);
-    dirtyVec3Buffers.insert(key);
-}
-
-void IERenderable::setVec4BufferData(const QString& key, const QVector<QVector4D>& data)
-{
-    auto buffer = vec4BufferContainer->value(key);
-    if(!buffer)
-        return;
-
-    buffer->setBufferData(data);
-    dirtyVec4Buffers.insert(key);
-}
-
-void IERenderable::setMat4BufferData(const QString& key, const QVector<QMatrix4x4>& data)
-{
-    auto buffer = mat4BufferContainer->value(key);
-    if(!buffer)
-        return;
-
-    buffer->setBufferData(data);
-    dirtyMat4Buffers.insert(key);
-}
-
-int IERenderable::addShownInstance()
-{
-    appendInstanceValues();
-
-    return shownCount++;
-}
-
-int IERenderable::addHiddenInstance()
-{
-    return hiddenCount++;
-}
-
-void IERenderable::removeShownInstance(const int index)
-{
-    shownCount--;
-
-    this->purgeInstanceValues(index);
-}
-
-void IERenderable::removeHiddenInstance()
-{
-    hiddenCount--;
-}
-
-int IERenderable::shownInstanceCount() const
-{
-    return shownCount;
-}
-
-int IERenderable::hiddenInstanceCount() const
-{
-    return hiddenCount;
-}
-
-void IERenderable::fetchBufferDataAtIndex(const int index,
-                                          QMap<QString, QVector2D>& vec2Data,
-                                          QMap<QString, QVector3D>& vec3Data,
-                                          QMap<QString, QVector4D>& vec4Data,
-                                          QMap<QString, QMatrix4x4>& mat4Data)
-{
-    QMapIterator<QString, IEVertexBuffer<QVector2D>*> it1(vec2BufferContainer->getBuffers());
-    while(it1.hasNext())
+    for(int i = 0; i < VAOs.size(); i++)
     {
-        it1.next();
-        auto key = it1.key();
-        auto buffer = it1.value();
-        if(!buffer->indexBoundsCheck(index))
-            continue;
-        vec2Data[key] = buffer->getBufferValue(index);
+        if(buffers[i].remove(name))
+            dirtyAllocations[i].insert(name);
     }
-
-    QMapIterator<QString, IEVertexBuffer<QVector3D>*> it2(vec3BufferContainer->getBuffers());
-    while(it2.hasNext())
-    {
-        it2.next();
-        auto key = it2.key();
-        auto buffer = it2.value();
-        if(!buffer->indexBoundsCheck(index))
-            continue;
-        vec3Data[key] = buffer->getBufferValue(index);
-    }
-
-    QMapIterator<QString, IEVertexBuffer<QVector4D>*> it3(vec4BufferContainer->getBuffers());
-    while(it3.hasNext())
-    {
-        it3.next();
-        auto key = it3.key();
-        auto buffer = it3.value();
-        if(!buffer->indexBoundsCheck(index))
-            continue;
-        vec4Data[key] = buffer->getBufferValue(index);
-    }
-
-    QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it4(mat4BufferContainer->getBuffers());
-    while(it4.hasNext())
-    {
-        it4.next();
-        auto key = it4.key();
-        auto buffer = it4.value();
-        if(!buffer->indexBoundsCheck(index))
-            continue;
-        mat4Data[key] = buffer->getBufferValue(index);
-    }
-}
-
-void IERenderable::appendVec2InstanceValue(const QString& key, const QVector2D& value)
-{
-    auto buffer = vec2BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    dirtyVec2Buffers.insert(key);
-
-    buffer->appendBufferValue(value);
-}
-
-void IERenderable::appendVec3InstanceValue(const QString& key, const QVector3D& value)
-{
-    auto buffer = vec3BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    dirtyVec3Buffers.insert(key);
-
-    buffer->appendBufferValue(value);
-}
-
-void IERenderable::appendVec4InstanceValue(const QString& key, const QVector4D& value)
-{
-    auto buffer = vec4BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    dirtyVec4Buffers.insert(key);
-
-    buffer->appendBufferValue(value);
-}
-
-void IERenderable::appendMat4InstanceValue(const QString& key, const QMatrix4x4& value)
-{
-    auto buffer = mat4BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    dirtyMat4Buffers.insert(key);
-
-    buffer->appendBufferValue(value);
-}
-
-void IERenderable::removeVec2InstanceValue(const QString& key, const int index)
-{
-    auto buffer = vec2BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    dirtyVec2Buffers.insert(key);
-
-    buffer->removeBufferValue(index);
-}
-
-void IERenderable::removeVec3InstanceValue(const QString& key, const int index)
-{
-    auto buffer = vec3BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    dirtyVec3Buffers.insert(key);
-
-    buffer->removeBufferValue(index);
-}
-
-void IERenderable::removeVec4InstanceValue(const QString& key, const int index)
-{
-    auto buffer = vec4BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    dirtyVec4Buffers.insert(key);
-
-    buffer->removeBufferValue(index);
-}
-
-void IERenderable::removeMat4InstanceValue(const QString& key, const int index)
-{
-    auto buffer = mat4BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    dirtyMat4Buffers.insert(key);
-
-    buffer->removeBufferValue(index);
-}
-
-void IERenderable::setVec2InstanceValue(const QString& key, const int index, const QVector2D& value)
-{
-    auto buffer = vec2BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    buffer->setBufferValue(index, value);
-    buffer->subAllocate(index);
-}
-
-void IERenderable::setVec3InstanceValue(const QString& key, const int index, const QVector3D& value)
-{
-    auto buffer = vec3BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    buffer->setBufferValue(index, value);
-    buffer->subAllocate(index);
-}
-
-void IERenderable::setVec4InstanceValue(const QString& key, const int index, const QVector4D& value)
-{
-    auto buffer = vec4BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    buffer->setBufferValue(index, value);
-    buffer->subAllocate(index);
-}
-
-void IERenderable::setMat4InstanceValue(const QString& key, const int index, const QMatrix4x4& value)
-{
-    auto buffer = mat4BufferContainer->value(key);
-    if(!buffer || !buffer->getIsInstanced())
-        return;
-
-    buffer->setBufferValue(index, value);
-    buffer->subAllocate(index);
 }
 
 void IERenderable::build(IEShader& shader)
 {
-    shader.bind();
+    for(int i = 0; i < VAOs.size(); i++)
+    {
+        auto* vao = VAOs[i];
 
-    if(!vao->isCreated())
+        if(vao->isCreated())
+            vao->destroy();
+
         vao->create();
+        vao->bind();
 
-    vao->bind();
+        handleBuild(i);
 
-    indexBuffer->build();
+        QHashIterator<QString, IEBufferObject*> it(buffers[i]);
+        while(it.hasNext())
+        {
+            it.value()->build(shader.attributeLocation(it.key()));
+        }
 
-    QMapIterator<QString, IEVertexBuffer<QVector2D>*> it1(vec2BufferContainer->getBuffers());
-    while(it1.hasNext()) { it1.next(); it1.value()->build(shader.attributeLocation(it1.key())); }
+        vao->release();
+        handleBuildRelease(i);
+        foreach (auto* j, buffers[i])
+        {
+            j->release();
+        }
 
-    QMapIterator<QString, IEVertexBuffer<QVector3D>*> it2(vec3BufferContainer->getBuffers());
-    while(it2.hasNext()) { it2.next(); it2.value()->build(shader.attributeLocation(it2.key())); }
-
-    QMapIterator<QString, IEVertexBuffer<QVector4D>*> it3(vec4BufferContainer->getBuffers());
-    while(it3.hasNext()) { it3.next(); it3.value()->build(shader.attributeLocation(it3.key())); }
-
-    QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it4(mat4BufferContainer->getBuffers());
-    while(it4.hasNext()) { it4.next(); it4.value()->build(shader.attributeLocation(it4.key())); }
-
-    shader.release();
-    vao->release();
-    indexBuffer->release();
-    vec2BufferContainer->releaseAllBuffers();
-    vec3BufferContainer->releaseAllBuffers();
-    vec4BufferContainer->releaseAllBuffers();
-    mat4BufferContainer->releaseAllBuffers();
-
-    dirtyVec2Buffers.clear();
-    dirtyVec3Buffers.clear();
-    dirtyVec4Buffers.clear();
-    dirtyMat4Buffers.clear();
-}
-
-void IERenderable::bindUniformData(IEShader& shader)
-{
-    uniformData.bind(shader);
-}
-
-void IERenderable::checkForDirtyBuffers()
-{
-    foreach(auto& key, dirtyVec2Buffers)
-        vec2BufferContainer->value(key)->reallocate();
-    dirtyVec2Buffers.clear();
-
-    foreach(auto& key, dirtyVec3Buffers)
-        vec3BufferContainer->value(key)->reallocate();
-    dirtyVec3Buffers.clear();
-
-    foreach(auto& key, dirtyVec4Buffers)
-        vec4BufferContainer->value(key)->reallocate();
-    dirtyVec4Buffers.clear();
-
-    foreach(auto& key, dirtyMat4Buffers)
-        mat4BufferContainer->value(key)->reallocate();
-    dirtyMat4Buffers.clear();
-}
-
-bool IERenderable::equals(const uint64_t meshId,
-                          const uint64_t materialId,
-                          const uint64_t shaderId)
-{
-    return (this->meshId == meshId &&
-            this->materialId == materialId &&
-            this->shaderId == shaderId);
-}
-
-void IERenderable::appendInstanceValues()
-{
-    QMapIterator<QString, IEVertexBuffer<QVector2D>*> it1(vec2BufferContainer->getBuffers());
-    while(it1.hasNext())
-    {
-        it1.next();
-        if(!it1.value()->getIsInstanced())
-            continue;
-        it1.value()->appendBufferValue(QVector2D());
-        dirtyVec2Buffers.insert(it1.key());
-    }
-
-    QMapIterator<QString, IEVertexBuffer<QVector3D>*> it2(vec3BufferContainer->getBuffers());
-    while(it2.hasNext())
-    {
-        it2.next();
-        if(!it2.value()->getIsInstanced())
-            continue;
-        it2.value()->appendBufferValue(QVector3D());
-        dirtyVec3Buffers.insert(it2.key());
-    }
-
-    QMapIterator<QString, IEVertexBuffer<QVector4D>*> it3(vec4BufferContainer->getBuffers());
-    while(it3.hasNext())
-    {
-        it3.next();
-        if(!it3.value()->getIsInstanced())
-            continue;
-        it3.value()->appendBufferValue(QVector4D());
-        dirtyVec4Buffers.insert(it3.key());
-    }
-
-    QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it4(mat4BufferContainer->getBuffers());
-    while(it4.hasNext())
-    {
-        it4.next();
-        if(!it4.value()->getIsInstanced())
-            continue;
-        it4.value()->appendBufferValue(QMatrix4x4());
-        dirtyMat4Buffers.insert(it4.key());
+        dirtyAllocations.clear();
     }
 }
 
-void IERenderable::purgeInstanceValues(const int index)
+void IERenderable::updateDirtyBuffers(const int index)
 {
-    QMapIterator<QString, IEVertexBuffer<QVector2D>*> it1(vec2BufferContainer->getBuffers());
-    while(it1.hasNext()) { it1.next(); removeVec2InstanceValue(it1.key(), index); }
+    if(index < 0 || index >= buffers.size())
+        throw std::exception("IERenderable::updateDirtyBuffers()::Index_out_of_bounds");
 
-    QMapIterator<QString, IEVertexBuffer<QVector3D>*> it2(vec3BufferContainer->getBuffers());
-    while(it2.hasNext()) { it2.next(); removeVec3InstanceValue(it2.key(), index); }
+    foreach(auto& set, dirtyAllocations)
+    {
 
-    QMapIterator<QString, IEVertexBuffer<QVector4D>*> it3(vec4BufferContainer->getBuffers());
-    while(it3.hasNext()) { it3.next(); removeVec4InstanceValue(it3.key(), index); }
+    }
+}
 
-    QMapIterator<QString, IEVertexBuffer<QMatrix4x4>*> it4(mat4BufferContainer->getBuffers());
-    while(it4.hasNext()) { it4.next(); removeMat4InstanceValue(it4.key(), index); }
+void IERenderable::cleanup()
+{
+    foreach (auto* i, VAOs)
+    {
+        i->destroy();
+        delete i;
+        i = nullptr;
+    }
+
+    foreach (auto& i, buffers)
+    {
+        foreach (auto* j, i)
+        {
+            j->destroy();
+            delete j;
+            j = nullptr;
+        }
+    }
+
+    VAOs.clear();
+    buffers.clear();
+    dirtyAllocations.clear();
+}
+
+bool IERenderable::doesBufferExist(const int index, const QString& name)
+{
+    return buffers[index].contains(name);
 }
 
 QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) const
@@ -480,13 +163,31 @@ QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) 
 
     const auto& renderable = static_cast<const IERenderable&>(obj);
 
-    out << renderable.renderMode
-        << renderable.drawMode << renderable.meshId
-        << renderable.materialId << renderable.shaderId
-        << *renderable.indexBuffer << *renderable.vec2BufferContainer
-        << *renderable.vec3BufferContainer << *renderable.vec4BufferContainer
-        << *renderable.mat4BufferContainer << renderable.shownCount
-        << renderable.hiddenCount << renderable.uniformData;
+    const int vaoSize = renderable.VAOs.size();
+    out << vaoSize;
+
+    const int bufferSize = renderable.buffers.size();
+    out << bufferSize;
+    foreach (auto& i, renderable.buffers)
+    {
+        out << i.size();
+
+        QHashIterator<QString, IEBufferObject*> it(i);
+        while(it.hasNext())
+        {
+            auto* buffer = it.value();
+
+            out << it.key() << buffer->getBufferType() << *buffer;
+
+            it.next();
+        }
+    }
+
+    out << renderable.dirtyAllocations
+        << renderable.primitiveMode
+        << renderable.materialId
+        << renderable.shaderId
+        << renderable.uData;
 
     return out;
 }
@@ -496,14 +197,51 @@ QDataStream& IERenderable::deserialize(QDataStream& in, Serializable& obj)
     IEFileResource::deserialize(in, obj);
 
     auto& renderable = static_cast<IERenderable&>(obj);
+    renderable.cleanup();
 
-    in >> renderable.renderMode
-       >> renderable.drawMode >> renderable.meshId
-       >> renderable.materialId >> renderable.shaderId
-       >> *renderable.indexBuffer >> *renderable.vec2BufferContainer
-       >> *renderable.vec3BufferContainer >> *renderable.vec4BufferContainer
-       >> *renderable.mat4BufferContainer >> renderable.shownCount
-       >> renderable.hiddenCount >> renderable.uniformData;
+    int vaoSize = 0;
+    in >> vaoSize;
+    for(int i = 0; i < vaoSize; i++)
+    {
+        renderable.VAOs.append(new QOpenGLVertexArrayObject(&renderable));
+    }
+
+    int bufferSize = 0;
+    in >> bufferSize;
+    for(int i = 0; i < bufferSize; i++)
+    {
+        QHash<QString, IEBufferObject*> result;
+
+        int tempSize = 0;
+        in >> tempSize;
+        for(int j = 0; j < tempSize; j++)
+        {
+            QString name = "";
+            IEBufferType type = IEBufferType::Unknown;
+            in >> name >> type;
+
+            IEBufferObject* buffer = nullptr;
+            switch(type)
+            {
+            case IEBufferType::Vec2: { buffer = new IEVertexBufferObject<QVector2D>(&renderable); break; }
+            case IEBufferType::Vec3: { buffer = new IEVertexBufferObject<QVector3D>(&renderable); break;  }
+            case IEBufferType::Vec4: { buffer = new IEVertexBufferObject<QVector4D>(&renderable); break;  }
+            case IEBufferType::Mat4: { buffer = new IEVertexBufferObject<QMatrix4x4>(&renderable); break;  }
+            }
+
+            in >> *buffer;
+
+            result.insert(name, buffer);
+        }
+
+        renderable.buffers.append(result);
+    }
+
+    in >> renderable.dirtyAllocations
+       >> renderable.primitiveMode
+       >> renderable.materialId
+       >> renderable.shaderId
+       >> renderable.uData;
 
     return in;
 }

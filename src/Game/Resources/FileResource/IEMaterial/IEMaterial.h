@@ -5,7 +5,7 @@
 #include <QVector4D>
 
 #include "IEFileResource.h"
-#include "IEUniform.h"
+#include "IEUniformData.h"
 #include "IEEnum.h"
 
 class IEShader;
@@ -15,7 +15,7 @@ class IEMaterial : public IEFileResource
 protected:
     QHash<IEColorType, QVector<QVector4D>> colors;
     QHash<IETextureType, QVector<uint64_t>> textureIDs;
-    IEUniform uData;
+    IEUniformData uData;
 
 public:
     IEMaterial(QObject* parent = nullptr);
@@ -38,9 +38,9 @@ public:
 
     const QHash<IEColorType, QVector<QVector4D>>& getColors() const;
     const QHash<IETextureType, QVector<uint64_t>>& getTexIDs() const;
-    IEUniform& getUniformData();
+    IEUniformData& getUniformData();
 
-    void setUniformData(const IEUniform& val);
+    void setUniformData(const IEUniformData& val);
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
     QDataStream& deserialize(QDataStream &in, Serializable &obj) override;

@@ -14,7 +14,7 @@
 
 class IEShader;
 
-class IEUniform : public Serializable
+class IEUniformData : public Serializable
 {
     QMap<QString, int> intData;
     QMap<QString, float> floatData;
@@ -27,9 +27,9 @@ class IEUniform : public Serializable
     QMap<QString, QColor> colData;
 
 public:
-    IEUniform();
-    IEUniform(const IEUniform& other);
-    ~IEUniform();
+    IEUniformData();
+    IEUniformData(const IEUniformData& other);
+    ~IEUniformData();
 
     void bind(IEShader& shader) const;
 

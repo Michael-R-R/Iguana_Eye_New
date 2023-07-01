@@ -107,32 +107,7 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
 
     if(!rManager->doesExist(rID))
     {
-        auto rType = (mesh->getIndices().size() > 0) ? IERenderable::RenderMode::I_Index : IERenderable::RenderMode::I_Vertex;
-
-        // create new renderable
-        auto* renderable = new IERenderable(rPath, meshId, materialId, shaderId, rManager);
-        renderable->setDrawType(GL_TRIANGLES);
-        renderable->setRenderMode(rType);
-        renderable->addIndexBuffer(new IEIndexBuffer(mesh->getIndices(), renderable));
-        renderable->addVec3Buffer("aPos", new IEVertexBuffer<QVector3D>(mesh->getPosVertices(), 12, 3, 0, 0, 0, renderable));
-        renderable->addMat4Buffer("aModel", new IEVertexBuffer<QMatrix4x4>(QVector<QMatrix4x4>(), 68, 4, 68, 4, 16, renderable));
-
-        auto shader = sManager->value<IEShader>(shaderId);
-        renderable->build(*shader);
-
-        if(!rManager->add(rID, renderable))
-        {
-            delete renderable;
-            return;
-        }
-
-        rSystem->setResourceId(rIndex, rID);
-        rSystem->addShown(rIndex);
-    }
-    else
-    {
-        rSystem->setResourceId(rIndex, rID);
-        rSystem->addShown(rIndex);
+        // TODO implement
     }
 }
 

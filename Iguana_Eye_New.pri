@@ -132,13 +132,6 @@ INCLUDEPATH += $$PWD/src/Game/GameState \
     $$PWD/src/Game/GameState/IEGameStateType \
     $$PWD/src/Game/GameState/IEGameStopState \
 
-INCLUDEPATH += $$PWD/src/Game/Graphics \
-    $$PWD/src/Game/Graphics/IEBuffer \
-    $$PWD/src/Game/Graphics/IEVertexBufferContainer \
-    $$PWD/src/Game/Graphics/IEIndexBuffer \
-    $$PWD/src/Game/Graphics/IEUniform \
-    $$PWD/src/Game/Graphics/IEVertexBuffer \
-
 INCLUDEPATH += $$PWD/src/Game/Physics \
     $$PWD/src/Game/Physics/IESimulationCallback \
 
@@ -232,6 +225,16 @@ INCLUDEPATH += $$PWD/src/Game/Systems/Managers \
     $$PWD/src/Game/Systems/Managers/IERenderableManager \
     $$PWD/src/Game/Systems/Managers/IEResourceManager \
     $$PWD/src/Game/Systems/Managers/IEShaderManager \
+
+INCLUDEPATH += $$PWD/src/OpenGL \
+
+INCLUDEPATH += $$PWD/src/OpenGL/Buffer \
+    $$PWD/src/OpenGL/Buffer/IEBufferObject \
+    $$PWD/src/OpenGL/Buffer/IEVertexBufferObject \
+    $$PWD/src/OpenGL/Buffer/IEIndexBufferObject \
+
+INCLUDEPATH += $$PWD/src/OpenGL/IEUniformData \
+    $$PWD/src/OpenGL/Uniform/IEUniformData \
 
 INCLUDEPATH += $$PWD/src/Serialize \
     $$PWD/src/Serialize/Serializable \
