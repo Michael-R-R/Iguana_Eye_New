@@ -1,18 +1,16 @@
 #include "EGridRenderable.h"
 #include "EGridMesh.h"
 #include "EGridShader.h"
-#include "IEVertexBuffer.h"
 #include "IECamera.h"
-#include <QVector3D>
-#include <QOpenGLVertexArrayObject>
-#include <QOpenGLExtraFunctions>
+#include "IEBufferObject.h"
+#include "IEBufferObjectFactory.h"
 
 EGridRenderable::EGridRenderable(QObject* parent) :
     IEObject(parent),
     gridMesh(new EGridMesh(this)),
     gridShader(new EGridShader(this)),
     vao(new QOpenGLVertexArrayObject(this)),
-    posBuffer(new IEVertexBuffer<QVector3D>(gridMesh->getPosVertices(), 12, 3, 0, 0, 0, this))
+    posBuffer(IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, this))
 {
     setup();
 }
@@ -24,6 +22,8 @@ EGridRenderable::~EGridRenderable()
 
 void EGridRenderable::setup()
 {
+    posBuffer->setValues(gridMesh->getPosVertices());
+
     gridShader->build();
     vao->create();
 

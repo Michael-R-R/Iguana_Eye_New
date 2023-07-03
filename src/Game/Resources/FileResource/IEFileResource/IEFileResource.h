@@ -11,6 +11,11 @@ public:
     IEFileResource(const IEFileResource&) = delete;
     virtual ~IEFileResource();
 
+    bool operator==(const IEFileResource& other) { return IEResource::operator==(other); }
+    bool operator!=(const IEFileResource& other) { return IEResource::operator!=(other); }
+    bool operator<(const IEFileResource& other) { return IEResource::operator<(other); }
+    bool operator>(const IEFileResource& other) { return IEResource::operator>(other); }
+
     uint64_t updateId(const QString& path) override;
 
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;

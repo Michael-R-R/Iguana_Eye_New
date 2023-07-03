@@ -11,6 +11,10 @@ INCLUDEPATH += $$PWD/src/Application \
 INCLUDEPATH += $$PWD/src/Common \
     $$PWD/src/Common/IEObject \
 
+INCLUDEPATH += $$PWD/src/Common/Factory \
+    $$PWD/src/Common/Factory/IEBufferObjectFactory \
+    $$PWD/src/Common/Factory/IERenderableFactory \
+
 INCLUDEPATH += $$PWD/src/Editor \
 
 INCLUDEPATH += $$PWD/src/Editor/Actions \
@@ -155,9 +159,12 @@ INCLUDEPATH += $$PWD/src/Game/Resources/FileResource \
     $$PWD/src/Game/Resources/FileResource/IEFileResource \
     $$PWD/src/Game/Resources/FileResource/IEMaterial \
     $$PWD/src/Game/Resources/FileResource/IEMesh \
-    $$PWD/src/Game/Resources/FileResource/IERenderable \
     $$PWD/src/Game/Resources/FileResource/IEShader \
     $$PWD/src/Game/Resources/FileResource/IEScript \
+
+INCLUDEPATH += $$PWD/src/Game/Resources/FileResource/IERenderable \
+    $$PWD/src/Game/Resources/FileResource/IERenderable/IEInstRenderable \
+    $$PWD/src/Game/Resources/FileResource/IERenderable/IEInstIndexRenderable \
 
 INCLUDEPATH += $$PWD/src/Game/Resources/SceneResource \
     $$PWD/src/Game/Resources/SceneResource/IECamera \

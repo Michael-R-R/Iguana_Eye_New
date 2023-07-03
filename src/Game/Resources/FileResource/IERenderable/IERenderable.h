@@ -5,22 +5,24 @@
 #include <QVector>
 #include <QHash>
 #include <QSet>
+#include <any>
 #include <gl/GL.h>
 
 #include "IEFileResource.h"
 #include "IEUniformData.h"
+#include "IEEnum.h"
 
 class IEShader;
 class IEBufferObject;
 
 class IERenderable : public IEFileResource
 {
-
 protected:
     QVector<QOpenGLVertexArrayObject*> VAOs;
     QVector<QHash<QString, IEBufferObject*>> buffers;
     QVector<QSet<QString>> dirtyAllocations;
 
+    IERenderableType type;
     GLenum primitiveMode;
     uint64_t materialId;
     uint64_t shaderId;
@@ -28,39 +30,46 @@ protected:
     IEUniformData uData;
 
 public:
-    IERenderable(QObject* parent = nullptr);
-    IERenderable(const QString& path,
+    IERenderable(IERenderableType ieType, QObject* parent = nullptr);
+    IERenderable(IERenderableType ieType,
+                 const QString& path,
                  const uint64_t mID,
                  const uint64_t sID,
                  QObject* parent = nullptr);
     IERenderable(const IERenderable&) = delete;
     virtual ~IERenderable();
 
-    bool operator==(const IERenderable& other) { return IEResource::operator==(other); }
-    bool operator!=(const IERenderable& other) { return IEResource::operator!=(other); }
-    bool operator<(const IERenderable& other) { return IEResource::operator<(other); }
-    bool operator>(const IERenderable& other) { return IEResource::operator>(other); }
+    bool operator==(const IERenderable& other) { return IEFileResource::operator==(other); }
+    bool operator!=(const IERenderable& other) { return IEFileResource::operator!=(other); }
+    bool operator<(const IERenderable& other) { return IEFileResource::operator<(other); }
+    bool operator>(const IERenderable& other) { return IEFileResource::operator>(other); }
 
 protected:
-    virtual void handleDraw(const int index) = 0;
     virtual void handleBuild(const int index) = 0;
     virtual void handleBuildRelease(const int index) = 0;
+    virtual void handleDraw(const int index, const QVector<std::any>& args) = 0;
 
 public:
-    virtual void draw(const int index);
+    virtual void draw(const int index, const QVector<std::any>& args = QVector<std::any>{});
 
     void bind(const int index);
+    void release(const int index);
     void bindData(IEShader& shader);
 
     int addVAO();
     void addBuffer(const int index, const QString& name, IEBufferObject* buffer);
     void removeBuffer(const QString& name);
+    void addBufferValue(const QString& name, const std::any& val, int index = 0);
+    void removeBufferValue(const QString& name, const int bufferIndex, int index = 0);
+    void setBufferValue(const QString& name, const int bufferIndex, const std::any& val, int index = 0);
     void build(IEShader& shader);
     void updateDirtyBuffers(const int index);
     void cleanup();
 
     bool doesBufferExist(const int index, const QString& name);
+    IEBufferObject* getBuffer(const int index, const QString& name);
 
+    IERenderableType getRenderableType() const { return type; }
     GLenum getPrimitiveMode() const { return primitiveMode; }
     uint64_t getMaterialId() const { return materialId; }
     uint64_t getShaderId() const { return shaderId; }

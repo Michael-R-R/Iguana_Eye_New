@@ -16,32 +16,23 @@ protected:
     int stride;
     int offset;
     int divisor;
-    bool isInstance;
 
 public:
-    IEVertexBufferObject(QObject* parent = nullptr) :
-        IEBufferObject(QOpenGLBuffer::VertexBuffer, parent),
-        tuple(0), stride(0), offset(0), divisor(0),
-        isInstance(false)
+    IEVertexBufferObject(const IEBufferType ieType, QObject* parent = nullptr) :
+        IEBufferObject(QOpenGLBuffer::VertexBuffer, ieType, false, parent),
+        tuple(0), stride(0), offset(0), divisor(0)
     {
 
     }
 
-    IEVertexBufferObject(const int t, const int s,
+    IEVertexBufferObject(const IEBufferType ieType,
+                         const int t, const int s,
                          const int o, const int d,
                          QObject* parent = nullptr) :
-        IEBufferObject(QOpenGLBuffer::VertexBuffer, parent),
-        tuple(t), stride(s), offset(o), divisor(d),
-        isInstance((d > 0))
+        IEBufferObject(QOpenGLBuffer::VertexBuffer, ieType, (d > 0), parent),
+        tuple(t), stride(s), offset(o), divisor(d)
     {
-        switch(typeid(T).hash_code())
-        {
-        case typeid(QVector2D).hash_code(): { bufferType = IEBufferType::Vec2; break; }
-        case typeid(QVector3D).hash_code(): { bufferType = IEBufferType::Vec3; break; }
-        case typeid(QVector4D).hash_code(): { bufferType = IEBufferType::Vec4; break; }
-        case typeid(QMatrix4x4).hash_code(): { bufferType = IEBufferType::Mat4; break; }
-        default: { bufferType = IEBufferType::Unknown; break; }
-        }
+
     }
 
     virtual ~IEVertexBufferObject()
@@ -51,14 +42,19 @@ public:
 
     IEVertexBufferObject(const IEVertexBufferObject&) = delete;
 
-    int appendValue(const T& val)
+    int appendValue(const std::any& val) override
     {
         const int index = values.size();
-        values.append(val);
+
+        if(val.has_value())
+            values.append(std::any_cast<T>(val));
+        else
+            values.append(T{});
+
         return index;
     }
 
-    bool removeValue(const int index)
+    bool removeValue(const int index) override
     {
         if(index < 0 || index >= values.size())
             return false;
@@ -68,22 +64,6 @@ public:
         values.removeLast();
 
         return true;
-    }
-
-    T* getValue(const int index)
-    {
-        if(index < 0 || index >= values.size())
-            return nullptr;
-
-        return &values[index];
-    }
-
-    void setValue(const int index, const T& val)
-    {
-        if(index < 0 || index >= values.size())
-            return;
-
-        values[index] = val;
     }
 
     void handleAllocate(const bool doRelease = false) override
@@ -120,7 +100,7 @@ public:
         this->handleAllocate();
 
         auto* gl = QOpenGLContext::currentContext()->functions();
-        if(!isInstance)
+        if(!isInstanced)
         {
             gl->glVertexAttribPointer(loc, tuple, GL_FLOAT, GL_FALSE, stride, (void*)(size_t)offset);
             gl->glEnableVertexAttribArray(loc);
@@ -142,6 +122,32 @@ public:
         return values.size();
     }
 
+    std::any getValue(const int index) override
+    {
+        if(index < 0 || index >= values.size())
+            return std::any{};
+
+        return values[index];
+    }
+
+    std::any getValues() const override
+    {
+        return values;
+    }
+
+    void setValue(const int index, const std::any& val)
+    {
+        if(index < 0 || index >= values.size())
+            return;
+
+        values[index] = (val.has_value()) ? std::any_cast<T>(val) : T{};
+    }
+
+    void setValues(const std::any& val) override
+    {
+        values = (val.has_value()) ? std::any_cast<QVector<T>>(val) : QVector<T>{};
+    }
+
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override
     {
         IEBufferObject::serialize(out, obj);
@@ -150,8 +156,7 @@ public:
 
         out << buffer.values
             << buffer.tuple << buffer.stride
-            << buffer.offset << buffer.divisor
-            << buffer.isInstance;
+            << buffer.offset << buffer.divisor;
 
         return out;
     }
@@ -164,8 +169,7 @@ public:
 
         in >> buffer.values
            >> buffer.tuple >> buffer.stride
-           >> buffer.offset >> buffer.divisor
-           >> buffer.isInstance;
+           >> buffer.offset >> buffer.divisor;
 
         return in;
     }

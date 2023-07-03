@@ -18,3 +18,8 @@ enum class IEBufferType
 {
     Index, Vec2, Vec3, Vec4, Mat4, Unknown
 };
+
+enum class IERenderableType
+{
+    Index, I_Index, Vertex, I_Vertex, Unknown
+};

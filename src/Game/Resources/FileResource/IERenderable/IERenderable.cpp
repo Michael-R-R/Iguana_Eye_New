@@ -1,13 +1,13 @@
 #include "IERenderable.h"
-#include "IEBufferObject.h"
-#include "IEVertexBufferObject.h"
 #include "IEShader.h"
+#include "IEBufferObject.h"
+#include "IEBufferObjectFactory.h"
 #include <stdexcept>
 
-IERenderable::IERenderable(QObject* parent) :
+IERenderable::IERenderable(IERenderableType ieType, QObject* parent) :
     IEFileResource(parent),
     VAOs(), buffers(), dirtyAllocations(),
-    primitiveMode(GL_TRIANGLES),
+    type(ieType), primitiveMode(GL_TRIANGLES),
     materialId(0),
     shaderId(0),
     uData()
@@ -15,13 +15,14 @@ IERenderable::IERenderable(QObject* parent) :
 
 }
 
-IERenderable::IERenderable(const QString& path,
+IERenderable::IERenderable(IERenderableType ieType,
+                           const QString& path,
                            const uint64_t mID,
                            const uint64_t sID,
                            QObject* parent) :
     IEFileResource(path, parent),
     VAOs(), buffers(), dirtyAllocations(),
-    primitiveMode(GL_TRIANGLES),
+    type(ieType), primitiveMode(GL_TRIANGLES),
     materialId(mID),
     shaderId(sID),
     uData()
@@ -34,11 +35,11 @@ IERenderable::~IERenderable()
     cleanup();
 }
 
-void IERenderable::draw(const int index)
+void IERenderable::draw(const int index, const QVector<std::any>& args)
 {
     bind(index);
     updateDirtyBuffers(index);
-    handleDraw(index);
+    handleDraw(index, args);
 }
 
 void IERenderable::bind(const int index)
@@ -47,6 +48,14 @@ void IERenderable::bind(const int index)
         throw std::exception("IERenderable::bind()::Index_out_of_bounds");
 
     VAOs[index]->bind();
+}
+
+void IERenderable::release(const int index)
+{
+    if(index < 0 || index >= VAOs.size())
+        throw std::exception("IERenderable::release()::Index_out_of_bounds");
+
+    VAOs[index]->release();
 }
 
 void IERenderable::bindData(IEShader& shader)
@@ -81,9 +90,55 @@ void IERenderable::removeBuffer(const QString& name)
 {
     for(int i = 0; i < VAOs.size(); i++)
     {
-        if(buffers[i].remove(name))
-            dirtyAllocations[i].insert(name);
+        if(!doesBufferExist(i, name))
+            continue;
+
+        auto* buffer = buffers[i][name];
+        buffers[i].remove(name);
+        delete buffer;
+
+        dirtyAllocations[i].insert(name);
     }
+}
+
+void IERenderable::addBufferValue(const QString& name, const std::any& val, int index)
+{
+    if(index < 0 || index >= buffers.size())
+        return;
+
+    if(doesBufferExist(index, name))
+    {
+        buffers[index][name]->appendValue(val);
+    }
+
+    addBufferValue(name, val, index++);
+}
+
+void IERenderable::removeBufferValue(const QString& name, const int bufferIndex, int index)
+{
+    if(index < 0 || index >= buffers.size())
+        return;
+
+    if(doesBufferExist(index, name))
+    {
+        buffers[index][name]->removeValue(bufferIndex);
+    }
+
+    removeBufferValue(name, bufferIndex, index++);
+}
+
+void IERenderable::setBufferValue(const QString& name, const int bufferIndex, const std::any& val, int index)
+{
+    if(index < 0 || index >= buffers.size())
+        return;
+
+    if(doesBufferExist(index, name))
+    {
+        buffers[index][name]->setValue(bufferIndex, val);
+        buffers[index][name]->handleSuballocate(bufferIndex);
+    }
+
+    setBufferValue(name, bufferIndex, val, index++);
 }
 
 void IERenderable::build(IEShader& shader)
@@ -103,17 +158,19 @@ void IERenderable::build(IEShader& shader)
         QHashIterator<QString, IEBufferObject*> it(buffers[i]);
         while(it.hasNext())
         {
+            it.next();
+
             it.value()->build(shader.attributeLocation(it.key()));
         }
 
         vao->release();
         handleBuildRelease(i);
-        foreach (auto* j, buffers[i])
+        foreach(auto* j, buffers[i])
         {
             j->release();
         }
 
-        dirtyAllocations.clear();
+        dirtyAllocations[i].clear();
     }
 }
 
@@ -122,10 +179,15 @@ void IERenderable::updateDirtyBuffers(const int index)
     if(index < 0 || index >= buffers.size())
         throw std::exception("IERenderable::updateDirtyBuffers()::Index_out_of_bounds");
 
-    foreach(auto& set, dirtyAllocations)
+    foreach(auto& name, dirtyAllocations[index])
     {
+        if(!doesBufferExist(index, name))
+            continue;
 
+        buffers[index][name]->handleAllocate(true);
     }
+
+    dirtyAllocations[index].clear();
 }
 
 void IERenderable::cleanup()
@@ -157,6 +219,14 @@ bool IERenderable::doesBufferExist(const int index, const QString& name)
     return buffers[index].contains(name);
 }
 
+IEBufferObject* IERenderable::getBuffer(const int index, const QString& name)
+{
+    if(!doesBufferExist(index, name))
+        return nullptr;
+
+    return buffers[index][name];
+}
+
 QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) const
 {
     IEFileResource::serialize(out, obj);
@@ -175,15 +245,17 @@ QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) 
         QHashIterator<QString, IEBufferObject*> it(i);
         while(it.hasNext())
         {
+            it.next();
+
+            QString name = it.key();
             auto* buffer = it.value();
 
-            out << it.key() << buffer->getBufferType() << *buffer;
-
-            it.next();
+            out << name << buffer->getBufferType() << *buffer;
         }
     }
 
     out << renderable.dirtyAllocations
+        << renderable.type
         << renderable.primitiveMode
         << renderable.materialId
         << renderable.shaderId
@@ -220,14 +292,9 @@ QDataStream& IERenderable::deserialize(QDataStream& in, Serializable& obj)
             IEBufferType type = IEBufferType::Unknown;
             in >> name >> type;
 
-            IEBufferObject* buffer = nullptr;
-            switch(type)
-            {
-            case IEBufferType::Vec2: { buffer = new IEVertexBufferObject<QVector2D>(&renderable); break; }
-            case IEBufferType::Vec3: { buffer = new IEVertexBufferObject<QVector3D>(&renderable); break;  }
-            case IEBufferType::Vec4: { buffer = new IEVertexBufferObject<QVector4D>(&renderable); break;  }
-            case IEBufferType::Mat4: { buffer = new IEVertexBufferObject<QMatrix4x4>(&renderable); break;  }
-            }
+            IEBufferObject* buffer = IEBufferObjectFactory::make(type, &renderable);
+            if(!buffer)
+                continue;
 
             in >> *buffer;
 
@@ -238,6 +305,7 @@ QDataStream& IERenderable::deserialize(QDataStream& in, Serializable& obj)
     }
 
     in >> renderable.dirtyAllocations
+       >> renderable.type
        >> renderable.primitiveMode
        >> renderable.materialId
        >> renderable.shaderId

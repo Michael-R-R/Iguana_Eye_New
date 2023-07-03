@@ -1,7 +1,7 @@
 #include "IEIndexBufferObject.h"
 
 IEIndexBufferObject::IEIndexBufferObject(QObject* parent) :
-    IEBufferObject(QOpenGLBuffer::IndexBuffer, parent)
+    IEBufferObject(QOpenGLBuffer::IndexBuffer, IEBufferType::Index, false, parent)
 {
 
 }
@@ -11,10 +11,15 @@ IEIndexBufferObject::~IEIndexBufferObject()
 
 }
 
-int IEIndexBufferObject::appendValue(const unsigned val)
+int IEIndexBufferObject::appendValue(const std::any& val)
 {
     const int index = values.size();
-    values.append(val);
+
+    if(val.has_value())
+        values.append(std::any_cast<unsigned>(val));
+    else
+        values.append(0);
+
     return index;
 }
 
@@ -28,22 +33,6 @@ bool IEIndexBufferObject::removeValue(const int index)
     values.removeLast();
 
     return true;
-}
-
-unsigned IEIndexBufferObject::getValue(const int index)
-{
-    if(index < 0 || index >= values.size())
-        return 0;
-
-    return values[index];
-}
-
-void IEIndexBufferObject::setValue(const int index, const unsigned val)
-{
-    if(index < 0 || index >= values.size())
-        return;
-
-    values[index] = val;
 }
 
 void IEIndexBufferObject::handleAllocate(const bool doRelease)
@@ -83,6 +72,32 @@ void IEIndexBufferObject::build(const int)
 int IEIndexBufferObject::size() const
 {
     return values.size();
+}
+
+std::any IEIndexBufferObject::getValue(const int index)
+{
+    if(index < 0 || index >= values.size())
+        return std::any();
+
+    return values[index];
+}
+
+std::any IEIndexBufferObject::getValues() const
+{
+    return values;
+}
+
+void IEIndexBufferObject::setValue(const int index, const std::any& val)
+{
+    if(index < 0 || index >= values.size())
+        return;
+
+    values[index] = (val.has_value()) ? std::any_cast<unsigned>(val) : 0;
+}
+
+void IEIndexBufferObject::setValues(const std::any& val)
+{
+    values = (val.has_value()) ? std::any_cast<QVector<unsigned>>(val) : QVector<unsigned>{};
 }
 
 QDataStream& IEIndexBufferObject::serialize(QDataStream& out, const Serializable& obj) const

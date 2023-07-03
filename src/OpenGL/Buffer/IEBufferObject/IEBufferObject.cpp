@@ -1,9 +1,11 @@
 #include "IEBufferObject.h"
 
-IEBufferObject::IEBufferObject(QOpenGLBuffer::Type type, QObject* parent) :
-    QOpenGLBuffer(type), IEObject(parent),
-    bufferType(IEBufferType::Unknown),
-    usage(QOpenGLBuffer::StaticDraw)
+IEBufferObject::IEBufferObject(QOpenGLBuffer::Type glType, IEBufferType ieType,
+                               bool instanced, QObject* parent) :
+    QOpenGLBuffer(glType), IEObject(parent),
+    bufferType(ieType),
+    usage(QOpenGLBuffer::StaticDraw),
+    isInstanced(instanced)
 {
     this->setUsagePattern(usage);
 }
@@ -18,7 +20,7 @@ QDataStream& IEBufferObject::serialize(QDataStream& out, const Serializable& obj
 {
     const auto& buffer = static_cast<const IEBufferObject&>(obj);
 
-    out << buffer.bufferType << buffer.usage;
+    out << buffer.bufferType << buffer.usage << buffer.isInstanced;
 
     return out;
 }
@@ -27,7 +29,7 @@ QDataStream& IEBufferObject::deserialize(QDataStream& in, Serializable& obj)
 {
     auto& buffer = static_cast<IEBufferObject&>(obj);
 
-    in >> buffer.bufferType >> buffer.usage;
+    in >> buffer.bufferType >> buffer.usage >> buffer.isInstanced;
 
     return in;
 }

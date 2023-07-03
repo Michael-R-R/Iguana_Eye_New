@@ -1,23 +1,22 @@
 #pragma once
 
+#include <QOpenGLVertexArrayObject>
+#include <QOpenGLExtraFunctions>
+#include <QVector3D>
+
 #include "IEObject.h"
 
 class EGridMesh;
 class EGridShader;
-class QVector3D;
-class QOpenGLVertexArrayObject;
-class QOpenGLExtraFunctions;
+class IEBufferObject;
 class IECamera;
-
-template<class T>
-class IEVertexBuffer;
 
 class EGridRenderable : public IEObject
 {
     EGridMesh* gridMesh;
     EGridShader* gridShader;
     QOpenGLVertexArrayObject* vao;
-    IEVertexBuffer<QVector3D>* posBuffer;
+    IEBufferObject* posBuffer;
 
 public:
     EGridRenderable(QObject* parent = nullptr);
