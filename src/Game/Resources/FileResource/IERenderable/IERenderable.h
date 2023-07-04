@@ -27,8 +27,6 @@ protected:
     uint64_t materialId;
     uint64_t shaderId;
 
-    IEUniformData uData;
-
 public:
     IERenderable(IERenderableType ieType, QObject* parent = nullptr);
     IERenderable(IERenderableType ieType,
@@ -54,7 +52,6 @@ public:
 
     void bind(const int index);
     void release(const int index);
-    void bindData(IEShader& shader);
 
     int addVAO();
     void addBuffer(const int index, const QString& name, IEBufferObject* buffer);
@@ -62,6 +59,7 @@ public:
     void addBufferValue(const QString& name, const std::any& val, int index = 0);
     void removeBufferValue(const QString& name, const int bufferIndex, int index = 0);
     void setBufferValue(const QString& name, const int bufferIndex, const std::any& val, int index = 0);
+    void setBufferValues(const QString& name, const std::any& val, int index = 0);
     void build(IEShader& shader);
     void updateDirtyBuffers(const int index);
     void cleanup();
@@ -73,12 +71,11 @@ public:
     GLenum getPrimitiveMode() const { return primitiveMode; }
     uint64_t getMaterialId() const { return materialId; }
     uint64_t getShaderId() const { return shaderId; }
-    const IEUniformData& getUniformData() const { return uData; }
+    int getVaoSize() const { return VAOs.size(); }
 
     void setPrimitiveMode(const GLenum val) { primitiveMode = val; }
     void setMaterialId(const uint64_t val) { materialId = val; }
     void setShaderId(const uint64_t val) { shaderId = val; }
-    void setUniformData(const IEUniformData& val) { uData = val; }
 
 public:
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

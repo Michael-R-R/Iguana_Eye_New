@@ -5,17 +5,17 @@
 #include <QVector4D>
 
 #include "IEFileResource.h"
-#include "IEUniformData.h"
 #include "IEEnum.h"
-
-class IEShader;
 
 class IEMaterial : public IEFileResource
 {
 protected:
-    QHash<IEColorType, QVector<QVector4D>> colors;
-    QHash<IETextureType, QVector<uint64_t>> textureIDs;
-    IEUniformData uData;
+    QHash<IEColorType, QVector4D> colors;
+    QHash<IETextureType, uint64_t> textureIDs;
+
+    IEMaterial* parent;
+    QVector<IEMaterial*> children;
+    QVector<IEMaterial*> materials;
 
 public:
     IEMaterial(QObject* parent = nullptr);
@@ -23,24 +23,24 @@ public:
     IEMaterial(const IEMaterial&) = delete;
     virtual ~IEMaterial();
 
-    bool operator==(const IEMaterial& other) { return IEResource::operator==(other); }
-    bool operator!=(const IEMaterial& other) { return IEResource::operator!=(other); }
-    bool operator<(const IEMaterial& other) { return IEResource::operator<(other); }
-    bool operator>(const IEMaterial& other) { return IEResource::operator>(other); }
+    bool operator==(const IEMaterial& other) { return IEFileResource::operator==(other); }
+    bool operator!=(const IEMaterial& other) { return IEFileResource::operator!=(other); }
+    bool operator<(const IEMaterial& other) { return IEFileResource::operator<(other); }
+    bool operator>(const IEMaterial& other) { return IEFileResource::operator>(other); }
 
-    void appendColor(IEColorType type, const QVector4D& val);
-    void removeColor(IEColorType type, const int index);
-    void setColor(IEColorType type, const int index, const QVector4D& val);
-    void appendTextureID(IETextureType type, const uint64_t val);
-    void removeTextureID(IETextureType type, const int index);
-    void setTextureID(IETextureType type, const int index, const uint64_t val);
-    void bindData(IEShader& shader) const;
+    void setColor(IEColorType type, const QVector4D& val);
+    void removeColor(IEColorType type);
 
-    const QHash<IEColorType, QVector<QVector4D>>& getColors() const;
-    const QHash<IETextureType, QVector<uint64_t>>& getTexIDs() const;
-    IEUniformData& getUniformData();
+    void setTextureID(IETextureType type, const uint64_t val);
+    void removeTextureID(IETextureType type);
 
-    void setUniformData(const IEUniformData& val);
+    const QHash<IEColorType, QVector4D>& getColors() const { return colors; }
+    const QHash<IETextureType, uint64_t>& getTexIDs() const { return textureIDs; }
+    IEMaterial* getParent() { return parent; }
+    QVector<IEMaterial*>& getChildren() { return children; }
+    QVector<IEMaterial*>& getMaterials() { return materials; }
+
+    void setParent(IEMaterial* val) { parent = val; }
 
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
     QDataStream& deserialize(QDataStream &in, Serializable &obj) override;

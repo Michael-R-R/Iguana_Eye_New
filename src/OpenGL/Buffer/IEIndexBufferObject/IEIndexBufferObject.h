@@ -10,6 +10,7 @@ class IEIndexBufferObject : public IEBufferObject
 
 public:
     IEIndexBufferObject(QObject* parent = nullptr);
+    IEIndexBufferObject(const QVector<unsigned>& vals, QObject* parent = nullptr);
     virtual ~IEIndexBufferObject();
 
     int appendValue(const std::any& val) override;

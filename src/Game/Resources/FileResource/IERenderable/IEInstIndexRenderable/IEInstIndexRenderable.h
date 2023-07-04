@@ -12,8 +12,7 @@ class IEInstIndexRenderable : public IEInstRenderable
 
 public:
     IEInstIndexRenderable(QObject* parent = nullptr);
-    IEInstIndexRenderable(IERenderableType ieType,
-                          const QString& path,
+    IEInstIndexRenderable(const QString& path,
                           const uint64_t mID,
                           const uint64_t sID,
                           QObject* parent = nullptr);
@@ -25,6 +24,8 @@ protected:
     void handleDraw(const int index, const QVector<std::any>& args) override;
 
 public:
+    void addIBO(IEIndexBufferObject* ibo);
+
     QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
 };

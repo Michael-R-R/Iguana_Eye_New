@@ -9,8 +9,7 @@ IERenderable::IERenderable(IERenderableType ieType, QObject* parent) :
     VAOs(), buffers(), dirtyAllocations(),
     type(ieType), primitiveMode(GL_TRIANGLES),
     materialId(0),
-    shaderId(0),
-    uData()
+    shaderId(0)
 {
 
 }
@@ -24,8 +23,7 @@ IERenderable::IERenderable(IERenderableType ieType,
     VAOs(), buffers(), dirtyAllocations(),
     type(ieType), primitiveMode(GL_TRIANGLES),
     materialId(mID),
-    shaderId(sID),
-    uData()
+    shaderId(sID)
 {
 
 }
@@ -56,11 +54,6 @@ void IERenderable::release(const int index)
         throw std::exception("IERenderable::release()::Index_out_of_bounds");
 
     VAOs[index]->release();
-}
-
-void IERenderable::bindData(IEShader& shader)
-{
-    uData.bind(shader);
 }
 
 int IERenderable::addVAO()
@@ -111,7 +104,7 @@ void IERenderable::addBufferValue(const QString& name, const std::any& val, int 
         buffers[index][name]->appendValue(val);
     }
 
-    addBufferValue(name, val, index++);
+    addBufferValue(name, val, ++index);
 }
 
 void IERenderable::removeBufferValue(const QString& name, const int bufferIndex, int index)
@@ -124,7 +117,7 @@ void IERenderable::removeBufferValue(const QString& name, const int bufferIndex,
         buffers[index][name]->removeValue(bufferIndex);
     }
 
-    removeBufferValue(name, bufferIndex, index++);
+    removeBufferValue(name, bufferIndex, ++index);
 }
 
 void IERenderable::setBufferValue(const QString& name, const int bufferIndex, const std::any& val, int index)
@@ -138,7 +131,21 @@ void IERenderable::setBufferValue(const QString& name, const int bufferIndex, co
         buffers[index][name]->handleSuballocate(bufferIndex);
     }
 
-    setBufferValue(name, bufferIndex, val, index++);
+    setBufferValue(name, bufferIndex, val, ++index);
+}
+
+void IERenderable::setBufferValues(const QString& name, const std::any& val, int index)
+{
+    if(index < 0 || index >= buffers.size())
+        return;
+
+    if(doesBufferExist(index, name))
+    {
+        buffers[index][name]->setValues(val);
+        dirtyAllocations[index].insert(name);
+    }
+
+    setBufferValues(name, val, ++index);
 }
 
 void IERenderable::build(IEShader& shader)
@@ -258,8 +265,7 @@ QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) 
         << renderable.type
         << renderable.primitiveMode
         << renderable.materialId
-        << renderable.shaderId
-        << renderable.uData;
+        << renderable.shaderId;
 
     return out;
 }
@@ -308,8 +314,7 @@ QDataStream& IERenderable::deserialize(QDataStream& in, Serializable& obj)
        >> renderable.type
        >> renderable.primitiveMode
        >> renderable.materialId
-       >> renderable.shaderId
-       >> renderable.uData;
+       >> renderable.shaderId;
 
     return in;
 }

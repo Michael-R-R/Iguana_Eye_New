@@ -246,6 +246,9 @@ INCLUDEPATH += $$PWD/src/OpenGL/IEUniformData \
 INCLUDEPATH += $$PWD/src/Serialize \
     $$PWD/src/Serialize/Serializable \
 
+INCLUDEPATH += $$PWD/src/Test \
+    $$PWD/src/Test/IETInstIndexRenderable \
+
 INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEFile \
     $$PWD/src/Utility/IEHash \

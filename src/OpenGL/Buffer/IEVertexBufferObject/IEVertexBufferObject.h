@@ -20,7 +20,7 @@ protected:
 public:
     IEVertexBufferObject(const IEBufferType ieType, QObject* parent = nullptr) :
         IEBufferObject(QOpenGLBuffer::VertexBuffer, ieType, false, parent),
-        tuple(0), stride(0), offset(0), divisor(0)
+        values(), tuple(0), stride(0), offset(0), divisor(0)
     {
 
     }
@@ -30,7 +30,18 @@ public:
                          const int o, const int d,
                          QObject* parent = nullptr) :
         IEBufferObject(QOpenGLBuffer::VertexBuffer, ieType, (d > 0), parent),
-        tuple(t), stride(s), offset(o), divisor(d)
+        values(), tuple(t), stride(s), offset(o), divisor(d)
+    {
+
+    }
+
+    IEVertexBufferObject(const IEBufferType ieType,
+                         const QVector<T>& vals,
+                         const int t, const int s,
+                         const int o, const int d,
+                         QObject* parent = nullptr) :
+        IEBufferObject(QOpenGLBuffer::VertexBuffer, ieType, (d > 0), parent),
+        values(vals), tuple(t), stride(s), offset(o), divisor(d)
     {
 
     }

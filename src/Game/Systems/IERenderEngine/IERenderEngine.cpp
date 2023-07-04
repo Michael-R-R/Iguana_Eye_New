@@ -73,7 +73,6 @@ void IERenderEngine::onPostRenderFrame()
 void IERenderEngine::draw(IEShader* shader, IEMaterial* material, IERenderable* renderable)
 {
     shader->bind();
-    material->bindData(*shader);
 
     // TODO implement
 }

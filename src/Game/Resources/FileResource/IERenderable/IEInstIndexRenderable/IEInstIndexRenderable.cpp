@@ -10,8 +10,7 @@ IEInstIndexRenderable::IEInstIndexRenderable(QObject* parent) :
 
 }
 
-IEInstIndexRenderable::IEInstIndexRenderable(IERenderableType ieType,
-                                             const QString& path,
+IEInstIndexRenderable::IEInstIndexRenderable(const QString& path,
                                              const uint64_t mID, const uint64_t sID,
                                              QObject* parent) :
     IEInstRenderable(IERenderableType::I_Index, path, mID, sID, parent),
@@ -22,7 +21,14 @@ IEInstIndexRenderable::IEInstIndexRenderable(IERenderableType ieType,
 
 IEInstIndexRenderable::~IEInstIndexRenderable()
 {
+    foreach(auto* i, IBOs)
+    {
+        i->destroy();
+        delete i;
+        i = nullptr;
+    }
 
+    IBOs.clear();
 }
 
 void IEInstIndexRenderable::handleBuild(const int index)
@@ -50,7 +56,14 @@ void IEInstIndexRenderable::handleDraw(const int index, const QVector<std::any>&
                                ibo->size(),
                                GL_UNSIGNED_INT,
                                0,
-                               shown);
+                                shown);
+}
+
+void IEInstIndexRenderable::addIBO(IEIndexBufferObject* ibo)
+{
+    ibo->setParent(this);
+
+    IBOs.append(ibo);
 }
 
 QDataStream& IEInstIndexRenderable::serialize(QDataStream& out, const Serializable& obj) const

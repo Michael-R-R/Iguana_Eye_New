@@ -1,7 +1,15 @@
 #include "IEIndexBufferObject.h"
 
 IEIndexBufferObject::IEIndexBufferObject(QObject* parent) :
-    IEBufferObject(QOpenGLBuffer::IndexBuffer, IEBufferType::Index, false, parent)
+    IEBufferObject(QOpenGLBuffer::IndexBuffer, IEBufferType::Index, false, parent),
+    values()
+{
+
+}
+
+IEIndexBufferObject::IEIndexBufferObject(const QVector<unsigned int>& vals, QObject* parent) :
+    IEBufferObject(QOpenGLBuffer::IndexBuffer, IEBufferType::Index, false, parent),
+    values(vals)
 {
 
 }

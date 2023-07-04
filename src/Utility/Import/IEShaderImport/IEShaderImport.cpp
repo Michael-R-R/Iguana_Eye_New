@@ -17,6 +17,8 @@ bool IEShaderImport::importShader(const QString& path, IEShader& shader)
     shader.setVertexSrc(vSrc);
     shader.setFragmentSrc(fSrc);
 
+    shader.build();
+
     return true;
 }
 
