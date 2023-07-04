@@ -25,7 +25,7 @@ public:
     virtual void handleAllocate(const bool doRelease = false) = 0;
     virtual void handleSuballocate(const int index) = 0;
     virtual void build(const int loc = -1) = 0;
-    virtual int size() const = 0;
+    virtual int count() const = 0;
     virtual std::any getValue(const int index) = 0;
     virtual std::any getValues() const = 0;
     virtual void setValue(const int index, const std::any& val) = 0;

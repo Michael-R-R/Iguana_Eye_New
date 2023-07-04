@@ -19,7 +19,8 @@ public:
     IEInstRenderable(IERenderableType ieType, QObject* parent = nullptr);
     IEInstRenderable(IERenderableType ieType,
                      const QString& path,
-                     const uint64_t mID,
+                     const uint64_t meID,
+                     const uint64_t maID,
                      const uint64_t sID,
                      QObject* parent = nullptr);
     IEInstRenderable(const IEInstRenderable&) = delete;
@@ -31,16 +32,16 @@ public:
     bool operator>(const IEInstRenderable& other) { return IERenderable::operator>(other); }
 
 protected:
-    virtual void handleBuild(const int index) override = 0;
-    virtual void handleBuildRelease(const int index) override = 0;
-    virtual void handleDraw(const int index, const QVector<std::any>& args) override = 0;
+    virtual void handleBuild() override = 0;
+    virtual void handleBuildRelease() override = 0;
+    virtual void handleDraw(const QVector<std::any>& args) override = 0;
 
 public:
     int addShown();
     int addShown(const int hiddenIndex);
     bool removeShown(const int index);
 
-    int addHidden(int shownIndex);
+    int addHidden(const int shownIndex);
     bool removeHidden(const int index);
 
     QHash<QString, std::any> getInstanceValues(const int shownIndex);

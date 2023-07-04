@@ -7,9 +7,12 @@
 #include "IEFileResource.h"
 #include "IEEnum.h"
 
+class IEShader;
+
 class IEMaterial : public IEFileResource
 {
 protected:
+    QHash<IEColorType, const char*> colorNames;
     QHash<IEColorType, QVector4D> colors;
     QHash<IETextureType, uint64_t> textureIDs;
 
@@ -27,6 +30,8 @@ public:
     bool operator!=(const IEMaterial& other) { return IEFileResource::operator!=(other); }
     bool operator<(const IEMaterial& other) { return IEFileResource::operator<(other); }
     bool operator>(const IEMaterial& other) { return IEFileResource::operator>(other); }
+
+    void bindColors(IEShader& shader);
 
     void setColor(IEColorType type, const QVector4D& val);
     void removeColor(IEColorType type);

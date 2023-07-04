@@ -8,20 +8,22 @@ class IEIndexBufferObject;
 
 class IEInstIndexRenderable : public IEInstRenderable
 {
-    QVector<IEIndexBufferObject*> IBOs;
+    IEIndexBufferObject* IBO;
 
 public:
     IEInstIndexRenderable(QObject* parent = nullptr);
     IEInstIndexRenderable(const QString& path,
-                          const uint64_t mID,
+                          const uint64_t meID,
+                          const uint64_t maID,
                           const uint64_t sID,
                           QObject* parent = nullptr);
+    IEInstIndexRenderable(IERenderable* parent);
     virtual ~IEInstIndexRenderable();
 
 protected:
-    void handleBuild(const int index) override;
-    void handleBuildRelease(const int index) override;
-    void handleDraw(const int index, const QVector<std::any>& args) override;
+    void handleBuild() override;
+    void handleBuildRelease() override;
+    void handleDraw(const QVector<std::any>& args) override;
 
 public:
     void addIBO(IEIndexBufferObject* ibo);

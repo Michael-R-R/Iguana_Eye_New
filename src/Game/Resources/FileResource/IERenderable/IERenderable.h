@@ -18,20 +18,26 @@ class IEBufferObject;
 class IERenderable : public IEFileResource
 {
 protected:
-    QVector<QOpenGLVertexArrayObject*> VAOs;
-    QVector<QHash<QString, IEBufferObject*>> buffers;
-    QVector<QSet<QString>> dirtyAllocations;
+    QOpenGLVertexArrayObject* vao;
+    QHash<QString, IEBufferObject*> buffers;
+    QSet<QString> dirtyAllocations;
 
     IERenderableType type;
     GLenum primitiveMode;
+    uint64_t meshID;
     uint64_t materialId;
     uint64_t shaderId;
+
+    IERenderable* parent;
+    QVector<IERenderable*> children;
+    QVector<IERenderable*> renderables;
 
 public:
     IERenderable(IERenderableType ieType, QObject* parent = nullptr);
     IERenderable(IERenderableType ieType,
                  const QString& path,
-                 const uint64_t mID,
+                 const uint64_t meID,
+                 const uint64_t maID,
                  const uint64_t sID,
                  QObject* parent = nullptr);
     IERenderable(const IERenderable&) = delete;
@@ -43,39 +49,44 @@ public:
     bool operator>(const IERenderable& other) { return IEFileResource::operator>(other); }
 
 protected:
-    virtual void handleBuild(const int index) = 0;
-    virtual void handleBuildRelease(const int index) = 0;
-    virtual void handleDraw(const int index, const QVector<std::any>& args) = 0;
+    virtual void handleBuild() = 0;
+    virtual void handleBuildRelease() = 0;
+    virtual void handleDraw(const QVector<std::any>& args) = 0;
 
 public:
-    virtual void draw(const int index, const QVector<std::any>& args = QVector<std::any>{});
+    virtual void draw(const QVector<std::any>& args = QVector<std::any>{});
 
-    void bind(const int index);
-    void release(const int index);
+    void bind();
+    void release();
 
-    int addVAO();
-    void addBuffer(const int index, const QString& name, IEBufferObject* buffer);
+    void init();
+    void addBuffer(const QString& name, IEBufferObject* buffer);
     void removeBuffer(const QString& name);
-    void addBufferValue(const QString& name, const std::any& val, int index = 0);
-    void removeBufferValue(const QString& name, const int bufferIndex, int index = 0);
-    void setBufferValue(const QString& name, const int bufferIndex, const std::any& val, int index = 0);
-    void setBufferValues(const QString& name, const std::any& val, int index = 0);
+    void appendBufferValue(const QString& name, const std::any& val);
+    void removeBufferValue(const QString& name, const int index);
+    void setBufferValue(const QString& name, const int index, const std::any& val);
+    void setBufferValues(const QString& name, const std::any& val);
     void build(IEShader& shader);
-    void updateDirtyBuffers(const int index);
+    void updateDirtyBuffers();
     void cleanup();
 
-    bool doesBufferExist(const int index, const QString& name);
-    IEBufferObject* getBuffer(const int index, const QString& name);
+    bool doesBufferExist(const QString& name);
+    IEBufferObject* getBuffer(const QString& name);
 
     IERenderableType getRenderableType() const { return type; }
     GLenum getPrimitiveMode() const { return primitiveMode; }
+    uint64_t getMeshId() const { return meshID; }
     uint64_t getMaterialId() const { return materialId; }
     uint64_t getShaderId() const { return shaderId; }
-    int getVaoSize() const { return VAOs.size(); }
+    IERenderable* getParent() { return parent; }
+    QVector<IERenderable*>& getChildren() { return children; }
+    QVector<IERenderable*>& getRenderables() { return renderables; }
 
     void setPrimitiveMode(const GLenum val) { primitiveMode = val; }
+    void setMeshId(const uint64_t val) { meshID = val; }
     void setMaterialId(const uint64_t val) { materialId = val; }
     void setShaderId(const uint64_t val) { shaderId = val; }
+    void setParent(IERenderable* val) { parent = val; }
 
 public:
     QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;

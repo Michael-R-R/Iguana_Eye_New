@@ -77,7 +77,7 @@ void IEIndexBufferObject::build(const int)
     this->handleAllocate();
 }
 
-int IEIndexBufferObject::size() const
+int IEIndexBufferObject::count() const
 {
     return values.size();
 }

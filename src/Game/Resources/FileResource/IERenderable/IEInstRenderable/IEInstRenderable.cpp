@@ -11,9 +11,11 @@ IEInstRenderable::IEInstRenderable(IERenderableType ieType, QObject* parent) :
 
 IEInstRenderable::IEInstRenderable(IERenderableType ieType,
                                    const QString& path,
-                                   const uint64_t mID, const uint64_t sID,
+                                   const uint64_t meID,
+                                   const uint64_t maID,
+                                   const uint64_t sID,
                                    QObject* parent) :
-    IERenderable(ieType, path, mID, sID, parent),
+    IERenderable(ieType, path, meID, maID, sID, parent),
     hiddenData(),
     shown(0), hidden(0)
 {
@@ -27,22 +29,19 @@ IEInstRenderable::~IEInstRenderable()
 
 int IEInstRenderable::addShown()
 {
-    for(int i = 0; i < VAOs.size(); i++)
+    QHashIterator<QString, IEBufferObject*> it(buffers);
+    while(it.hasNext())
     {
-        QHashIterator<QString, IEBufferObject*> it(buffers[i]);
-        while(it.hasNext())
-        {
-            it.next();
+        it.next();
 
-            auto* buffer = it.value();
-            if(!buffer->getIsInstanced())
-                continue;
+        auto* buffer = it.value();
+        if(!buffer->getIsInstanced())
+            continue;
 
-            if(buffer->appendValue(std::any{}) < 0)
-                continue;
+        if(buffer->appendValue(std::any{}) < 0)
+            continue;
 
-            dirtyAllocations[i].insert(it.key());
-        }
+        dirtyAllocations.insert(it.key());
     }
 
     return shown++;
@@ -53,23 +52,20 @@ int IEInstRenderable::addShown(const int hiddenIndex)
     if(!hiddenIndexBoundsCheck(hiddenIndex))
         return -1;
 
-    for(int i = 0; i < VAOs.size(); i++)
+    QHashIterator<QString, std::any> it(hiddenData[hiddenIndex]);
+    while(it.hasNext())
     {
-        QHashIterator<QString, std::any> it(hiddenData[hiddenIndex]);
-        while(it.hasNext())
-        {
-            it.next();
+        it.next();
 
-            if(!doesBufferExist(i, it.key()))
-                continue;
+        if(!doesBufferExist(it.key()))
+            continue;
 
-            auto* buffer = buffers[i][it.key()];
-            if(!buffer->getIsInstanced())
-                continue;
+        auto* buffer = buffers[it.key()];
+        if(!buffer->getIsInstanced())
+            continue;
 
-            if(buffer->appendValue(it.value()) > -1)
-                dirtyAllocations[i].insert(it.key());
-        }
+        if(buffer->appendValue(it.value()) > -1)
+            dirtyAllocations.insert(it.key());
     }
 
     removeHidden(hiddenIndex);
@@ -82,20 +78,17 @@ bool IEInstRenderable::removeShown(const int index)
     if(!shownIndexBoundsCheck(index))
         return false;
 
-    for(int i = 0; i < VAOs.size(); i++)
+    QHashIterator<QString, IEBufferObject*> it(buffers);
+    while(it.hasNext())
     {
-        QHashIterator<QString, IEBufferObject*> it(buffers[i]);
-        while(it.hasNext())
-        {
-            it.next();
+        it.next();
 
-            auto* buffer = it.value();
-            if(!buffer->getIsInstanced())
-                continue;
+        auto* buffer = it.value();
+        if(!buffer->getIsInstanced())
+            continue;
 
-            if(buffer->removeValue(index))
-                dirtyAllocations[i].insert(it.key());
-        }
+        if(buffer->removeValue(index))
+            dirtyAllocations.insert(it.key());
     }
 
     shown--;
@@ -103,7 +96,7 @@ bool IEInstRenderable::removeShown(const int index)
     return true;
 }
 
-int IEInstRenderable::addHidden(int shownIndex)
+int IEInstRenderable::addHidden(const int shownIndex)
 {
     if(!shownIndexBoundsCheck(shownIndex))
         return -1;
@@ -134,11 +127,8 @@ QHash<QString, std::any> IEInstRenderable::getInstanceValues(const int shownInde
     if(!shownIndexBoundsCheck(shownIndex))
         return QHash<QString, std::any>{};
 
-    if(VAOs.size() <= 0)
-        return QHash<QString, std::any>{};
-
     QHash<QString, std::any> results;
-    QHashIterator<QString, IEBufferObject*> it(buffers[0]);
+    QHashIterator<QString, IEBufferObject*> it(buffers);
     while(it.hasNext())
     {
         it.next();

@@ -128,7 +128,7 @@ public:
         }
     }
 
-    int size() const override
+    int count() const override
     {
         return values.size();
     }

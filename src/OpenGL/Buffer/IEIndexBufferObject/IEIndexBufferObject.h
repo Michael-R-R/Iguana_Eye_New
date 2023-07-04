@@ -18,7 +18,7 @@ public:
     void handleAllocate(const bool doRelease = false) override;
     void handleSuballocate(const int index) override;
     void build(const int loc = -1) override;
-    int size() const override;
+    int count() const override;
     std::any getValue(const int index) override;
     std::any getValues() const override;
     void setValue(const int index, const std::any& val) override;

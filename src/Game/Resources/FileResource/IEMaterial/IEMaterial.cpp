@@ -1,8 +1,10 @@
 #include "IEMaterial.h"
+#include "IEShader.h"
 #include "IESerialize.h"
 
 IEMaterial::IEMaterial(QObject* parent) :
     IEFileResource(parent),
+    colorNames(),
     colors(), textureIDs(),
     children(), materials()
 {
@@ -11,6 +13,7 @@ IEMaterial::IEMaterial(QObject* parent) :
 
 IEMaterial::IEMaterial(const QString& path, QObject* parent) :
     IEFileResource(path, parent),
+    colorNames(),
     colors(), textureIDs(),
     children(), materials()
 {
@@ -20,6 +23,16 @@ IEMaterial::IEMaterial(const QString& path, QObject* parent) :
 IEMaterial::~IEMaterial()
 {
 
+}
+
+void IEMaterial::bindColors(IEShader& shader)
+{
+    QHashIterator<IEColorType, QVector4D> it(colors);
+    while(it.hasNext())
+    {
+        it.next();
+        shader.setUniformValue(colorNames[it.key()], it.value());
+    }
 }
 
 void IEMaterial::setColor(IEColorType type, const QVector4D& val)
@@ -66,6 +79,13 @@ QDataStream& IEMaterial::deserialize(QDataStream& in, Serializable& obj)
 
 void IEMaterial::setup()
 {
+    colorNames.insert(IEColorType::Ambient, "uColor0");
+    colorNames.insert(IEColorType::Diffuse, "uColor1");
+    colorNames.insert(IEColorType::Specular, "uColor2");
+    colorNames.insert(IEColorType::Emissive, "uColor3");
+    colorNames.insert(IEColorType::Reflective, "uColor4");
+    colorNames.insert(IEColorType::Transparent, "uColor5");
+
     colors.insert(IEColorType::Ambient, QVector4D{});
     colors.insert(IEColorType::Diffuse, QVector4D{});
     colors.insert(IEColorType::Specular, QVector4D{});

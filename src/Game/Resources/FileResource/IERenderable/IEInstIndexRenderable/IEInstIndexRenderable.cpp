@@ -5,65 +5,84 @@
 
 IEInstIndexRenderable::IEInstIndexRenderable(QObject* parent) :
     IEInstRenderable(IERenderableType::I_Index, parent),
-    IBOs()
+    IBO(nullptr)
 {
 
 }
 
 IEInstIndexRenderable::IEInstIndexRenderable(const QString& path,
-                                             const uint64_t mID, const uint64_t sID,
+                                             const uint64_t meID,
+                                             const uint64_t maID,
+                                             const uint64_t sID,
                                              QObject* parent) :
-    IEInstRenderable(IERenderableType::I_Index, path, mID, sID, parent),
-    IBOs()
+    IEInstRenderable(IERenderableType::I_Index, path, meID, maID, sID, parent),
+    IBO(nullptr)
 {
 
+}
+
+IEInstIndexRenderable::IEInstIndexRenderable(IERenderable* parent) :
+    IEInstRenderable(IERenderableType::I_Index,
+                     parent->getName(),
+                     parent->getMeshId(),
+                     parent->getMaterialId(),
+                     parent->getShaderId(),
+                     parent),
+    IBO(nullptr)
+{
+    this->parent = parent;
 }
 
 IEInstIndexRenderable::~IEInstIndexRenderable()
 {
-    foreach(auto* i, IBOs)
+    if(IBO)
     {
-        i->destroy();
-        delete i;
-        i = nullptr;
+        IBO->destroy();
+        delete IBO;
+        IBO = nullptr;
     }
-
-    IBOs.clear();
 }
 
-void IEInstIndexRenderable::handleBuild(const int index)
+void IEInstIndexRenderable::handleBuild()
 {
-    if(index < 0 || index >= IBOs.size())
-        throw std::exception("IEInstIndexRenderable::handleBuild()::Index_out_of_bounds");
+    if(!IBO)
+        throw std::exception("IEInstIndexRenderable::handleBuild()::nullptr");
 
-    IBOs[index]->build();
+    IBO->build();
 }
 
-void IEInstIndexRenderable::handleBuildRelease(const int index)
+void IEInstIndexRenderable::handleBuildRelease()
 {
-    if(index < 0 || index >= IBOs.size())
-        throw std::exception("IEInstIndexRenderable::handleBuildRelease()::Index_out_of_bounds");
+    if(!IBO)
+        throw std::exception("IEInstIndexRenderable::handleBuildRelease()::nullptr");
 
-    IBOs[index]->release();
+    IBO->release();
 }
 
-void IEInstIndexRenderable::handleDraw(const int index, const QVector<std::any>&)
+void IEInstIndexRenderable::handleDraw(const QVector<std::any>&)
 {
-    auto* ibo = IBOs[index];
+    if(shown < 1)
+        return;
 
     auto* gl = QOpenGLContext::currentContext()->extraFunctions();
     gl->glDrawElementsInstanced(primitiveMode,
-                               ibo->size(),
-                               GL_UNSIGNED_INT,
-                               0,
+                                IBO->count(),
+                                GL_UNSIGNED_INT,
+                                0,
                                 shown);
 }
 
 void IEInstIndexRenderable::addIBO(IEIndexBufferObject* ibo)
 {
-    ibo->setParent(this);
+    if(IBO)
+    {
+        IBO->destroy();
+        delete IBO;
+        IBO = nullptr;
+    }
 
-    IBOs.append(ibo);
+    IBO = ibo;
+    IBO->setParent(this);
 }
 
 QDataStream& IEInstIndexRenderable::serialize(QDataStream& out, const Serializable& obj) const
@@ -72,11 +91,7 @@ QDataStream& IEInstIndexRenderable::serialize(QDataStream& out, const Serializab
 
     const auto& renderable = static_cast<const IEInstIndexRenderable&>(obj);
 
-    out << renderable.IBOs.size();
-    foreach (auto* ibo, renderable.IBOs)
-    {
-        out << *ibo;
-    }
+    out << *renderable.IBO;
 
     return out;
 }
@@ -86,17 +101,11 @@ QDataStream& IEInstIndexRenderable::deserialize(QDataStream& in, Serializable& o
     IEInstRenderable::deserialize(in, obj);
 
     auto& renderable = static_cast<IEInstIndexRenderable&>(obj);
-    renderable.IBOs.clear();
 
-    int size = 0;
-    in >> size;
-    for(int i = 0; i < size; i++)
-    {
-        auto* ibo = new IEIndexBufferObject(&renderable);
-        in >> *ibo;
+    auto* ibo = new IEIndexBufferObject(&renderable);
+    in >> *ibo;
 
-        renderable.IBOs.append(ibo);
-    }
+    renderable.IBO = ibo;
 
     return in;
 }
