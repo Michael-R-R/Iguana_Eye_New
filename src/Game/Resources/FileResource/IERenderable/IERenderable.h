@@ -49,24 +49,24 @@ public:
     bool operator>(const IERenderable& other) { return IEFileResource::operator>(other); }
 
 protected:
-    virtual void handleBuild() = 0;
-    virtual void handleBuildRelease() = 0;
-    virtual void handleDraw(const QVector<std::any>& args) = 0;
+    virtual bool handleBuild() = 0;
+    virtual bool handleBuildRelease() = 0;
+    virtual bool handleDraw(const QVector<std::any>& args) = 0;
 
 public:
-    virtual void draw(const QVector<std::any>& args = QVector<std::any>{});
+    virtual bool draw(const QVector<std::any>& args = QVector<std::any>{});
 
-    void bind();
-    void release();
+    bool bind();
+    bool release();
 
-    void init();
-    void addBuffer(const QString& name, IEBufferObject* buffer);
-    void removeBuffer(const QString& name);
-    void appendBufferValue(const QString& name, const std::any& val);
-    void removeBufferValue(const QString& name, const int index);
-    void setBufferValue(const QString& name, const int index, const std::any& val);
-    void setBufferValues(const QString& name, const std::any& val);
-    void build(IEShader& shader);
+    bool addBuffer(const QString& name, IEBufferObject* buffer);
+    bool removeBuffer(const QString& name);
+    bool appendBufferValue(const QString& name, const std::any& val);
+    bool removeBufferValue(const QString& name, const int index);
+    bool setBufferValue(const QString& name, const int index, const std::any& val);
+    bool setBufferValues(const QString& name, const std::any& val);
+
+    bool build(IEShader& shader);
     void updateDirtyBuffers();
     void cleanup();
 

@@ -12,9 +12,6 @@ class IERenderEngine;
 class ERenderEngine;
 class ECamera;
 
-// TODO test
-#include "IETInstIndexRenderable.h"
-
 class IEGameStopState : public IEGameState
 {
     QOpenGLFunctions* glFunc;
@@ -27,9 +24,6 @@ class IEGameStopState : public IEGameState
 
     ERenderEngine* erEngine;
     ECamera* eCamera;
-
-    // TODO test
-    IETInstIndexRenderable* test = nullptr;
 
 public:
     IEGameStopState(QObject* parent = nullptr);

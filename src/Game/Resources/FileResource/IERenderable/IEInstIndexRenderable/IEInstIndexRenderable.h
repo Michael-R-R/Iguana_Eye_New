@@ -21,9 +21,9 @@ public:
     virtual ~IEInstIndexRenderable();
 
 protected:
-    void handleBuild() override;
-    void handleBuildRelease() override;
-    void handleDraw(const QVector<std::any>& args) override;
+    bool handleBuild() override;
+    bool handleBuildRelease() override;
+    bool handleDraw(const QVector<std::any>& args) override;
 
 public:
     void addIBO(IEIndexBufferObject* ibo);

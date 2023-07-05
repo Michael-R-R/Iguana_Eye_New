@@ -32,9 +32,9 @@ public:
     bool operator>(const IEInstRenderable& other) { return IERenderable::operator>(other); }
 
 protected:
-    virtual void handleBuild() override = 0;
-    virtual void handleBuildRelease() override = 0;
-    virtual void handleDraw(const QVector<std::any>& args) override = 0;
+    virtual bool handleBuild() override = 0;
+    virtual bool handleBuildRelease() override = 0;
+    virtual bool handleDraw(const QVector<std::any>& args) override = 0;
 
 public:
     int addShown();
@@ -45,6 +45,8 @@ public:
     bool removeHidden(const int index);
 
     QHash<QString, std::any> getInstanceValues(const int shownIndex);
+    int getShownCount() const { return shown; }
+    int getHiddenCount() const { return hidden; }
 
 protected:
     bool shownIndexBoundsCheck(const int index);

@@ -11,8 +11,10 @@
 #include "IEBufferObjectFactory.h"
 #include "ApplicationWindow.h"
 #include "IEGame.h"
+#include "IESerialize.h"
 #include <QLineEdit>
 #include <QPushButton>
+#include <QSpinBox>
 #include <QOpenGLContext>
 
 IETInstIndexRenderable::IETInstIndexRenderable() :
@@ -21,7 +23,10 @@ IETInstIndexRenderable::IETInstIndexRenderable() :
     mesh(nullptr), material(nullptr),
     shader(nullptr), renderable(nullptr),
     meshPath("./resources/root/Content/cube/cube.obj"),
-    shaderPath("./resources/shaders/tests/instanced_renderable.glsl")
+    shaderPath("./resources/shaders/tests/instanced_renderable.glsl"),
+    createCount(1),
+    showCount(0),
+    hideCount(0)
 {
     this->setup();
     this->show();
@@ -62,17 +67,40 @@ void IETInstIndexRenderable::setup()
     auto* meLineEdit = new QLineEdit(meshPath, this);
     auto* sLineEdit = new QLineEdit(shaderPath, this);
     auto* createButton = new QPushButton("Create", this);
-    auto* addShownButton = new QPushButton("Add Shown", this);
+    auto* createCountSpinbox = new QSpinBox(this);
+    auto* addShownButton = new QPushButton("Add", this);
+    auto* showCountSpinbox = new QSpinBox(this);
+    auto* showButton = new QPushButton("Show", this);
+    auto* hideCountSpinbox = new QSpinBox(this);
+    auto* hideButton = new QPushButton("Hide", this);
+    auto* serializeButton = new QPushButton("Serialize", this);
+    auto* deserializeButton = new QPushButton("Deserialize", this);
+
+    createCountSpinbox->setMaximum(50000);
 
     vLayout->addWidget(meLineEdit);
     vLayout->addWidget(sLineEdit);
     vLayout->addWidget(createButton);
+    vLayout->addWidget(createCountSpinbox);
     vLayout->addWidget(addShownButton);
+    vLayout->addWidget(showCountSpinbox);
+    vLayout->addWidget(showButton);
+    vLayout->addWidget(hideCountSpinbox);
+    vLayout->addWidget(hideButton);
+    vLayout->addWidget(serializeButton);
+    vLayout->addWidget(deserializeButton);
 
     connect(meLineEdit, &QLineEdit::textChanged, this, [this](const QString& path){ meshPath = path; });
     connect(sLineEdit, &QLineEdit::textChanged, this, [this](const QString& path){ shaderPath = path; });
     connect(createButton, &QPushButton::clicked, this, [this](){ createResources(); });
-    connect(addShownButton, &QPushButton::clicked, this, [this](){ addShown(); });
+    connect(addShownButton, &QPushButton::clicked, this, [this](){ appendShown(); });
+    connect(createCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ createCount = val; });
+    connect(showCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ showCount = val; });
+    connect(hideCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ hideCount = val; });
+    connect(showButton, &QPushButton::clicked, this, [this](){ showInstances(); });
+    connect(hideButton, &QPushButton::clicked, this, [this](){ hideInstances(); });
+    connect(serializeButton, &QPushButton::clicked, this, [this](){ serialize(); });
+    connect(deserializeButton, &QPushButton::clicked, this, [this](){ deserialize(); });
 }
 
 void IETInstIndexRenderable::createResources()
@@ -116,7 +144,6 @@ void IETInstIndexRenderable::processNode(IEShader* shader, IEMesh* mesh, IEInstI
 
 void IETInstIndexRenderable::processRenderable(IEShader* shader, IEMesh* mesh, IEInstIndexRenderable* renderable)
 {
-    renderable->init();
     renderable->addIBO(new IEIndexBufferObject(mesh->getIndices(), renderable));
     renderable->addBuffer("aPos", IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, renderable));
     renderable->addBuffer("aNormal", IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, renderable));
@@ -134,21 +161,90 @@ void IETInstIndexRenderable::processRenderable(IEShader* shader, IEMesh* mesh, I
     renderable->build(*shader);
 }
 
-void IETInstIndexRenderable::addShown()
+void IETInstIndexRenderable::appendShown()
 {
     foreach(auto* child, renderable->getChildren())
     {
         foreach(auto* i, child->getRenderables())
         {
-            auto* temp = static_cast<IEInstIndexRenderable*>(i);
+            for(int j = 0; j < createCount; j++)
+            {
+                auto* temp = static_cast<IEInstIndexRenderable*>(i);
 
-            int index = temp->addShown();
+                int index = temp->addShown();
 
-            QMatrix4x4 model;
-            model.translate(index * 2.5f, 0.0f, 0.0f);
+                QMatrix4x4 model;
+                model.translate(index * 2.5f, 0.0f, 0.0f);
 
-            temp->setBufferValue("aModel", index, model);
+                temp->setBufferValue("aModel", index, model);
+            }
         }
     }
 }
+
+void IETInstIndexRenderable::showInstances()
+{
+    auto& rChildren = renderable->getChildren();
+    for(int i = 0; i < rChildren.size(); i++)
+    {
+        auto& renderables = rChildren[i]->getRenderables();
+        for(int j = 0; j < renderables.size(); j++)
+        {
+            auto* temp = static_cast<IEInstRenderable*>(renderables[j]);
+            const int hidden = temp->getHiddenCount();
+            for(int k = hidden - 1; k > -1; k-=(showCount + 1))
+            {
+                temp->addShown(k);
+            }
+        }
+    }
+}
+
+void IETInstIndexRenderable::hideInstances()
+{
+    auto& rChildren = renderable->getChildren();
+    for(int i = 0; i < rChildren.size(); i++)
+    {
+        auto& renderables = rChildren[i]->getRenderables();
+        for(int j = 0; j < renderables.size(); j++)
+        {
+            auto* temp = static_cast<IEInstRenderable*>(renderables[j]);
+            const int shown = temp->getShownCount();
+            for(int k = shown - 1; k > -1; k-=(hideCount + 1))
+            {
+                temp->addHidden(k);
+            }
+        }
+    }
+}
+
+void IETInstIndexRenderable::serialize()
+{
+    if(!renderable)
+        return;
+
+    IESerialize::write<IERenderable>("./resources/renderables/test.ierend", renderable);
+}
+
+void IETInstIndexRenderable::deserialize()
+{
+    if(renderable)
+    {
+        delete renderable;
+    }
+
+    ApplicationWindow::instance().getGame()->makeCurrent();
+
+    renderable = new IEInstIndexRenderable(this);
+    IESerialize::read<IEInstIndexRenderable>("./resources/renderables/test.ierend", renderable);
+
+    foreach(auto* child, renderable->getChildren())
+    {
+        foreach(auto* i, child->getRenderables())
+        {
+            i->build(*shader);
+        }
+    }
+}
+
 

@@ -1,5 +1,6 @@
 #include "IEInstRenderable.h"
 #include "IEBufferObject.h"
+#include "IESerializeTranslator.h"
 
 IEInstRenderable::IEInstRenderable(IERenderableType ieType, QObject* parent) :
     IERenderable(ieType, parent),
@@ -159,31 +160,21 @@ QDataStream& IEInstRenderable::serialize(QDataStream& out, const Serializable& o
 
     const auto& renderable = static_cast<const IEInstRenderable&>(obj);
 
-    out << renderable.hiddenData.size();
-    for(int i = 0; i < renderable.hiddenData.size(); i++)
+    int hiddenInstanceSize = renderable.hiddenData.size();
+    out << hiddenInstanceSize;
+    for(int i = 0; i < hiddenInstanceSize; i++)
     {
-        out << renderable.hiddenData[i].size();
+        int dataCount = renderable.hiddenData[i].size();
+        out << dataCount;
 
         QHashIterator<QString, std::any> it(renderable.hiddenData[i]);
         while(it.hasNext())
         {
             it.next();
 
-            const std::any& info = it.value();
-            size_t hashcode = info.type().hash_code();
+            out << it.key();
 
-            out << it.key() << hashcode;
-
-            if(hashcode == typeid(QVector2D).hash_code())
-                out << std::any_cast<QVector2D>(info);
-            else if(hashcode == typeid(QVector3D).hash_code())
-                out << std::any_cast<QVector3D>(info);
-            else if(hashcode == typeid(QVector4D).hash_code())
-                out << std::any_cast<QVector4D>(info);
-            else if(hashcode == typeid(QMatrix4x4).hash_code())
-                out << std::any_cast<QMatrix4x4>(info);
-            else
-                out << -1;
+            IESerializeTranslator::write(out, it.value());
         }
     }
 
@@ -204,42 +195,16 @@ QDataStream& IEInstRenderable::deserialize(QDataStream& in, Serializable& obj)
 
     for(int i = 0; i < hiddenInstanceSize; i++)
     {
-        int dataSize = 0;
-        in >> dataSize;
+        int dataCount = 0;
+        in >> dataCount;
 
         QHash<QString, std::any> results;
-
-        for(int j = 0; j < dataSize; j++)
+        for(int j = 0; j < dataCount; j++)
         {
             QString bufferName = "";
-            size_t hashcode = 0;
-            std::any data;
-            in >> bufferName >> hashcode;
+            in >> bufferName;
 
-            if(hashcode == typeid(QVector2D).hash_code())
-            {
-                QVector2D temp;
-                in >> temp;
-                data = temp;
-            }
-            else if(hashcode == typeid(QVector3D).hash_code())
-            {
-                QVector3D temp;
-                in >> temp;
-                data = temp;
-            }
-            else if(hashcode == typeid(QVector4D).hash_code())
-            {
-                QVector4D temp;
-                in >> temp;
-                data = temp;
-            }
-            else if(hashcode == typeid(QMatrix4x4).hash_code())
-            {
-                QMatrix4x4 temp;
-                in >> temp;
-                data = temp;
-            }
+            std::any data = IESerializeTranslator::read(in);
 
             results.insert(bufferName, data);
         }

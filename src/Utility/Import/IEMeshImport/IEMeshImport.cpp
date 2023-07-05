@@ -96,47 +96,54 @@ void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* ieMes
 
 void IEMeshImport::processMesh(aiMesh* assimpMesh, IEMesh* ieMesh)
 {
+    auto& posVerts = ieMesh->getPosVertices();
+    auto& normVerts = ieMesh->getNormVertices();
+    auto& tanVerts = ieMesh->getTanVertices();
+    auto& bitanVerts = ieMesh->getBiTanVertices();
+    auto& texVerts = ieMesh->getTexVertices();
+    auto& indices = ieMesh->getIndices();
+
     for(unsigned i = 0; i < assimpMesh->mNumVertices; i++)
     {
         // Position coords
         auto tempPos = assimpMesh->mVertices[i];
-        ieMesh->getPosVertices().append(QVector3D(tempPos.x, tempPos.y, tempPos.z));
+        posVerts.append(QVector3D(tempPos.x, tempPos.y, tempPos.z));
 
         // Normal coords
         if(assimpMesh->HasNormals())
         {
             auto tempNorm = assimpMesh->mNormals[i];
-            ieMesh->getNormVertices().append(QVector3D(tempNorm.x, tempNorm.y, tempNorm.z));
+            normVerts.append(QVector3D(tempNorm.x, tempNorm.y, tempNorm.z));
         }
         else
         {
-            ieMesh->getNormVertices().append(QVector3D());
+            normVerts.append(QVector3D());
         }
 
         // Tangents and Bitangets
         if(assimpMesh->HasTangentsAndBitangents())
         {
             auto tempTan = assimpMesh->mTangents[i];
-            ieMesh->getTanVertices().append(QVector3D(tempTan.x, tempTan.y, tempTan.z));
+            tanVerts.append(QVector3D(tempTan.x, tempTan.y, tempTan.z));
 
             auto tempBiTan = assimpMesh->mBitangents[i];
-            ieMesh->getBiTanVertices().append(QVector3D(tempBiTan.x, tempBiTan.y, tempBiTan.z));
+            bitanVerts.append(QVector3D(tempBiTan.x, tempBiTan.y, tempBiTan.z));
         }
         else
         {
-            ieMesh->getTanVertices().append(QVector3D());
-            ieMesh->getBiTanVertices().append(QVector3D());
+            tanVerts.append(QVector3D());
+            bitanVerts.append(QVector3D());
         }
 
         // Texture coords
         if(assimpMesh->HasTextureCoords(0))
         {
             auto tempTex = assimpMesh->mTextureCoords[0][i];
-            ieMesh->getTexVertices().append(QVector2D(tempTex.x, tempTex.y));
+            texVerts.append(QVector2D(tempTex.x, tempTex.y));
         }
         else
         {
-            ieMesh->getTexVertices().append(QVector2D());
+            texVerts.append(QVector2D());
         }
     }
 
@@ -147,7 +154,7 @@ void IEMeshImport::processMesh(aiMesh* assimpMesh, IEMesh* ieMesh)
 
         for(unsigned j = 0; j < face.mNumIndices; j++)
         {
-            ieMesh->getIndices().append(face.mIndices[j]);
+            indices.append(face.mIndices[j]);
         }
     }
 }

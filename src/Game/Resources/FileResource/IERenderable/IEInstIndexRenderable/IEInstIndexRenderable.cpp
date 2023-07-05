@@ -5,7 +5,7 @@
 
 IEInstIndexRenderable::IEInstIndexRenderable(QObject* parent) :
     IEInstRenderable(IERenderableType::I_Index, parent),
-    IBO(nullptr)
+    IBO(new IEIndexBufferObject(this))
 {
 
 }
@@ -16,7 +16,7 @@ IEInstIndexRenderable::IEInstIndexRenderable(const QString& path,
                                              const uint64_t sID,
                                              QObject* parent) :
     IEInstRenderable(IERenderableType::I_Index, path, meID, maID, sID, parent),
-    IBO(nullptr)
+    IBO(new IEIndexBufferObject(this))
 {
 
 }
@@ -28,7 +28,7 @@ IEInstIndexRenderable::IEInstIndexRenderable(IERenderable* parent) :
                      parent->getMaterialId(),
                      parent->getShaderId(),
                      parent),
-    IBO(nullptr)
+    IBO(new IEIndexBufferObject(this))
 {
     this->parent = parent;
 }
@@ -43,26 +43,30 @@ IEInstIndexRenderable::~IEInstIndexRenderable()
     }
 }
 
-void IEInstIndexRenderable::handleBuild()
+bool IEInstIndexRenderable::handleBuild()
 {
     if(!IBO)
-        throw std::exception("IEInstIndexRenderable::handleBuild()::nullptr");
+        return false;
 
     IBO->build();
+
+    return true;
 }
 
-void IEInstIndexRenderable::handleBuildRelease()
+bool IEInstIndexRenderable::handleBuildRelease()
 {
     if(!IBO)
-        throw std::exception("IEInstIndexRenderable::handleBuildRelease()::nullptr");
+        return false;
 
     IBO->release();
+
+    return true;
 }
 
-void IEInstIndexRenderable::handleDraw(const QVector<std::any>&)
+bool IEInstIndexRenderable::handleDraw(const QVector<std::any>&)
 {
     if(shown < 1)
-        return;
+        return false;
 
     auto* gl = QOpenGLContext::currentContext()->extraFunctions();
     gl->glDrawElementsInstanced(primitiveMode,
@@ -70,6 +74,8 @@ void IEInstIndexRenderable::handleDraw(const QVector<std::any>&)
                                 GL_UNSIGNED_INT,
                                 0,
                                 shown);
+
+    return true;
 }
 
 void IEInstIndexRenderable::addIBO(IEIndexBufferObject* ibo)
@@ -78,7 +84,6 @@ void IEInstIndexRenderable::addIBO(IEIndexBufferObject* ibo)
     {
         IBO->destroy();
         delete IBO;
-        IBO = nullptr;
     }
 
     IBO = ibo;
@@ -102,10 +107,7 @@ QDataStream& IEInstIndexRenderable::deserialize(QDataStream& in, Serializable& o
 
     auto& renderable = static_cast<IEInstIndexRenderable&>(obj);
 
-    auto* ibo = new IEIndexBufferObject(&renderable);
-    in >> *ibo;
-
-    renderable.IBO = ibo;
+    in >> *renderable.IBO;
 
     return in;
 }

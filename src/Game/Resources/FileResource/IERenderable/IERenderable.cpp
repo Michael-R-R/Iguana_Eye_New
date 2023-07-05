@@ -1,12 +1,14 @@
 #include "IERenderable.h"
 #include "IEShader.h"
 #include "IEBufferObject.h"
+#include "IERenderableFactory.h"
 #include "IEBufferObjectFactory.h"
 #include <stdexcept>
 
 IERenderable::IERenderable(IERenderableType ieType, QObject* parent) :
     IEFileResource(parent),
-    vao(), buffers(), dirtyAllocations(),
+    vao(new QOpenGLVertexArrayObject(this)),
+    buffers(), dirtyAllocations(),
     type(ieType), primitiveMode(GL_TRIANGLES),
     materialId(0),
     shaderId(0)
@@ -21,7 +23,8 @@ IERenderable::IERenderable(IERenderableType ieType,
                            const uint64_t sID,
                            QObject* parent) :
     IEFileResource(path, parent),
-    vao(), buffers(), dirtyAllocations(),
+    vao(new QOpenGLVertexArrayObject(this)),
+    buffers(), dirtyAllocations(),
     type(ieType), primitiveMode(GL_TRIANGLES),
     meshID(meID), materialId(maID), shaderId(sID)
 {
@@ -45,95 +48,113 @@ IERenderable::~IERenderable()
     }
 }
 
-void IERenderable::draw(const QVector<std::any>& args)
+bool IERenderable::draw(const QVector<std::any>& args)
 {
+    if(!vao)
+        return false;
+
     bind();
     updateDirtyBuffers();
-    handleDraw(args);
+
+    return handleDraw(args);
 }
 
-void IERenderable::bind()
+bool IERenderable::bind()
 {
     if(!vao)
-        return;
+        return false;
 
     vao->bind();
+
+    return true;
 }
 
-void IERenderable::release()
+bool IERenderable::release()
 {
     if(!vao)
-        return;
+        return false;
 
     vao->release();
+
+    return true;
 }
 
-void IERenderable::init()
-{
-    vao = new QOpenGLVertexArrayObject(this);
-}
-
-void IERenderable::addBuffer(const QString& name, IEBufferObject* buffer)
+bool IERenderable::addBuffer(const QString& name, IEBufferObject* buffer)
 {
     if(!buffer)
-        throw std::exception("IERenderable::addBuffer()::null_buffer");
+        return false;
 
     buffer->setParent(this);
 
     buffers.insert(name, buffer);
     dirtyAllocations.insert(name);
+
+    return true;
 }
 
-void IERenderable::removeBuffer(const QString& name)
+bool IERenderable::removeBuffer(const QString& name)
 {
     if(!doesBufferExist(name))
-        return;
+        return false;
 
     auto* buffer = buffers[name];
     buffers.remove(name);
     delete buffer;
 
     dirtyAllocations.insert(name);
+
+    return true;
 }
 
-void IERenderable::appendBufferValue(const QString& name, const std::any& val)
+bool IERenderable::appendBufferValue(const QString& name, const std::any& val)
 {
     if(!doesBufferExist(name))
-        return;
+        return false;
 
     buffers[name]->appendValue(val);
     dirtyAllocations.insert(name);
+
+    return true;
 }
 
-void IERenderable::removeBufferValue(const QString& name, const int index)
+bool IERenderable::removeBufferValue(const QString& name, const int index)
 {
     if(doesBufferExist(name))
-        return;
+        return false;
 
     buffers[name]->removeValue(index);
     dirtyAllocations.insert(name);
+
+    return true;
 }
 
-void IERenderable::setBufferValue(const QString& name, const int index, const std::any& val)
+bool IERenderable::setBufferValue(const QString& name, const int index, const std::any& val)
 {
     if(!doesBufferExist(name))
-        return;
+        return false;
 
     buffers[name]->setValue(index, val);
     buffers[name]->handleSuballocate(index);
+
+    return true;
 }
 
-void IERenderable::setBufferValues(const QString& name, const std::any& val)
+bool IERenderable::setBufferValues(const QString& name, const std::any& val)
 {
     if(!doesBufferExist(name))
-        return;
+        return false;
 
     buffers[name]->setValues(val);
     dirtyAllocations.insert(name);
+
+    return true;
 }
 
-void IERenderable::build(IEShader& shader)
+bool IERenderable::build(IEShader& shader)
 {
+    if(!vao)
+        return false;
+
     shader.bind();
 
     if(vao->isCreated())
@@ -142,7 +163,8 @@ void IERenderable::build(IEShader& shader)
     vao->create();
     vao->bind();
 
-    handleBuild();
+    if(!handleBuild())
+        return false;
 
     QHashIterator<QString, IEBufferObject*> it(buffers);
     while(it.hasNext())
@@ -159,6 +181,8 @@ void IERenderable::build(IEShader& shader)
     }
 
     dirtyAllocations.clear();
+
+    return true;
 }
 
 void IERenderable::updateDirtyBuffers()
@@ -213,7 +237,36 @@ QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) 
 
     const auto& renderable = static_cast<const IERenderable&>(obj);
 
-    // TODO implement
+    out << renderable.type;
+
+    int childCount = renderable.children.size();
+    out << childCount;
+    foreach(auto* child, renderable.children)
+    {
+        out << *child;
+    }
+
+    int renderableCount = renderable.renderables.size();
+    out << renderableCount;
+    foreach (auto* r, renderable.renderables)
+    {
+        out << *r;
+    }
+
+    int bufferCount = renderable.buffers.size();
+    out << bufferCount;
+    QHashIterator<QString, IEBufferObject*> it(renderable.buffers);
+    while(it.hasNext())
+    {
+        it.next();
+        auto* buffer = it.value();
+        out << it.key() << buffer->getBufferType();
+        out << *buffer;
+    }
+
+    out << renderable.primitiveMode << renderable.meshID
+        << renderable.materialId << renderable.shaderId
+        << renderable.dirtyAllocations;
 
     return out;
 }
@@ -223,8 +276,50 @@ QDataStream& IERenderable::deserialize(QDataStream& in, Serializable& obj)
     IEFileResource::deserialize(in, obj);
 
     auto& renderable = static_cast<IERenderable&>(obj);
+    renderable.buffers.clear();
+    renderable.children.clear();
+    renderable.renderables.clear();
 
-    // TODO implement
+    IERenderableType rType = IERenderableType::Unknown;
+    in >> rType;
+
+    int childSize = 0;
+    in >> childSize;
+    for(int i = 0; i < childSize; i++)
+    {
+        auto* r = IERenderableFactory::make(rType, &renderable);
+        in >> *r;
+        r->setParent(&renderable);
+        renderable.children.append(r);
+    }
+
+    int renderableCount = 0;
+    in >> renderableCount;
+    for(int i = 0; i < renderableCount; i++)
+    {
+        auto* r = IERenderableFactory::make(rType, &renderable);
+        in >> *r;
+        r->setParent(&renderable);
+        renderable.renderables.append(r);
+    }
+
+    int bufferCount = 0;
+    in >> bufferCount;
+    for(int i = 0; i < bufferCount; i++)
+    {
+        QString name = "";
+        IEBufferType bType = IEBufferType::Unknown;
+        in >> name >> bType;
+
+        auto* buffer = IEBufferObjectFactory::make(bType, &renderable);
+        in >> *buffer;
+
+        renderable.buffers.insert(name, buffer);
+    }
+
+    in >> renderable.primitiveMode >> renderable.meshID
+       >> renderable.materialId >> renderable.shaderId
+       >> renderable.dirtyAllocations;
 
     return in;
 }

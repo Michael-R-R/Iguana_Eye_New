@@ -12,9 +12,11 @@ class IEShader;
 class IEMaterial : public IEFileResource
 {
 protected:
-    QHash<IEColorType, const char*> colorNames;
     QHash<IEColorType, QVector4D> colors;
     QHash<IETextureType, uint64_t> textureIDs;
+
+    QHash<IEColorType, const char*> colorNames;
+    QHash<IETextureType, const char*> textureNames;
 
     IEMaterial* parent;
     QVector<IEMaterial*> children;

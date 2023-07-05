@@ -254,12 +254,14 @@ INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEHash \
     $$PWD/src/Utility/IEMath \
     $$PWD/src/Utility/IERandomNumber \
-    $$PWD/src/Utility/IESerialize \
     $$PWD/src/Utility/IEStyleSheet \
 
 INCLUDEPATH += $$PWD/src/Utility/Export \
     $$PWD/src/Utility/Export/IEMeshExport \
     $$PWD/src/Utility/Export/IEShaderExport \
+
+INCLUDEPATH += $$PWD/src/Utility/IESerialize \
+    $$PWD/src/Utility/IESerialize/IESerializeTranslator \
 
 INCLUDEPATH += $$PWD/src/Utility/Import \
     $$PWD/src/Utility/Import/IEMeshImport \
