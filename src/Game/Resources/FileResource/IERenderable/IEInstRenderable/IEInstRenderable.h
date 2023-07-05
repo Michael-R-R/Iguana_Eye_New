@@ -23,6 +23,7 @@ public:
                      const uint64_t maID,
                      const uint64_t sID,
                      QObject* parent = nullptr);
+    IEInstRenderable(IERenderable* parent);
     IEInstRenderable(const IEInstRenderable&) = delete;
     virtual ~IEInstRenderable();
 

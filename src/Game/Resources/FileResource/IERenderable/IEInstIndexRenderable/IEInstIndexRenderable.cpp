@@ -22,15 +22,10 @@ IEInstIndexRenderable::IEInstIndexRenderable(const QString& path,
 }
 
 IEInstIndexRenderable::IEInstIndexRenderable(IERenderable* parent) :
-    IEInstRenderable(IERenderableType::I_Index,
-                     parent->getName(),
-                     parent->getMeshId(),
-                     parent->getMaterialId(),
-                     parent->getShaderId(),
-                     parent),
+    IEInstRenderable(parent),
     IBO(new IEIndexBufferObject(this))
 {
-    this->parent = parent;
+
 }
 
 IEInstIndexRenderable::~IEInstIndexRenderable()
@@ -65,7 +60,7 @@ bool IEInstIndexRenderable::handleBuildRelease()
 
 bool IEInstIndexRenderable::handleDraw(const QVector<std::any>&)
 {
-    if(shown < 1)
+    if(shown < 1 || !vao || !IBO)
         return false;
 
     auto* gl = QOpenGLContext::currentContext()->extraFunctions();

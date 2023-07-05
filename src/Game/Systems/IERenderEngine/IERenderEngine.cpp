@@ -74,5 +74,16 @@ void IERenderEngine::draw(IEShader* shader, IEMaterial* material, IERenderable* 
 {
     shader->bind();
 
-    // TODO implement
+    auto& maChildren = material->getChildren();
+    auto& rChildren = renderable->getChildren();
+    for(int i = 0; i < rChildren.size(); i++)
+    {
+        auto& materials = maChildren[i]->getMaterials();
+        auto& renderables = rChildren[i]->getRenderables();
+        for(int j = 0; j < renderables.size(); j++)
+        {
+            materials[j]->bindColors(*shader);
+            renderables[j]->draw();
+        }
+    }
 }

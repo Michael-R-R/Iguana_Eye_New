@@ -23,6 +23,12 @@ IEInstRenderable::IEInstRenderable(IERenderableType ieType,
 
 }
 
+IEInstRenderable::IEInstRenderable(IERenderable* parent) :
+    IERenderable(parent)
+{
+
+}
+
 IEInstRenderable::~IEInstRenderable()
 {
 

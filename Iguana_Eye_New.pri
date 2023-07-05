@@ -163,8 +163,11 @@ INCLUDEPATH += $$PWD/src/Game/Resources/FileResource \
     $$PWD/src/Game/Resources/FileResource/IEScript \
 
 INCLUDEPATH += $$PWD/src/Game/Resources/FileResource/IERenderable \
+$$PWD/src/Game/Resources/FileResource/IERenderable/IEIndexRenderable \
+$$PWD/src/Game/Resources/FileResource/IERenderable/IEInstIndexRenderable \
     $$PWD/src/Game/Resources/FileResource/IERenderable/IEInstRenderable \
-    $$PWD/src/Game/Resources/FileResource/IERenderable/IEInstIndexRenderable \
+    $$PWD/src/Game/Resources/FileResource/IERenderable/IEInstVertRenderable \
+    $$PWD/src/Game/Resources/FileResource/IERenderable/IEVertRenderable \
 
 INCLUDEPATH += $$PWD/src/Game/Resources/SceneResource \
     $$PWD/src/Game/Resources/SceneResource/IECamera \

@@ -10,8 +10,8 @@ IERenderable::IERenderable(IERenderableType ieType, QObject* parent) :
     vao(new QOpenGLVertexArrayObject(this)),
     buffers(), dirtyAllocations(),
     type(ieType), primitiveMode(GL_TRIANGLES),
-    materialId(0),
-    shaderId(0)
+    meshId(0), materialId(0), shaderId(0),
+    parent(nullptr), children(), renderables()
 {
 
 }
@@ -26,7 +26,22 @@ IERenderable::IERenderable(IERenderableType ieType,
     vao(new QOpenGLVertexArrayObject(this)),
     buffers(), dirtyAllocations(),
     type(ieType), primitiveMode(GL_TRIANGLES),
-    meshID(meID), materialId(maID), shaderId(sID)
+    meshId(meID), materialId(maID), shaderId(sID),
+    parent(nullptr), children(), renderables()
+{
+
+}
+
+IERenderable::IERenderable(IERenderable* parent) :
+    IEFileResource(parent->getName(), parent),
+    vao(new QOpenGLVertexArrayObject(this)),
+    buffers(), dirtyAllocations(),
+    type(parent->getType()),
+    primitiveMode(parent->getPrimitiveMode()),
+    meshId(parent->getMeshId()),
+    materialId(parent->getMaterialId()),
+    shaderId(parent->getShaderId()),
+    parent(parent), children(), renderables()
 {
 
 }
@@ -264,7 +279,7 @@ QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) 
         out << *buffer;
     }
 
-    out << renderable.primitiveMode << renderable.meshID
+    out << renderable.primitiveMode << renderable.meshId
         << renderable.materialId << renderable.shaderId
         << renderable.dirtyAllocations;
 
@@ -317,7 +332,7 @@ QDataStream& IERenderable::deserialize(QDataStream& in, Serializable& obj)
         renderable.buffers.insert(name, buffer);
     }
 
-    in >> renderable.primitiveMode >> renderable.meshID
+    in >> renderable.primitiveMode >> renderable.meshId
        >> renderable.materialId >> renderable.shaderId
        >> renderable.dirtyAllocations;
 

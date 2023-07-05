@@ -24,7 +24,7 @@ protected:
 
     IERenderableType type;
     GLenum primitiveMode;
-    uint64_t meshID;
+    uint64_t meshId;
     uint64_t materialId;
     uint64_t shaderId;
 
@@ -40,6 +40,7 @@ public:
                  const uint64_t maID,
                  const uint64_t sID,
                  QObject* parent = nullptr);
+    IERenderable(IERenderable* parent);
     IERenderable(const IERenderable&) = delete;
     virtual ~IERenderable();
 
@@ -73,9 +74,9 @@ public:
     bool doesBufferExist(const QString& name);
     IEBufferObject* getBuffer(const QString& name);
 
-    IERenderableType getRenderableType() const { return type; }
+    IERenderableType getType() const { return type; }
     GLenum getPrimitiveMode() const { return primitiveMode; }
-    uint64_t getMeshId() const { return meshID; }
+    uint64_t getMeshId() const { return meshId; }
     uint64_t getMaterialId() const { return materialId; }
     uint64_t getShaderId() const { return shaderId; }
     IERenderable* getParent() { return parent; }
@@ -83,7 +84,7 @@ public:
     QVector<IERenderable*>& getRenderables() { return renderables; }
 
     void setPrimitiveMode(const GLenum val) { primitiveMode = val; }
-    void setMeshId(const uint64_t val) { meshID = val; }
+    void setMeshId(const uint64_t val) { meshId = val; }
     void setMaterialId(const uint64_t val) { materialId = val; }
     void setShaderId(const uint64_t val) { shaderId = val; }
     void setParent(IERenderable* val) { parent = val; }
