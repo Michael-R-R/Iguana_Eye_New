@@ -23,6 +23,7 @@ IETInstIndexRenderable::IETInstIndexRenderable() :
     mesh(nullptr), material(nullptr),
     shader(nullptr), renderable(nullptr),
     meshPath("./resources/root/Content/cube/cube.obj"),
+    materialPath("./resources/root/Content/material.iemat"),
     shaderPath("./resources/shaders/tests/instanced_renderable.glsl"),
     createCount(1),
     showCount(0),
@@ -113,52 +114,27 @@ void IETInstIndexRenderable::createResources()
     delete renderable;
 
     mesh = new IEMesh(meshPath, this);
-    material = new IEMaterial("./resources/root/Content/test.iemat", this);
+    material = new IEMaterial(materialPath, this);
     shader = new IEShader(shaderPath, this);
+    renderable = new IEInstIndexRenderable(this);
 
-    IEMeshImport::importMesh(mesh->getName(), *mesh, *material);
+    IEMeshImport::importMesh(mesh->getName(), *mesh, *material, *shader, *renderable);
     IEShaderImport::importShader(shader->getName(), *shader);
 
-    renderable = new IEInstIndexRenderable("", mesh->getId(), material->getId(), shader->getId(), this);
-    processNode(shader, mesh, renderable);
-}
-
-void IETInstIndexRenderable::processNode(IEShader* shader, IEMesh* mesh, IEInstIndexRenderable* ieRenderable)
-{
-    auto& meshes = mesh->getMeshes();
-    for(int i = 0; i < meshes.size(); i++)
+    auto& meChildren = mesh->getChildren();
+    auto& rChildren = renderable->getChildren();
+    for(int i = 0; i < rChildren.size(); i++)
     {
-        auto* renderable = new IEInstIndexRenderable(ieRenderable);
-        processRenderable(shader, meshes[i], renderable);
-        ieRenderable->getRenderables().append(renderable);
+        auto& meshes = meChildren[i]->getMeshes();
+        auto& renderables = rChildren[i]->getRenderables();
+        for(int j = 0; j < renderables.size(); j++)
+        {
+            auto* temp = static_cast<IEInstIndexRenderable*>(renderables[j]);
+            temp->addIBO(new IEIndexBufferObject(meshes[j]->getIndices(), temp));
+            temp->addBuffer("aModel", IEBufferObjectFactory::make(IEBufferType::Mat4, 4, 68, 16, 4, temp));
+            temp->build(*shader);
+        }
     }
-
-    auto& children = mesh->getChildren();
-    for(int i = 0; i < children.size(); i++)
-    {
-        auto* child = new IEInstIndexRenderable(ieRenderable);
-        processNode(shader, children[i], child);
-        ieRenderable->getChildren().append(child);
-    }
-}
-
-void IETInstIndexRenderable::processRenderable(IEShader* shader, IEMesh* mesh, IEInstIndexRenderable* renderable)
-{
-    renderable->addIBO(new IEIndexBufferObject(mesh->getIndices(), renderable));
-    renderable->addBuffer("aPos", IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, renderable));
-    renderable->addBuffer("aNormal", IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, renderable));
-    renderable->addBuffer("aTangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, renderable));
-    renderable->addBuffer("aBitangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, renderable));
-    renderable->addBuffer("aTexCoord", IEBufferObjectFactory::make(IEBufferType::Vec2, 3, 0, 0, 0, renderable));
-    renderable->addBuffer("aModel", IEBufferObjectFactory::make(IEBufferType::Mat4, 4, 68, 16, 4, renderable));
-
-    renderable->setBufferValues("aPos", mesh->getPosVertices());
-    renderable->setBufferValues("aNormal", mesh->getNormVertices());
-    renderable->setBufferValues("aTangent", mesh->getTanVertices());
-    renderable->setBufferValues("aBitangent", mesh->getBiTanVertices());
-    renderable->setBufferValues("aTexCoord", mesh->getTexVertices());
-
-    renderable->build(*shader);
 }
 
 void IETInstIndexRenderable::appendShown()
@@ -223,20 +199,23 @@ void IETInstIndexRenderable::serialize()
     if(!renderable)
         return;
 
-    IESerialize::write<IERenderable>("./resources/renderables/test.ierend", renderable);
+    IESerialize::write<IERenderable>(renderable->getName(), renderable);
 }
 
 void IETInstIndexRenderable::deserialize()
 {
+    QString path = "";
+
     if(renderable)
     {
+        path = renderable->getName();
         delete renderable;
     }
 
     ApplicationWindow::instance().getGame()->makeCurrent();
 
     renderable = new IEInstIndexRenderable(this);
-    IESerialize::read<IEInstIndexRenderable>("./resources/renderables/test.ierend", renderable);
+    IESerialize::read<IEInstIndexRenderable>(path, renderable);
 
     foreach(auto* child, renderable->getChildren())
     {

@@ -19,6 +19,7 @@ class IETInstIndexRenderable : public QWidget
     IEInstIndexRenderable* renderable;
 
     QString meshPath;
+    QString materialPath;
     QString shaderPath;
     int createCount;
     int showCount;
@@ -33,8 +34,6 @@ public:
 private:
     void setup();
     void createResources();
-    void processNode(IEShader* shader, IEMesh* mesh, IEInstIndexRenderable* renderable);
-    void processRenderable(IEShader* shader, IEMesh* mesh, IEInstIndexRenderable* renderable);
     void appendShown();
     void showInstances();
     void hideInstances();
