@@ -78,7 +78,7 @@ void IEGameStopState::onResize(const float w, const float h)
     eCamera->updateProjection(w, h);
 }
 
-QDataStream& IEGameStopState::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEGameStopState::serialize(QDataStream& out, const IESerializable& obj) const
 {
     const IEGameStopState& state = static_cast<const IEGameStopState&>(obj);
 
@@ -87,7 +87,7 @@ QDataStream& IEGameStopState::serialize(QDataStream& out, const Serializable& ob
     return out;
 }
 
-QDataStream& IEGameStopState::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEGameStopState::deserialize(QDataStream& in, IESerializable& obj)
 {
     IEGameStopState& state = static_cast<IEGameStopState&>(obj);
 

@@ -55,7 +55,7 @@ void IEMaterial::removeTextureID(IETextureType type)
     textureIDs.remove(type);
 }
 
-QDataStream& IEMaterial::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEMaterial::serialize(QDataStream& out, const IESerializable& obj) const
 {
     IEFileResource::serialize(out, obj);
 
@@ -66,7 +66,7 @@ QDataStream& IEMaterial::serialize(QDataStream& out, const Serializable& obj) co
     return out;
 }
 
-QDataStream& IEMaterial::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEMaterial::deserialize(QDataStream& in, IESerializable& obj)
 {
     IEFileResource::deserialize(in, obj);
 

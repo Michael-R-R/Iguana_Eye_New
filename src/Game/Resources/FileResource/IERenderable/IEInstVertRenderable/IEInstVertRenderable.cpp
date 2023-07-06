@@ -55,12 +55,12 @@ bool IEInstVertRenderable::handleDraw(const QVector<std::any>&)
     return true;
 }
 
-QDataStream& IEInstVertRenderable::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEInstVertRenderable::serialize(QDataStream& out, const IESerializable& obj) const
 {
     return IEInstRenderable::serialize(out, obj);
 }
 
-QDataStream& IEInstVertRenderable::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEInstVertRenderable::deserialize(QDataStream& in, IESerializable& obj)
 {
     return IEInstRenderable::deserialize(in, obj);
 }

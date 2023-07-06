@@ -52,12 +52,12 @@ bool IEVertRenderable::handleDraw(const QVector<std::any>&)
     return true;
 }
 
-QDataStream& IEVertRenderable::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEVertRenderable::serialize(QDataStream& out, const IESerializable& obj) const
 {
     return IERenderable::serialize(out, obj);
 }
 
-QDataStream& IEVertRenderable::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEVertRenderable::deserialize(QDataStream& in, IESerializable& obj)
 {
     return IERenderable::deserialize(in, obj);
 }

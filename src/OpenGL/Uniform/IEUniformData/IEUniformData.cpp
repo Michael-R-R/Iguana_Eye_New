@@ -164,7 +164,7 @@ void IEUniformData::removeCol(const QString& name)
     colData.remove(name);
 }
 
-QDataStream& IEUniformData::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEUniformData::serialize(QDataStream& out, const IESerializable& obj) const
 {
     const auto& uniform = static_cast<const IEUniformData&>(obj);
 
@@ -177,7 +177,7 @@ QDataStream& IEUniformData::serialize(QDataStream& out, const Serializable& obj)
     return out;
 }
 
-QDataStream& IEUniformData::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEUniformData::deserialize(QDataStream& in, IESerializable& obj)
 {
     auto& uniform = static_cast<IEUniformData&>(obj);
 

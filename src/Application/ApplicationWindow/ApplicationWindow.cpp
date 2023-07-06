@@ -123,7 +123,7 @@ void ApplicationWindow::clearActions()
     this->addActions(QList<QAction*>());
 }
 
-QDataStream& ApplicationWindow::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& ApplicationWindow::serialize(QDataStream& out, const IESerializable& obj) const
 {
     const ApplicationWindow& app = static_cast<const ApplicationWindow&>(obj);
 
@@ -134,7 +134,7 @@ QDataStream& ApplicationWindow::serialize(QDataStream& out, const Serializable& 
     return out;
 }
 
-QDataStream& ApplicationWindow::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& ApplicationWindow::deserialize(QDataStream& in, IESerializable& obj)
 {
     ApplicationWindow& app = static_cast<ApplicationWindow&>(obj);
 

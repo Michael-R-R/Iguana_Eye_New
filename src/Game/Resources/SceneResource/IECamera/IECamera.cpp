@@ -31,7 +31,7 @@ void IECamera::updateView(const QVector3D& position, const QVector3D& rotation)
     view.lookAt(position, position + rotation, up);
 }
 
-QDataStream& IECamera::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IECamera::serialize(QDataStream& out, const IESerializable& obj) const
 {
     IESceneResource::serialize(out, obj);
 
@@ -45,7 +45,7 @@ QDataStream& IECamera::serialize(QDataStream& out, const Serializable& obj) cons
     return out;
 }
 
-QDataStream& IECamera::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IECamera::deserialize(QDataStream& in, IESerializable& obj)
 {
     IESceneResource::deserialize(in, obj);
 

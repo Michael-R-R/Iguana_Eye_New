@@ -10,11 +10,11 @@
 #include <QMatrix4x4>
 #include <QColor>
 
-#include "Serializable.h"
+#include "IESerializable.h"
 
 class IEShader;
 
-class IEUniformData : public Serializable
+class IEUniformData : public IESerializable
 {
     QMap<QString, int> intData;
     QMap<QString, float> floatData;
@@ -73,6 +73,6 @@ public:
     void setMat4Data(const QMap<QString, QMatrix4x4>& val) { mat4Data = val; }
     void setColData(const QMap<QString, QColor>& val) { colData = val; }
 
-    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
-    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
+    QDataStream& serialize(QDataStream &out, const IESerializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, IESerializable &obj) override;
 };

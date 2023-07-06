@@ -34,12 +34,12 @@ void IEShader::build()
     this->link();
 }
 
-QDataStream& IEShader::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEShader::serialize(QDataStream& out, const IESerializable& obj) const
 {
     return IEFileResource::serialize(out, obj);
 }
 
-QDataStream& IEShader::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEShader::deserialize(QDataStream& in, IESerializable& obj)
 {
     return IEFileResource::deserialize(in, obj);
 }

@@ -85,7 +85,7 @@ void IEInstIndexRenderable::addIBO(IEIndexBufferObject* ibo)
     IBO->setParent(this);
 }
 
-QDataStream& IEInstIndexRenderable::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEInstIndexRenderable::serialize(QDataStream& out, const IESerializable& obj) const
 {
     IEInstRenderable::serialize(out, obj);
 
@@ -96,7 +96,7 @@ QDataStream& IEInstIndexRenderable::serialize(QDataStream& out, const Serializab
     return out;
 }
 
-QDataStream& IEInstIndexRenderable::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEInstIndexRenderable::deserialize(QDataStream& in, IESerializable& obj)
 {
     IEInstRenderable::deserialize(in, obj);
 

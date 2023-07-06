@@ -25,12 +25,12 @@ void IEGameState::deserializeTemporary(IEGame& game)
     IEFile::removeFile("./resources/temp/backup/game.iedat");
 }
 
-QDataStream& IEGameState::serialize(QDataStream& out, const Serializable&) const
+QDataStream& IEGameState::serialize(QDataStream& out, const IESerializable&) const
 {
     return out;
 }
 
-QDataStream& IEGameState::deserialize(QDataStream& in, Serializable&)
+QDataStream& IEGameState::deserialize(QDataStream& in, IESerializable&)
 {
     return in;
 }

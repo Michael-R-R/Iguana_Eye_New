@@ -96,7 +96,7 @@ void InputContainer::clear()
     emit cleared();
 }
 
-QDataStream& InputContainer::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& InputContainer::serialize(QDataStream& out, const IESerializable& obj) const
 {
     const auto& container = static_cast<const InputContainer&>(obj);
 
@@ -113,7 +113,7 @@ QDataStream& InputContainer::serialize(QDataStream& out, const Serializable& obj
     return out;
 }
 
-QDataStream& InputContainer::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& InputContainer::deserialize(QDataStream& in, IESerializable& obj)
 {
     auto& container = static_cast<InputContainer&>(obj);
 

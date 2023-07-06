@@ -47,7 +47,7 @@ void InputKey::update(const int mod, const int key)
     emit updated(keySequence);
 }
 
-QDataStream& InputKey::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& InputKey::serialize(QDataStream& out, const IESerializable& obj) const
 {
     const auto& input = static_cast<const InputKey&>(obj);
 
@@ -56,7 +56,7 @@ QDataStream& InputKey::serialize(QDataStream& out, const Serializable& obj) cons
     return out;
 }
 
-QDataStream& InputKey::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& InputKey::deserialize(QDataStream& in, IESerializable& obj)
 {
     auto& input = static_cast<InputKey&>(obj);
 

@@ -93,7 +93,7 @@ void ECamera::updateRotation(IEInput* input, const float dt)
     }
 }
 
-QDataStream& ECamera::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& ECamera::serialize(QDataStream& out, const IESerializable& obj) const
 {
     IECamera::serialize(out, obj);
 
@@ -105,7 +105,7 @@ QDataStream& ECamera::serialize(QDataStream& out, const Serializable& obj) const
     return out;
 }
 
-QDataStream& ECamera::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& ECamera::deserialize(QDataStream& in, IESerializable& obj)
 {
     IECamera::deserialize(in, obj);
 

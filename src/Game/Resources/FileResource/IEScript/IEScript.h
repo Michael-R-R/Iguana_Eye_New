@@ -51,7 +51,7 @@ public:
     sol::object getFunc(const char* name) const;
     sol::object callFunc(const char* name, sol::variadic_args args) const;
 
-    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
-    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
+    QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, IESerializable& obj) override;
 };
 

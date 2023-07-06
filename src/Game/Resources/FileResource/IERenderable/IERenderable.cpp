@@ -246,7 +246,7 @@ IEBufferObject* IERenderable::getBuffer(const QString& name)
     return buffers[name];
 }
 
-QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IERenderable::serialize(QDataStream& out, const IESerializable& obj) const
 {
     IEFileResource::serialize(out, obj);
 
@@ -286,7 +286,7 @@ QDataStream& IERenderable::serialize(QDataStream& out, const Serializable& obj) 
     return out;
 }
 
-QDataStream& IERenderable::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IERenderable::deserialize(QDataStream& in, IESerializable& obj)
 {
     IEFileResource::deserialize(in, obj);
 

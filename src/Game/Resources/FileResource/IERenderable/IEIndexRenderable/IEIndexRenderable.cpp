@@ -70,7 +70,7 @@ bool IEIndexRenderable::handleDraw(const QVector<std::any>&)
     return true;
 }
 
-QDataStream& IEIndexRenderable::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEIndexRenderable::serialize(QDataStream& out, const IESerializable& obj) const
 {
     IERenderable::serialize(out, obj);
 
@@ -81,7 +81,7 @@ QDataStream& IEIndexRenderable::serialize(QDataStream& out, const Serializable& 
     return out;
 }
 
-QDataStream& IEIndexRenderable::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEIndexRenderable::deserialize(QDataStream& in, IESerializable& obj)
 {
     IERenderable::deserialize(in, obj);
 

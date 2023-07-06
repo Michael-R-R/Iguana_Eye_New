@@ -144,7 +144,7 @@ void IEGame::onRenderFrame()
     this->update();
 }
 
-QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEGame::serialize(QDataStream& out, const IESerializable& obj) const
 {
     const IEGame& game = static_cast<const IEGame&>(obj);
 
@@ -158,7 +158,7 @@ QDataStream& IEGame::serialize(QDataStream& out, const Serializable& obj) const
     return out;
 }
 
-QDataStream& IEGame::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEGame::deserialize(QDataStream& in, IESerializable& obj)
 {
     IEGame& game = static_cast<IEGame&>(obj);
     game.makeCurrent();

@@ -29,12 +29,12 @@ uint64_t IESceneResource::updateId(const QString& path)
     return id;
 }
 
-QDataStream& IESceneResource::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IESceneResource::serialize(QDataStream& out, const IESerializable& obj) const
 {
     return IEResource::serialize(out, obj);
 }
 
-QDataStream& IESceneResource::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IESceneResource::deserialize(QDataStream& in, IESerializable& obj)
 {
     return IEResource::deserialize(in, obj);
 }

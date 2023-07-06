@@ -30,12 +30,12 @@ uint64_t IEFileResource::updateId(const QString& path)
     return id;
 }
 
-QDataStream& IEFileResource::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEFileResource::serialize(QDataStream& out, const IESerializable& obj) const
 {
     return IEResource::serialize(out, obj);
 }
 
-QDataStream& IEFileResource::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEFileResource::deserialize(QDataStream& in, IESerializable& obj)
 {
     return IEResource::deserialize(in, obj);
 }

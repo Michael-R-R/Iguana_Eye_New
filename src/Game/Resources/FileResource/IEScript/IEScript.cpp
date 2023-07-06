@@ -121,7 +121,7 @@ sol::object IEScript::callFunc(const char* name, sol::variadic_args args) const
     return env[name](args);
 }
 
-QDataStream& IEScript::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEScript::serialize(QDataStream& out, const IESerializable& obj) const
 {
     IEFileResource::serialize(out, obj);
 
@@ -132,7 +132,7 @@ QDataStream& IEScript::serialize(QDataStream& out, const Serializable& obj) cons
     return out;
 }
 
-QDataStream& IEScript::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEScript::deserialize(QDataStream& in, IESerializable& obj)
 {
     IEFileResource::deserialize(in, obj);
 

@@ -25,12 +25,12 @@ IEMesh::~IEMesh()
 
 }
 
-QDataStream& IEMesh::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEMesh::serialize(QDataStream& out, const IESerializable& obj) const
 {
     return IEFileResource::serialize(out, obj);
 }
 
-QDataStream& IEMesh::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEMesh::deserialize(QDataStream& in, IESerializable& obj)
 {
     return IEFileResource::deserialize(in, obj);
 }

@@ -33,7 +33,7 @@ private:
     void updateRotation(IEInput* input, const float dt);
 
 public:
-    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
-    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
+    QDataStream& serialize(QDataStream &out, const IESerializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, IESerializable &obj) override;
 };
 

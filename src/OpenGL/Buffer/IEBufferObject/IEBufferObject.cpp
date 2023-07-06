@@ -16,7 +16,7 @@ IEBufferObject::~IEBufferObject()
         this->destroy();
 }
 
-QDataStream& IEBufferObject::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEBufferObject::serialize(QDataStream& out, const IESerializable& obj) const
 {
     const auto& buffer = static_cast<const IEBufferObject&>(obj);
 
@@ -25,7 +25,7 @@ QDataStream& IEBufferObject::serialize(QDataStream& out, const Serializable& obj
     return out;
 }
 
-QDataStream& IEBufferObject::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEBufferObject::deserialize(QDataStream& in, IESerializable& obj)
 {
     auto& buffer = static_cast<IEBufferObject&>(obj);
 

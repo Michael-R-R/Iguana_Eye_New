@@ -160,7 +160,7 @@ bool IEInstRenderable::hiddenIndexBoundsCheck(const int index)
     return (index > -1 && index < hidden);
 }
 
-QDataStream& IEInstRenderable::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEInstRenderable::serialize(QDataStream& out, const IESerializable& obj) const
 {
     IERenderable::serialize(out, obj);
 
@@ -189,7 +189,7 @@ QDataStream& IEInstRenderable::serialize(QDataStream& out, const Serializable& o
     return out;
 }
 
-QDataStream& IEInstRenderable::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEInstRenderable::deserialize(QDataStream& in, IESerializable& obj)
 {
     IERenderable::deserialize(in, obj);
 

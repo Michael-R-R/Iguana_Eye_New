@@ -13,7 +13,7 @@ IEResource::~IEResource()
 
 }
 
-QDataStream& IEResource::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEResource::serialize(QDataStream& out, const IESerializable& obj) const
 {
     const IEResource& resource = static_cast<const IEResource&>(obj);
 
@@ -22,7 +22,7 @@ QDataStream& IEResource::serialize(QDataStream& out, const Serializable& obj) co
     return out;
 }
 
-QDataStream& IEResource::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEResource::deserialize(QDataStream& in, IESerializable& obj)
 {
     IEResource& resource = static_cast<IEResource&>(obj);
 

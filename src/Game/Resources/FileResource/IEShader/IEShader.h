@@ -31,6 +31,6 @@ public:
     void setVertexSrc(const QString& val) { vertexSource = val; }
     void setFragmentSrc(const QString& val) { fragmentSource = val; }
 
-    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
-    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
+    QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, IESerializable& obj) override;
 };

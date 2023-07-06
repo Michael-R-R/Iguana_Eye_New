@@ -27,8 +27,8 @@ public:
     const QString& getName() const { return name; }
     uint64_t getId() const { return id; }
 
-    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
-    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
+    QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, IESerializable& obj) override;
 
 signals:
     void nameUpdated(const uint64_t id, const QString& path);

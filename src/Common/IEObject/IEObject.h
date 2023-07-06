@@ -2,9 +2,9 @@
 
 #include <QObject>
 
-#include "Serializable.h"
+#include "IESerializable.h"
 
-class IEObject : public QObject, public Serializable
+class IEObject : public QObject, public IESerializable
 {
     Q_OBJECT
 
@@ -18,8 +18,8 @@ public:
     IEObject(QObject* parent = nullptr);
     virtual ~IEObject();
 
-    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
-    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
+    QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, IESerializable& obj) override;
 
 signals:
     void message(const QString& msg, const IEObject::MessageType type = IEObject::MessageType::Normal);

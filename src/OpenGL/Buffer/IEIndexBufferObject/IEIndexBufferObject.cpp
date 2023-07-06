@@ -108,7 +108,7 @@ void IEIndexBufferObject::setValues(const std::any& val)
     values = (val.has_value()) ? std::any_cast<QVector<unsigned>>(val) : QVector<unsigned>{};
 }
 
-QDataStream& IEIndexBufferObject::serialize(QDataStream& out, const Serializable& obj) const
+QDataStream& IEIndexBufferObject::serialize(QDataStream& out, const IESerializable& obj) const
 {
     IEBufferObject::serialize(out, obj);
 
@@ -119,7 +119,7 @@ QDataStream& IEIndexBufferObject::serialize(QDataStream& out, const Serializable
     return out;
 }
 
-QDataStream& IEIndexBufferObject::deserialize(QDataStream& in, Serializable& obj)
+QDataStream& IEIndexBufferObject::deserialize(QDataStream& in, IESerializable& obj)
 {
     IEBufferObject::deserialize(in, obj);
 

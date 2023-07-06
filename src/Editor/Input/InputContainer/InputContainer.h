@@ -5,9 +5,9 @@
 #include <QString>
 
 #include "InputKey.h"
-#include "Serializable.h"
+#include "IESerializable.h"
 
-class InputContainer : public QObject, public Serializable
+class InputContainer : public QObject, public IESerializable
 {
     Q_OBJECT
 
@@ -33,6 +33,6 @@ signals:
     void cleared();
 
 public:
-    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
-    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
+    QDataStream& serialize(QDataStream &out, const IESerializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, IESerializable &obj) override;
 };

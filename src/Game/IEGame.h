@@ -6,8 +6,8 @@
 #include <QVector>
 #include <QMap>
 
-#include "Serializable.h"
-#include "IEGameSystem.h"
+#include "IESerializable.h"
+#include "IESystem.h"
 
 class ApplicationWindow;
 class IERenderEngine;
@@ -19,7 +19,7 @@ class IEScriptEngine;
 class IETime;
 class IEGameState;
 
-class IEGame : public QOpenGLWidget, public Serializable
+class IEGame : public QOpenGLWidget, public IESerializable
 {
     Q_OBJECT
 
@@ -27,7 +27,7 @@ class IEGame : public QOpenGLWidget, public Serializable
     QOpenGLFunctions* glFunc;
     QOpenGLExtraFunctions* glExtraFunc;
 
-    QVector<IEGameSystem*> systems;
+    QVector<IESystem*> systems;
     QHash<size_t, int> systemsIndex;
 
     IEGameState* state;
@@ -59,8 +59,8 @@ public slots:
     void onRenderFrame();
 
 public:
-    QDataStream& serialize(QDataStream &out, const Serializable &obj) const override;
-    QDataStream& deserialize(QDataStream &in, Serializable &obj) override;
+    QDataStream& serialize(QDataStream &out, const IESerializable &obj) const override;
+    QDataStream& deserialize(QDataStream &in, IESerializable &obj) override;
 
 signals:
     void initialized();
@@ -68,7 +68,7 @@ signals:
 
 public:
     template<class T>
-    bool appendSystem(IEGameSystem* system)
+    bool appendSystem(IESystem* system)
     {
         size_t key = typeid(T).hash_code();
         if(!system || doesSystemExist(key))

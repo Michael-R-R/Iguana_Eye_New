@@ -2,7 +2,7 @@
 
 #include <QMainWindow>
 
-#include "Serializable.h"
+#include "IESerializable.h"
 #include "ApplicationFileHandler.h"
 
 class IEGame;
@@ -12,7 +12,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class ApplicationWindow; }
 QT_END_NAMESPACE
 
-class ApplicationWindow : public QMainWindow, public Serializable
+class ApplicationWindow : public QMainWindow, public IESerializable
 {
     Q_OBJECT
 
@@ -55,6 +55,6 @@ private:
     void clearActions();
 
 public:
-    QDataStream& serialize(QDataStream& out, const Serializable& obj) const override;
-    QDataStream& deserialize(QDataStream& in, Serializable& obj) override;
+    QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override;
+    QDataStream& deserialize(QDataStream& in, IESerializable& obj) override;
 };
