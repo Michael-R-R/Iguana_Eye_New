@@ -231,6 +231,7 @@ INCLUDEPATH += $$PWD/src/Game/System/IEManager \
     $$PWD/src/Game/System/IEManager/IERenderableManager \
     $$PWD/src/Game/System/IEManager/IEResourceManager \
     $$PWD/src/Game/System/IEManager/IEShaderManager \
+    $$PWD/src/Game/System/IEManager/IETexture2DManager \
 
 INCLUDEPATH += $$PWD/src/OpenGL \
 

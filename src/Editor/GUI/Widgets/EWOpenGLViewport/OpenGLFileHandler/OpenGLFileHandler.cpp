@@ -54,61 +54,7 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
     game->makeCurrent();
 
     // --- Create or get mesh --- //
-    auto* scene = game->getSystem<IEScene>();
-    auto* meManager = scene->getManager<IEMeshManager>();
-    auto* maMaterial = scene->getManager<IEMaterialManager>();
-    auto* sManager = scene->getManager<IEShaderManager>();
-    auto* rManager = scene->getManager<IERenderableManager>();
-
-    const uint64_t meshId = IEHash::Compute(path);
-    const uint64_t materialId = maMaterial->getDefaultId();
-    const uint64_t shaderId = sManager->getDefaultId();
-
-    IEMesh* mesh = nullptr;
-    if(!meManager->doesExist(meshId))
-    {
-        mesh = new IEMesh(path, meManager);
-        if(!IEMeshImport::importMesh(path, *mesh))
-            return;
-
-        if(!meManager->add(meshId, mesh))
-        {
-            delete mesh;
-            return;
-        }
-    }
-    else
-    {
-        mesh = meManager->value<IEMesh>(meshId);
-    }
-
-    // --- Create entity and attach components --- //
-    auto* ecs = game->getSystem<IEECS>();
-    auto* meSystem = ecs->getComponent<IEECSMeshSystem>();
-    auto* maSystem = ecs->getComponent<IEECSMaterialSystem>();
-    auto* sSystem = ecs->getComponent<IEECSShaderSystem>();
-    auto* rSystem = ecs->getComponent<IEECSRenderableSystem>();
-
-    IEEntity entity = ecs->create();
-    const int meIndex = ecs->attachComponent<IEECSMeshSystem>(entity);
-    const int maIndex = ecs->attachComponent<IEECSMaterialSystem>(entity);
-    const int sIndex = ecs->attachComponent<IEECSShaderSystem>(entity);
-    const int rIndex = ecs->attachComponent<IEECSRenderableSystem>(entity);
-
-    meSystem->setResourceId(meIndex, meshId);
-    maSystem->setResourceId(maIndex, materialId);
-    sSystem->setResourceId(sIndex, shaderId);
-
-    // --- Create renderable or create instance --- //
-    QString rPath = QString("./resources/renderables/%1/%2/%3/r.ierend").arg(QString::number(meshId),
-                                                                             QString::number(materialId),
-                                                                             QString::number(shaderId));
-    const uint64_t rID = IEHash::Compute(rPath);
-
-    if(!rManager->doesExist(rID))
-    {
-        // TODO implement
-    }
+    // TODO implement
 }
 
 void OpenGLFileHandler::handleGlslFile(const QString& path)

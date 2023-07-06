@@ -16,6 +16,8 @@ IEMaterialManager::~IEMaterialManager()
 
 QDataStream& IEMaterialManager::serialize(QDataStream& out, const IESerializable& obj) const
 {
+    IEResourceManager::serialize(out, obj);
+
     const auto& manager = static_cast<const IEMaterialManager&>(obj);
 
     out << (int)manager.resources.size();
@@ -32,13 +34,15 @@ QDataStream& IEMaterialManager::serialize(QDataStream& out, const IESerializable
 
 QDataStream& IEMaterialManager::deserialize(QDataStream& in, IESerializable& obj)
 {
+    IEResourceManager::deserialize(in, obj);
+
     auto& manager = static_cast<IEMaterialManager&>(obj);
 
-    int size = 0;
-    in >> size;
+    int count = 0;
+    in >> count;
 
     QString path = "";
-    for(int i = 0; i < size; i++)
+    for(int i = 0; i < count; i++)
     {
         in >> path;
 

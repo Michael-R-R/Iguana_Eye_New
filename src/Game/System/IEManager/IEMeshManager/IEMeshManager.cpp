@@ -1,6 +1,6 @@
 #include "IEMeshManager.h"
 #include "IEMesh.h"
-#include "IEMeshImport.h"
+#include "IESerialize.h"
 
 IEMeshManager::IEMeshManager(QObject* parent) :
     IEResourceManager(parent)
@@ -15,13 +15,17 @@ IEMeshManager::~IEMeshManager()
 
 QDataStream& IEMeshManager::serialize(QDataStream& out, const IESerializable& obj) const
 {
+    IEResourceManager::serialize(out, obj);
+
     const IEMeshManager& manager = static_cast<const IEMeshManager&>(obj);
 
     out << (int)manager.resources.size();
 
-    for(auto* i : qAsConst(manager.resources))
+    foreach (auto* i, manager.resources)
     {
         out << i->getName();
+
+        IESerialize::write<IEMesh>(i->getName(), static_cast<IEMesh*>(i));
     }
 
     return out;
@@ -29,20 +33,21 @@ QDataStream& IEMeshManager::serialize(QDataStream& out, const IESerializable& ob
 
 QDataStream& IEMeshManager::deserialize(QDataStream& in, IESerializable& obj)
 {
+    IEResourceManager::deserialize(in, obj);
+
     IEMeshManager& manager = static_cast<IEMeshManager&>(obj);
 
-    int size = 0;
-    in >> size;
+    int count = 0;
+    in >> count;
 
-    for(int i = 0; i < size; i++)
+    QString path = "";
+    for(int i = 0; i < count; i++)
     {
-        QString path = "";
-
         in >> path;
 
-        auto* mesh = new IEMesh(path, &manager);
+        auto* mesh = new IEMesh(&manager);
 
-        if(!IEMeshImport::importMesh(path, *mesh))
+        if(!IESerialize::read<IEMesh>(path, mesh))
         {
             delete mesh;
             continue;

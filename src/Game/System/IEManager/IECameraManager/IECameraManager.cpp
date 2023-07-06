@@ -15,15 +15,15 @@ IECameraManager::~IECameraManager()
 
 QDataStream& IECameraManager::serialize(QDataStream& out, const IESerializable& obj) const
 {
+    IEResourceManager::serialize(out, obj);
+
     const auto& manager = static_cast<const IECameraManager&>(obj);
 
     out << (int)manager.resources.size();
 
-    for(auto* i : qAsConst(manager.resources))
+    foreach (auto* i, manager.resources)
     {
-        auto* camera = static_cast<IECamera*>(i);
-
-        out << *camera;
+        out << *i;
     }
 
     return out;
@@ -31,12 +31,14 @@ QDataStream& IECameraManager::serialize(QDataStream& out, const IESerializable& 
 
 QDataStream& IECameraManager::deserialize(QDataStream& in, IESerializable& obj)
 {
+    IEResourceManager::deserialize(in, obj);
+
     auto& manager = static_cast<IECameraManager&>(obj);
 
-    int size = 0;
-    in >> size;
+    int count = 0;
+    in >> count;
 
-    for(int i = 0; i < size; i++)
+    for(int i = 0; i < count; i++)
     {
         auto* camera = new IECamera(&manager);
 

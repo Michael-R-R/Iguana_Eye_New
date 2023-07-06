@@ -23,7 +23,7 @@ public:
     bool operator<(const IEShader& other) { return IEResource::operator<(other); }
     bool operator>(const IEShader& other) { return IEResource::operator>(other); }
 
-    void build();
+    bool build();
 
     QString getVertexSrc() const { return vertexSource; }
     QString getFragmentSrc() const { return fragmentSource; }

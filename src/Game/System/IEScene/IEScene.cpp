@@ -4,6 +4,7 @@
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
 #include "IECameraManager.h"
+#include "IETexture2DManager.h"
 
 IEScene::IEScene(QObject* parent) :
     IESystem(parent),
@@ -24,6 +25,7 @@ void IEScene::startup(IEGame& game)
     appendManager<IEShaderManager>(new IEShaderManager(this));
     appendManager<IERenderableManager>(new IERenderableManager(this));
     appendManager<IECameraManager>(new IECameraManager(this));
+    appendManager<IETexture2DManager>(new IETexture2DManager(this));
 
     foreach (auto* i, managers)
     {

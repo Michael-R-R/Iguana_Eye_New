@@ -4,7 +4,8 @@
 IEShader::IEShader(QObject* parent) :
     QOpenGLShaderProgram(),
     IEFileResource(parent),
-    vertexSource(), fragmentSource()
+    vertexSource(),
+    fragmentSource()
 {
 
 }
@@ -23,15 +24,33 @@ IEShader::~IEShader()
     this->removeAllShaders();
 }
 
-void IEShader::build()
+bool IEShader::build()
 {
     if(this->shaders().size() > 0)
         this->removeAllShaders();
 
-    this->create();
-    this->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexSource);
-    this->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentSource);
-    this->link();
+    if(!this->create())
+        return false;
+
+    if(!this->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexSource))
+    {
+        this->removeAllShaders();
+        return false;
+    }
+
+    if(!this->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentSource))
+    {
+        this->removeAllShaders();
+        return false;
+    }
+
+    if(!this->link())
+    {
+        this->removeAllShaders();
+        return false;
+    }
+
+    return true;
 }
 
 QDataStream& IEShader::serialize(QDataStream& out, const IESerializable& obj) const

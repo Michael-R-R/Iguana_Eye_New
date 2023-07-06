@@ -3,8 +3,7 @@
 
 IEResourceManager::IEResourceManager(QObject* parent) :
     IESystem(parent),
-    resources(),
-    defaultId(0)
+    resources()
 {
 
 }
@@ -16,12 +15,12 @@ IEResourceManager::~IEResourceManager()
 
 void IEResourceManager::shutdown(IEGame&)
 {
-    clear();
+    cleanup();
 }
 
 void IEResourceManager::onDeserialize(IEGame&)
 {
-    clear();
+    cleanup();
 }
 
 bool IEResourceManager::add(const uint64_t key, IEResource* value)
@@ -70,7 +69,7 @@ bool IEResourceManager::doesExist(const uint64_t key) const
     return resources.contains(key);
 }
 
-void IEResourceManager::clear()
+void IEResourceManager::cleanup()
 {
     for(auto* i : qAsConst(resources))
     {
@@ -79,7 +78,6 @@ void IEResourceManager::clear()
     }
 
     resources.clear();
-    defaultId = 0;
 }
 
 QDataStream& IEResourceManager::serialize(QDataStream& out, const IESerializable&) const

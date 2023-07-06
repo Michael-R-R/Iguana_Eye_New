@@ -12,7 +12,6 @@ class IEResourceManager : public IESystem
 
 protected:
     QHash<uint64_t, IEResource*> resources;
-    uint64_t defaultId;
 
 public:
     IEResourceManager(QObject* parent = nullptr);
@@ -27,9 +26,8 @@ public:
     virtual bool changeKey(const uint64_t oldKey, const uint64_t newKey);
 
     bool doesExist(const uint64_t key) const;
-    void clear();
+    void cleanup();
 
-    uint64_t getDefaultId() const { return defaultId; }
     QHash<uint64_t, IEResource*>& getResources() { return resources; }
 
     QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override;
