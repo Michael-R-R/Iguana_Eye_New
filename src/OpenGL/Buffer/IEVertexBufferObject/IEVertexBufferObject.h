@@ -89,7 +89,7 @@ public:
 
     void handleSuballocate(const int index) override
     {
-        if(index < 0 || index > values.size() - 1)
+        if(index < 0 || index >= values.size())
             return;
 
         if(!isCreated())

@@ -6,6 +6,7 @@
 #include "IEECS.h"
 #include "IEInput.h"
 #include "IEScriptEngine.h"
+#include "IEUboManager.h"
 #include "IETime.h"
 #include "IEGameState.h"
 
@@ -76,6 +77,7 @@ void IEGame::startUp()
     appendSystem<IEPhysicsEngine>(new IEPhysicsEngine(this));
     appendSystem<IERenderEngine>(new IERenderEngine(this));
     appendSystem<IEECS>(new IEECS(this));
+    appendSystem<IEUboManager>(new IEUboManager(this));
     appendSystem<IETime>(new IETime(this));
 
     foreach (auto* i, qAsConst(systems))

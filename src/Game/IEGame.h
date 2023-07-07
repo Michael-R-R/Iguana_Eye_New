@@ -9,14 +9,6 @@
 #include "IESerializable.h"
 #include "IESystem.h"
 
-class ApplicationWindow;
-class IERenderEngine;
-class IEPhysicsEngine;
-class IEScene;
-class IEECS;
-class IEInput;
-class IEScriptEngine;
-class IETime;
 class IEGameState;
 
 class IEGame : public QOpenGLWidget, public IESerializable

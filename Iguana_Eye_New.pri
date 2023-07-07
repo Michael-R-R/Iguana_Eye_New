@@ -162,6 +162,7 @@ INCLUDEPATH += $$PWD/src/Game/System \
     $$PWD/src/Game/System/IEInput \
     $$PWD/src/Game/System/IERenderEngine \
     $$PWD/src/Game/System/IEScene \
+    $$PWD/src/Game/System/IEUboManager \
 
 INCLUDEPATH += $$PWD/src/Game/System/IEECS \
     $$PWD/src/Game/System/IEECS/IEEntity \
@@ -238,7 +239,11 @@ INCLUDEPATH += $$PWD/src/OpenGL \
 INCLUDEPATH += $$PWD/src/OpenGL/Buffer \
     $$PWD/src/OpenGL/Buffer/IEBufferObject \
     $$PWD/src/OpenGL/Buffer/IEIndexBufferObject \
+    $$PWD/src/OpenGL/Buffer/IEUniformBufferObject \
     $$PWD/src/OpenGL/Buffer/IEVertexBufferObject \
+
+INCLUDEPATH += $$PWD/src/OpenGL/Struct \
+    $$PWD/src/OpenGL/Struct/GLViewProjectionStruct \
 
 INCLUDEPATH += $$PWD/src/OpenGL/Uniform \
     $$PWD/src/OpenGL/Uniform/IEUniformData \
