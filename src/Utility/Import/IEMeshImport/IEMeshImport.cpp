@@ -3,14 +3,20 @@
 #include "IEMaterial.h"
 #include "IEShader.h"
 #include "IERenderable.h"
+#include "IETexture2D.h"
 #include "IERenderableFactory.h"
 #include "IEBufferObjectFactory.h"
 #include "IEFile.h"
+#include "IEHash.h"
+#include "ApplicationWindow.h"
+#include "IEGame.h"
+#include "IEScene.h"
+#include "IETexture2DManager.h"
 #include <QVector2D>
 #include <QVector3D>
 #include <QDebug>
 
-bool IEMeshImport::importMesh(const QString& path, IEMesh& ieMesh)
+bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcessPreset_TargetRealtime_MaxQuality);
@@ -20,7 +26,9 @@ bool IEMeshImport::importMesh(const QString& path, IEMesh& ieMesh)
         return false;
     }
 
-    processNode(scene->mRootNode, scene, &ieMesh);
+    replaceExtension(path, ".iemesh", mesh);
+
+    processNode(scene->mRootNode, scene, &mesh);
 
     return true;
 }
@@ -35,10 +43,8 @@ bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh, IEMaterial& mat
         return false;
     }
 
-    QString tempPath = path;
-    QString extension = IEFile::extractExtension(tempPath);
-    QString matPath = tempPath.replace(extension, ".iemat");
-    material.updateId(matPath);
+    replaceExtension(path, ".iemesh", mesh);
+    replaceExtension(path, ".iemat", material);
 
     processNode(scene->mRootNode, scene, &mesh, &material);
 
@@ -55,15 +61,10 @@ bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh, IEMaterial& mat
         return false;
     }
 
-    QString tempPath = path;
-    QString extension = IEFile::extractExtension(tempPath);
-    QString newPath = tempPath.replace(extension, ".iemat");
-    material.updateId(newPath);
+    replaceExtension(path, ".iemesh", mesh);
+    replaceExtension(path, ".iemat", material);
+    replaceExtension(path, ".ierend", renderable);
 
-    tempPath = path;
-    extension = IEFile::extractExtension(tempPath);
-    newPath = tempPath.replace(extension, ".ierend");
-    renderable.updateId(newPath);
     renderable.setMeshId(mesh.getId());
     renderable.setMaterialId(material.getId());
     renderable.setShaderId(shader.getId());
@@ -71,6 +72,14 @@ bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh, IEMaterial& mat
     processNode(scene->mRootNode, scene, &mesh, &material, &renderable);
 
     return true;
+}
+
+void IEMeshImport::replaceExtension(QString path, const QString extension, IEResource& resource)
+{
+    QString ext = IEFile::extractExtension(path);
+    path = path.replace(ext, extension);
+
+    resource.updateId(path);
 }
 
 void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* meParent)
@@ -241,8 +250,9 @@ void IEMeshImport::processMesh(aiMesh* assimpMesh, IEMesh* ieMesh)
 
 void IEMeshImport::processMaterial(aiMesh* assimpMesh, const aiScene* scene, IEMaterial* ieMaterial)
 {
-    aiMaterial* material = scene->mMaterials[assimpMesh->mMaterialIndex];
+    aiMaterial* assimpMat = scene->mMaterials[assimpMesh->mMaterialIndex];
 
+    // Colors
     aiColor4D ambient;
     aiColor4D diffuse;
     aiColor4D specular;
@@ -250,29 +260,44 @@ void IEMeshImport::processMaterial(aiMesh* assimpMesh, const aiScene* scene, IEM
     aiColor4D reflective;
     aiColor4D transparent;
 
-    if(AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &ambient))
+    if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_AMBIENT, &ambient))
         ieMaterial->setColor(IEColorType::Ambient, QVector4D(ambient.r, ambient.g, ambient.b, ambient.a));
-    if(AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
+    if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
         ieMaterial->setColor(IEColorType::Diffuse, QVector4D(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
-    if(AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &specular))
+    if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_SPECULAR, &specular))
         ieMaterial->setColor(IEColorType::Specular, QVector4D(specular.r, specular.g, specular.b, specular.a));
-    if(AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_EMISSIVE, &emissive))
+    if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_EMISSIVE, &emissive))
         ieMaterial->setColor(IEColorType::Emissive, QVector4D(emissive.r, emissive.g, emissive.b, emissive.a));
-    if(AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_REFLECTIVE, &reflective))
+    if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_REFLECTIVE, &reflective))
         ieMaterial->setColor(IEColorType::Reflective, QVector4D(reflective.r, reflective.g, reflective.b, reflective.a));
-    if(AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_TRANSPARENT, &transparent))
+    if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_TRANSPARENT, &transparent))
         ieMaterial->setColor(IEColorType::Transparent, QVector4D(transparent.r, transparent.g, transparent.b, transparent.a));
 
-    // TODO load textures once we have texture manager
+    // Textures
+    auto* game = ApplicationWindow::instance().getGame();
+    auto* texManager = game->getSystem<IEScene>()->getManager<IETexture2DManager>();
+
+    QString relPath = IEFile::extractPath(ieMaterial->getName());
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_AMBIENT, IETextureType::Ambient, ieMaterial, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_DIFFUSE, IETextureType::Diffuse, ieMaterial, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_SPECULAR, IETextureType::Specular, ieMaterial, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_NORMALS, IETextureType::Normals, ieMaterial, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_HEIGHT, IETextureType::Height, ieMaterial, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_EMISSIVE, IETextureType::Emissive, ieMaterial, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_SHININESS, IETextureType::Shininess, ieMaterial, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_OPACITY, IETextureType::Opacity, ieMaterial, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_DISPLACEMENT, IETextureType::Displacement, ieMaterial, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_LIGHTMAP, IETextureType::Lightmap, ieMaterial, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_UNKNOWN, IETextureType::Unknown, ieMaterial, texManager);
 }
 
 void IEMeshImport::processRenderable(IEMesh* mesh, IERenderable* renderable)
 {
-    renderable->addBuffer("aPos", IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, renderable));
-    renderable->addBuffer("aNormal", IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, renderable));
-    renderable->addBuffer("aTangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, renderable));
-    renderable->addBuffer("aBitangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, renderable));
-    renderable->addBuffer("aTexCoord", IEBufferObjectFactory::make(IEBufferType::Vec2, 3, 0, 0, 0, renderable));
+    renderable->addBuffer("aPos", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, renderable));
+    renderable->addBuffer("aNormal", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, renderable));
+    renderable->addBuffer("aTangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, renderable));
+    renderable->addBuffer("aBitangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, renderable));
+    renderable->addBuffer("aTexCoord", IEBufferObjectFactory::make(IEBufferType::Vec2, 0, 0, 0, renderable));
 
     renderable->setBufferValues("aPos", mesh->getPosVertices());
     renderable->setBufferValues("aNormal", mesh->getNormVertices());
@@ -280,3 +305,52 @@ void IEMeshImport::processRenderable(IEMesh* mesh, IERenderable* renderable)
     renderable->setBufferValues("aBitangent", mesh->getBiTanVertices());
     renderable->setBufferValues("aTexCoord", mesh->getTexVertices());
 }
+
+void IEMeshImport::load2DTextures(const QString& relPath,
+                                  aiMaterial* assimpMat,
+                                  aiTextureType assimpTexType,
+                                  IETextureType ieTexType,
+                                  IEMaterial* ieMaterial,
+                                  IETexture2DManager* manager)
+{
+    for(unsigned i = 0; i < assimpMat->GetTextureCount(assimpTexType); i++)
+    {
+        aiString assimpPath;
+        assimpMat->GetTexture(assimpTexType, i, &assimpPath);
+
+        QString imgPath = relPath + assimpPath.C_Str();
+        QString texPath = relPath + IEFile::extractName(imgPath) + ".ietex2d";
+
+        uint64_t hashID = IEHash::Compute(texPath);
+
+        if(!manager->doesExist(hashID))
+        {
+            auto* texture = new IETexture2D(texPath,
+                                            imgPath,
+                                            QOpenGLTexture::LinearMipMapLinear,
+                                            QOpenGLTexture::Linear,
+                                            QOpenGLTexture::Repeat,
+                                            QOpenGLTexture::Repeat,
+                                            manager);
+            if(!texture->build())
+            {
+                delete texture;
+                continue;
+            }
+
+            if(!manager->add(texture->getId(), texture))
+            {
+                delete texture;
+                continue;
+            }
+        }
+
+        ieMaterial->appendTextureID(ieTexType, hashID);
+    }
+}
+
+
+
+
+
+

@@ -22,12 +22,14 @@ IEGameStopState::IEGameStopState(QObject* parent) :
     erEngine(nullptr),
     eCamera(nullptr)
 {
-
+    // TODO test
+    test = new IETInstIndexRenderable();
 }
 
 IEGameStopState::~IEGameStopState()
 {
-
+    // TODO test
+    delete test;
 }
 
 void IEGameStopState::enter(IEGame& game)
@@ -67,6 +69,9 @@ void IEGameStopState::onUpdateFrame()
 void IEGameStopState::onRenderFrame()
 {
     grEngine->onRenderFrame(glExtraFunc, eCamera);
+
+    // TODO test
+    test->draw(eCamera);
 
     erEngine->onRenderFrame(glExtraFunc, eCamera);
 

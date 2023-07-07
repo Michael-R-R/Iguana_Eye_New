@@ -8,12 +8,13 @@
 #include "IEEnum.h"
 
 class IEShader;
+class IETexture2DManager;
 
 class IEMaterial : public IEFileResource
 {
 protected:
     QHash<IEColorType, QVector4D> colors;
-    QHash<IETextureType, uint64_t> textureIDs;
+    QHash<IETextureType, QVector<uint64_t>> textureIDs;
 
     QHash<IEColorType, const char*> colorNames;
     QHash<IETextureType, const char*> textureNames;
@@ -34,15 +35,17 @@ public:
     bool operator>(const IEMaterial& other) { return IEFileResource::operator>(other); }
 
     void bindColors(IEShader& shader);
+    void bindTextures(IEShader& shader, IETexture2DManager& manager);
 
     void setColor(IEColorType type, const QVector4D& val);
     void removeColor(IEColorType type);
 
-    void setTextureID(IETextureType type, const uint64_t val);
-    void removeTextureID(IETextureType type);
+    void appendTextureID(IETextureType type, const uint64_t val);
+    void setTextureID(IETextureType type, const int index, const uint64_t val);
+    void removeTextureID(IETextureType type, const int index);
 
     const QHash<IEColorType, QVector4D>& getColors() const { return colors; }
-    const QHash<IETextureType, uint64_t>& getTexIDs() const { return textureIDs; }
+    const QHash<IETextureType, QVector<uint64_t>>& getTexIDs() const { return textureIDs; }
     IEMaterial* getParent() { return parent; }
     QVector<IEMaterial*>& getChildren() { return children; }
     QVector<IEMaterial*>& getMaterials() { return materials; }

@@ -97,6 +97,15 @@ QString IEFile::absolutePath(const QString& path)
     return dir.absolutePath();
 }
 
+QString IEFile::extractPath(const QString& path)
+{
+    int index1 = path.lastIndexOf("/") + 1;
+    int index2 = path.lastIndexOf("\\") + 1;
+    int index = qMax(index1, index2);
+
+    return path.mid(0, index);
+}
+
 QString IEFile::extractName(const QString& path)
 {
     int index1 = path.lastIndexOf("/") + 1;

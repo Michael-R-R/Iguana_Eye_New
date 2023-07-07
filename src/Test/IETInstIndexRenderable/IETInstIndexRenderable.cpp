@@ -11,6 +11,8 @@
 #include "IEBufferObjectFactory.h"
 #include "ApplicationWindow.h"
 #include "IEGame.h"
+#include "IEScene.h"
+#include "IETexture2DManager.h"
 #include "IESerialize.h"
 #include <QLineEdit>
 #include <QPushButton>
@@ -22,7 +24,7 @@ IETInstIndexRenderable::IETInstIndexRenderable() :
     vLayout(new QVBoxLayout(this)),
     mesh(nullptr), material(nullptr),
     shader(nullptr), renderable(nullptr),
-    meshPath("./resources/root/Content/cube/cube.obj"),
+    meshPath("./resources/root/Content/backpack/backpack.obj"),
     materialPath("./resources/root/Content/material.iemat"),
     shaderPath("./resources/shaders/tests/instanced_renderable.glsl"),
     createCount(1),
@@ -43,6 +45,9 @@ void IETInstIndexRenderable::draw(IECamera* camera)
     if(!mesh || !material || !shader || !renderable)
         return;
 
+    auto* game = ApplicationWindow::instance().getGame();
+    auto* texManager = game->getSystem<IEScene>()->getManager<IETexture2DManager>();
+
     shader->bind();
     shader->setUniformValue("uViewProjection", camera->getViewProjection());
 
@@ -55,6 +60,7 @@ void IETInstIndexRenderable::draw(IECamera* camera)
         for(int j = 0; j < renderables.size(); j++)
         {
             materials[j]->bindColors(*shader);
+            materials[j]->bindTextures(*shader, *texManager);
             renderables[j]->draw();
         }
     }
@@ -131,7 +137,7 @@ void IETInstIndexRenderable::createResources()
         {
             auto* temp = static_cast<IEInstIndexRenderable*>(renderables[j]);
             temp->addIBO(new IEIndexBufferObject(meshes[j]->getIndices(), temp));
-            temp->addBuffer("aModel", IEBufferObjectFactory::make(IEBufferType::Mat4, 4, 68, 16, 4, temp));
+            temp->addBuffer("aModel", IEBufferObjectFactory::make(IEBufferType::Mat4, 68, 16, 4, temp));
             temp->build(*shader);
         }
     }

@@ -10,7 +10,7 @@ EGridRenderable::EGridRenderable(QObject* parent) :
     gridMesh(new EGridMesh(this)),
     gridShader(new EGridShader(this)),
     vao(new QOpenGLVertexArrayObject(this)),
-    posBuffer(IEBufferObjectFactory::make(IEBufferType::Vec3, 3, 0, 0, 0, this))
+    posBuffer(IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, this))
 {
     setup();
 }

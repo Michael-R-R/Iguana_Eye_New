@@ -8,11 +8,13 @@ IETexture2D::IETexture2D(QObject* parent) :
 }
 
 IETexture2D::IETexture2D(const QString& path,
+                         const QString& imgPath,
                          Filter min, Filter mag,
                          WrapMode sWrap, WrapMode tWrap,
                          QObject* parent) :
     QOpenGLTexture(Target::Target2D),
-    IEFileResource(path, parent)
+    IEFileResource(path, parent),
+    imgPath(imgPath)
 {
 
     this->setMinificationFilter(min);
@@ -35,7 +37,7 @@ bool IETexture2D::build()
         return false;
 
     this->bind();
-    this->setData(QImage(this->name).mirrored());
+    this->setData(QImage(imgPath));
     this->release();
 
     return true;
@@ -47,7 +49,8 @@ QDataStream& IETexture2D::serialize(QDataStream& out, const IESerializable& obj)
 
     const auto& texture = static_cast<const IETexture2D&>(obj);
 
-    out << texture.minificationFilter()
+    out << texture.imgPath
+        << texture.minificationFilter()
         << texture.magnificationFilter()
         << texture.wrapMode(QOpenGLTexture::DirectionS)
         << texture.wrapMode(QOpenGLTexture::DirectionT);
@@ -66,7 +69,8 @@ QDataStream& IETexture2D::deserialize(QDataStream& in, IESerializable& obj)
     WrapMode sWrap;
     WrapMode tWrap;
 
-    in >> min
+    in >> texture.imgPath
+       >> min
        >> mag
        >> sWrap
        >> tWrap;

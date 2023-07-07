@@ -21,16 +21,17 @@ IEBufferObject* IEBufferObjectFactory::make(const IEBufferType type, QObject* pa
 }
 
 IEBufferObject* IEBufferObjectFactory::make(const IEBufferType type,
-                                            const int tuple, const int stride,
-                                            const int offset, const int divisor,
+                                            const int stride,
+                                            const int offset,
+                                            const int divisor,
                                             QObject* parent)
 {
     switch(type)
     {
-    case IEBufferType::Vec2: { return new IEVertexBufferObject<QVector2D>(type, tuple, stride, offset, divisor, parent); }
-    case IEBufferType::Vec3: { return new IEVertexBufferObject<QVector3D>(type, tuple, stride, offset, divisor, parent); }
-    case IEBufferType::Vec4: { return new IEVertexBufferObject<QVector4D>(type, tuple, stride, offset, divisor, parent); }
-    case IEBufferType::Mat4: { return new IEVertexBufferObject<QMatrix4x4>(type, tuple, stride, offset, divisor, parent); }
+    case IEBufferType::Vec2: { return new IEVertexBufferObject<QVector2D>(type, 2, stride, offset, divisor, parent); }
+    case IEBufferType::Vec3: { return new IEVertexBufferObject<QVector3D>(type, 3, stride, offset, divisor, parent); }
+    case IEBufferType::Vec4: { return new IEVertexBufferObject<QVector4D>(type, 4, stride, offset, divisor, parent); }
+    case IEBufferType::Mat4: { return new IEVertexBufferObject<QMatrix4x4>(type, 4, stride, offset, divisor, parent); }
     default: { return nullptr; }
     }
 }

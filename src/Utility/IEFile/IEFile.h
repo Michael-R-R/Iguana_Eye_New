@@ -15,6 +15,7 @@ public:
     static bool doesFileExist(const QString& path);
     static bool doesPathExist(const QString& path);
     static QString absolutePath(const QString& path);
+    static QString extractPath(const QString& path);
     static QString extractName(const QString& path);
     static QString extractExtension(const QString& path);
 
