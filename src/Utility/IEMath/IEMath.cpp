@@ -1,48 +1,52 @@
 #include "IEMath.h"
+#include <glm/gtc/matrix_transform.hpp>
 
-QVector3D IEMath::toWorldPosition(const float w, const float h,
-                                  const QVector2D& scrPos,
-                                  const QVector3D& objPos,
-                                  const QMatrix4x4& projection)
+glm::vec3 IEMath::toWorldPosition(const float w, const float h,
+                                  const glm::vec2& scrPos,
+                                  const glm::vec3& objPos,
+                                  const glm::mat4& projection)
 {
     // NDC
-    float x = (2.0f * scrPos.x()) / w - 1.0f;
-    float y = 1.0f - (2.0f * scrPos.y()) / h;
-    const QVector2D rayNDC(x, y);
+    float x = (2.0f * scrPos[0]) / w - 1.0f;
+    float y = 1.0f - (2.0f * scrPos[1]) / h;
+    const glm::vec2 rayNDC(x, y);
 
     // 4D Homogenous clip coords
-    const QVector4D rayClip = QVector4D(rayNDC.x(), rayNDC.y(), -1.0f, 1.0f);
+    const glm::vec4 rayClip = glm::vec4(rayNDC[0], rayNDC[1], -1.0f, 1.0f);
 
     // World position
-    QVector4D rayEye = projection.inverted() * rayClip;
-    rayEye = QVector4D(rayEye.x(), rayEye.y(), -1.0f, 1.0f);
+    glm::mat4 prjInverse = glm::inverse(projection);
+    glm::vec4 rayEye = prjInverse * rayClip;
+    rayEye = glm::vec4(rayEye[0], rayEye[1], -1.0f, 1.0f);
 
-    return QVector3D((rayEye.x() + objPos.x()),
-                     (rayEye.y() + objPos.y()),
-                     (rayEye.z() + objPos.z()));
+    return glm::vec3((rayEye[0] + objPos[0]),
+                     (rayEye[1] + objPos[1]),
+                     (rayEye[2] + objPos[2]));
 }
 
-QVector3D IEMath::toWorldRay(const float w, const float h,
-                             const QVector2D& scrPos,
-                             const QMatrix4x4& view,
-                             const QMatrix4x4& projection)
+glm::vec3 IEMath::toWorldRay(const float w, const float h,
+                             const glm::vec2& scrPos,
+                             const glm::mat4& view,
+                             const glm::mat4& projection)
 {
     // Normal device coords
-    const float x = (2.0f * scrPos.x()) / w - 1.0f;
-    const float y = 1.0f - (2.0f * scrPos.y()) / h;
+    const float x = (2.0f * scrPos[0]) / w - 1.0f;
+    const float y = 1.0f - (2.0f * scrPos[1]) / h;
     const float z = 1.0f;
-    const QVector3D rayNDC = QVector3D(x, y, z);
+    const glm::vec3 rayNDC = glm::vec3(x, y, z);
 
     // 4D homogenous clip coords
-    const QVector4D rayClip = QVector4D(rayNDC.x(), rayNDC.y(), -1.0f, 1.0f);
+    const glm::vec4 rayClip = glm::vec4(rayNDC[0], rayNDC[1], -1.0f, 1.0f);
 
     // 4D world position
-    QVector4D rayEye = projection.inverted() * rayClip;
-    rayEye = QVector4D(rayEye.x(), rayEye.y(), -1.0f, 0.0f);
+    glm::mat4 prjInverse = glm::inverse(projection);
+    glm::vec4 rayEye = prjInverse * rayClip;
+    rayEye = glm::vec4(rayEye[0], rayEye[1], -1.0f, 0.0f);
 
     // 4D world ray
-    QVector4D inverseMat = view.inverted() * rayEye;
-    QVector3D rayWorld = QVector3D(inverseMat.x(), inverseMat.y(), inverseMat.z());
+    glm::mat4 viewInverse = glm::inverse(view);
+    glm::vec4 inverseMat = viewInverse * rayEye;
+    glm::vec3 rayWorld = glm::vec3(inverseMat[0], inverseMat[1], inverseMat[2]);
 
-    return rayWorld.normalized();
+    return glm::normalize(rayWorld);
 }

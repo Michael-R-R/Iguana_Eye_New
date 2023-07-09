@@ -2,7 +2,6 @@
 #include "EGridRenderable.h"
 #include "IEGame.h"
 #include "IECamera.h"
-#include <QOpenGLExtraFunctions>
 
 ERenderEngine::ERenderEngine(QObject* parent) :
     IEObject(parent),
@@ -21,7 +20,7 @@ void ERenderEngine::startup(IEGame&)
     gridRenderable = new EGridRenderable(this);
 }
 
-void ERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera)
+void ERenderEngine::onRenderFrame(IECamera* camera)
 {
-    gridRenderable->draw(glFunc, camera);
+    gridRenderable->draw(camera);
 }

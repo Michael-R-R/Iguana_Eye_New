@@ -4,6 +4,8 @@
 #include "IECamera.h"
 #include "IEBufferObject.h"
 #include "IEBufferObjectFactory.h"
+#include <QOpenGLContext>
+#include <QOpenGLFunctions>
 
 EGridRenderable::EGridRenderable(QObject* parent) :
     IEObject(parent),
@@ -36,14 +38,15 @@ void EGridRenderable::setup()
     posBuffer->release();
 }
 
-void EGridRenderable::draw(QOpenGLExtraFunctions* glFunc, IECamera* camera)
+void EGridRenderable::draw(IECamera* camera)
 {
     gridShader->bind();
     vao->bind();
 
-    gridShader->setUniformValue("uViewProjection", camera->getViewProjection());
+    gridShader->setMat4("uViewProjection", camera->getViewProjection());
 
-    glFunc->glDrawArrays(GL_TRIANGLES, 0, 6);
+    auto* gl = QOpenGLContext::currentContext()->functions();
+    gl->glDrawArrays(GL_TRIANGLES, 0, 6);
 
     gridShader->release();
     vao->release();

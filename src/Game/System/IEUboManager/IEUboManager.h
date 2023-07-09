@@ -17,12 +17,16 @@ public:
     void startup(IEGame& game) override;
     void shutdown(IEGame& game) override;
 
+    void linkShaderToBlock(IEShader& shader);
     void cleanup();
 
     IEUniformBufferObject<GLViewProjectionStruct>* getVPBuffer() { return vpBuffer; }
 
 private slots:
     void linkProgramToBlock(const uint64_t key, const QString& path);
+
+private:
+    void linkAllBlocks(IEShader& shader);
 
 public:
     QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override;

@@ -1,14 +1,12 @@
 #pragma once
 
-#include <QMatrix4x4>
+#include <glm/glm.hpp>
 
-#include "IESerializable.h"
-
-struct GLViewProjectionStruct : public IESerializable
+struct GLViewProjectionStruct
 {
-    QMatrix4x4 view;
-    QMatrix4x4 projection;
-    QMatrix4x4 viewProjection;
+    glm::mat4 view;
+    glm::mat4 projection;
+    glm::mat4 viewProjection;
 
     GLViewProjectionStruct() :
         view(),
@@ -18,32 +16,12 @@ struct GLViewProjectionStruct : public IESerializable
 
     }
 
-    GLViewProjectionStruct(const QMatrix4x4& view, const QMatrix4x4& projection) :
+    GLViewProjectionStruct(const glm::mat4& view, const glm::mat4& projection) :
         view(view),
         projection(projection),
-        viewProjection(view * projection)
+        viewProjection(projection * view)
     {
 
-    }
-
-    QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override
-    {
-        const auto& data = static_cast<const GLViewProjectionStruct&>(obj);
-
-        out << data.view << data.projection;
-
-        return out;
-    }
-
-    QDataStream& deserialize(QDataStream& in, IESerializable& obj) override
-    {
-        auto& data = static_cast<GLViewProjectionStruct&>(obj);
-
-        in >> data.view >> data.projection;
-
-        data.viewProjection = data.view * data.projection;
-
-        return in;
     }
 };
 

@@ -1,19 +1,20 @@
 #include "LuaMat4Wrapper.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 LuaMat4Wrapper::LuaMat4Wrapper() :
-    mat4()
+    value()
 {
 
 }
 
-LuaMat4Wrapper::LuaMat4Wrapper(const QMatrix4x4& n) :
-    mat4(n)
+LuaMat4Wrapper::LuaMat4Wrapper(const glm::mat4& n) :
+    value(n)
 {
 
 }
 
 LuaMat4Wrapper::LuaMat4Wrapper(const LuaMat4Wrapper& n) :
-    mat4(n.mat4)
+    value(n.value)
 {
 
 }
@@ -26,7 +27,7 @@ LuaMat4Wrapper::~LuaMat4Wrapper()
 void LuaMat4Wrapper::addToLua(sol::state& lua)
 {
     lua.new_usertype<LuaMat4Wrapper>("IEMat4", sol::constructors<LuaMat4Wrapper(),
-                                     LuaMat4Wrapper(const QMatrix4x4&),
+                                     LuaMat4Wrapper(const glm::mat4&),
                                      LuaMat4Wrapper(const LuaMat4Wrapper&)>(),
                                      "inverted", &LuaMat4Wrapper::inverted,
                                      "lookAt", &LuaMat4Wrapper::lookAt,
@@ -42,47 +43,47 @@ void LuaMat4Wrapper::addToLua(sol::state& lua)
                                      sol::meta_function::multiplication, &LuaMat4Wrapper::operator *);
 }
 
-QMatrix4x4 LuaMat4Wrapper::inverted(bool* invertible)
+glm::mat4 LuaMat4Wrapper::inverted()
 {
-    return mat4.inverted(invertible);
+    return glm::inverse(value);
 }
 
-void LuaMat4Wrapper::lookAt(const QVector3D& eye, const QVector3D& center, const QVector3D& up)
+void LuaMat4Wrapper::lookAt(const glm::vec3& eye, const glm::vec3& center, const glm::vec3& up)
 {
-    mat4.lookAt(eye, center, up);
+    value = glm::lookAt(eye, center, up);
 }
 
 void LuaMat4Wrapper::ortho(float left, float right, float bottom, float top, float nearPlane, float farPlane)
 {
-    mat4.ortho(left, right, bottom, top, nearPlane, farPlane);
+    value = glm::ortho(left, right, bottom, top, nearPlane, farPlane);
 }
 
-void LuaMat4Wrapper::perspective(float verticalAngle, float aspectRatio, float nearPlane, float farPlane)
+void LuaMat4Wrapper::perspective(float fov, float aspect, float nearPlane, float farPlane)
 {
-    mat4.perspective(verticalAngle, aspectRatio, nearPlane, farPlane);
+    value = glm::perspective(glm::radians(fov), aspect, nearPlane, farPlane);
 }
 
 void LuaMat4Wrapper::rotate(float angle, float x, float y, float z)
 {
-    mat4.rotate(angle, x, y, z);
+    value = glm::rotate(value, glm::radians(angle), glm::vec3(x, y, z));
 }
 
 void LuaMat4Wrapper::scale(float x, float y, float z)
 {
-    mat4.scale(x, y, z);
+    value = glm::scale(value, glm::vec3(x, y, z));
 }
 
 void LuaMat4Wrapper::translate(float x, float y, float z)
 {
-    mat4.translate(x, y, z);
+    value = glm::translate(value, glm::vec3(x, y, z));
 }
 
 void LuaMat4Wrapper::setToIdentity()
 {
-    mat4.setToIdentity();
+    value = glm::mat4(1.0f);
 }
 
-QMatrix4x4& LuaMat4Wrapper::get()
+glm::mat4& LuaMat4Wrapper::get()
 {
-    return mat4;
+    return value;
 }

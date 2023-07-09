@@ -7,6 +7,8 @@ class IEGame;
 class IEMaterialManager;
 class IEShaderManager;
 class IERenderableManager;
+class IETexture2DManager;
+class IEUboManager;
 class IEMaterial;
 class IEShader;
 class IERenderable;
@@ -17,6 +19,8 @@ class IERenderEngine : public IESystem
     IEMaterialManager* materialManager;
     IEShaderManager* shaderManager;
     IERenderableManager* renderableManager;
+    IETexture2DManager* texture2DManager;
+    IEUboManager* uboManager;
 
 public:
     IERenderEngine(QObject* parent = nullptr);
@@ -26,11 +30,10 @@ public:
     void shutdown(IEGame& game) override;
 
     void onPreRenderFrame();
-    void onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera);
+    void onRenderFrame(IECamera* camera);
     void onPostRenderFrame();
 
 private:
-    void prepareViewProjection();
     void draw(IEShader* shader, IEMaterial* material, IERenderable* renderable);
 };
 

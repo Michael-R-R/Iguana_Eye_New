@@ -1,15 +1,13 @@
 #pragma once
 
-#include <QVector3D>
-
 #include "IECamera.h"
 
 class IEInput;
 
 class ECamera : public IECamera
 {
-    QVector3D position;
-    QVector3D rotation;
+    glm::vec3 position;
+    glm::vec3 rotation;
 
     float lastX;
     float lastY;
@@ -25,8 +23,8 @@ public:
     void update(IEInput* input, const float dt);
     void updateProjection(const float w, const float h);
 
-    const QVector3D& getPosition() const { return position; }
-    const QVector3D& getRotation() const { return rotation; }
+    const glm::vec3& getPosition() const { return position; }
+    const glm::vec3& getRotation() const { return rotation; }
 
 private:
     void updateMovement(IEInput* input, const float dt);

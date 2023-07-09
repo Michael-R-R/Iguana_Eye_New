@@ -1,20 +1,18 @@
 #pragma once
 
-#include <QVector2D>
-#include <QVector3D>
-#include <QVector4D>
-#include <QMatrix4x4>
+#include <glm/glm.hpp>
 
 class IEMath
 {
 public:
-    static QVector3D toWorldPosition(const float w, const float h,
-                                     const QVector2D& scrPos,
-                                     const QVector3D& objPos,
-                                     const QMatrix4x4& projection);
-    static QVector3D toWorldRay(const float w, const float h,
-                                const QVector2D& scrPos,
-                                const QMatrix4x4& view,
-                                const QMatrix4x4& projection);
+    static glm::vec3 toWorldPosition(const float w, const float h,
+                                     const glm::vec2& scrPos,
+                                     const glm::vec3& objPos,
+                                     const glm::mat4& projection);
+
+    static glm::vec3 toWorldRay(const float w, const float h,
+                                const glm::vec2& scrPos,
+                                const glm::mat4& view,
+                                const glm::mat4& projection);
 };
 

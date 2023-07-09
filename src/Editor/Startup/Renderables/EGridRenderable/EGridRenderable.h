@@ -23,6 +23,6 @@ public:
     ~EGridRenderable();
 
     void setup();
-    void draw(QOpenGLExtraFunctions* glFunc, IECamera* camera);
+    void draw(IECamera* camera);
 };
 

@@ -1,16 +1,15 @@
 #pragma once
 
-#include <QVector3D>
-#include <QMatrix4x4>
+#include <glm/glm.hpp>
 
 #include "IESceneResource.h"
 
 class IECamera : public IESceneResource
 {
 protected:
-    QMatrix4x4 projection;
-    QMatrix4x4 view;
-    QVector3D up;
+    glm::mat4 projection;
+    glm::mat4 view;
+    glm::vec3 up;
     float nearPlane;
     float farPlane;
     float fov;
@@ -28,19 +27,19 @@ public:
     bool operator<(const IECamera& other) { return IEResource::operator<(other); }
     bool operator>(const IECamera& other) { return IEResource::operator>(other); }
 
-    void updateView(const QVector3D& position, const QVector3D& rotation);
+    void updateView(const glm::vec3& position, const glm::vec3& rotation);
 
-    QMatrix4x4 getViewProjection() const { return (projection * view); }
-    const QMatrix4x4& getProjection() const { return projection; }
-    const QMatrix4x4& getView() const { return view; }
-    const QVector3D& getUp() const { return up; }
-    float getNearPlane() { return nearPlane; }
-    float getFarPlane() { return farPlane; }
-    float getFOV() { return fov; }
-    float getSpeed() { return speed; }
-    float getSensitivity() { return sensitivity; }
+    glm::mat4 getViewProjection() const { return (projection * view); }
+    const glm::mat4& getProjection() const { return projection; }
+    const glm::mat4& getView() const { return view; }
+    const glm::vec3& getUp() const { return up; }
+    float getNearPlane() const { return nearPlane; }
+    float getFarPlane() const { return farPlane; }
+    float getFOV() const { return fov; }
+    float getSpeed() const { return speed; }
+    float getSensitivity() const { return sensitivity; }
 
-    void setProjection(const QMatrix4x4& val) { projection = val; }
+    void setProjection(const glm::mat4& val) { projection = val; }
     void setNearPlane(const float val) { nearPlane = val; }
     void setFarPlane(const float val) { farPlane = val; }
     void setFOV(const float val) { fov = val; }

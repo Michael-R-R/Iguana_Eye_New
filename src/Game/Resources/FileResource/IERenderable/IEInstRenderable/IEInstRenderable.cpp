@@ -1,6 +1,6 @@
 #include "IEInstRenderable.h"
 #include "IEBufferObject.h"
-#include "IESerializeTranslator.h"
+#include "IESerializeConverter.h"
 
 IEInstRenderable::IEInstRenderable(IERenderableType ieType, QObject* parent) :
     IERenderable(ieType, parent),
@@ -180,7 +180,7 @@ QDataStream& IEInstRenderable::serialize(QDataStream& out, const IESerializable&
 
             out << it.key();
 
-            IESerializeTranslator::write(out, it.value());
+            IESerializeConverter::write(out, it.value());
         }
     }
 
@@ -210,7 +210,8 @@ QDataStream& IEInstRenderable::deserialize(QDataStream& in, IESerializable& obj)
             QString bufferName = "";
             in >> bufferName;
 
-            std::any data = IESerializeTranslator::read(in);
+            std::any data;
+            IESerializeConverter::read(in, data);
 
             results.insert(bufferName, data);
         }

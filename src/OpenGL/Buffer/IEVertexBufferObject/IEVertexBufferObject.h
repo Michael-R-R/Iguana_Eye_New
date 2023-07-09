@@ -6,6 +6,7 @@
 #include <QVector>
 
 #include "IEBufferObject.h"
+#include "IESerializeConverter.h"
 
 template<class T>
 class IEVertexBufferObject : public IEBufferObject
@@ -165,8 +166,9 @@ public:
 
         const auto& buffer = static_cast<const IEVertexBufferObject&>(obj);
 
-        out << buffer.values
-            << buffer.tuple << buffer.stride
+        IESerializeConverter::write(out, buffer.values);
+
+        out << buffer.tuple << buffer.stride
             << buffer.offset << buffer.divisor;
 
         return out;
@@ -178,8 +180,9 @@ public:
 
         auto& buffer = static_cast<IEVertexBufferObject&>(obj);
 
-        in >> buffer.values
-           >> buffer.tuple >> buffer.stride
+        IESerializeConverter::read(in, buffer.values);
+
+        in >> buffer.tuple >> buffer.stride
            >> buffer.offset >> buffer.divisor;
 
         return in;

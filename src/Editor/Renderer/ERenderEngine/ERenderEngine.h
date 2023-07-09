@@ -5,7 +5,6 @@
 class EGridRenderable;
 class IEGame;
 class IECamera;
-class QOpenGLExtraFunctions;
 
 class ERenderEngine : public IEObject
 {
@@ -18,6 +17,6 @@ public:
     ~ERenderEngine();
 
     void startup(IEGame& game);
-    void onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera);
+    void onRenderFrame(IECamera* camera);
 };
 

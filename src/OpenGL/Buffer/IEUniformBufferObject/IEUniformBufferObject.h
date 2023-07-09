@@ -137,9 +137,15 @@ public:
         this->bind();
 
         auto* gl = QOpenGLContext::currentContext()->extraFunctions();
-        gl->glBufferSubData(GL_UNIFORM_BUFFER, (offset * sizeof(T)), sizeof(T), values[offset]);
+        gl->glBufferSubData(GL_UNIFORM_BUFFER, (offset * sizeof(T)), sizeof(T), &values[offset]);
 
         this->release();
+    }
+
+    void build()
+    {
+        this->create();
+        this->handleAllocate(true);
     }
 
     bool linkBlock(const int program)
@@ -159,11 +165,6 @@ public:
         return true;
     }
 
-    void build()
-    {
-        this->create();
-        this->handleAllocate(true);
-    }
     bool isCreated()
     {
         return (id > -1);
@@ -206,7 +207,9 @@ public:
 
         const auto& buffer = static_cast<const IEUniformBufferObject&>(obj);
 
-        out << buffer.values << buffer.blockName << buffer.bindingPoint;
+        // TODO serialize values
+
+        out << buffer.blockName << buffer.bindingPoint;
 
         return out;
     }
@@ -216,8 +219,11 @@ public:
         IEObject::deserialize(in, obj);
 
         auto& buffer = static_cast<IEUniformBufferObject&>(obj);
+        buffer.values.clear();
 
-        in >> buffer.values >> buffer.blockName >> buffer.bindingPoint;
+        // TODO deserialize values
+
+        in >> buffer.blockName >> buffer.bindingPoint;
 
         return in;
     }

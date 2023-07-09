@@ -10,8 +10,6 @@
 
 IEGamePlayState::IEGamePlayState(QObject* parent) :
     IEGameState(parent),
-    glFunc(nullptr),
-    glExtraFunc(nullptr),
     time(nullptr),
     pEngine(nullptr),
     rEngine(nullptr),
@@ -28,8 +26,6 @@ IEGamePlayState::~IEGamePlayState()
 
 void IEGamePlayState::enter(IEGame& game)
 {
-    glFunc = game.getGlFunc();
-    glExtraFunc = game.getGlExtraFunc();
     time = game.getSystem<IETime>();
     pEngine = game.getSystem<IEPhysicsEngine>();
     rEngine = game.getSystem<IERenderEngine>();
@@ -57,7 +53,7 @@ void IEGamePlayState::onRenderFrame()
 {
     auto* camera = cameraSystem->getActiveCamera();
 
-    rEngine->onRenderFrame(glExtraFunc, camera);
+    rEngine->onRenderFrame(camera);
     time->processDeltaTime();
 }
 

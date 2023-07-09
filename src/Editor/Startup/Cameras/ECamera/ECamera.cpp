@@ -1,5 +1,7 @@
 #include "ECamera.h"
 #include "IEinput.h"
+#include "IESerializeConverter.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 ECamera::ECamera(QObject* parent) :
     IECamera(parent),
@@ -24,8 +26,8 @@ void ECamera::update(IEInput* input, const float dt)
 
 void ECamera::updateProjection(const float w, const float h)
 {
-    projection.setToIdentity();
-    projection.perspective(fov, (w / h), nearPlane, farPlane);
+    projection = glm::mat4(1.0f);
+    projection = glm::perspective(glm::radians(fov), (w / h), nearPlane, farPlane);
 }
 
 void ECamera::updateMovement(IEInput* input, const float dt)
@@ -33,22 +35,22 @@ void ECamera::updateMovement(IEInput* input, const float dt)
     const float speed = this->speed * dt;
 
     if(input->isPressed("Forward"))
-        position = position + (rotation * speed);
+        position += (rotation * speed);
 
     if(input->isPressed("Backward"))
-        position = position - (rotation * speed);
+        position -= (rotation * speed);
 
     if(input->isPressed("Left"))
-        position = position - (QVector3D::crossProduct(rotation, up).normalized() * speed);
+        position -= (glm::normalize(glm::cross(rotation, up)) * speed);
 
     if(input->isPressed("Right"))
-        position = position + (QVector3D::crossProduct(rotation, up).normalized() * speed);
+        position += (glm::normalize(glm::cross(rotation, up)) * speed);
 
     if(input->isPressed("Up"))
-        position = position + (up * speed);
+        position += (up * speed);
 
     if(input->isPressed("Down"))
-        position = position - (up * speed);
+        position -= (up * speed);
 }
 
 void ECamera::updateRotation(IEInput* input, const float dt)
@@ -85,7 +87,7 @@ void ECamera::updateRotation(IEInput* input, const float dt)
         float roty = qSin(qDegreesToRadians(pitch));
         float rotz = qSin(qDegreesToRadians(yaw)) * qCos(qDegreesToRadians(pitch));
 
-        rotation = QVector3D(rotx, roty, rotz);
+        rotation = glm::vec3(rotx, roty, rotz);
     }
     else
     {
@@ -99,8 +101,13 @@ QDataStream& ECamera::serialize(QDataStream& out, const IESerializable& obj) con
 
     const ECamera& camera = static_cast<const ECamera&>(obj);
 
-    out << camera.position << camera.rotation
-        << camera.lastX << camera.lastY << camera.yaw << camera.pitch;
+    IESerializeConverter::write(out, camera.position);
+    IESerializeConverter::write(out, camera.rotation);
+
+    out << camera.lastX
+        << camera.lastY
+        << camera.yaw
+        << camera.pitch;
 
     return out;
 }
@@ -111,8 +118,13 @@ QDataStream& ECamera::deserialize(QDataStream& in, IESerializable& obj)
 
     ECamera& camera = static_cast<ECamera&>(obj);
 
-    in >> camera.position >> camera.rotation
-       >> camera.lastX >> camera.lastY >> camera.yaw >> camera.pitch;
+    IESerializeConverter::read(in, camera.position);
+    IESerializeConverter::read(in, camera.rotation);
+
+    in >> camera.lastX
+       >> camera.lastY
+       >> camera.yaw
+       >> camera.pitch;
 
     return in;
 }

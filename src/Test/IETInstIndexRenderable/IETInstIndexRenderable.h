@@ -13,9 +13,6 @@ class IETInstIndexRenderable : public QWidget
 {
     QVBoxLayout* vLayout;
 
-    IEMesh* mesh;
-    IEMaterial* material;
-    IEShader* shader;
     IEInstIndexRenderable* renderable;
 
     QString meshPath;
@@ -29,8 +26,6 @@ public:
     IETInstIndexRenderable();
     virtual ~IETInstIndexRenderable();
 
-    void draw(IECamera* camera);
-
 private:
     void setup();
     void createResources();
@@ -39,5 +34,6 @@ private:
     void hideInstances();
     void serialize();
     void deserialize();
+    void clearManagers();
 };
 

@@ -1,11 +1,13 @@
 #include "IERenderEngine.h"
+#include "QOpenGLContext"
 #include <QOpenGLExtraFunctions>
-#include <QMatrix4x4>
 #include "IEGame.h"
 #include "IEScene.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
+#include "IETexture2DManager.h"
+#include "IEUboManager.h"
 #include "IECamera.h"
 #include "IEMaterial.h"
 #include "IEShader.h"
@@ -14,7 +16,9 @@
 IERenderEngine::IERenderEngine(QObject* parent) :
     IESystem(parent),
     materialManager(nullptr),
-    shaderManager(nullptr), renderableManager(nullptr)
+    shaderManager(nullptr),
+    renderableManager(nullptr),
+    texture2DManager(nullptr)
 {
 
 }
@@ -30,6 +34,8 @@ void IERenderEngine::startup(IEGame& game)
     materialManager = scene->getManager<IEMaterialManager>();
     shaderManager = scene->getManager<IEShaderManager>();
     renderableManager = scene->getManager<IERenderableManager>();
+    texture2DManager = scene->getManager<IETexture2DManager>();
+    uboManager = game.getSystem<IEUboManager>();
 }
 
 void IERenderEngine::shutdown(IEGame&)
@@ -37,6 +43,8 @@ void IERenderEngine::shutdown(IEGame&)
     materialManager = nullptr;
     shaderManager = nullptr;
     renderableManager = nullptr;
+    texture2DManager = nullptr;
+    uboManager = nullptr;
 }
 
 void IERenderEngine::onPreRenderFrame()
@@ -44,10 +52,11 @@ void IERenderEngine::onPreRenderFrame()
     // TODO implement
 }
 
-void IERenderEngine::onRenderFrame(QOpenGLExtraFunctions* glFunc, IECamera* camera)
+void IERenderEngine::onRenderFrame(IECamera* camera)
 {
-    glFunc->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glFunc->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+    auto* gl = QOpenGLContext::currentContext()->extraFunctions();
+    gl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    gl->glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
     if(!camera)
         return;
@@ -83,6 +92,7 @@ void IERenderEngine::draw(IEShader* shader, IEMaterial* material, IERenderable* 
         for(int j = 0; j < renderables.size(); j++)
         {
             materials[j]->bindColors(*shader);
+            materials[j]->bindTextures(*shader, *texture2DManager);
             renderables[j]->draw();
         }
     }

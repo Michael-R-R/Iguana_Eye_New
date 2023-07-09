@@ -19,13 +19,13 @@ IEUboManager::~IEUboManager()
 
 void IEUboManager::startup(IEGame& game)
 {
-    vpBuffer = new IEUniformBufferObject<GLViewProjectionStruct>("ubViewProjection", 0, 1, this);
-
-    vpBuffer->build();
-
     auto* scene = game.getSystem<IEScene>();
     auto* sManager = scene->getManager<IEShaderManager>();
     connect(sManager, &IEShaderManager::added, this, &IEUboManager::linkProgramToBlock);
+
+    vpBuffer = new IEUniformBufferObject<GLViewProjectionStruct>("ubViewProjection", 0, 1, this);
+
+    vpBuffer->build();
 }
 
 void IEUboManager::shutdown(IEGame& game)
@@ -35,6 +35,11 @@ void IEUboManager::shutdown(IEGame& game)
     disconnect(sManager, &IEShaderManager::added, this, &IEUboManager::linkProgramToBlock);
 
     cleanup();
+}
+
+void IEUboManager::linkShaderToBlock(IEShader& shader)
+{
+    linkAllBlocks(shader);
 }
 
 void IEUboManager::cleanup()
@@ -53,7 +58,15 @@ void IEUboManager::linkProgramToBlock(const uint64_t key, const QString&)
     if(!shader)
         return;
 
-    const int program = shader->programId();
+    linkAllBlocks(*shader);
+}
+
+void IEUboManager::linkAllBlocks(IEShader& shader)
+{
+    if(!shader.isLinked())
+        return;
+
+    const int program = shader.programId();
 
     vpBuffer->linkBlock(program);
 }

@@ -6,6 +6,7 @@
 #include "IEECSRenderableSystem.h"
 #include "IERenderableManager.h"
 #include "IERenderable.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 IEECSTransformSystem::IEECSTransformSystem(QObject* parent) :
     IEECSSystem(typeid(IEECSTransformSystem).hash_code(), parent),
@@ -31,10 +32,10 @@ int IEECSTransformSystem::attach(const IEEntity entity)
     dirtyParentIndices.insert(index);
 
     data.entity.append(entity);
-    data.position.append(QVector3D(0.0f, 0.0f, 0.0f));
-    data.rotation.append(QVector4D(0.0f, 0.0f, 0.0f, 0.0f));
-    data.scale.append(QVector3D(1.0f, 1.0f, 1.0f));
-    data.transform.append(QMatrix4x4());
+    data.position.append(glm::vec3(0.0f, 0.0f, 0.0f));
+    data.rotation.append(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+    data.scale.append(glm::vec3(1.0f, 1.0f, 1.0f));
+    data.transform.append(glm::mat4(1.0f));
 
     return index;
 }
@@ -100,7 +101,7 @@ void IEECSTransformSystem::onUpdateFrame()
             if(!renderable)
                 continue;
 
-            QMatrix4x4& transform = data.transform[j];
+            glm::mat4& transform = data.transform[j];
             // TODO implement
         }
 
@@ -111,14 +112,14 @@ void IEECSTransformSystem::onUpdateFrame()
         if(!renderable)
             continue;
 
-        QMatrix4x4& transform = data.transform[i];
+        glm::mat4& transform = data.transform[i];
         // TODO implement
     }
 
     dirtyParentIndices.clear();
 }
 
-const QVector3D& IEECSTransformSystem::getPosition(const int index) const
+const glm::vec3& IEECSTransformSystem::getPosition(const int index) const
 {
     if(!indexBoundCheck(index))
         return data.position[0];
@@ -126,7 +127,7 @@ const QVector3D& IEECSTransformSystem::getPosition(const int index) const
     return data.position[index];
 }
 
-const QVector4D& IEECSTransformSystem::getRotation(const int index) const
+const glm::vec4& IEECSTransformSystem::getRotation(const int index) const
 {
     if(!indexBoundCheck(index))
         return data.rotation[0];
@@ -134,7 +135,7 @@ const QVector4D& IEECSTransformSystem::getRotation(const int index) const
     return data.rotation[index];
 }
 
-const QVector3D& IEECSTransformSystem::getScale(const int index) const
+const glm::vec3& IEECSTransformSystem::getScale(const int index) const
 {
     if(!indexBoundCheck(index))
         return data.scale[0];
@@ -142,7 +143,7 @@ const QVector3D& IEECSTransformSystem::getScale(const int index) const
     return data.scale[index];
 }
 
-const QMatrix4x4& IEECSTransformSystem::getTransform(const int index) const
+const glm::mat4& IEECSTransformSystem::getTransform(const int index) const
 {
     if(!indexBoundCheck(index))
         return data.transform[0];
@@ -150,7 +151,7 @@ const QMatrix4x4& IEECSTransformSystem::getTransform(const int index) const
     return data.transform[index];
 }
 
-void IEECSTransformSystem::setPosition(const int index, const QVector3D& val)
+void IEECSTransformSystem::setPosition(const int index, const glm::vec3& val)
 {
     if(!indexBoundCheck(index))
         return;
@@ -160,17 +161,17 @@ void IEECSTransformSystem::setPosition(const int index, const QVector3D& val)
     dirtyParentIndices.insert(index);
 }
 
-void IEECSTransformSystem::setRotation(const int index, const QVector3D& val)
+void IEECSTransformSystem::setRotation(const int index, const glm::vec3& val)
 {
     if(!indexBoundCheck(index))
         return;
 
-    data.rotation[index] = QVector4D(val.x(), val.y(), val.z(), 0.0f);
+    data.rotation[index] = glm::vec4(val[0], val[1], val[2], 0.0f);
 
     dirtyParentIndices.insert(index);
 }
 
-void IEECSTransformSystem::setRotation(const int index, const QVector4D& val)
+void IEECSTransformSystem::setRotation(const int index, const glm::vec4& val)
 {
     if(!indexBoundCheck(index))
         return;
@@ -180,7 +181,7 @@ void IEECSTransformSystem::setRotation(const int index, const QVector4D& val)
     dirtyParentIndices.insert(index);
 }
 
-void IEECSTransformSystem::setScale(const int index, const QVector3D& val)
+void IEECSTransformSystem::setScale(const int index, const glm::vec3& val)
 {
     if(!indexBoundCheck(index))
         return;
@@ -221,21 +222,21 @@ void IEECSTransformSystem::updateTransform(const int index,
     }
 }
 
-QMatrix4x4 IEECSTransformSystem::calcModelMatrix(const int index)
+glm::mat4 IEECSTransformSystem::calcModelMatrix(const int index)
 {
     if(!indexBoundCheck(index))
-        return QMatrix4x4();
+        return glm::mat4();
 
     auto& pos = data.position[index];
     auto& rot = data.rotation[index];
     auto& scl = data.scale[index];
 
-    QMatrix4x4 transform;
-    transform.translate(pos);
-    transform.rotate(rot.w(), rot.x(), rot.y(), rot.z());
-    transform.scale(scl);
+    glm::mat4 model(1.0f);
+    model = glm::translate(model, pos);
+    model = glm::rotate(model, glm::radians(rot[3]), glm::vec3(rot));
+    model = glm::scale(model, scl);
 
-    return transform;
+    return model;
 }
 
 QDataStream& IEECSTransformSystem::serialize(QDataStream& out, const IESerializable& obj) const

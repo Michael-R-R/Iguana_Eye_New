@@ -2,8 +2,6 @@
 
 #include "IEGameState.h"
 
-class QOpenGLFunctions;
-class QOpenGLExtraFunctions;
 class IEGame;
 class IETime;
 class IEInput;
@@ -17,9 +15,6 @@ class ECamera;
 
 class IEGameStopState : public IEGameState
 {
-    QOpenGLFunctions* glFunc;
-    QOpenGLExtraFunctions* glExtraFunc;
-
     IETime* time;
     IEInput* input;
     IEECS* ecs;

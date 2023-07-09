@@ -4,10 +4,10 @@
 #include <QMap>
 #include <QVector>
 #include <QSet>
-#include <QVector3D>
-#include <QMatrix4x4>
+#include <glm/glm.hpp>
 
 #include "IEECSSystem.h"
+#include "IESerializeConverter.h"
 
 class IEGame;
 class IEECSHierarchySystem;
@@ -19,22 +19,32 @@ class IEECSTransformSystem : public IEECSSystem
     struct Data
     {
         QVector<IEEntity> entity;
-        QVector<QVector3D> position;
-        QVector<QVector4D> rotation;
-        QVector<QVector3D> scale;
-        QVector<QMatrix4x4> transform;
+        QVector<glm::vec3> position;
+        QVector<glm::vec4> rotation;
+        QVector<glm::vec3> scale;
+        QVector<glm::mat4> transform;
 
         friend QDataStream& operator<<(QDataStream& out, const Data& data)
         {
-            out << data.entity << data.position << data.rotation
-                << data.scale << data.transform;
+            IESerializeConverter::write(out, data.position);
+            IESerializeConverter::write(out, data.rotation);
+            IESerializeConverter::write(out, data.scale);
+            IESerializeConverter::write(out, data.transform);
+
+            out << data.entity;
+
             return out;
         }
 
         friend QDataStream& operator>>(QDataStream& in, Data& data)
         {
-            in >> data.entity >> data.position >> data.rotation
-               >> data.scale >> data.transform;
+            IESerializeConverter::read(in, data.position);
+            IESerializeConverter::read(in, data.rotation);
+            IESerializeConverter::read(in, data.scale);
+            IESerializeConverter::read(in, data.transform);
+
+            in >> data.entity;
+
             return in;
         }
     };
@@ -57,21 +67,21 @@ public:
     void shutdown(const IEGame& game) override;
     void onUpdateFrame() override;
 
-    const QVector3D& getPosition(const int index) const;
-    const QVector4D& getRotation(const int index) const;
-    const QVector3D& getScale(const int index) const;
-    const QMatrix4x4& getTransform(const int index) const;
+    const glm::vec3& getPosition(const int index) const;
+    const glm::vec4& getRotation(const int index) const;
+    const glm::vec3& getScale(const int index) const;
+    const glm::mat4& getTransform(const int index) const;
     const Data& getData() const { return data; }
 
-    void setPosition(const int index, const QVector3D& val);
-    void setRotation(const int index, const QVector3D& val);
-    void setRotation(const int index, const QVector4D& val);
-    void setScale(const int index, const QVector3D& val);
+    void setPosition(const int index, const glm::vec3& val);
+    void setRotation(const int index, const glm::vec3& val);
+    void setRotation(const int index, const glm::vec4& val);
+    void setScale(const int index, const glm::vec3& val);
 
 private:
     void updateTransform(const int index,
                          QSet<int>& dirtyChildren);
-    QMatrix4x4 calcModelMatrix(const int index);
+    glm::mat4 calcModelMatrix(const int index);
 
 public:
     QDataStream& serialize(QDataStream &out, const IESerializable &obj) const override;

@@ -12,8 +12,13 @@
 #include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScene.h"
-#include "IETexture2DManager.h"
+#include "IEMeshManager.h"
+#include "IEMaterialManager.h"
+#include "IEShaderManager.h"
+#include "IERenderableManager.h"
 #include "IESerialize.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QSpinBox>
@@ -22,11 +27,10 @@
 IETInstIndexRenderable::IETInstIndexRenderable() :
     QWidget(),
     vLayout(new QVBoxLayout(this)),
-    mesh(nullptr), material(nullptr),
-    shader(nullptr), renderable(nullptr),
-    meshPath("./resources/root/Content/backpack/backpack.obj"),
+    renderable(nullptr),
+    meshPath("./resources/root/Content/cube/cube.obj"),
     materialPath("./resources/root/Content/material.iemat"),
-    shaderPath("./resources/shaders/tests/instanced_renderable.glsl"),
+    shaderPath("./resources/root/Content/default.glsl"),
     createCount(1),
     showCount(0),
     hideCount(0)
@@ -38,32 +42,6 @@ IETInstIndexRenderable::IETInstIndexRenderable() :
 IETInstIndexRenderable::~IETInstIndexRenderable()
 {
 
-}
-
-void IETInstIndexRenderable::draw(IECamera* camera)
-{
-    if(!mesh || !material || !shader || !renderable)
-        return;
-
-    auto* game = ApplicationWindow::instance().getGame();
-    auto* texManager = game->getSystem<IEScene>()->getManager<IETexture2DManager>();
-
-    shader->bind();
-    shader->setUniformValue("uViewProjection", camera->getViewProjection());
-
-    auto& maChildren = material->getChildren();
-    auto& rChildren = renderable->getChildren();
-    for(int i = 0; i < rChildren.size(); i++)
-    {
-        auto& materials = maChildren[i]->getMaterials();
-        auto& renderables = rChildren[i]->getRenderables();
-        for(int j = 0; j < renderables.size(); j++)
-        {
-            materials[j]->bindColors(*shader);
-            materials[j]->bindTextures(*shader, *texManager);
-            renderables[j]->draw();
-        }
-    }
 }
 
 void IETInstIndexRenderable::setup()
@@ -112,20 +90,24 @@ void IETInstIndexRenderable::setup()
 
 void IETInstIndexRenderable::createResources()
 {
-    ApplicationWindow::instance().getGame()->makeCurrent();
+    auto* game = ApplicationWindow::instance().getGame();
+    auto* scene = game->getSystem<IEScene>();
+    auto* meManger = scene->getManager<IEMeshManager>();
+    auto* maManger = scene->getManager<IEMaterialManager>();
+    auto* sManger = scene->getManager<IEShaderManager>();
+    auto* rManger = scene->getManager<IERenderableManager>();
 
-    delete mesh;
-    delete material;
-    delete shader;
-    delete renderable;
+    game->makeCurrent();
 
-    mesh = new IEMesh(meshPath, this);
-    material = new IEMaterial(materialPath, this);
-    shader = new IEShader(shaderPath, this);
+    clearManagers();
+
+    auto* mesh = new IEMesh(meshPath, this);
+    auto* material = new IEMaterial(materialPath, this);
+    auto* shader = new IEShader(shaderPath, this);
     renderable = new IEInstIndexRenderable(this);
 
-    IEMeshImport::importMesh(mesh->getName(), *mesh, *material, *shader, *renderable);
-    IEShaderImport::importShader(shader->getName(), *shader);
+    IEMeshImport::importMesh(meshPath, *mesh, *material, *shader, *renderable);
+    IEShaderImport::importShader(shaderPath, *shader);
 
     auto& meChildren = mesh->getChildren();
     auto& rChildren = renderable->getChildren();
@@ -141,6 +123,11 @@ void IETInstIndexRenderable::createResources()
             temp->build(*shader);
         }
     }
+
+    meManger->add(mesh->getId(), mesh);
+    maManger->add(material->getId(), material);
+    sManger->add(shader->getId(), shader);
+    rManger->add(renderable->getId(), renderable);
 }
 
 void IETInstIndexRenderable::appendShown()
@@ -155,8 +142,8 @@ void IETInstIndexRenderable::appendShown()
 
                 int index = temp->addShown();
 
-                QMatrix4x4 model;
-                model.translate(index * 2.5f, 0.0f, 0.0f);
+                glm::mat4 model;
+                model = glm::translate(model, glm::vec3(index * 2.5f, 0.0f, 0.0f));
 
                 temp->setBufferValue("aModel", index, model);
             }
@@ -210,19 +197,24 @@ void IETInstIndexRenderable::serialize()
 
 void IETInstIndexRenderable::deserialize()
 {
-    QString path = "";
+    if(!renderable)
+        return;
 
-    if(renderable)
-    {
-        path = renderable->getName();
-        delete renderable;
-    }
+    auto* game = ApplicationWindow::instance().getGame();
+    auto* scene = game->getSystem<IEScene>();
+    auto* sManger = scene->getManager<IEShaderManager>();
+    auto* rManger = scene->getManager<IERenderableManager>();
 
-    ApplicationWindow::instance().getGame()->makeCurrent();
+    game->makeCurrent();
 
+    QString path = renderable->getName();
+
+    rManger->remove(renderable->getId());
     renderable = new IEInstIndexRenderable(this);
     IESerialize::read<IEInstIndexRenderable>(path, renderable);
+    rManger->add(renderable->getId(), renderable);
 
+    auto* shader = sManger->value<IEShader>(renderable->getShaderId());
     foreach(auto* child, renderable->getChildren())
     {
         foreach(auto* i, child->getRenderables())
@@ -230,6 +222,21 @@ void IETInstIndexRenderable::deserialize()
             i->build(*shader);
         }
     }
+}
+
+void IETInstIndexRenderable::clearManagers()
+{
+    auto* game = ApplicationWindow::instance().getGame();
+    auto* scene = game->getSystem<IEScene>();
+    auto* meManger = scene->getManager<IEMeshManager>();
+    auto* maManger = scene->getManager<IEMaterialManager>();
+    auto* sManger = scene->getManager<IEShaderManager>();
+    auto* rManger = scene->getManager<IERenderableManager>();
+
+    meManger->cleanup();
+    maManger->cleanup();
+    sManger->cleanup();
+    rManger->cleanup();
 }
 
 

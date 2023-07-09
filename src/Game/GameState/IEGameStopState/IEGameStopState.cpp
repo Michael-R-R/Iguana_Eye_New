@@ -13,8 +13,6 @@
 
 IEGameStopState::IEGameStopState(QObject* parent) :
     IEGameState(parent),
-    glFunc(nullptr),
-    glExtraFunc(nullptr),
     time(nullptr),
     input(nullptr),
     ecs(nullptr),
@@ -34,8 +32,6 @@ IEGameStopState::~IEGameStopState()
 
 void IEGameStopState::enter(IEGame& game)
 {
-    glFunc = game.getGlFunc();
-    glExtraFunc = game.getGlExtraFunc();
     time = game.getSystem<IETime>();
     input = game.getSystem<IEInput>();
     ecs = game.getSystem<IEECS>();
@@ -68,12 +64,9 @@ void IEGameStopState::onUpdateFrame()
 
 void IEGameStopState::onRenderFrame()
 {
-    grEngine->onRenderFrame(glExtraFunc, eCamera);
+    grEngine->onRenderFrame(eCamera);
 
-    // TODO test
-    test->draw(eCamera);
-
-    erEngine->onRenderFrame(glExtraFunc, eCamera);
+    erEngine->onRenderFrame(eCamera);
 
     time->processDeltaTime();
 }
