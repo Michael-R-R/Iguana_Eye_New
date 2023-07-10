@@ -173,6 +173,9 @@ void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* mePar
 
         auto* childRenderable = IERenderableFactory::make(rParent->getType(), rParent);
         childRenderable->setParent(rParent);
+        childRenderable->setMeshId(rParent->getMeshId());
+        childRenderable->setMaterialId(rParent->getMaterialId());
+        childRenderable->setShaderId(rParent->getShaderId());
 
         processNode(node->mChildren[i], scene, childMesh, childMaterial, childRenderable);
 

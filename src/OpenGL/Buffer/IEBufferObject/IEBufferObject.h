@@ -15,8 +15,10 @@ protected:
     bool isInstanced;
 
 public:
-    IEBufferObject(QOpenGLBuffer::Type glType, IEBufferType ieType,
-                   bool instanced, QObject* parent = nullptr);
+    IEBufferObject(QOpenGLBuffer::Type glType,
+                   IEBufferType ieType,
+                   bool instanced,
+                   QObject* parent = nullptr);
     IEBufferObject(const IEBufferObject&) = delete;
     virtual ~IEBufferObject();
 

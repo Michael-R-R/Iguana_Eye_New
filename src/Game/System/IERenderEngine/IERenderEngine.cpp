@@ -61,6 +61,10 @@ void IERenderEngine::onRenderFrame(IECamera* camera)
     if(!camera)
         return;
 
+    //auto* uboVP = uboManager->getVPBuffer();
+    //uboVP->setValue(0, camera->getViewProjection());
+    //uboVP->handleSuballocate(0);
+
     auto& renderables = renderableManager->getResources();
     for(auto* i : renderables)
     {
@@ -69,6 +73,9 @@ void IERenderEngine::onRenderFrame(IECamera* camera)
         auto* shader = shaderManager->value<IEShader>(renderable->getShaderId());
         if(!material || !shader)
             continue;
+
+        shader->bind();
+        shader->setMat4("vp", camera->getViewProjection());
 
         draw(shader, material, renderable);
     }
@@ -81,7 +88,7 @@ void IERenderEngine::onPostRenderFrame()
 
 void IERenderEngine::draw(IEShader* shader, IEMaterial* material, IERenderable* renderable)
 {
-    shader->bind();
+    //shader->bind();
 
     auto& maChildren = material->getChildren();
     auto& rChildren = renderable->getChildren();

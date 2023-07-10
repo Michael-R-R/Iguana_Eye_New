@@ -106,8 +106,8 @@ void IETInstIndexRenderable::createResources()
     auto* shader = new IEShader(shaderPath, this);
     renderable = new IEInstIndexRenderable(this);
 
-    IEMeshImport::importMesh(meshPath, *mesh, *material, *shader, *renderable);
     IEShaderImport::importShader(shaderPath, *shader);
+    IEMeshImport::importMesh(meshPath, *mesh, *material, *shader, *renderable);
 
     auto& meChildren = mesh->getChildren();
     auto& rChildren = renderable->getChildren();
@@ -119,7 +119,7 @@ void IETInstIndexRenderable::createResources()
         {
             auto* temp = static_cast<IEInstIndexRenderable*>(renderables[j]);
             temp->addIBO(new IEIndexBufferObject(meshes[j]->getIndices(), temp));
-            temp->addBuffer("aModel", IEBufferObjectFactory::make(IEBufferType::Mat4, 68, 16, 4, temp));
+            temp->addBuffer("aModel", IEBufferObjectFactory::make(IEBufferType::Mat4, 64, 16, 4, temp));
             temp->build(*shader);
         }
     }
@@ -142,7 +142,7 @@ void IETInstIndexRenderable::appendShown()
 
                 int index = temp->addShown();
 
-                glm::mat4 model;
+                glm::mat4 model(1.0f);
                 model = glm::translate(model, glm::vec3(index * 2.5f, 0.0f, 0.0f));
 
                 temp->setBufferValue("aModel", index, model);
@@ -212,7 +212,6 @@ void IETInstIndexRenderable::deserialize()
     rManger->remove(renderable->getId());
     renderable = new IEInstIndexRenderable(this);
     IESerialize::read<IEInstIndexRenderable>(path, renderable);
-    rManger->add(renderable->getId(), renderable);
 
     auto* shader = sManger->value<IEShader>(renderable->getShaderId());
     foreach(auto* child, renderable->getChildren())
@@ -222,6 +221,8 @@ void IETInstIndexRenderable::deserialize()
             i->build(*shader);
         }
     }
+
+    rManger->add(renderable->getId(), renderable);
 }
 
 void IETInstIndexRenderable::clearManagers()

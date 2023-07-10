@@ -166,9 +166,9 @@ QDataStream& IEInstRenderable::serialize(QDataStream& out, const IESerializable&
 
     const auto& renderable = static_cast<const IEInstRenderable&>(obj);
 
-    int hiddenInstanceSize = renderable.hiddenData.size();
-    out << hiddenInstanceSize;
-    for(int i = 0; i < hiddenInstanceSize; i++)
+    int hiddenCount = renderable.hiddenData.size();
+    out << hiddenCount;
+    for(int i = 0; i < hiddenCount; i++)
     {
         int dataCount = renderable.hiddenData[i].size();
         out << dataCount;
@@ -196,10 +196,10 @@ QDataStream& IEInstRenderable::deserialize(QDataStream& in, IESerializable& obj)
     auto& renderable = static_cast<IEInstRenderable&>(obj);
     renderable.hiddenData.clear();
 
-    int hiddenInstanceSize = 0;
-    in >> hiddenInstanceSize;
+    int hiddenCount = 0;
+    in >> hiddenCount;
 
-    for(int i = 0; i < hiddenInstanceSize; i++)
+    for(int i = 0; i < hiddenCount; i++)
     {
         int dataCount = 0;
         in >> dataCount;

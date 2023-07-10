@@ -1,7 +1,9 @@
 #include "IEBufferObject.h"
 
-IEBufferObject::IEBufferObject(QOpenGLBuffer::Type glType, IEBufferType ieType,
-                               bool instanced, QObject* parent) :
+IEBufferObject::IEBufferObject(QOpenGLBuffer::Type glType,
+                               IEBufferType ieType,
+                               bool instanced,
+                               QObject* parent) :
     QOpenGLBuffer(glType), IEObject(parent),
     bufferType(ieType),
     usage(QOpenGLBuffer::StaticDraw),

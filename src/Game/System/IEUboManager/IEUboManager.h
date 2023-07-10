@@ -2,13 +2,13 @@
 
 #include "IESystem.h"
 #include "IEUniformBufferObject.h"
-#include "GLViewProjectionStruct.h"
+#include "glm/glm.hpp"
 
 class IEShader;
 
 class IEUboManager : public IESystem
 {
-    IEUniformBufferObject<GLViewProjectionStruct>* vpBuffer;
+    IEUniformBufferObject<glm::mat4>* vpBuffer;
 
 public:
     IEUboManager(QObject* parent = nullptr);
@@ -20,7 +20,7 @@ public:
     void linkShaderToBlock(IEShader& shader);
     void cleanup();
 
-    IEUniformBufferObject<GLViewProjectionStruct>* getVPBuffer() { return vpBuffer; }
+    IEUniformBufferObject<glm::mat4>* getVPBuffer() { return vpBuffer; }
 
 private slots:
     void linkProgramToBlock(const uint64_t key, const QString& path);

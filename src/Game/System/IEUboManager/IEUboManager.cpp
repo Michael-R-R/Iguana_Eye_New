@@ -23,7 +23,7 @@ void IEUboManager::startup(IEGame& game)
     auto* sManager = scene->getManager<IEShaderManager>();
     connect(sManager, &IEShaderManager::added, this, &IEUboManager::linkProgramToBlock);
 
-    vpBuffer = new IEUniformBufferObject<GLViewProjectionStruct>("ubViewProjection", 0, 1, this);
+    vpBuffer = new IEUniformBufferObject<glm::mat4>("ubViewProjection", 0, 1, this);
 
     vpBuffer->build();
 }

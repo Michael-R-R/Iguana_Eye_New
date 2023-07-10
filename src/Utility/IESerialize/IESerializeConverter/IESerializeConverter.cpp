@@ -70,6 +70,8 @@ void IESerializeConverter::write(QDataStream& out, const glm::mat4& val)
 
 void IESerializeConverter::write(QDataStream& out, const QVector<glm::vec2>& val)
 {
+    out << (int)val.size();
+
     foreach(auto& i, val)
     {
         IESerializeConverter::write(out, i);
@@ -78,6 +80,8 @@ void IESerializeConverter::write(QDataStream& out, const QVector<glm::vec2>& val
 
 void IESerializeConverter::write(QDataStream& out, const QVector<glm::vec3>& val)
 {
+    out << (int)val.size();
+
     foreach(auto& i, val)
     {
         IESerializeConverter::write(out, i);
@@ -86,6 +90,8 @@ void IESerializeConverter::write(QDataStream& out, const QVector<glm::vec3>& val
 
 void IESerializeConverter::write(QDataStream& out, const QVector<glm::vec4>& val)
 {
+    out << (int)val.size();
+
     foreach(auto& i, val)
     {
         IESerializeConverter::write(out, i);
@@ -94,6 +100,8 @@ void IESerializeConverter::write(QDataStream& out, const QVector<glm::vec4>& val
 
 void IESerializeConverter::write(QDataStream& out, const QVector<glm::mat2>& val)
 {
+    out << (int)val.size();
+
     foreach(auto& i, val)
     {
         IESerializeConverter::write(out, i);
@@ -102,6 +110,8 @@ void IESerializeConverter::write(QDataStream& out, const QVector<glm::mat2>& val
 
 void IESerializeConverter::write(QDataStream& out, const QVector<glm::mat3>& val)
 {
+    out << (int)val.size();
+
     foreach(auto& i, val)
     {
         IESerializeConverter::write(out, i);
@@ -110,6 +120,8 @@ void IESerializeConverter::write(QDataStream& out, const QVector<glm::mat3>& val
 
 void IESerializeConverter::write(QDataStream& out, const QVector<glm::mat4>& val)
 {
+    out << (int)val.size();
+
     foreach(auto& i, val)
     {
         IESerializeConverter::write(out, i);
@@ -187,48 +199,90 @@ void IESerializeConverter::read(QDataStream& in, glm::mat4& val)
 
 void IESerializeConverter::read(QDataStream& in, QVector<glm::vec2>& val)
 {
-    for(int i = 0; i < val.size(); i++)
+    val.clear();
+
+    int count = 0;
+    in >> count;
+
+    for(int i = 0; i < count; i++)
     {
-        IESerializeConverter::read(in, val[i]);
+        glm::vec2 temp;
+        IESerializeConverter::read(in, temp);
+        val.append(temp);
     }
 }
 
 void IESerializeConverter::read(QDataStream& in, QVector<glm::vec3>& val)
 {
-    for(int i = 0; i < val.size(); i++)
+    val.clear();
+
+    int count = 0;
+    in >> count;
+
+    for(int i = 0; i < count; i++)
     {
-        IESerializeConverter::read(in, val[i]);
+        glm::vec3 temp;
+        IESerializeConverter::read(in, temp);
+        val.append(temp);
     }
 }
 
 void IESerializeConverter::read(QDataStream& in, QVector<glm::vec4>& val)
 {
-    for(int i = 0; i < val.size(); i++)
+    val.clear();
+
+    int count = 0;
+    in >> count;
+
+    for(int i = 0; i < count; i++)
     {
-        IESerializeConverter::read(in, val[i]);
+        glm::vec4 temp;
+        IESerializeConverter::read(in, temp);
+        val.append(temp);
     }
 }
 
 void IESerializeConverter::read(QDataStream& in, QVector<glm::mat2>& val)
 {
-    for(int i = 0; i < val.size(); i++)
+    val.clear();
+
+    int count = 0;
+    in >> count;
+
+    for(int i = 0; i < count; i++)
     {
-        IESerializeConverter::read(in, val[i]);
+        glm::mat2 temp;
+        IESerializeConverter::read(in, temp);
+        val.append(temp);
     }
 }
 
 void IESerializeConverter::read(QDataStream& in, QVector<glm::mat3>& val)
 {
-    for(int i = 0; i < val.size(); i++)
+    val.clear();
+
+    int count = 0;
+    in >> count;
+
+    for(int i = 0; i < count; i++)
     {
-        IESerializeConverter::read(in, val[i]);
+        glm::mat3 temp;
+        IESerializeConverter::read(in, temp);
+        val.append(temp);
     }
 }
 
 void IESerializeConverter::read(QDataStream& in, QVector<glm::mat4>& val)
 {
-    for(int i = 0; i < val.size(); i++)
+    val.clear();
+
+    int count = 0;
+    in >> count;
+
+    for(int i = 0; i < count; i++)
     {
-        IESerializeConverter::read(in, val[i]);
+        glm::mat4 temp;
+        IESerializeConverter::read(in, temp);
+        val.append(temp);
     }
 }

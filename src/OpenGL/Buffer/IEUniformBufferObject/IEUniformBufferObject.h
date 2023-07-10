@@ -6,6 +6,7 @@
 #include <any>
 
 #include "IEObject.h"
+#include "IESerializeConverter.h"
 
 template<class T>
 class IEUniformBufferObject : public IEObject
@@ -207,7 +208,7 @@ public:
 
         const auto& buffer = static_cast<const IEUniformBufferObject&>(obj);
 
-        // TODO serialize values
+        IESerializeConverter::write(out, buffer.values);
 
         out << buffer.blockName << buffer.bindingPoint;
 
@@ -219,9 +220,8 @@ public:
         IEObject::deserialize(in, obj);
 
         auto& buffer = static_cast<IEUniformBufferObject&>(obj);
-        buffer.values.clear();
 
-        // TODO deserialize values
+        IESerializeConverter::read(in, buffer.values);
 
         in >> buffer.blockName >> buffer.bindingPoint;
 
