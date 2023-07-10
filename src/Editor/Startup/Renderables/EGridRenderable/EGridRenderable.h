@@ -2,7 +2,6 @@
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLExtraFunctions>
-#include <QVector3D>
 
 #include "IEObject.h"
 

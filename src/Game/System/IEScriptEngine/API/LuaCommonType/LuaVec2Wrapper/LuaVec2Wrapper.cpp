@@ -12,7 +12,7 @@ LuaVec2Wrapper::LuaVec2Wrapper(float n1, float n2) :
 
 }
 
-LuaVec2Wrapper::LuaVec2Wrapper(const QVector2D& n) :
+LuaVec2Wrapper::LuaVec2Wrapper(const glm::vec2& n) :
     vec2(n)
 {
 
@@ -33,7 +33,7 @@ void LuaVec2Wrapper::addToLua(sol::state& lua)
 {
     lua.new_usertype<LuaVec2Wrapper>("IEVec2", sol::constructors<LuaVec2Wrapper(),
                                      LuaVec2Wrapper(float, float),
-                                     LuaVec2Wrapper(const QVector2D&),
+                                     LuaVec2Wrapper(const glm::vec2&),
                                      LuaVec2Wrapper(const LuaVec2Wrapper&)>(),
                                      "x", &LuaVec2Wrapper::x,
                                      "y", &LuaVec2Wrapper::y,

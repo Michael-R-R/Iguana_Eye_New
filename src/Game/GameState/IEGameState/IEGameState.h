@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QVector2D>
+#include <glm/glm.hpp>
 
 #include "IEObject.h"
 
@@ -18,7 +18,7 @@ public:
     virtual void onUpdateFrame() = 0;
     virtual void onRenderFrame() = 0;
     virtual void onResize(const float w, const float h) = 0;
-    virtual void onResize(const QVector2D& val);
+    virtual void onResize(const glm::vec2& val);
     virtual void serializeTemporary(IEGame& game);
     virtual void deserializeTemporary(IEGame& game);
 

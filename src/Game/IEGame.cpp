@@ -62,7 +62,7 @@ void IEGame::resizeGL(int w, int h)
 {
     glFunc->glViewport(0, 0, w, h);
 
-    ApplicationProperties::viewportDimensions = QVector2D(w, h);
+    ApplicationProperties::viewportDimensions = glm::vec2(w, h);
 
     if(state) { state->onResize((float)w, (float)h); }
 }

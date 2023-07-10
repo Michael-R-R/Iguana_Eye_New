@@ -20,7 +20,7 @@ ECamera::~ECamera()
 void ECamera::update(IEInput* input, const float dt)
 {
     updateMovement(input, dt);
-    updateRotation(input, dt);
+    updateRotation(input);
     updateView(position, rotation);
 }
 
@@ -53,13 +53,13 @@ void ECamera::updateMovement(IEInput* input, const float dt)
         position -= (up * speed);
 }
 
-void ECamera::updateRotation(IEInput* input, const float dt)
+void ECamera::updateRotation(IEInput* input)
 {
     if(input->isPressed("Right Click"))
     {
         const auto& cursorPos = input->cursorPos();
-        const float x = qFloor(cursorPos.x());
-        const float y = qFloor(cursorPos.y());
+        const float x = cursorPos[0];
+        const float y = cursorPos[1];
 
         if(!isCaptured)
         {
@@ -83,9 +83,9 @@ void ECamera::updateRotation(IEInput* input, const float dt)
         if (pitch > 89.0) { pitch = 89.0; }
         else if (pitch < -89.0) { pitch = -89.0; }
 
-        float rotx = qCos(qDegreesToRadians(yaw)) * qCos(qDegreesToRadians(pitch));
-        float roty = qSin(qDegreesToRadians(pitch));
-        float rotz = qSin(qDegreesToRadians(yaw)) * qCos(qDegreesToRadians(pitch));
+        float rotx = glm::cos(glm::radians(yaw)) * glm::cos(glm::radians(pitch));
+        float roty = glm::sin(glm::radians(pitch));
+        float rotz = glm::sin(glm::radians(yaw)) * glm::cos(glm::radians(pitch));
 
         rotation = glm::vec3(rotx, roty, rotz);
     }

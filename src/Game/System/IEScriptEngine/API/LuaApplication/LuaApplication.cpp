@@ -23,10 +23,10 @@ void LuaApplication::addToLua(sol::table gameTable)
 
 float LuaApplication::viewportWidth()
 {
-    return ApplicationProperties::viewportDimensions.x();
+    return ApplicationProperties::viewportDimensions[0];
 }
 
 float LuaApplication::viewportHeight()
 {
-    return ApplicationProperties::viewportDimensions.y();
+    return ApplicationProperties::viewportDimensions[1];
 }

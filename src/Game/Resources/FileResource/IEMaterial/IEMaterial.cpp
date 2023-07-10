@@ -3,6 +3,7 @@
 #include "IETexture2D.h"
 #include "IETexture2DManager.h"
 #include "IESerialize.h"
+#include "IESerializeConverter.h"
 
 IEMaterial::IEMaterial(QObject* parent) :
     IEFileResource(parent),
@@ -29,12 +30,12 @@ IEMaterial::~IEMaterial()
 
 void IEMaterial::bindColors(IEShader& shader)
 {
-    QHashIterator<IEColorType, QVector4D> it(colors);
+    QHashIterator<IEColorType, glm::vec4> it(colors);
     while(it.hasNext())
     {
         it.next();
 
-        shader.setUniformValue(colorNames[it.key()], it.value());
+        shader.setVec4(colorNames[it.key()], it.value());
     }
 }
 
@@ -67,7 +68,7 @@ void IEMaterial::bindTextures(IEShader& shader, IETexture2DManager& manager)
     }
 }
 
-void IEMaterial::setColor(IEColorType type, const QVector4D& val)
+void IEMaterial::setColor(IEColorType type, const glm::vec4& val)
 {
     colors.insert(type, val);
 }
@@ -104,7 +105,17 @@ QDataStream& IEMaterial::serialize(QDataStream& out, const IESerializable& obj) 
 
     const auto& material = static_cast<const IEMaterial&>(obj);
 
-    out << material.colors << material.textureIDs;
+    out << (int)material.colors.size();
+    QHashIterator<IEColorType, glm::vec4> it(material.colors);
+    while(it.hasNext())
+    {
+        it.next();
+
+        out << it.key();
+        IESerializeConverter::write(out, it.value());
+    }
+
+    out << material.textureIDs;
 
     return out;
 }
@@ -115,7 +126,23 @@ QDataStream& IEMaterial::deserialize(QDataStream& in, IESerializable& obj)
 
     auto& material = static_cast<IEMaterial&>(obj);
 
-    in >> material.colors >> material.textureIDs;
+    int count = 0;
+    in >> count;
+    QHash<IEColorType, glm::vec4> colVals;
+    for(int i = 0; i < count; i++)
+    {
+        IEColorType type = IEColorType::Unknown;
+        glm::vec4 col;
+
+        in >> type;
+        IESerializeConverter::read(in, col);
+
+        colVals.insert(type, col);
+    }
+
+    material.colors = colVals;
+
+    in >> material.textureIDs;
 
     return in;
 }

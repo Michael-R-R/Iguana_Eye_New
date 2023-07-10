@@ -3,9 +3,9 @@
 #include "IESerialize.h"
 #include "IEFile.h"
 
-void IEGameState::onResize(const QVector2D& val)
+void IEGameState::onResize(const glm::vec2& val)
 {
-    onResize(val.x(), val.y());
+    onResize(val[0], val[1]);
 }
 
 void IEGameState::serializeTemporary(IEGame& game)

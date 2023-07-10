@@ -21,7 +21,7 @@ InputCapture::~InputCapture()
 void InputCapture::clear()
 {
     currKey = InputKey();
-    cursorPos = QVector2D();
+    cursorPos = glm::vec2();
     capturedInput.clear();
 }
 
@@ -73,7 +73,9 @@ void InputCapture::mouseMoveEvent(QMouseEvent* event)
 {
     if(!event) { return; }
 
-    cursorPos = QVector2D(event->pos());
+    QPoint p = event->pos();
+
+    cursorPos = glm::vec2(p.x(), p.y());
 }
 
 void InputCapture::wheelEvent(QWheelEvent* event)

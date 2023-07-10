@@ -3,7 +3,8 @@
 enum class IEColorType
 {
     Ambient, Diffuse, Specular,
-    Emissive, Reflective, Transparent
+    Emissive, Reflective, Transparent,
+    Unknown
 };
 
 enum class IETextureType

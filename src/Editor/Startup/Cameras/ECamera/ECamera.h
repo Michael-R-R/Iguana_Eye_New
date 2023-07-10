@@ -28,7 +28,7 @@ public:
 
 private:
     void updateMovement(IEInput* input, const float dt);
-    void updateRotation(IEInput* input, const float dt);
+    void updateRotation(IEInput* input);
 
 public:
     QDataStream& serialize(QDataStream &out, const IESerializable &obj) const override;

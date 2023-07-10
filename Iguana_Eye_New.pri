@@ -259,7 +259,6 @@ INCLUDEPATH += $$PWD/src/Utility \
     $$PWD/src/Utility/IEStyleSheet \
 
 INCLUDEPATH += $$PWD/src/Utility/Export \
-    $$PWD/src/Utility/Export/IEMeshExport \
     $$PWD/src/Utility/Export/IEShaderExport \
 
 INCLUDEPATH += $$PWD/src/Utility/IESerialize \

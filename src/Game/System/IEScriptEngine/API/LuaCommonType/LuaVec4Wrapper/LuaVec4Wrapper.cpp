@@ -12,7 +12,7 @@ LuaVec4Wrapper::LuaVec4Wrapper(float n1, float n2, float n3, float n4) :
 
 }
 
-LuaVec4Wrapper::LuaVec4Wrapper(const QVector4D& n) :
+LuaVec4Wrapper::LuaVec4Wrapper(const glm::vec4& n) :
     vec4(n)
 {
 
@@ -33,7 +33,7 @@ void LuaVec4Wrapper::addToLua(sol::state& lua)
 {
     lua.new_usertype<LuaVec4Wrapper>("IEVec4", sol::constructors<LuaVec4Wrapper(),
                                      LuaVec4Wrapper(float, float, float, float),
-                                     LuaVec4Wrapper(const QVector4D&),
+                                     LuaVec4Wrapper(const glm::vec4&),
                                      LuaVec4Wrapper(const LuaVec4Wrapper&)>(),
                                      "x", &LuaVec4Wrapper::x,
                                      "y", &LuaVec4Wrapper::y,

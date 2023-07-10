@@ -44,7 +44,7 @@ bool IEInput::isPressed(const char* keyName)
     return inputCapture->checkStatus(key);
 }
 
-const QVector2D& IEInput::cursorPos() const
+const glm::vec2& IEInput::cursorPos() const
 {
     return inputCapture->getCursorPos();
 }

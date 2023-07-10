@@ -1,4 +1,5 @@
 #include "LuaVec3Wrapper.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 LuaVec3Wrapper::LuaVec3Wrapper() :
     vec3()
@@ -12,14 +13,14 @@ LuaVec3Wrapper::LuaVec3Wrapper(float n1, float n2, float n3) :
 
 }
 
-LuaVec3Wrapper::LuaVec3Wrapper(const QVector3D& n) :
+LuaVec3Wrapper::LuaVec3Wrapper(const glm::vec3& n) :
     vec3(n)
 {
 
 }
 
-LuaVec3Wrapper::LuaVec3Wrapper(const QVector4D& n) :
-    vec3(n.toVector3D())
+LuaVec3Wrapper::LuaVec3Wrapper(const glm::vec4& n) :
+    vec3(n)
 {
 
 }
@@ -39,8 +40,8 @@ void LuaVec3Wrapper::addToLua(sol::state& lua)
 {
     lua.new_usertype<LuaVec3Wrapper>("IEVec3", sol::constructors<LuaVec3Wrapper(),
                                      LuaVec3Wrapper(float, float, float),
-                                     LuaVec3Wrapper(const QVector3D&),
-                                     LuaVec3Wrapper(const QVector4D&),
+                                     LuaVec3Wrapper(const glm::vec3&),
+                                     LuaVec3Wrapper(const glm::vec4&),
                                      LuaVec3Wrapper(const LuaVec3Wrapper&)>(),
                                      "x", &LuaVec3Wrapper::x,
                                      "y", &LuaVec3Wrapper::y,
@@ -57,12 +58,10 @@ void LuaVec3Wrapper::addToLua(sol::state& lua)
 
 LuaVec3Wrapper LuaVec3Wrapper::normalize()
 {
-    vec3.normalize();
-    return LuaVec3Wrapper(vec3);
+    return LuaVec3Wrapper(glm::normalize(vec3));
 }
 
 LuaVec3Wrapper LuaVec3Wrapper::cross(LuaVec3Wrapper v1, LuaVec3Wrapper v2)
 {
-    vec3 = QVector3D::crossProduct(v1.vec3, v2.vec3);
-    return LuaVec3Wrapper(vec3);
+    return LuaVec3Wrapper(glm::cross(v1.vec3, v2.vec3));
 }

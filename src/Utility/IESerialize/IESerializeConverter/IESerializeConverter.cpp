@@ -4,10 +4,10 @@ void IESerializeConverter::write(QDataStream& out, const std::any& val)
 {
     size_t hashcode = val.type().hash_code();
 
-    if(hashcode == hashcodes[0]) { out << hashcode << std::any_cast<QVector2D>(val); }
-    else if(hashcode == hashcodes[1]) { out << hashcode << std::any_cast<QVector3D>(val); }
-    else if(hashcode == hashcodes[2]) { out << hashcode << std::any_cast<QVector4D>(val); }
-    else if(hashcode == hashcodes[3]) { out << hashcode << std::any_cast<QMatrix4x4>(val); }
+    if(hashcode == hashcodes[0]) { out << hashcode; write(out, std::any_cast<glm::vec2>(val)); }
+    else if(hashcode == hashcodes[1]) { out << hashcode; write(out, std::any_cast<glm::vec3>(val)); }
+    else if(hashcode == hashcodes[2]) { out << hashcode; write(out, std::any_cast<glm::vec4>(val)); }
+    else if(hashcode == hashcodes[3]) { out << hashcode; write(out, std::any_cast<glm::mat4>(val)); }
     else { out << typeid(char).hash_code() << (char)'~'; }
 }
 
@@ -121,10 +121,10 @@ void IESerializeConverter::read(QDataStream& in, std::any& val)
     size_t hashcode = 0;
     in >> hashcode;
 
-    if(hashcode == hashcodes[0]) { QVector2D temp; in >> temp; val = temp; }
-    else if(hashcode == hashcodes[1]) { QVector3D temp; in >> temp; val = temp; }
-    else if(hashcode == hashcodes[2]) { QVector4D temp; in >> temp; val = temp; }
-    else if(hashcode == hashcodes[3]) { QMatrix4x4 temp; in >> temp; val = temp; }
+    if(hashcode == hashcodes[0]) { glm::vec2 temp; read(in, temp); val = temp; }
+    else if(hashcode == hashcodes[1]) { glm::vec3 temp; read(in, temp); val = temp; }
+    else if(hashcode == hashcodes[2]) { glm::vec4 temp; read(in, temp); val = temp; }
+    else if(hashcode == hashcodes[3]) { glm::mat4 temp; read(in, temp); val = temp; }
     else { char temp; in >> temp; val = temp; }
 }
 

@@ -2,7 +2,7 @@
 
 #include <QHash>
 #include <QVector>
-#include <QVector4D>
+#include <glm/glm.hpp>
 
 #include "IEFileResource.h"
 #include "IEEnum.h"
@@ -13,7 +13,7 @@ class IETexture2DManager;
 class IEMaterial : public IEFileResource
 {
 protected:
-    QHash<IEColorType, QVector4D> colors;
+    QHash<IEColorType, glm::vec4> colors;
     QHash<IETextureType, QVector<uint64_t>> textureIDs;
 
     QHash<IEColorType, const char*> colorNames;
@@ -37,14 +37,14 @@ public:
     void bindColors(IEShader& shader);
     void bindTextures(IEShader& shader, IETexture2DManager& manager);
 
-    void setColor(IEColorType type, const QVector4D& val);
+    void setColor(IEColorType type, const glm::vec4& val);
     void removeColor(IEColorType type);
 
     void appendTextureID(IETextureType type, const uint64_t val);
     void setTextureID(IETextureType type, const int index, const uint64_t val);
     void removeTextureID(IETextureType type, const int index);
 
-    const QHash<IEColorType, QVector4D>& getColors() const { return colors; }
+    const QHash<IEColorType, glm::vec4>& getColors() const { return colors; }
     const QHash<IETextureType, QVector<uint64_t>>& getTexIDs() const { return textureIDs; }
     IEMaterial* getParent() { return parent; }
     QVector<IEMaterial*>& getChildren() { return children; }

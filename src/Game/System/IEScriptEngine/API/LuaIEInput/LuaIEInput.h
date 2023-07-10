@@ -1,7 +1,7 @@
 #pragma once
 
 #include <sol/sol.hpp>
-#include <QVector2D>
+#include <glm/glm.hpp>
 
 class IEInput;
 
@@ -20,6 +20,6 @@ public:
 
 private:
     bool isPressed(const char* key);
-    QVector2D cursorPos();
+    const glm::vec2& cursorPos() const;
 };
 

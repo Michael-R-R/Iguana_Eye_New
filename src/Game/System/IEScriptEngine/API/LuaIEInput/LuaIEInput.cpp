@@ -29,7 +29,7 @@ bool LuaIEInput::isPressed(const char* key)
     return input->isPressed(key);
 }
 
-QVector2D LuaIEInput::cursorPos()
+const glm::vec2& LuaIEInput::cursorPos() const
 {
     return input->cursorPos();
 }

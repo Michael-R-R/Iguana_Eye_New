@@ -2,12 +2,12 @@
 
 #include <QWidget>
 #include <QMap>
-#include <QVector2D>
 #include <QEvent>
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QKeyEvent>
 #include <QFocusEvent>
+#include <glm/glm.hpp>
 
 #include "InputKey.h"
 
@@ -20,7 +20,7 @@ class InputCapture : public QWidget
     InputKey currKey;
     int lastMod;
 
-    QVector2D cursorPos;
+    glm::vec2 cursorPos;
 
 public:
     InputCapture(QWidget* parent = nullptr);
@@ -29,7 +29,7 @@ public:
     void clear();
     bool checkStatus(const InputKey& key);
 
-    const QVector2D& getCursorPos() const { return cursorPos; }
+    const glm::vec2& getCursorPos() const { return cursorPos; }
 
 protected:
     bool eventFilter(QObject* watched, QEvent* event) override;

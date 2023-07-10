@@ -3,20 +3,16 @@
 #include <QDataStream>
 #include <QHash>
 #include <any>
-#include <QVector2D>
-#include <QVector3D>
-#include <QVector4D>
-#include <QMatrix4x4>
 #include <glm/glm.hpp>
 
 class IESerializeConverter
 {
     static inline QHash<unsigned, size_t> hashcodes
     {
-            { 0, typeid(QVector2D).hash_code() },
-            { 1, typeid(QVector3D).hash_code() },
-            { 2, typeid(QVector4D).hash_code() },
-            { 3, typeid(QMatrix4x4).hash_code() },
+            { 0, typeid(glm::vec2).hash_code() },
+            { 1, typeid(glm::vec3).hash_code() },
+            { 2, typeid(glm::vec4).hash_code() },
+            { 3, typeid(glm::mat4).hash_code() },
     };
 
 public:

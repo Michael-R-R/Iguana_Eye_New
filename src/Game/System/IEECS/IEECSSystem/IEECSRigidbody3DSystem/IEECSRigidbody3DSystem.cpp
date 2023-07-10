@@ -114,8 +114,8 @@ void IEECSRigidbody3DSystem::onUpdateFrame()
         pxQuat.toRadiansAndUnitAxis(angle, pxRot);
 
         const int transformIndex = tSystem->lookUpIndex(data.entity[i]);
-        tSystem->setPosition(transformIndex, QVector3D(pxPos.x, pxPos.y, pxPos.z));
-        tSystem->setRotation(transformIndex, QVector4D(pxRot.x, pxRot.y, pxRot.z, qRadiansToDegrees(angle)));
+        tSystem->setPosition(transformIndex, glm::vec3(pxPos.x, pxPos.y, pxPos.z));
+        tSystem->setRotation(transformIndex, glm::vec4(pxRot.x, pxRot.y, pxRot.z, glm::degrees(angle)));
 
         qDebug() << pxPos.x << pxPos.y << pxPos.z;
     }

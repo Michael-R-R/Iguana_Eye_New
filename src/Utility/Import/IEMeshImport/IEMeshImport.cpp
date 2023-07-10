@@ -12,8 +12,7 @@
 #include "IEGame.h"
 #include "IEScene.h"
 #include "IETexture2DManager.h"
-#include <QVector2D>
-#include <QVector3D>
+#include <glm/glm.hpp>
 #include <QDebug>
 
 bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh)
@@ -196,43 +195,43 @@ void IEMeshImport::processMesh(aiMesh* assimpMesh, IEMesh* ieMesh)
     {
         // Position coords
         auto tempPos = assimpMesh->mVertices[i];
-        posVerts.append(QVector3D(tempPos.x, tempPos.y, tempPos.z));
+        posVerts.append(glm::vec3(tempPos.x, tempPos.y, tempPos.z));
 
         // Normal coords
         if(assimpMesh->HasNormals())
         {
             auto tempNorm = assimpMesh->mNormals[i];
-            normVerts.append(QVector3D(tempNorm.x, tempNorm.y, tempNorm.z));
+            normVerts.append(glm::vec3(tempNorm.x, tempNorm.y, tempNorm.z));
         }
         else
         {
-            normVerts.append(QVector3D());
+            normVerts.append(glm::vec3());
         }
 
         // Tangents and Bitangets
         if(assimpMesh->HasTangentsAndBitangents())
         {
             auto tempTan = assimpMesh->mTangents[i];
-            tanVerts.append(QVector3D(tempTan.x, tempTan.y, tempTan.z));
+            tanVerts.append(glm::vec3(tempTan.x, tempTan.y, tempTan.z));
 
             auto tempBiTan = assimpMesh->mBitangents[i];
-            bitanVerts.append(QVector3D(tempBiTan.x, tempBiTan.y, tempBiTan.z));
+            bitanVerts.append(glm::vec3(tempBiTan.x, tempBiTan.y, tempBiTan.z));
         }
         else
         {
-            tanVerts.append(QVector3D());
-            bitanVerts.append(QVector3D());
+            tanVerts.append(glm::vec3());
+            bitanVerts.append(glm::vec3());
         }
 
         // Texture coords
         if(assimpMesh->HasTextureCoords(0))
         {
             auto tempTex = assimpMesh->mTextureCoords[0][i];
-            texVerts.append(QVector2D(tempTex.x, tempTex.y));
+            texVerts.append(glm::vec2(tempTex.x, tempTex.y));
         }
         else
         {
-            texVerts.append(QVector2D());
+            texVerts.append(glm::vec2());
         }
     }
 
@@ -261,17 +260,17 @@ void IEMeshImport::processMaterial(aiMesh* assimpMesh, const aiScene* scene, IEM
     aiColor4D transparent;
 
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_AMBIENT, &ambient))
-        ieMaterial->setColor(IEColorType::Ambient, QVector4D(ambient.r, ambient.g, ambient.b, ambient.a));
+        ieMaterial->setColor(IEColorType::Ambient, glm::vec4(ambient.r, ambient.g, ambient.b, ambient.a));
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
-        ieMaterial->setColor(IEColorType::Diffuse, QVector4D(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
+        ieMaterial->setColor(IEColorType::Diffuse, glm::vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_SPECULAR, &specular))
-        ieMaterial->setColor(IEColorType::Specular, QVector4D(specular.r, specular.g, specular.b, specular.a));
+        ieMaterial->setColor(IEColorType::Specular, glm::vec4(specular.r, specular.g, specular.b, specular.a));
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_EMISSIVE, &emissive))
-        ieMaterial->setColor(IEColorType::Emissive, QVector4D(emissive.r, emissive.g, emissive.b, emissive.a));
+        ieMaterial->setColor(IEColorType::Emissive, glm::vec4(emissive.r, emissive.g, emissive.b, emissive.a));
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_REFLECTIVE, &reflective))
-        ieMaterial->setColor(IEColorType::Reflective, QVector4D(reflective.r, reflective.g, reflective.b, reflective.a));
+        ieMaterial->setColor(IEColorType::Reflective, glm::vec4(reflective.r, reflective.g, reflective.b, reflective.a));
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_TRANSPARENT, &transparent))
-        ieMaterial->setColor(IEColorType::Transparent, QVector4D(transparent.r, transparent.g, transparent.b, transparent.a));
+        ieMaterial->setColor(IEColorType::Transparent, glm::vec4(transparent.r, transparent.g, transparent.b, transparent.a));
 
     // Textures
     auto* game = ApplicationWindow::instance().getGame();

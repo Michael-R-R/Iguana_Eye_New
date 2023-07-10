@@ -19,7 +19,7 @@ public:
 
     bool isPressed(const InputKey& key);
     bool isPressed(const char* keyName);
-    const QVector2D& cursorPos() const;
+    const glm::vec2& cursorPos() const;
 
     InputCapture* getInputCapture() const { return inputCapture; }
 
