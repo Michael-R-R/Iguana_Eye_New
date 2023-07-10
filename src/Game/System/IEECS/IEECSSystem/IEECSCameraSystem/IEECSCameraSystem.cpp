@@ -103,8 +103,7 @@ void IEECSCameraSystem::onUpdateFrame()
     auto& rot = tSystem->getRotation(transformIndex);
 
     auto* activeCamera = cameraManager->value<IECamera>(activeId);
-    //activeCamera->updateView(pos, rot.toVector3D());
-    // TODO fix
+    activeCamera->updateView(pos, rot);
 }
 
 void IEECSCameraSystem::initAll()

@@ -12,6 +12,8 @@
 #include "IEMaterial.h"
 #include "IEShader.h"
 #include "IERenderable.h"
+#include "IEUniformBufferObject.h"
+#include "GLSViewProjection.h"
 
 IERenderEngine::IERenderEngine(QObject* parent) :
     IESystem(parent),
@@ -61,9 +63,7 @@ void IERenderEngine::onRenderFrame(IECamera* camera)
     if(!camera)
         return;
 
-    //auto* uboVP = uboManager->getVPBuffer();
-    //uboVP->setValue(0, camera->getViewProjection());
-    //uboVP->handleSuballocate(0);
+    prepareCamera(camera, uboManager->getVPBuffer());
 
     auto& renderables = renderableManager->getResources();
     for(auto* i : renderables)
@@ -74,9 +74,6 @@ void IERenderEngine::onRenderFrame(IECamera* camera)
         if(!material || !shader)
             continue;
 
-        shader->bind();
-        shader->setMat4("vp", camera->getViewProjection());
-
         draw(shader, material, renderable);
     }
 }
@@ -86,9 +83,15 @@ void IERenderEngine::onPostRenderFrame()
     // TODO implement
 }
 
+void IERenderEngine::prepareCamera(IECamera* camera, IEUniformBufferObject<GLSViewProjection>* ubo)
+{
+    ubo->setValue(0, camera->getVPStruct());
+    ubo->handleSuballocate(0);
+}
+
 void IERenderEngine::draw(IEShader* shader, IEMaterial* material, IERenderable* renderable)
 {
-    //shader->bind();
+    shader->bind();
 
     auto& maChildren = material->getChildren();
     auto& rChildren = renderable->getChildren();

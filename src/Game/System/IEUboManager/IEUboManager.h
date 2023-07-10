@@ -1,14 +1,18 @@
 #pragma once
 
 #include "IESystem.h"
-#include "IEUniformBufferObject.h"
-#include "glm/glm.hpp"
 
 class IEShader;
 
+template<class T>
+class IEUniformBufferObject;
+struct GLSViewProjection;
+struct GLSCamera;
+
 class IEUboManager : public IESystem
 {
-    IEUniformBufferObject<glm::mat4>* vpBuffer;
+    IEUniformBufferObject<GLSViewProjection>* vpBuffer;
+    IEUniformBufferObject<GLSCamera>* cameraBuffer;
 
 public:
     IEUboManager(QObject* parent = nullptr);
@@ -20,7 +24,8 @@ public:
     void linkShaderToBlock(IEShader& shader);
     void cleanup();
 
-    IEUniformBufferObject<glm::mat4>* getVPBuffer() { return vpBuffer; }
+    IEUniformBufferObject<GLSViewProjection>* getVPBuffer() { return vpBuffer; }
+    IEUniformBufferObject<GLSCamera>* getCameraBuffer() { return cameraBuffer; }
 
 private slots:
     void linkProgramToBlock(const uint64_t key, const QString& path);

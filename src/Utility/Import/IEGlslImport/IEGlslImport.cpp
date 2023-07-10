@@ -1,8 +1,9 @@
-#include "IEShaderImport.h"
+#include "IEGlslImport.h"
 #include "IEShader.h"
 #include "IEFile.h"
+#include "GLInclude.h"
 
-bool IEShaderImport::importShader(const QString& path, IEShader& shader)
+bool IEGlslImport::importPath(const QString& path, IEShader& shader)
 {
     if(path.lastIndexOf(".glsl") < 0)
         return false;
@@ -14,15 +15,17 @@ bool IEShaderImport::importShader(const QString& path, IEShader& shader)
     if(vSrc.isEmpty() || fSrc.isEmpty())
         return false;
 
+    processIncludes(vSrc);
+    processIncludes(fSrc);
+
+    shader.updateId(convertPath(path));
     shader.setVertexSrc(vSrc);
     shader.setFragmentSrc(fSrc);
 
-    shader.build();
-
-    return true;
+    return shader.build();
 }
 
-bool IEShaderImport::importShader(const QString& path, QString& vSrc, QString& fSrc)
+bool IEGlslImport::importPath(const QString& path, QString& vSrc, QString& fSrc)
 {
     if(path.lastIndexOf(".glsl") < 0)
         return false;
@@ -40,7 +43,15 @@ bool IEShaderImport::importShader(const QString& path, QString& vSrc, QString& f
     return true;
 }
 
-std::tuple<QString, QString> IEShaderImport::parseFile(const QString& filePath)
+QString IEGlslImport::convertPath(const QString& path)
+{
+    QString newPath = path;
+    QString extension = IEFile::extractExtension(path);
+
+    return newPath.replace(extension, ".ieshader");
+}
+
+std::tuple<QString, QString> IEGlslImport::parseFile(const QString& filePath)
 {
     QString content = "";
     if(!IEFile::read(filePath, &content))
@@ -65,4 +76,13 @@ std::tuple<QString, QString> IEShaderImport::parseFile(const QString& filePath)
     QString fSrc = content.mid(fStart);
 
     return std::make_tuple(vSrc, fSrc);
+}
+
+void IEGlslImport::processIncludes(QString& src)
+{
+    src.replace("#include uVP", GLInclude::includeViewProjection());
+    src.replace("#include uCamera", GLInclude::includeCamera());
+    src.replace("#include uDirLight", GLInclude::includeDirLight());
+    src.replace("#include uPointLight", GLInclude::includePointLight());
+    src.replace("#include uSpotLight", GLInclude::includeSpotLight());
 }

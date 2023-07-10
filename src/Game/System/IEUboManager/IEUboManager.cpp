@@ -1,4 +1,7 @@
 #include "IEUboManager.h"
+#include "IEUniformBufferObject.h"
+#include "GLSViewProjection.h"
+#include "GLSCamera.h"
 #include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScene.h"
@@ -7,7 +10,7 @@
 
 IEUboManager::IEUboManager(QObject* parent) :
     IESystem(parent),
-    vpBuffer(nullptr)
+    vpBuffer(nullptr), cameraBuffer(nullptr)
 {
 
 }
@@ -23,9 +26,11 @@ void IEUboManager::startup(IEGame& game)
     auto* sManager = scene->getManager<IEShaderManager>();
     connect(sManager, &IEShaderManager::added, this, &IEUboManager::linkProgramToBlock);
 
-    vpBuffer = new IEUniformBufferObject<glm::mat4>("ubViewProjection", 0, 1, this);
+    vpBuffer = new IEUniformBufferObject<GLSViewProjection>("ubViewProjection", 0, 1, this);
+    cameraBuffer = new IEUniformBufferObject<GLSCamera>("ubCamera", 1, 1, this);
 
     vpBuffer->build();
+    cameraBuffer->build();
 }
 
 void IEUboManager::shutdown(IEGame& game)
@@ -45,8 +50,10 @@ void IEUboManager::linkShaderToBlock(IEShader& shader)
 void IEUboManager::cleanup()
 {
     delete vpBuffer;
+    delete cameraBuffer;
 
     vpBuffer = nullptr;
+    cameraBuffer = nullptr;
 }
 
 void IEUboManager::linkProgramToBlock(const uint64_t key, const QString&)
@@ -69,6 +76,7 @@ void IEUboManager::linkAllBlocks(IEShader& shader)
     const int program = shader.programId();
 
     vpBuffer->linkBlock(program);
+    cameraBuffer->linkBlock(program);
 }
 
 QDataStream& IEUboManager::serialize(QDataStream& out, const IESerializable& obj) const
@@ -77,7 +85,8 @@ QDataStream& IEUboManager::serialize(QDataStream& out, const IESerializable& obj
 
     const auto& manager = static_cast<const IEUboManager&>(obj);
 
-    out << *manager.vpBuffer;
+    out << *manager.vpBuffer
+        << *manager.cameraBuffer;
 
     return out;
 }
@@ -88,7 +97,8 @@ QDataStream& IEUboManager::deserialize(QDataStream& in, IESerializable& obj)
 
     auto& manager = static_cast<IEUboManager&>(obj);
 
-    in >> *manager.vpBuffer;
+    in >> *manager.vpBuffer
+       >> *manager.cameraBuffer;
 
     return in;
 }

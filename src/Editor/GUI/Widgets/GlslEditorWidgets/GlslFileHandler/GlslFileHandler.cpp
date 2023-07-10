@@ -5,7 +5,7 @@
 #include "IEScene.h"
 #include "IEShaderManager.h"
 #include "IEShader.h"
-#include "IEShaderImport.h"
+#include "IEGlslImport.h"
 #include "IEShaderExport.h"
 #include "IEFile.h"
 #include "IEHash.h"
@@ -54,7 +54,7 @@ void GlslFileHandler::handleGlslOpen(const QString& path)
 
     QString vSrc = "";
     QString fSrc = "";
-    IEShaderImport::importShader(path, vSrc, fSrc);
+    IEGlslImport::importPath(path, vSrc, fSrc);
 
     QString name = IEFile::extractName(path);
     glslEditor->getCurrShaderNameLabel()->setText(name);

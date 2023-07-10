@@ -18,9 +18,12 @@ class IETexture2DManager;
 class IEMeshImport
 {
 public:
-    static bool importMesh(const QString& path, IEMesh& mesh);
-    static bool importMesh(const QString& path, IEMesh& mesh, IEMaterial& material);
-    static bool importMesh(const QString& path, IEMesh& mesh, IEMaterial& material, IEShader& shader, IERenderable& renderable);
+    static bool importPath(const QString& path, IEMesh& mesh);
+    static bool importPath(const QString& path, IEMesh& mesh, IEMaterial& material);
+    static bool importPath(const QString& path, IEMesh& mesh, IEMaterial& material, IEShader& shader, IERenderable& renderable);
+    static QString convertMeshPath(const QString& path);
+    static QString convertMaterialPath(const QString& path);
+    static QString convertRenderablePath(const QString& path);
 
 private:
     static void replaceExtension(QString path, const QString extension, IEResource& resource);

@@ -14,6 +14,10 @@ class IEShader;
 class IERenderable;
 class IECamera;
 
+template<class T>
+class IEUniformBufferObject;
+struct GLSViewProjection;
+
 class IERenderEngine : public IESystem
 {
     IEMaterialManager* materialManager;
@@ -34,6 +38,7 @@ public:
     void onPostRenderFrame();
 
 private:
+    void prepareCamera(IECamera* camera, IEUniformBufferObject<GLSViewProjection>* ubo);
     void draw(IEShader* shader, IEMaterial* material, IERenderable* renderable);
 };
 

@@ -15,7 +15,7 @@
 #include <glm/glm.hpp>
 #include <QDebug>
 
-bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh)
+bool IEMeshImport::importPath(const QString& path, IEMesh& mesh)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcessPreset_TargetRealtime_MaxQuality);
@@ -25,14 +25,14 @@ bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh)
         return false;
     }
 
-    replaceExtension(path, ".iemesh", mesh);
+    mesh.updateId(convertMeshPath(path));
 
     processNode(scene->mRootNode, scene, &mesh);
 
     return true;
 }
 
-bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh, IEMaterial& material)
+bool IEMeshImport::importPath(const QString& path, IEMesh& mesh, IEMaterial& material)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcessPreset_TargetRealtime_MaxQuality);
@@ -42,15 +42,15 @@ bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh, IEMaterial& mat
         return false;
     }
 
-    replaceExtension(path, ".iemesh", mesh);
-    replaceExtension(path, ".iemat", material);
+    mesh.updateId(convertMeshPath(path));
+    material.updateId(convertMaterialPath(path));
 
     processNode(scene->mRootNode, scene, &mesh, &material);
 
     return true;
 }
 
-bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh, IEMaterial& material, IEShader& shader, IERenderable& renderable)
+bool IEMeshImport::importPath(const QString& path, IEMesh& mesh, IEMaterial& material, IEShader& shader, IERenderable& renderable)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcessPreset_TargetRealtime_MaxQuality);
@@ -60,9 +60,9 @@ bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh, IEMaterial& mat
         return false;
     }
 
-    replaceExtension(path, ".iemesh", mesh);
-    replaceExtension(path, ".iemat", material);
-    replaceExtension(path, ".ierend", renderable);
+    mesh.updateId(convertMeshPath(path));
+    material.updateId(convertMaterialPath(path));
+    renderable.updateId(convertRenderablePath(path));
 
     renderable.setMeshId(mesh.getId());
     renderable.setMaterialId(material.getId());
@@ -73,12 +73,28 @@ bool IEMeshImport::importMesh(const QString& path, IEMesh& mesh, IEMaterial& mat
     return true;
 }
 
-void IEMeshImport::replaceExtension(QString path, const QString extension, IEResource& resource)
+QString IEMeshImport::convertMeshPath(const QString& path)
 {
-    QString ext = IEFile::extractExtension(path);
-    path = path.replace(ext, extension);
+    QString newPath = path;
+    QString oldExt = IEFile::extractExtension(path);
 
-    resource.updateId(path);
+    return newPath.replace(oldExt, ".iemesh");
+}
+
+QString IEMeshImport::convertMaterialPath(const QString& path)
+{
+    QString newPath = path;
+    QString oldExt = IEFile::extractExtension(path);
+
+    return newPath.replace(oldExt, ".iemat");
+}
+
+QString IEMeshImport::convertRenderablePath(const QString& path)
+{
+    QString newPath = path;
+    QString oldExt = IEFile::extractExtension(path);
+
+    return newPath.replace(oldExt, ".ierend");
 }
 
 void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* meParent)

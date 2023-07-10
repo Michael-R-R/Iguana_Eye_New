@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "IESceneResource.h"
+#include "GLSViewProjection.h"
 
 class IECamera : public IESceneResource
 {
@@ -28,6 +29,7 @@ public:
     bool operator>(const IECamera& other) { return IEResource::operator>(other); }
 
     void updateView(const glm::vec3& position, const glm::vec3& rotation);
+    void updateView(const glm::vec3& position, const glm::vec4& rotation);
 
     glm::mat4 getViewProjection() const { return (projection * view); }
     const glm::mat4& getProjection() const { return projection; }
@@ -38,6 +40,7 @@ public:
     float getFOV() const { return fov; }
     float getSpeed() const { return speed; }
     float getSensitivity() const { return sensitivity; }
+    GLSViewProjection getVPStruct() { return GLSViewProjection(view, projection); }
 
     void setProjection(const glm::mat4& val) { projection = val; }
     void setNearPlane(const float val) { nearPlane = val; }

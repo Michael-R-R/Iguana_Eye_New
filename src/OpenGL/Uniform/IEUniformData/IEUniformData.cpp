@@ -1,6 +1,5 @@
 #include "IEUniformData.h"
 #include "IEShader.h"
-#include "IESerializeConverter.h"
 
 IEUniformData::IEUniformData() :
     intData(), floatData(),
@@ -50,6 +49,18 @@ void IEUniformData::bind(IEShader& shader) const
 
     QMapIterator<QString, glm::mat4> it8(mat4Data);
     while(it8.hasNext()) { it8.next(); shader.setMat4(it8.key().toLocal8Bit().data(), it8.value()); }
+}
+
+void IEUniformData::clear()
+{
+    intData.clear();
+    floatData.clear();
+    vec2Data.clear();
+    vec3Data.clear();
+    vec4Data.clear();
+    mat2Data.clear();
+    mat3Data.clear();
+    mat4Data.clear();
 }
 
 void IEUniformData::add(const QString& name, const int data)
@@ -152,7 +163,14 @@ QDataStream& IEUniformData::serialize(QDataStream& out, const IESerializable& ob
 {
     const auto& uniform = static_cast<const IEUniformData&>(obj);
 
-    // TODO implement converters
+    out << uniform.intData << uniform.floatData;
+
+    serializeHelper(out, uniform.vec2Data);
+    serializeHelper(out, uniform.vec3Data);
+    serializeHelper(out, uniform.vec4Data);
+    serializeHelper(out, uniform.mat2Data);
+    serializeHelper(out, uniform.mat3Data);
+    serializeHelper(out, uniform.mat4Data);
 
     return out;
 }
@@ -160,8 +178,16 @@ QDataStream& IEUniformData::serialize(QDataStream& out, const IESerializable& ob
 QDataStream& IEUniformData::deserialize(QDataStream& in, IESerializable& obj)
 {
     auto& uniform = static_cast<IEUniformData&>(obj);
+    uniform.clear();
 
-    // TODO implement converters
+    in >> uniform.intData >> uniform.floatData;
+
+    deserializeHelper(in, uniform.vec2Data);
+    deserializeHelper(in, uniform.vec3Data);
+    deserializeHelper(in, uniform.vec4Data);
+    deserializeHelper(in, uniform.mat2Data);
+    deserializeHelper(in, uniform.mat3Data);
+    deserializeHelper(in, uniform.mat4Data);
 
     return in;
 }

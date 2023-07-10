@@ -2,13 +2,13 @@
 
 #include <glm/glm.hpp>
 
-struct GLViewProjectionStruct
+struct GLSViewProjection
 {
     glm::mat4 view;
     glm::mat4 projection;
     glm::mat4 viewProjection;
 
-    GLViewProjectionStruct() :
+    GLSViewProjection() :
         view(),
         projection(),
         viewProjection()
@@ -16,7 +16,7 @@ struct GLViewProjectionStruct
 
     }
 
-    GLViewProjectionStruct(const glm::mat4& view, const glm::mat4& projection) :
+    GLSViewProjection(const glm::mat4& view, const glm::mat4& projection) :
         view(view),
         projection(projection),
         viewProjection(projection * view)

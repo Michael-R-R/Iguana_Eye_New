@@ -1,5 +1,6 @@
 #include "LuaIECamera.h"
 #include "IECamera.h"
+#include <glm/glm.hpp>
 
 void LuaIECamera::addToLua(sol::state& lua)
 {
@@ -12,5 +13,6 @@ void LuaIECamera::addToLua(sol::state& lua)
                                "fov", sol::property(&IECamera::getFOV, &IECamera::setFOV),
                                "speed", sol::property(&IECamera::getSpeed, &IECamera::setSpeed),
                                "sensitivity", sol::property(&IECamera::getSensitivity, &IECamera::setSensitivity),
-                               "updateView", &IECamera::updateView);
+                               "updateView", sol::overload(sol::resolve<const glm::vec3&, const glm::vec3&>(&IECamera::updateView),
+                                                           sol::resolve<const glm::vec3&, const glm::vec4&>(&IECamera::updateView)));
 }

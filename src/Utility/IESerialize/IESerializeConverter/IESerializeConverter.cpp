@@ -1,4 +1,6 @@
 #include "IESerializeConverter.h"
+#include "GLSViewProjection.h"
+#include "GLSCamera.h"
 
 void IESerializeConverter::write(QDataStream& out, const std::any& val)
 {
@@ -68,6 +70,18 @@ void IESerializeConverter::write(QDataStream& out, const glm::mat4& val)
     }
 }
 
+void IESerializeConverter::write(QDataStream& out, const GLSViewProjection& val)
+{
+    write(out, val.view);
+    write(out, val.projection);
+}
+
+void IESerializeConverter::write(QDataStream& out, const GLSCamera& val)
+{
+    write(out, val.position);
+    write(out, val.rotation);
+}
+
 void IESerializeConverter::write(QDataStream& out, const QVector<glm::vec2>& val)
 {
     out << (int)val.size();
@@ -119,6 +133,26 @@ void IESerializeConverter::write(QDataStream& out, const QVector<glm::mat3>& val
 }
 
 void IESerializeConverter::write(QDataStream& out, const QVector<glm::mat4>& val)
+{
+    out << (int)val.size();
+
+    foreach(auto& i, val)
+    {
+        IESerializeConverter::write(out, i);
+    }
+}
+
+void IESerializeConverter::write(QDataStream& out, const QVector<GLSViewProjection>& val)
+{
+    out << (int)val.size();
+
+    foreach(auto& i, val)
+    {
+        IESerializeConverter::write(out, i);
+    }
+}
+
+void IESerializeConverter::write(QDataStream& out, const QVector<GLSCamera>& val)
 {
     out << (int)val.size();
 
@@ -195,6 +229,18 @@ void IESerializeConverter::read(QDataStream& in, glm::mat4& val)
             in >> val[i][j];
         }
     }
+}
+
+void IESerializeConverter::read(QDataStream& in, GLSViewProjection& val)
+{
+    read(in, val.view);
+    read(in, val.projection);
+}
+
+void IESerializeConverter::read(QDataStream& in, GLSCamera& val)
+{
+    read(in, val.position);
+    read(in, val.rotation);
 }
 
 void IESerializeConverter::read(QDataStream& in, QVector<glm::vec2>& val)
@@ -282,6 +328,36 @@ void IESerializeConverter::read(QDataStream& in, QVector<glm::mat4>& val)
     for(int i = 0; i < count; i++)
     {
         glm::mat4 temp;
+        IESerializeConverter::read(in, temp);
+        val.append(temp);
+    }
+}
+
+void IESerializeConverter::read(QDataStream& in, QVector<GLSViewProjection>& val)
+{
+    val.clear();
+
+    int count = 0;
+    in >> count;
+
+    for(int i = 0; i < count; i++)
+    {
+        GLSViewProjection temp;
+        IESerializeConverter::read(in, temp);
+        val.append(temp);
+    }
+}
+
+void IESerializeConverter::read(QDataStream& in, QVector<GLSCamera>& val)
+{
+    val.clear();
+
+    int count = 0;
+    in >> count;
+
+    for(int i = 0; i < count; i++)
+    {
+        GLSCamera temp;
         IESerializeConverter::read(in, temp);
         val.append(temp);
     }

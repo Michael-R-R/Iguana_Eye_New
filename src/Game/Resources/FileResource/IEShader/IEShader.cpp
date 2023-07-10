@@ -120,10 +120,22 @@ void IEShader::setMat4(const char* name, const glm::mat4& val)
 
 QDataStream& IEShader::serialize(QDataStream& out, const IESerializable& obj) const
 {
-    return IEFileResource::serialize(out, obj);
+    IEFileResource::serialize(out, obj);
+
+    const auto& shader = static_cast<const IEShader&>(obj);
+
+    out << shader.vertexSource << shader.fragmentSource;
+
+    return out;
 }
 
 QDataStream& IEShader::deserialize(QDataStream& in, IESerializable& obj)
 {
-    return IEFileResource::deserialize(in, obj);
+    IEFileResource::deserialize(in, obj);
+
+    auto& shader = static_cast<IEShader&>(obj);
+
+    in >> shader.vertexSource >> shader.fragmentSource;
+
+    return in;
 }

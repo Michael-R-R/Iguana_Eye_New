@@ -16,7 +16,6 @@ class IETInstIndexRenderable : public QWidget
     IEInstIndexRenderable* renderable;
 
     QString meshPath;
-    QString materialPath;
     QString shaderPath;
     int createCount;
     int showCount;

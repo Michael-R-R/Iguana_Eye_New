@@ -5,6 +5,9 @@
 #include <any>
 #include <glm/glm.hpp>
 
+struct GLSViewProjection;
+struct GLSCamera;
+
 class IESerializeConverter
 {
     static inline QHash<unsigned, size_t> hashcodes
@@ -23,12 +26,16 @@ public:
     static void write(QDataStream& out, const glm::mat2& val);
     static void write(QDataStream& out, const glm::mat3& val);
     static void write(QDataStream& out, const glm::mat4& val);
+    static void write(QDataStream& out, const GLSViewProjection& val);
+    static void write(QDataStream& out, const GLSCamera& val);
     static void write(QDataStream& out, const QVector<glm::vec2>& val);
     static void write(QDataStream& out, const QVector<glm::vec3>& val);
     static void write(QDataStream& out, const QVector<glm::vec4>& val);
     static void write(QDataStream& out, const QVector<glm::mat2>& val);
     static void write(QDataStream& out, const QVector<glm::mat3>& val);
     static void write(QDataStream& out, const QVector<glm::mat4>& val);
+    static void write(QDataStream& out, const QVector<GLSViewProjection>& val);
+    static void write(QDataStream& out, const QVector<GLSCamera>& val);
 
     static void read(QDataStream& in, std::any& val);
     static void read(QDataStream& in, glm::vec2& val);
@@ -37,11 +44,15 @@ public:
     static void read(QDataStream& in, glm::mat2& val);
     static void read(QDataStream& in, glm::mat3& val);
     static void read(QDataStream& in, glm::mat4& val);
+    static void read(QDataStream& in, GLSViewProjection& val);
+    static void read(QDataStream& in, GLSCamera& val);
     static void read(QDataStream& in, QVector<glm::vec2>& val);
     static void read(QDataStream& in, QVector<glm::vec3>& val);
     static void read(QDataStream& in, QVector<glm::vec4>& val);
     static void read(QDataStream& in, QVector<glm::mat2>& val);
     static void read(QDataStream& in, QVector<glm::mat3>& val);
     static void read(QDataStream& in, QVector<glm::mat4>& val);
+    static void read(QDataStream& in, QVector<GLSViewProjection>& val);
+    static void read(QDataStream& in, QVector<GLSCamera>& val);
 };
 

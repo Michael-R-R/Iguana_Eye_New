@@ -242,8 +242,10 @@ INCLUDEPATH += $$PWD/src/OpenGL/Buffer \
     $$PWD/src/OpenGL/Buffer/IEUniformBufferObject \
     $$PWD/src/OpenGL/Buffer/IEVertexBufferObject \
 
+INCLUDEPATH += $$PWD/src/OpenGL/Include \
+    $$PWD/src/OpenGL/Include/GLInclude \
+
 INCLUDEPATH += $$PWD/src/OpenGL/Struct \
-    $$PWD/src/OpenGL/Struct/GLViewProjectionStruct \
 
 INCLUDEPATH += $$PWD/src/OpenGL/Uniform \
     $$PWD/src/OpenGL/Uniform/IEUniformData \
@@ -267,4 +269,4 @@ INCLUDEPATH += $$PWD/src/Utility/IESerialize \
 
 INCLUDEPATH += $$PWD/src/Utility/Import \
     $$PWD/src/Utility/Import/IEMeshImport \
-    $$PWD/src/Utility/Import/IEShaderImport \
+    $$PWD/src/Utility/Import/IEGlslImport \

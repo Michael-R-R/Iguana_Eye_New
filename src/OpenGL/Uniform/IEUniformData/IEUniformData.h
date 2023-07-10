@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 #include "IESerializable.h"
+#include "IESerializeConverter.h"
 
 class IEShader;
 
@@ -25,6 +26,7 @@ public:
     ~IEUniformData();
 
     void bind(IEShader& shader) const;
+    void clear();
 
     void add(const QString& name, const int data);
     void add(const QString& name, const float data);
@@ -64,4 +66,39 @@ public:
 
     QDataStream& serialize(QDataStream &out, const IESerializable &obj) const override;
     QDataStream& deserialize(QDataStream &in, IESerializable &obj) override;
+
+private:
+    template<class T>
+    void serializeHelper(QDataStream& out, const QMap<QString, T>& map) const
+    {
+        out << (int)map.size();
+
+        QMapIterator<QString, T> it(map);
+        while(it.hasNext())
+        {
+            it.next();
+
+            out << it.key();
+            IESerializeConverter::write(out, it.value());
+        }
+    }
+
+    template<class T>
+    void deserializeHelper(QDataStream &in, QMap<QString, T>& map)
+    {
+        int count = 0;
+
+        in >> count;
+
+        for(int i = 0; i < count; i++)
+        {
+            QString name;
+            T temp;
+
+            in >> name;
+            IESerializeConverter::read(in, temp);
+
+            map.insert(name, temp);
+        }
+    }
 };

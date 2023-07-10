@@ -5,7 +5,7 @@
 #include "IEInstIndexRenderable.h"
 #include "IEIndexBufferObject.h"
 #include "IEVertexBufferObject.h"
-#include "IEShaderImport.h"
+#include "IEGlslImport.h"
 #include "IEMeshImport.h"
 #include "IECamera.h"
 #include "IEBufferObjectFactory.h"
@@ -29,7 +29,6 @@ IETInstIndexRenderable::IETInstIndexRenderable() :
     vLayout(new QVBoxLayout(this)),
     renderable(nullptr),
     meshPath("./resources/root/Content/cube/cube.obj"),
-    materialPath("./resources/root/Content/material.iemat"),
     shaderPath("./resources/root/Content/default.glsl"),
     createCount(1),
     showCount(0),
@@ -101,13 +100,13 @@ void IETInstIndexRenderable::createResources()
 
     clearManagers();
 
-    auto* mesh = new IEMesh(meshPath, this);
-    auto* material = new IEMaterial(materialPath, this);
-    auto* shader = new IEShader(shaderPath, this);
+    auto* mesh = new IEMesh(this);
+    auto* material = new IEMaterial(this);
+    auto* shader = new IEShader(this);
     renderable = new IEInstIndexRenderable(this);
 
-    IEShaderImport::importShader(shaderPath, *shader);
-    IEMeshImport::importMesh(meshPath, *mesh, *material, *shader, *renderable);
+    IEGlslImport::importPath(shaderPath, *shader);
+    IEMeshImport::importPath(meshPath, *mesh, *material, *shader, *renderable);
 
     auto& meChildren = mesh->getChildren();
     auto& rChildren = renderable->getChildren();

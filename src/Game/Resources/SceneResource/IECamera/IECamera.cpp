@@ -32,6 +32,11 @@ void IECamera::updateView(const glm::vec3& position, const glm::vec3& rotation)
     view = glm::lookAt(position, position + rotation, up);
 }
 
+void IECamera::updateView(const glm::vec3& position, const glm::vec4& rotation)
+{
+    view = glm::lookAt(position, position + glm::vec3(rotation), up);
+}
+
 QDataStream& IECamera::serialize(QDataStream& out, const IESerializable& obj) const
 {
     IESceneResource::serialize(out, obj);
