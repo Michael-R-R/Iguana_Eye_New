@@ -18,6 +18,7 @@ class IETInstIndexRenderable : public QWidget
     QString meshPath;
     QString shaderPath;
     int createCount;
+    int removeCount;
     int showCount;
     int hideCount;
 
@@ -28,7 +29,8 @@ public:
 private:
     void setup();
     void createResources();
-    void appendShown();
+    void createEntity();
+    void removeEntity();
     void showInstances();
     void hideInstances();
     void serialize();

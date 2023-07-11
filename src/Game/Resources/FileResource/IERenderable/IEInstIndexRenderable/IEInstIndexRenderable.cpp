@@ -58,10 +58,12 @@ bool IEInstIndexRenderable::handleBuildRelease()
     return true;
 }
 
-bool IEInstIndexRenderable::handleDraw(const QVector<std::any>&)
+void IEInstIndexRenderable::handleDraw(const QVector<std::any>&)
 {
-    if(shown < 1 || !vao || !IBO)
-        return false;
+    if(!VAO || !IBO || shown < 1)
+        return;
+
+    VAO->bind();
 
     auto* gl = QOpenGLContext::currentContext()->extraFunctions();
     gl->glDrawElementsInstanced(primitiveMode,
@@ -69,8 +71,6 @@ bool IEInstIndexRenderable::handleDraw(const QVector<std::any>&)
                                 GL_UNSIGNED_INT,
                                 0,
                                 shown);
-
-    return true;
 }
 
 void IEInstIndexRenderable::addIboValues(const QVector<unsigned int>& vals)

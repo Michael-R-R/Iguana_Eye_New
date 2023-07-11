@@ -38,18 +38,18 @@ bool IEVertRenderable::handleBuildRelease()
     return true;
 }
 
-bool IEVertRenderable::handleDraw(const QVector<std::any>&)
+void IEVertRenderable::handleDraw(const QVector<std::any>&)
 {
     auto* buffer = this->getBuffer("aPos");
-    if(!buffer || !vao)
-        return false;
+    if(!VAO || !buffer)
+        return;
+
+    VAO->bind();
 
     auto* gl = QOpenGLContext::currentContext()->extraFunctions();
     gl->glDrawArrays(primitiveMode,
                      0,
                      buffer->count());
-
-    return true;
 }
 
 QDataStream& IEVertRenderable::serialize(QDataStream& out, const IESerializable& obj) const

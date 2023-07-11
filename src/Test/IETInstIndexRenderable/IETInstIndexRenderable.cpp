@@ -12,6 +12,9 @@
 #include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScene.h"
+#include "IEECS.h"
+#include "IEECSTransformSystem.h"
+#include "IEECSRenderableSystem.h"
 #include "IEMeshManager.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
@@ -31,6 +34,7 @@ IETInstIndexRenderable::IETInstIndexRenderable() :
     meshPath("./resources/root/Content/cube/cube.obj"),
     shaderPath("./resources/root/Content/default.glsl"),
     createCount(1),
+    removeCount(1),
     showCount(0),
     hideCount(0)
 {
@@ -50,39 +54,48 @@ void IETInstIndexRenderable::setup()
 
     auto* meLineEdit = new QLineEdit(meshPath, this);
     auto* sLineEdit = new QLineEdit(shaderPath, this);
-    auto* createButton = new QPushButton("Create", this);
-    auto* createCountSpinbox = new QSpinBox(this);
-    auto* addShownButton = new QPushButton("Add", this);
-    auto* showCountSpinbox = new QSpinBox(this);
-    auto* showButton = new QPushButton("Show", this);
-    auto* hideCountSpinbox = new QSpinBox(this);
-    auto* hideButton = new QPushButton("Hide", this);
-    auto* serializeButton = new QPushButton("Serialize", this);
-    auto* deserializeButton = new QPushButton("Deserialize", this);
-
-    createCountSpinbox->setMaximum(50000);
-
     vLayout->addWidget(meLineEdit);
     vLayout->addWidget(sLineEdit);
-    vLayout->addWidget(createButton);
-    vLayout->addWidget(createCountSpinbox);
-    vLayout->addWidget(addShownButton);
-    vLayout->addWidget(showCountSpinbox);
-    vLayout->addWidget(showButton);
-    vLayout->addWidget(hideCountSpinbox);
-    vLayout->addWidget(hideButton);
-    vLayout->addWidget(serializeButton);
-    vLayout->addWidget(deserializeButton);
-
     connect(meLineEdit, &QLineEdit::textChanged, this, [this](const QString& path){ meshPath = path; });
     connect(sLineEdit, &QLineEdit::textChanged, this, [this](const QString& path){ shaderPath = path; });
-    connect(createButton, &QPushButton::clicked, this, [this](){ createResources(); });
-    connect(addShownButton, &QPushButton::clicked, this, [this](){ appendShown(); });
+
+    auto* createResourcesButton = new QPushButton("Create Resources", this);
+    vLayout->addWidget(createResourcesButton);
+    connect(createResourcesButton, &QPushButton::clicked, this, [this](){ createResources(); });
+
+    auto* createCountSpinbox = new QSpinBox(this);
+    auto* createEntityButton = new QPushButton("Create Entity", this);
+    vLayout->addWidget(createCountSpinbox);
+    vLayout->addWidget(createEntityButton);
+    createCountSpinbox->setMaximum(50000);
     connect(createCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ createCount = val; });
+    connect(createEntityButton, &QPushButton::clicked, this, [this](){ createEntity(); });
+
+    auto* removeCountSpinbox = new QSpinBox(this);
+    auto* removeEntityButton = new QPushButton("Remove Entity", this);
+    vLayout->addWidget(removeCountSpinbox);
+    vLayout->addWidget(removeEntityButton);
+    connect(removeCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ removeCount = val; });
+    connect(removeEntityButton, &QPushButton::clicked, this, [this](){ removeEntity(); });
+
+    auto* showCountSpinbox = new QSpinBox(this);
+    auto* showButton = new QPushButton("Show", this);
+    vLayout->addWidget(showCountSpinbox);
+    vLayout->addWidget(showButton);
     connect(showCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ showCount = val; });
-    connect(hideCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ hideCount = val; });
     connect(showButton, &QPushButton::clicked, this, [this](){ showInstances(); });
+
+    auto* hideCountSpinbox = new QSpinBox(this);
+    auto* hideButton = new QPushButton("Hide", this);
+    vLayout->addWidget(hideCountSpinbox);
+    vLayout->addWidget(hideButton);
+    connect(hideCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ hideCount = val; });
     connect(hideButton, &QPushButton::clicked, this, [this](){ hideInstances(); });
+
+    auto* serializeButton = new QPushButton("Serialize", this);
+    auto* deserializeButton = new QPushButton("Deserialize", this);
+    vLayout->addWidget(serializeButton);
+    vLayout->addWidget(deserializeButton);
     connect(serializeButton, &QPushButton::clicked, this, [this](){ serialize(); });
     connect(deserializeButton, &QPushButton::clicked, this, [this](){ deserialize(); });
 }
@@ -118,7 +131,7 @@ void IETInstIndexRenderable::createResources()
         {
             auto* temp = static_cast<IEInstIndexRenderable*>(renderables[j]);
             temp->addIboValues(meshes[j]->getIndices());
-            temp->addBuffer("aModel", IEBufferObjectFactory::make(IEBufferType::Mat4, 64, 16, 4, temp));
+            temp->addBuffer("aModel", IEBufferType::Mat4, 64, 16, 4);
             temp->build(*shader);
         }
     }
@@ -129,24 +142,39 @@ void IETInstIndexRenderable::createResources()
     rManger->add(renderable->getId(), renderable);
 }
 
-void IETInstIndexRenderable::appendShown()
+void IETInstIndexRenderable::createEntity()
 {
-    foreach(auto* child, renderable->getChildren())
+    auto* game = ApplicationWindow::instance().getGame();
+    auto* ecs = game->getSystem<IEECS>();
+    auto* tSystem = ecs->getComponent<IEECSTransformSystem>();
+    auto* rSystem = ecs->getComponent<IEECSRenderableSystem>();
+    int count = ecs->entityCount();
+
+    for(int i = count; i < count + createCount; i++)
     {
-        foreach(auto* i, child->getRenderables())
-        {
-            for(int j = 0; j < createCount; j++)
-            {
-                auto* temp = static_cast<IEInstIndexRenderable*>(i);
+        IEEntity entity = ecs->create();
 
-                int index = temp->addShown();
+        int rIndex = ecs->attachComponent<IEECSRenderableSystem>(entity);
+        rSystem->setResourceId(rIndex, renderable->getId());
+        rSystem->addShown(rIndex);
 
-                glm::mat4 model(1.0f);
-                model = glm::translate(model, glm::vec3(index * 2.5f, 0.0f, 0.0f));
+        int tIndex = tSystem->lookUpIndex(entity);
+        tSystem->setPosition(tIndex, glm::vec3(i * 2.5f, 0.0f, 0.0f));
+    }
+}
 
-                temp->setBufferValue("aModel", index, model);
-            }
-        }
+void IETInstIndexRenderable::removeEntity()
+{
+    auto* game = ApplicationWindow::instance().getGame();
+    auto* ecs = game->getSystem<IEECS>();
+    int count = ecs->entityCount();
+
+    for(int i = 1; i <= count; i++)
+    {
+        if((i % removeCount) != 0)
+            continue;
+
+        ecs->remove(IEEntity(i));
     }
 }
 

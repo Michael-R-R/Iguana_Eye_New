@@ -32,8 +32,8 @@ bool IEECSResourceSystem::detach(const IEEntity entity)
     if (!doesExist(entity))
         return false;
 
-    int indexToRemove = entityMap[entity];
-    int lastIndex = entityMap.size() - 1;
+    const int indexToRemove = entityMap[entity];
+    const int lastIndex = entityMap.size() - 1;
     IEEntity lastEntity = data.entity[lastIndex];
 
     // Remove indexToRemove from IdIndexPair
@@ -53,7 +53,7 @@ bool IEECSResourceSystem::detach(const IEEntity entity)
     data.resourceId[indexToRemove] = data.resourceId[lastIndex];
 
     data.entity.removeLast();
-    data.entity.removeLast();
+    data.resourceId.removeLast();
 
     entityMap[lastEntity] = indexToRemove;
     entityMap.remove(entity);

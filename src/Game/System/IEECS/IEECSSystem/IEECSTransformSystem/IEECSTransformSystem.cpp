@@ -33,7 +33,7 @@ int IEECSTransformSystem::attach(const IEEntity entity)
 
     data.entity.append(entity);
     data.position.append(glm::vec3(0.0f, 0.0f, 0.0f));
-    data.rotation.append(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+    data.rotation.append(glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
     data.scale.append(glm::vec3(1.0f, 1.0f, 1.0f));
     data.transform.append(glm::mat4(1.0f));
 
@@ -95,25 +95,39 @@ void IEECSTransformSystem::onUpdateFrame()
         for(const auto& j : qAsConst(dirtyChildIndices))
         {
             const IEEntity& childEntity = data.entity[j];
-            const int childIndex = rSystem->lookUpIndex(childEntity);
-            const uint64_t renderableId = rSystem->getResourceId(childIndex);
+            const int rchildIndex = rSystem->lookUpIndex(childEntity);
+            const uint64_t renderableId = rSystem->getResourceId(rchildIndex);
             auto renderable = renderableManager->value<IERenderable>(renderableId);
             if(!renderable)
                 continue;
 
             glm::mat4& transform = data.transform[j];
-            // TODO implement
+            const int cInstIndex = rSystem->getShownIndex(rchildIndex);
+            foreach(auto* c, renderable->getChildren())
+            {
+                foreach(auto* r, c->getRenderables())
+                {
+                    r->setBufferValue("aModel", cInstIndex, transform);
+                }
+            }
         }
 
         const IEEntity& parentEntity = data.entity[i];
-        const int parentIndex = rSystem->lookUpIndex(parentEntity);
-        const uint64_t renderableId = rSystem->getResourceId(parentIndex);
+        const int rparentIndex = rSystem->lookUpIndex(parentEntity);
+        const uint64_t renderableId = rSystem->getResourceId(rparentIndex);
         auto renderable = renderableManager->value<IERenderable>(renderableId);
         if(!renderable)
             continue;
 
         glm::mat4& transform = data.transform[i];
-        // TODO implement
+        const int pInstIndex = rSystem->getShownIndex(rparentIndex);
+        foreach(auto* c, renderable->getChildren())
+        {
+            foreach(auto* r, c->getRenderables())
+            {
+                r->setBufferValue("aModel", pInstIndex, transform);
+            }
+        }
     }
 
     dirtyParentIndices.clear();

@@ -35,7 +35,7 @@ public:
 protected:
     virtual bool handleBuild() override = 0;
     virtual bool handleBuildRelease() override = 0;
-    virtual bool handleDraw(const QVector<std::any>& args) override = 0;
+    virtual void handleDraw(const QVector<std::any>& args) override = 0;
 
 public:
     int addShown();

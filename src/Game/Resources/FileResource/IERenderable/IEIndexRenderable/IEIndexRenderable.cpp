@@ -56,18 +56,18 @@ bool IEIndexRenderable::handleBuildRelease()
     return true;
 }
 
-bool IEIndexRenderable::handleDraw(const QVector<std::any>&)
+void IEIndexRenderable::handleDraw(const QVector<std::any>&)
 {
-    if(!vao || !IBO)
-        return false;
+    if(!VAO || !IBO)
+        return;
+
+    VAO->bind();
 
     auto* gl = QOpenGLContext::currentContext()->extraFunctions();
     gl->glDrawElements(primitiveMode,
                        IBO->count(),
                        GL_UNSIGNED_INT,
                        0);
-
-    return true;
 }
 
 QDataStream& IEIndexRenderable::serialize(QDataStream& out, const IESerializable& obj) const

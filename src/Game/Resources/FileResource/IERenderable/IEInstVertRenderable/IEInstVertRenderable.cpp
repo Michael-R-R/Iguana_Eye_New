@@ -40,19 +40,19 @@ bool IEInstVertRenderable::handleBuildRelease()
     return true;
 }
 
-bool IEInstVertRenderable::handleDraw(const QVector<std::any>&)
+void IEInstVertRenderable::handleDraw(const QVector<std::any>&)
 {
     IEBufferObject* buffer = this->getBuffer("aPos");
-    if(!buffer || !vao)
-        return false;
+    if(!VAO || !buffer || shown < 1)
+        return;
+
+    VAO->bind();
 
     auto* gl = QOpenGLContext::currentContext()->extraFunctions();
     gl->glDrawArraysInstanced(primitiveMode,
                               0,
                               buffer->count(),
                               shown);
-
-    return true;
 }
 
 QDataStream& IEInstVertRenderable::serialize(QDataStream& out, const IESerializable& obj) const

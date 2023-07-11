@@ -22,7 +22,7 @@ public:
 protected:
     bool handleBuild() override;
     bool handleBuildRelease() override;
-    bool handleDraw(const QVector<std::any>& args) override;
+    void handleDraw(const QVector<std::any>& args) override;
 
 public:
     QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override;

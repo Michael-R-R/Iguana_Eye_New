@@ -111,7 +111,7 @@ int IEECSRenderableSystem::addShown(const int index)
     if (!indexBoundCheck(index))
         return -1;
 
-    // Already exist
+    // Already exist, return current shown index
     if(moreData.shownIndex[index] > -1) { return moreData.shownIndex[index]; }
     // Has hidden instance
     else if(moreData.hiddenIndex[index] > -1) { return hiddenToShown(index); }
@@ -127,7 +127,16 @@ bool IEECSRenderableSystem::removeShown(const int index)
     const uint64_t id = renderable->getId();
     const int lastShownIndex = renderable->getShownCount() - 1;
     const int currShownIndex = moreData.shownIndex[index];
-    if(!renderable->removeShown(currShownIndex)) { return -1; }
+
+    foreach (auto* c, renderable->getChildren())
+    {
+        foreach(auto* r, c->getRenderables())
+        {
+            auto* temp = static_cast<IEInstRenderable*>(r);
+            if(!temp->removeShown(currShownIndex))
+                return false;
+        }
+    }
 
     removeMappedIndex(id, currShownIndex, ShownMappedIndices);
     moreData.shownIndex[index] = -1;
@@ -146,8 +155,18 @@ int IEECSRenderableSystem::addHidden(const int index)
     const uint64_t id = renderable->getId();
     const int lastShownIndex = renderable->getShownCount() - 1;
     const int currShownIndex = moreData.shownIndex[index];
-    const int currHiddenIndex = renderable->addHidden(currShownIndex);
-    if(currHiddenIndex < 0) { return -1; }
+    int currHiddenIndex = -1;
+
+    foreach (auto* c, renderable->getChildren())
+    {
+        foreach(auto* r, c->getRenderables())
+        {
+            auto* temp = static_cast<IEInstRenderable*>(r);
+            currHiddenIndex = temp->addHidden(currShownIndex);
+            if(currHiddenIndex < 0)
+                return -1;
+        }
+    }
 
     removeMappedIndex(id, currShownIndex, ShownMappedIndices);
     addMappedIndex(id, currHiddenIndex, data.entity[index], HiddenMappedIndices);
@@ -167,7 +186,16 @@ bool IEECSRenderableSystem::removeHidden(const int index)
     const uint64_t id = renderable->getId();
     const int lastHiddenIndex = renderable->getHiddenCount() - 1;
     const int currHiddenIndex = moreData.hiddenIndex[index];
-    if(!renderable->removeHidden(currHiddenIndex)) { return false; }
+
+    foreach (auto* c, renderable->getChildren())
+    {
+        foreach(auto* r, c->getRenderables())
+        {
+            auto* temp = static_cast<IEInstRenderable*>(r);
+            if(!temp->removeHidden(currHiddenIndex))
+                return false;
+        }
+    }
 
     removeMappedIndex(id, currHiddenIndex, HiddenMappedIndices);
     moreData.hiddenIndex[index] = -1;
@@ -179,9 +207,6 @@ bool IEECSRenderableSystem::removeHidden(const int index)
 
 void IEECSRenderableSystem::removeInstance(const int index)
 {
-    auto* renderable = getAttachedResource(index);
-    if(!renderable) { return; }
-
     removeShown(index);
     removeHidden(index);
 }
@@ -192,10 +217,18 @@ int IEECSRenderableSystem::createInstance(const int index)
     if(!renderable) { return -1; }
 
     const uint64_t id = renderable->getId();
-    const int shownIndex = renderable->addShown();
-    IEEntity entity = data.entity[index];
+    int shownIndex = -1;
 
-    addMappedIndex(id, shownIndex, entity, ShownMappedIndices);
+    foreach (auto* c, renderable->getChildren())
+    {
+        foreach(auto* r, c->getRenderables())
+        {
+            auto* temp = static_cast<IEInstRenderable*>(r);
+            shownIndex = temp->addShown();
+        }
+    }
+
+    addMappedIndex(id, shownIndex, data.entity[index], ShownMappedIndices);
     moreData.shownIndex[index] = shownIndex;
 
     return shownIndex;
@@ -209,8 +242,18 @@ int IEECSRenderableSystem::hiddenToShown(const int index)
     const uint64_t id = renderable->getId();
     const int lastHiddenIndex = renderable->getHiddenCount() - 1;
     const int currHiddenIndex = moreData.hiddenIndex[index];
-    const int currShownIndex = renderable->addShown(currHiddenIndex);
-    if(currShownIndex < 0) { return -1; }
+    int currShownIndex = -1;
+
+    foreach (auto* c, renderable->getChildren())
+    {
+        foreach(auto* r, c->getRenderables())
+        {
+            auto* temp = static_cast<IEInstRenderable*>(r);
+            currShownIndex = temp->addShown(currHiddenIndex);
+            if(currShownIndex < 0)
+                return -1;
+        }
+    }
 
     removeMappedIndex(id, currHiddenIndex, HiddenMappedIndices);
     addMappedIndex(id, currShownIndex, data.entity[index], ShownMappedIndices);

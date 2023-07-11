@@ -12,13 +12,15 @@
 #include "IEUniformData.h"
 #include "IEEnum.h"
 
+class IETexture2DManager;
+class IEMaterial;
 class IEShader;
 class IEBufferObject;
 
 class IERenderable : public IEFileResource
 {
 protected:
-    QOpenGLVertexArrayObject* vao;
+    QOpenGLVertexArrayObject* VAO;
     QHash<QString, IEBufferObject*> buffers;
     QSet<QString> dirtyAllocations;
 
@@ -52,15 +54,13 @@ public:
 protected:
     virtual bool handleBuild() = 0;
     virtual bool handleBuildRelease() = 0;
-    virtual bool handleDraw(const QVector<std::any>& args) = 0;
+    virtual void handleDraw(const QVector<std::any>& args) = 0;
 
 public:
-    virtual bool draw(const QVector<std::any>& args = QVector<std::any>{});
+    virtual void draw(const QVector<std::any>& args = QVector<std::any>{});
 
-    bool bind();
-    bool release();
-
-    bool addBuffer(const QString& name, IEBufferObject* buffer);
+    bool addBuffer(const QString& name, const IEBufferType type,
+                   const int s, const int o, const int d);
     bool removeBuffer(const QString& name);
     bool appendBufferValue(const QString& name, const std::any& val);
     bool removeBufferValue(const QString& name, const int index);
@@ -82,6 +82,8 @@ public:
     IERenderable* getParent() { return parent; }
     QVector<IERenderable*>& getChildren() { return children; }
     QVector<IERenderable*>& getRenderables() { return renderables; }
+    QHash<QString, IEBufferObject*>& getBuffers() { return buffers; }
+    QSet<QString>& getDirtyAllocations() { return dirtyAllocations; }
 
     void setPrimitiveMode(const GLenum val) { primitiveMode = val; }
     void setMeshId(const uint64_t val) { meshId = val; }

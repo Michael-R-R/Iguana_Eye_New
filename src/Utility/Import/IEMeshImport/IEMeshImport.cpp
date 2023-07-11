@@ -311,11 +311,11 @@ void IEMeshImport::processMaterial(aiMesh* assimpMesh, const aiScene* scene, IEM
 
 void IEMeshImport::processRenderable(IEMesh* mesh, IERenderable* renderable)
 {
-    renderable->addBuffer("aPos", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, renderable));
-    renderable->addBuffer("aNormal", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, renderable));
-    renderable->addBuffer("aTangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, renderable));
-    renderable->addBuffer("aBitangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, renderable));
-    renderable->addBuffer("aTexCoord", IEBufferObjectFactory::make(IEBufferType::Vec2, 0, 0, 0, renderable));
+    renderable->addBuffer("aPos", IEBufferType::Vec3, 0, 0, 0);
+    renderable->addBuffer("aNormal", IEBufferType::Vec3, 0, 0, 0);
+    renderable->addBuffer("aTangent", IEBufferType::Vec3, 0, 0, 0);
+    renderable->addBuffer("aBitangent", IEBufferType::Vec3, 0, 0, 0);
+    renderable->addBuffer("aTexCoord", IEBufferType::Vec2, 0, 0, 0);
 
     renderable->setBufferValues("aPos", mesh->getPosVertices());
     renderable->setBufferValues("aNormal", mesh->getNormVertices());

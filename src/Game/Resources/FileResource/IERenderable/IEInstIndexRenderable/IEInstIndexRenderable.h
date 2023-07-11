@@ -23,7 +23,7 @@ public:
 protected:
     bool handleBuild() override;
     bool handleBuildRelease() override;
-    bool handleDraw(const QVector<std::any>& args) override;
+    void handleDraw(const QVector<std::any>& args) override;
 
 public:
     void addIboValues(const QVector<unsigned>& vals);
