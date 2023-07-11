@@ -117,7 +117,7 @@ void IETInstIndexRenderable::createResources()
         for(int j = 0; j < renderables.size(); j++)
         {
             auto* temp = static_cast<IEInstIndexRenderable*>(renderables[j]);
-            temp->addIBO(new IEIndexBufferObject(meshes[j]->getIndices(), temp));
+            temp->addIboValues(meshes[j]->getIndices());
             temp->addBuffer("aModel", IEBufferObjectFactory::make(IEBufferType::Mat4, 64, 16, 4, temp));
             temp->build(*shader);
         }

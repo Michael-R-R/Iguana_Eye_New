@@ -73,16 +73,9 @@ bool IEInstIndexRenderable::handleDraw(const QVector<std::any>&)
     return true;
 }
 
-void IEInstIndexRenderable::addIBO(IEIndexBufferObject* ibo)
+void IEInstIndexRenderable::addIboValues(const QVector<unsigned int>& vals)
 {
-    if(IBO)
-    {
-        IBO->destroy();
-        delete IBO;
-    }
-
-    IBO = ibo;
-    IBO->setParent(this);
+    IBO->setValues(vals);
 }
 
 QDataStream& IEInstIndexRenderable::serialize(QDataStream& out, const IESerializable& obj) const

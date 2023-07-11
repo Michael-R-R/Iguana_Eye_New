@@ -3,6 +3,7 @@
 #include "IEScene.h"
 #include "IERenderableManager.h"
 #include "IEInstRenderable.h"
+#include "IEEntity.h"
 
 IEECSRenderableSystem::IEECSRenderableSystem(QObject* parent) :
     IEECSResourceSystem(typeid(IEECSRenderableSystem).hash_code(), parent),
@@ -163,14 +164,26 @@ bool IEECSRenderableSystem::removeHidden(const int index)
     auto* renderable = getAttachedResource(index);
     if(!renderable) { return false; }
 
-    // TODO start here
+    const uint64_t id = renderable->getId();
+    const int lastHiddenIndex = renderable->getHiddenCount() - 1;
+    const int currHiddenIndex = moreData.hiddenIndex[index];
+    if(!renderable->removeHidden(currHiddenIndex)) { return false; }
+
+    removeMappedIndex(id, currHiddenIndex, HiddenMappedIndices);
+    moreData.hiddenIndex[index] = -1;
+
+    updateSwappedIndex(id, lastHiddenIndex, currHiddenIndex, moreData.hiddenIndex, HiddenMappedIndices);
 
     return true;
 }
 
 void IEECSRenderableSystem::removeInstance(const int index)
 {
+    auto* renderable = getAttachedResource(index);
+    if(!renderable) { return; }
 
+    removeShown(index);
+    removeHidden(index);
 }
 
 int IEECSRenderableSystem::createInstance(const int index)
@@ -178,7 +191,14 @@ int IEECSRenderableSystem::createInstance(const int index)
     auto* renderable = getAttachedResource(index);
     if(!renderable) { return -1; }
 
-    return -1;
+    const uint64_t id = renderable->getId();
+    const int shownIndex = renderable->addShown();
+    IEEntity entity = data.entity[index];
+
+    addMappedIndex(id, shownIndex, entity, ShownMappedIndices);
+    moreData.shownIndex[index] = shownIndex;
+
+    return shownIndex;
 }
 
 int IEECSRenderableSystem::hiddenToShown(const int index)
@@ -186,7 +206,20 @@ int IEECSRenderableSystem::hiddenToShown(const int index)
     auto* renderable = getAttachedResource(index);
     if(!renderable) { return -1; }
 
-    return -1;
+    const uint64_t id = renderable->getId();
+    const int lastHiddenIndex = renderable->getHiddenCount() - 1;
+    const int currHiddenIndex = moreData.hiddenIndex[index];
+    const int currShownIndex = renderable->addShown(currHiddenIndex);
+    if(currShownIndex < 0) { return -1; }
+
+    removeMappedIndex(id, currHiddenIndex, HiddenMappedIndices);
+    addMappedIndex(id, currShownIndex, data.entity[index], ShownMappedIndices);
+    moreData.hiddenIndex[index] = -1;
+    moreData.shownIndex[index] = currShownIndex;
+
+    updateSwappedIndex(id, lastHiddenIndex, currHiddenIndex, moreData.hiddenIndex, HiddenMappedIndices);
+
+    return currShownIndex;
 }
 
 bool IEECSRenderableSystem::doesMappedIdExist(const uint64_t id, const QHash<uint64_t, QHash<int, IEEntity>>& map)

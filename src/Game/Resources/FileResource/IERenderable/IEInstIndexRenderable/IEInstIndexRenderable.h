@@ -26,7 +26,7 @@ protected:
     bool handleDraw(const QVector<std::any>& args) override;
 
 public:
-    void addIBO(IEIndexBufferObject* ibo);
+    void addIboValues(const QVector<unsigned>& vals);
 
     QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, IESerializable& obj) override;
