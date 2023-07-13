@@ -1,30 +1,51 @@
 #pragma once
 
 #include "IERenderable.h"
+#include "IEIndexBufferObject.h"
 
-class IEIndexBufferObject;
+struct IEIndexRenderableNode
+{
+    IEIndexBufferObject* IBO;
+
+    IEIndexRenderableNode() :
+        IBO(new IEIndexBufferObject())
+    {
+
+    }
+
+    ~IEIndexRenderableNode()
+    {
+        IBO->destroy();
+        delete IBO;
+        IBO = nullptr;
+    }
+};
 
 class IEIndexRenderable : public IERenderable
 {
 protected:
-    IEIndexBufferObject* IBO;
+    QVector<IEIndexRenderableNode*> indexNodes;
 
 public:
     IEIndexRenderable(QObject* parent = nullptr);
-    IEIndexRenderable(const QString& path,
-                      const uint64_t meID,
-                      const uint64_t maID,
-                      const uint64_t sID,
-                      QObject* parent = nullptr);
+    IEIndexRenderable(const QString& path, QObject* parent = nullptr);
     IEIndexRenderable(IERenderable* parent);
     virtual ~IEIndexRenderable();
 
 protected:
-    bool handleBuild() override;
-    bool handleBuildRelease() override;
-    void handleDraw(const QVector<std::any>& args) override;
+    bool handleBuild(const int index) override;
+    bool handleBuildRelease(const int index) override;
+    void handleDraw(const int index, const QVector<std::any>& args) override;
 
 public:
+    virtual int appendNode(IERenderableNode* node) override;
+    virtual bool removeNode(const int index) override;
+    virtual void cleanup() override;
+
+    IEIndexRenderableNode* getIndexNode(const int index);
+
+    QVector<IEIndexRenderableNode*>& getIndexNodes() { return indexNodes; }
+
     QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, IESerializable& obj) override;
 };

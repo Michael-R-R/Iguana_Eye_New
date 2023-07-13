@@ -6,6 +6,7 @@
 #include "IEECSRenderableSystem.h"
 #include "IERenderableManager.h"
 #include "IERenderable.h"
+#include "IEInstRenderable.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 IEECSTransformSystem::IEECSTransformSystem(QObject* parent) :
@@ -96,37 +97,31 @@ void IEECSTransformSystem::onUpdateFrame()
         {
             const IEEntity& childEntity = data.entity[j];
             const int rchildIndex = rSystem->lookUpIndex(childEntity);
-            const uint64_t renderableId = rSystem->getResourceId(rchildIndex);
-            auto renderable = renderableManager->value<IERenderable>(renderableId);
+            auto* renderable = rSystem->getAttachedResource(rchildIndex);
             if(!renderable)
                 continue;
 
             glm::mat4& transform = data.transform[j];
             const int cInstIndex = rSystem->getShownIndex(rchildIndex);
-            foreach(auto* c, renderable->getChildren())
+            const int nodeCount = renderable->getNodes().size();
+            for(int i = 0; i < nodeCount; i++)
             {
-                foreach(auto* r, c->getRenderables())
-                {
-                    r->setBufferValue("aModel", cInstIndex, transform);
-                }
+                renderable->setBufferValue(i, "aModel", cInstIndex, transform);
             }
         }
 
         const IEEntity& parentEntity = data.entity[i];
         const int rparentIndex = rSystem->lookUpIndex(parentEntity);
-        const uint64_t renderableId = rSystem->getResourceId(rparentIndex);
-        auto renderable = renderableManager->value<IERenderable>(renderableId);
+        auto* renderable = rSystem->getAttachedResource(rparentIndex);
         if(!renderable)
             continue;
 
         glm::mat4& transform = data.transform[i];
         const int pInstIndex = rSystem->getShownIndex(rparentIndex);
-        foreach(auto* c, renderable->getChildren())
+        const int nodeCount = renderable->getNodes().size();
+        for(int i = 0; i < nodeCount; i++)
         {
-            foreach(auto* r, c->getRenderables())
-            {
-                r->setBufferValue("aModel", pInstIndex, transform);
-            }
+            renderable->setBufferValue(i, "aModel", pInstIndex, transform);
         }
     }
 

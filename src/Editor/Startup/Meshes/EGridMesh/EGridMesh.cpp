@@ -3,7 +3,9 @@
 EGridMesh::EGridMesh(QObject* parent) :
     IEMesh(parent)
 {
-    positionVertices =
+    auto* node = new IEMeshNode();
+
+    node->positions =
     {
         glm::vec3(1.0f, 1.0f, 0.0),
         glm::vec3(-1.0f, -1.0f, 0.0),
@@ -12,6 +14,8 @@ EGridMesh::EGridMesh(QObject* parent) :
         glm::vec3(1.0f, 1.0f, 0.0),
         glm::vec3(1.0f, -1.0f, 0.0)
     };
+
+    IEMesh::appendNode(node);
 }
 
 EGridMesh::~EGridMesh()

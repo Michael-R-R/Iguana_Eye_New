@@ -72,22 +72,26 @@ QDataStream& IERenderableManager::deserialize(QDataStream& in, IESerializable& o
             continue;
         }
 
-        if(!meManager->doesExist(renderable->getMeshId()) ||
-           !maManager->doesExist(renderable->getMaterialId()) ||
-           !sManager->doesExist(renderable->getShaderId()))
+        if(!meManager->doesExist(renderable->getMeshID()) ||
+           !maManager->doesExist(renderable->getMaterialID()) ||
+           !sManager->doesExist(renderable->getShaderID()))
         {
             delete renderable;
             continue;
         }
 
-        auto* shader = sManager->value<IEShader>(renderable->getShaderId());
-        if(!renderable->build(*shader))
+        auto* shader = sManager->value<IEShader>(renderable->getShaderID());
+        const int nodeCount = renderable->getNodes().size();
+        for(int i = 0; i < nodeCount; i++)
         {
-            delete renderable;
-            continue;
+            if(!renderable->build(i, *shader))
+            {
+                delete renderable;
+                continue;
+            }
         }
 
-        if(!manager.add(renderable->getId(), renderable))
+        if(!manager.add(renderable->getID(), renderable))
             delete renderable;
     }
 

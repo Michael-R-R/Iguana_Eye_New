@@ -19,7 +19,7 @@ int IEECSResourceSystem::attach(const IEEntity entity)
 
     const int index = entityMap.size();
 
-    entityMap[entity] = index;
+    entityMap.insert(entity, index);
 
     data.entity.append(entity);
     data.resourceId.append(0);
@@ -55,7 +55,7 @@ bool IEECSResourceSystem::detach(const IEEntity entity)
     data.entity.removeLast();
     data.resourceId.removeLast();
 
-    entityMap[lastEntity] = indexToRemove;
+    entityMap.insert(lastEntity, indexToRemove);
     entityMap.remove(entity);
 
     return true;

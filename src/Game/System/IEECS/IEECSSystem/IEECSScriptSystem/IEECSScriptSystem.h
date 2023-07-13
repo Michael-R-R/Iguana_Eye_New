@@ -59,7 +59,7 @@ class IEECSScriptSystem : public IEECSSystem
 
                     in >> *script;
 
-                    tempMap.insert(script->getId(), script);
+                    tempMap.insert(script->getID(), script);
                 }
 
                 data.scripts.append(tempMap);

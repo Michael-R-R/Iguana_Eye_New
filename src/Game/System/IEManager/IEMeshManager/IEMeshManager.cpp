@@ -53,7 +53,7 @@ QDataStream& IEMeshManager::deserialize(QDataStream& in, IESerializable& obj)
             continue;
         }
 
-        if(!manager.add(mesh->getId(), mesh))
+        if(!manager.add(mesh->getID(), mesh))
             delete mesh;
     }
 

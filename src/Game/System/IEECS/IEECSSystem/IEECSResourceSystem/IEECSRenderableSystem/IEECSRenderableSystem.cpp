@@ -8,8 +8,8 @@
 IEECSRenderableSystem::IEECSRenderableSystem(QObject* parent) :
     IEECSResourceSystem(typeid(IEECSRenderableSystem).hash_code(), parent),
     moreData(),
-    ShownMappedIndices(),
-    HiddenMappedIndices(),
+    mappedShownIndices(),
+    mappedHiddenIndices(),
     renderableManager(nullptr)
 {
     IEECSRenderableSystem::attach(IEEntity(-1));
@@ -60,31 +60,6 @@ void IEECSRenderableSystem::shutdown(const IEGame&)
     renderableManager = nullptr;
 }
 
-QSet<int> IEECSRenderableSystem::massReplaceResourceId(const uint64_t oldId, const uint64_t newId)
-{
-    if(doesMappedIdExist(oldId, ShownMappedIndices))
-    {
-        if(!doesMappedIdExist(newId, ShownMappedIndices))
-        {
-            auto& tempHash = ShownMappedIndices[oldId];
-            ShownMappedIndices.remove(oldId);
-            ShownMappedIndices.insert(newId, tempHash);
-        }
-    }
-
-    if(doesMappedIdExist(oldId, HiddenMappedIndices))
-    {
-        if(!doesMappedIdExist(newId, HiddenMappedIndices))
-        {
-            auto& tempHash = HiddenMappedIndices[oldId];
-            HiddenMappedIndices.remove(oldId);
-            HiddenMappedIndices.insert(newId, tempHash);
-        }
-    }
-
-    return IEECSResourceSystem::massReplaceResourceId(oldId, newId);
-}
-
 IEInstRenderable* IEECSRenderableSystem::getAttachedResource(const int index)
 {
     return IEECSResourceSystem::getAttachedResource<IEInstRenderable>(index, renderableManager);
@@ -106,103 +81,44 @@ int IEECSRenderableSystem::getHiddenIndex(const int index) const
     return moreData.hiddenIndex[index];
 }
 
-int IEECSRenderableSystem::addShown(const int index)
+int IEECSRenderableSystem::showInstance(const int index)
 {
-    if (!indexBoundCheck(index))
+    if(!indexBoundCheck(index))
         return -1;
 
-    // Already exist, return current shown index
-    if(moreData.shownIndex[index] > -1) { return moreData.shownIndex[index]; }
-    // Has hidden instance
-    else if(moreData.hiddenIndex[index] > -1) { return hiddenToShown(index); }
-    // Create a new instance
-    else { createInstance(index); }
+    if(moreData.shownIndex[index] > -1)
+        return moreData.shownIndex[index];
+
+    if(moreData.hiddenIndex[index] > -1)
+        return addShownFromHidden(index);
+
+    return addShown(index);
 }
 
-bool IEECSRenderableSystem::removeShown(const int index)
-{
-    auto* renderable = getAttachedResource(index);
-    if(!renderable) { return false; }
-
-    const uint64_t id = renderable->getId();
-    const int lastShownIndex = renderable->getShownCount() - 1;
-    const int currShownIndex = moreData.shownIndex[index];
-
-    foreach (auto* c, renderable->getChildren())
-    {
-        foreach(auto* r, c->getRenderables())
-        {
-            auto* temp = static_cast<IEInstRenderable*>(r);
-            if(!temp->removeShown(currShownIndex))
-                return false;
-        }
-    }
-
-    removeMappedIndex(id, currShownIndex, ShownMappedIndices);
-    moreData.shownIndex[index] = -1;
-
-    updateSwappedIndex(id, lastShownIndex, currShownIndex, moreData.shownIndex, ShownMappedIndices);
-
-    return true;
-}
-
-int IEECSRenderableSystem::addHidden(const int index)
+int IEECSRenderableSystem::hideInstance(const int index)
 {
     auto* renderable = getAttachedResource(index);
     if(!renderable) { return -1; }
-    if(moreData.shownIndex[index] < 0) { return -1; }
 
-    const uint64_t id = renderable->getId();
-    const int lastShownIndex = renderable->getShownCount() - 1;
+    if(moreData.shownIndex[index] < 0)
+        return -1;
+
+    const uint64_t rID = renderable->getID();
+    const int lastShownIndex = renderable->shownCount() - 1;
     const int currShownIndex = moreData.shownIndex[index];
-    int currHiddenIndex = -1;
+    const int currHiddenIndex = renderable->addHiddenFromShown(currShownIndex);
+    if(currHiddenIndex < 0)
+        return -1;
 
-    foreach (auto* c, renderable->getChildren())
-    {
-        foreach(auto* r, c->getRenderables())
-        {
-            auto* temp = static_cast<IEInstRenderable*>(r);
-            currHiddenIndex = temp->addHidden(currShownIndex);
-            if(currHiddenIndex < 0)
-                return -1;
-        }
-    }
+    removeMappedIndex(rID, currShownIndex, mappedShownIndices);
+    addMappedIndex(rID, currHiddenIndex, data.entity[index], mappedHiddenIndices);
 
-    removeMappedIndex(id, currShownIndex, ShownMappedIndices);
-    addMappedIndex(id, currHiddenIndex, data.entity[index], HiddenMappedIndices);
     moreData.shownIndex[index] = -1;
     moreData.hiddenIndex[index] = currHiddenIndex;
 
-    updateSwappedIndex(id, lastShownIndex, currShownIndex, moreData.shownIndex, ShownMappedIndices);
+    updateSwappedIndex(rID, lastShownIndex, currShownIndex, moreData.shownIndex, mappedShownIndices);
 
     return currHiddenIndex;
-}
-
-bool IEECSRenderableSystem::removeHidden(const int index)
-{
-    auto* renderable = getAttachedResource(index);
-    if(!renderable) { return false; }
-
-    const uint64_t id = renderable->getId();
-    const int lastHiddenIndex = renderable->getHiddenCount() - 1;
-    const int currHiddenIndex = moreData.hiddenIndex[index];
-
-    foreach (auto* c, renderable->getChildren())
-    {
-        foreach(auto* r, c->getRenderables())
-        {
-            auto* temp = static_cast<IEInstRenderable*>(r);
-            if(!temp->removeHidden(currHiddenIndex))
-                return false;
-        }
-    }
-
-    removeMappedIndex(id, currHiddenIndex, HiddenMappedIndices);
-    moreData.hiddenIndex[index] = -1;
-
-    updateSwappedIndex(id, lastHiddenIndex, currHiddenIndex, moreData.hiddenIndex, HiddenMappedIndices);
-
-    return true;
 }
 
 void IEECSRenderableSystem::removeInstance(const int index)
@@ -211,66 +127,86 @@ void IEECSRenderableSystem::removeInstance(const int index)
     removeHidden(index);
 }
 
-int IEECSRenderableSystem::createInstance(const int index)
+int IEECSRenderableSystem::addShown(const int index)
 {
     auto* renderable = getAttachedResource(index);
     if(!renderable) { return -1; }
 
-    const uint64_t id = renderable->getId();
-    int shownIndex = -1;
+    const uint64_t rID = renderable->getID();
+    const int shownIndex = renderable->addShown();
 
-    foreach (auto* c, renderable->getChildren())
-    {
-        foreach(auto* r, c->getRenderables())
-        {
-            auto* temp = static_cast<IEInstRenderable*>(r);
-            shownIndex = temp->addShown();
-        }
-    }
+    addMappedIndex(rID, shownIndex, data.entity[index], mappedShownIndices);
 
-    addMappedIndex(id, shownIndex, data.entity[index], ShownMappedIndices);
     moreData.shownIndex[index] = shownIndex;
 
     return shownIndex;
 }
 
-int IEECSRenderableSystem::hiddenToShown(const int index)
+int IEECSRenderableSystem::addShownFromHidden(const int index)
 {
     auto* renderable = getAttachedResource(index);
     if(!renderable) { return -1; }
 
-    const uint64_t id = renderable->getId();
-    const int lastHiddenIndex = renderable->getHiddenCount() - 1;
+    const uint64_t rID = renderable->getID();
+    const int lastHiddenIndex = renderable->hiddenCount() - 1;
     const int currHiddenIndex = moreData.hiddenIndex[index];
-    int currShownIndex = -1;
+    const int currShownIndex = renderable->addShownFromHidden(currHiddenIndex);
+    if(currShownIndex < 0)
+        return -1;
 
-    foreach (auto* c, renderable->getChildren())
-    {
-        foreach(auto* r, c->getRenderables())
-        {
-            auto* temp = static_cast<IEInstRenderable*>(r);
-            currShownIndex = temp->addShown(currHiddenIndex);
-            if(currShownIndex < 0)
-                return -1;
-        }
-    }
+    removeMappedIndex(rID, currHiddenIndex, mappedHiddenIndices);
+    addMappedIndex(rID, currShownIndex, data.entity[index], mappedShownIndices);
 
-    removeMappedIndex(id, currHiddenIndex, HiddenMappedIndices);
-    addMappedIndex(id, currShownIndex, data.entity[index], ShownMappedIndices);
-    moreData.hiddenIndex[index] = -1;
     moreData.shownIndex[index] = currShownIndex;
+    moreData.hiddenIndex[index] = -1;
 
-    updateSwappedIndex(id, lastHiddenIndex, currHiddenIndex, moreData.hiddenIndex, HiddenMappedIndices);
+    updateSwappedIndex(rID, lastHiddenIndex, currHiddenIndex, moreData.hiddenIndex, mappedHiddenIndices);
 
     return currShownIndex;
 }
 
-bool IEECSRenderableSystem::doesMappedIdExist(const uint64_t id, const QHash<uint64_t, QHash<int, IEEntity>>& map)
+void IEECSRenderableSystem::removeShown(const int index)
+{
+    auto* renderable = getAttachedResource(index);
+    if(!renderable) { return; }
+
+    const uint64_t rID = renderable->getID();
+    const int lastShownIndex = renderable->shownCount() - 1;
+    const int currShownIndex = moreData.shownIndex[index];
+    if(!renderable->removeShown(currShownIndex))
+        return;
+
+    removeMappedIndex(rID, currShownIndex, mappedShownIndices);
+    moreData.shownIndex[index] = -1;
+
+    updateSwappedIndex(rID, lastShownIndex, currShownIndex, moreData.shownIndex, mappedShownIndices);
+}
+
+void IEECSRenderableSystem::removeHidden(const int index)
+{
+    auto* renderable = getAttachedResource(index);
+    if(!renderable) { return; }
+
+    const uint64_t rID = renderable->getID();
+    const int lastHiddenIndex = renderable->hiddenCount() - 1;
+    const int currHiddenIndex = moreData.hiddenIndex[index];
+    if (!renderable->removeHidden(currHiddenIndex))
+        return;
+
+    removeMappedIndex(rID, currHiddenIndex, mappedHiddenIndices);
+
+    moreData.hiddenIndex[index] = -1;
+
+    updateSwappedIndex(rID, lastHiddenIndex, currHiddenIndex, moreData.hiddenIndex, mappedHiddenIndices);
+}
+
+bool IEECSRenderableSystem::doesMappedIdExist(const uint64_t id,
+                                              const QHash<uint64_t, QHash<int, IEEntity>>& map)
 {
     return map.contains(id);
 }
 
-bool IEECSRenderableSystem::doesMappedIndexExist(const uint64_t id, const int index, const QHash<uint64_t, QHash<int, IEEntity>>& map)
+bool IEECSRenderableSystem::doesMappedIndexExist(const uint64_t id, const int index, const QHash<uint64_t, QHash<int, IEEntity> >& map)
 {
     if(!doesMappedIdExist(id, map))
         return false;
@@ -278,18 +214,10 @@ bool IEECSRenderableSystem::doesMappedIndexExist(const uint64_t id, const int in
     return map[id].contains(index);
 }
 
-void IEECSRenderableSystem::updateSwappedIndex(const uint64_t id, const int lastIndex, const int newIndex, QVector<int>& list, QHash<uint64_t, QHash<int, IEEntity> >& map)
-{
-    if(!doesMappedIndexExist(id, lastIndex, map)) { return; }
-
-    IEEntity lastEntity = map[id][lastIndex];
-    const int lookupIndex = lookUpIndex(lastEntity);
-    list[lookupIndex] = newIndex;
-
-    replaceMappedIndex(id, lastIndex, newIndex, map);
-}
-
-void IEECSRenderableSystem::addMappedIndex(const uint64_t id, const int index, const IEEntity& entity, QHash<uint64_t, QHash<int, IEEntity>>& map)
+void IEECSRenderableSystem::addMappedIndex(const uint64_t id,
+                                           const int index,
+                                           const IEEntity entity,
+                                           QHash<uint64_t, QHash<int, IEEntity>>& map)
 {
     if(!doesMappedIdExist(id, map))
         map.insert(id, QHash<int, IEEntity>{});
@@ -297,23 +225,48 @@ void IEECSRenderableSystem::addMappedIndex(const uint64_t id, const int index, c
     map[id].insert(index, entity);
 }
 
-void IEECSRenderableSystem::replaceMappedIndex(const uint64_t id, const int oldIndex, const int newIndex, QHash<uint64_t, QHash<int, IEEntity>>& map)
+void IEECSRenderableSystem::removeMappedIndex(const uint64_t id,
+                                              const int index,
+                                              QHash<uint64_t, QHash<int, IEEntity>>& map)
 {
-    if(!doesMappedIndexExist(id, oldIndex, map)) { return; }
-    if(!doesMappedIndexExist(id, newIndex, map)) { return; }
-
-    auto tempEntity = map[id][oldIndex];
-    map[id].remove(oldIndex);
-    map[id].insert(newIndex, tempEntity);
-}
-
-void IEECSRenderableSystem::removeMappedIndex(const uint64_t id, const int index, QHash<uint64_t, QHash<int, IEEntity>>& map)
-{
-    if(!doesMappedIndexExist(id, index, map)) { return; }
+    if(!doesMappedIndexExist(id, index, map))
+        return;
 
     map[id].remove(index);
 
-    if(map[id].size() <= 0) { map.remove(id); }
+    if(map[id].size() <= 0)
+        map.remove(id);
+}
+
+void IEECSRenderableSystem::replaceMappedIndex(const uint64_t id,
+                                               const int oldIndex,
+                                               const int newIndex,
+                                               QHash<uint64_t, QHash<int, IEEntity>>& map)
+{
+    if(!doesMappedIndexExist(id, oldIndex, map))
+        return;
+
+    if(doesMappedIndexExist(id, newIndex, map))
+        return;
+
+    const IEEntity temp = map[id][oldIndex];
+    map[id].remove(oldIndex);
+    map[id].insert(newIndex, temp);
+}
+
+void IEECSRenderableSystem::updateSwappedIndex(const uint64_t id,
+                                               const int lastIndex,
+                                               const int newIndex,
+                                               QVector<int>& list,
+                                               QHash<uint64_t, QHash<int, IEEntity>>& map)
+{
+    if(!doesMappedIndexExist(id, lastIndex, map))
+        return;
+
+    const IEEntity lastEntity = map[id][lastIndex];
+    const int lookupIndex = lookUpIndex(lastEntity);
+    list[lookupIndex] = newIndex;
+    replaceMappedIndex(id, lastIndex, newIndex, map);
 }
 
 QDataStream& IEECSRenderableSystem::serialize(QDataStream& out, const IESerializable& obj) const
@@ -322,7 +275,7 @@ QDataStream& IEECSRenderableSystem::serialize(QDataStream& out, const IESerializ
 
     const auto& system = static_cast<const IEECSRenderableSystem&>(obj);
 
-    out << system.moreData << system.ShownMappedIndices << system.HiddenMappedIndices;
+    out << system.moreData;
 
     return out;
 }
@@ -333,7 +286,7 @@ QDataStream& IEECSRenderableSystem::deserialize(QDataStream& in, IESerializable&
 
     auto& system = static_cast<IEECSRenderableSystem&>(obj);
 
-    in >> system.moreData >> system.ShownMappedIndices >> system.HiddenMappedIndices;
+    in >> system.moreData;
 
     return in;
 }

@@ -4,7 +4,7 @@
 void LuaIEScript::addToLua(sol::state& lua)
 {
     lua.new_usertype<IEScript>("", sol::no_constructor,
-                               "id", sol::property(&IEScript::getId),
+                               "id", sol::property(&IEScript::getID),
                                "value", &IEScript::value,
                                "getFunc", &IEScript::getFunc,
                                "callFunc", &IEScript::callFunc);

@@ -9,10 +9,8 @@ IEVertRenderable::IEVertRenderable(QObject* parent) :
 
 }
 
-IEVertRenderable::IEVertRenderable(const QString& path, const uint64_t meID,
-                                   const uint64_t maID, const uint64_t sID,
-                                   QObject* parent) :
-    IERenderable(IERenderableType::Vertex, path, meID, maID, sID, parent)
+IEVertRenderable::IEVertRenderable(const QString& path, QObject* parent) :
+    IERenderable(IERenderableType::Vertex, path, parent)
 {
 
 }
@@ -28,26 +26,28 @@ IEVertRenderable::~IEVertRenderable()
 
 }
 
-bool IEVertRenderable::handleBuild()
+bool IEVertRenderable::handleBuild(const int)
 {
     return true;
 }
 
-bool IEVertRenderable::handleBuildRelease()
+bool IEVertRenderable::handleBuildRelease(const int)
 {
     return true;
 }
 
-void IEVertRenderable::handleDraw(const QVector<std::any>&)
+void IEVertRenderable::handleDraw(const int index, const QVector<std::any>&)
 {
-    auto* buffer = this->getBuffer("aPos");
-    if(!VAO || !buffer)
+    if(index < 0 || index >= nodes.size())
         return;
 
-    VAO->bind();
+    IERenderableNode* rNode = nodes[index];
+    IEBufferObject* buffer = rNode->buffers["aPos"];
+
+    rNode->VAO->bind();
 
     auto* gl = QOpenGLContext::currentContext()->extraFunctions();
-    gl->glDrawArrays(primitiveMode,
+    gl->glDrawArrays(rNode->primitiveMode,
                      0,
                      buffer->count());
 }

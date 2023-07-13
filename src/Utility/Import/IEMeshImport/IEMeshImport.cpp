@@ -15,7 +15,7 @@
 #include <glm/glm.hpp>
 #include <QDebug>
 
-bool IEMeshImport::importPath(const QString& path, IEMesh& mesh)
+bool IEMeshImport::importPath(const QString& path, IEMesh& me)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcessPreset_TargetRealtime_MaxQuality);
@@ -25,14 +25,14 @@ bool IEMeshImport::importPath(const QString& path, IEMesh& mesh)
         return false;
     }
 
-    mesh.updateId(convertMeshPath(path));
+    me.updateId(convertMeshPath(path));
 
-    processNode(scene->mRootNode, scene, &mesh);
+    processNode(scene->mRootNode, scene, &me);
 
     return true;
 }
 
-bool IEMeshImport::importPath(const QString& path, IEMesh& mesh, IEMaterial& material)
+bool IEMeshImport::importPath(const QString& path, IEMesh& me, IEMaterial& ma)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcessPreset_TargetRealtime_MaxQuality);
@@ -42,15 +42,15 @@ bool IEMeshImport::importPath(const QString& path, IEMesh& mesh, IEMaterial& mat
         return false;
     }
 
-    mesh.updateId(convertMeshPath(path));
-    material.updateId(convertMaterialPath(path));
+    me.updateId(convertMeshPath(path));
+    ma.updateId(convertMaterialPath(path));
 
-    processNode(scene->mRootNode, scene, &mesh, &material);
+    processNode(scene->mRootNode, scene, &me, &ma);
 
     return true;
 }
 
-bool IEMeshImport::importPath(const QString& path, IEMesh& mesh, IEMaterial& material, IEShader& shader, IERenderable& renderable)
+bool IEMeshImport::importPath(const QString& path, IEMesh& me, IEMaterial& ma, IEShader& s, IERenderable& r)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcessPreset_TargetRealtime_MaxQuality);
@@ -60,15 +60,15 @@ bool IEMeshImport::importPath(const QString& path, IEMesh& mesh, IEMaterial& mat
         return false;
     }
 
-    mesh.updateId(convertMeshPath(path));
-    material.updateId(convertMaterialPath(path));
-    renderable.updateId(convertRenderablePath(path));
+    me.updateId(convertMeshPath(path));
+    ma.updateId(convertMaterialPath(path));
+    r.updateId(convertRenderablePath(path));
 
-    renderable.setMeshId(mesh.getId());
-    renderable.setMaterialId(material.getId());
-    renderable.setShaderId(shader.getId());
+    r.setMeshID(me.getID());
+    r.setMaterialID(ma.getID());
+    r.setShaderID(s.getID());
 
-    processNode(scene->mRootNode, scene, &mesh, &material, &renderable);
+    processNode(scene->mRootNode, scene, &me, &ma, &r);
 
     return true;
 }
@@ -97,160 +97,115 @@ QString IEMeshImport::convertRenderablePath(const QString& path)
     return newPath.replace(oldExt, ".ierend");
 }
 
-void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* meParent)
+void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* me)
 {
     for(unsigned i = 0; i < node->mNumMeshes; i++)
     {
         aiMesh* assimpMesh = scene->mMeshes[node->mMeshes[i]];
 
-        auto* mesh = new IEMesh(meParent->getName(), meParent);
-        mesh->setParent(meParent);
-        processMesh(assimpMesh, mesh);
-        meParent->getMeshes().append(mesh);
+        IEMeshNode* ieNode = new IEMeshNode();
+
+        processMeshNode(assimpMesh, ieNode);
+
+        me->appendNode(ieNode);
     }
 
     for(unsigned i = 0; i < node->mNumChildren; i++)
     {
-        auto* childMesh = new IEMesh(meParent->getName(), meParent);
-        childMesh->setParent(meParent);
-        processNode(node->mChildren[i], scene, childMesh);
-        meParent->getChildren().append(childMesh);
+        processNode(node->mChildren[i], scene, me);
     }
 }
 
-void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* meParent, IEMaterial* maParent)
+void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* me, IEMaterial* ma)
 {
     for(unsigned i = 0; i < node->mNumMeshes; i++)
     {
         aiMesh* assimpMesh = scene->mMeshes[node->mMeshes[i]];
 
-        auto* mesh = new IEMesh(meParent->getName(), meParent);
-        mesh->setParent(meParent);
+        IEMeshNode* meshNode = new IEMeshNode();
+        IEMaterialNode* materialNode = new IEMaterialNode();
 
-        auto* material = new IEMaterial(maParent->getName(), maParent);
-        material->setParent(maParent);
+        processMeshNode(assimpMesh, meshNode);
+        processMaterialNode(assimpMesh, scene, ma->getName(), materialNode);
 
-        processMesh(assimpMesh, mesh);
-        processMaterial(assimpMesh, scene, material);
-
-        meParent->getMeshes().append(mesh);
-        maParent->getMaterials().append(material);
+        me->appendNode(meshNode);
+        ma->appendNode(materialNode);
     }
 
     for(unsigned i = 0; i < node->mNumChildren; i++)
     {
-        auto* childMesh = new IEMesh(meParent->getName(), meParent);
-        childMesh->setParent(meParent);
-
-        auto* childMaterial = new IEMaterial(maParent->getName(), maParent);
-        childMaterial->setParent(maParent);
-
-        processNode(node->mChildren[i], scene, childMesh, childMaterial);
-
-        meParent->getChildren().append(childMesh);
-        maParent->getChildren().append(childMaterial);
+        processNode(node->mChildren[i], scene, me, ma);
     }
 }
 
-void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* meParent, IEMaterial* maParent, IERenderable* rParent)
+void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* me, IEMaterial* ma, IERenderable* r)
 {
     for(unsigned i = 0; i < node->mNumMeshes; i++)
     {
         aiMesh* assimpMesh = scene->mMeshes[node->mMeshes[i]];
 
-        auto* mesh = new IEMesh(meParent->getName(), meParent);
-        mesh->setParent(meParent);
+        IEMeshNode* meNode = new IEMeshNode();
+        IEMaterialNode* maNode = new IEMaterialNode();
+        IERenderableNode* rNode = new IERenderableNode();
 
-        auto* material = new IEMaterial(maParent->getName(), maParent);
-        material->setParent(maParent);
+        processMeshNode(assimpMesh, meNode);
+        processMaterialNode(assimpMesh, scene, ma->getName(), maNode);
+        processRenderableNode(meNode, rNode, r);
 
-        auto* renderable = IERenderableFactory::make(rParent->getType(), rParent);
-        renderable->setParent(rParent);
-        renderable->setMeshId(rParent->getMeshId());
-        renderable->setMaterialId(rParent->getMaterialId());
-        renderable->setShaderId(rParent->getShaderId());
-
-        processMesh(assimpMesh, mesh);
-        processMaterial(assimpMesh, scene, material);
-        processRenderable(mesh, renderable);
-
-        meParent->getMeshes().append(mesh);
-        maParent->getMaterials().append(material);
-        rParent->getRenderables().append(renderable);
+        me->appendNode(meNode);
+        ma->appendNode(maNode);
+        r->appendNode(rNode);
     }
 
     for(unsigned i = 0; i < node->mNumChildren; i++)
     {
-        auto* childMesh = new IEMesh(meParent->getName(), meParent);
-        childMesh->setParent(meParent);
-
-        auto* childMaterial = new IEMaterial(maParent->getName(), maParent);
-        childMaterial->setParent(maParent);
-
-        auto* childRenderable = IERenderableFactory::make(rParent->getType(), rParent);
-        childRenderable->setParent(rParent);
-        childRenderable->setMeshId(rParent->getMeshId());
-        childRenderable->setMaterialId(rParent->getMaterialId());
-        childRenderable->setShaderId(rParent->getShaderId());
-
-        processNode(node->mChildren[i], scene, childMesh, childMaterial, childRenderable);
-
-        meParent->getChildren().append(childMesh);
-        maParent->getChildren().append(childMaterial);
-        rParent->getChildren().append(childRenderable);
+        processNode(node->mChildren[i], scene, me, ma, r);
     }
 }
 
-void IEMeshImport::processMesh(aiMesh* assimpMesh, IEMesh* ieMesh)
+void IEMeshImport::processMeshNode(aiMesh* assimpMesh, IEMeshNode* meNode)
 {
-    auto& posVerts = ieMesh->getPosVertices();
-    auto& normVerts = ieMesh->getNormVertices();
-    auto& tanVerts = ieMesh->getTanVertices();
-    auto& bitanVerts = ieMesh->getBiTanVertices();
-    auto& texVerts = ieMesh->getTexVertices();
-    auto& indices = ieMesh->getIndices();
-
     for(unsigned i = 0; i < assimpMesh->mNumVertices; i++)
     {
         // Position coords
         auto tempPos = assimpMesh->mVertices[i];
-        posVerts.append(glm::vec3(tempPos.x, tempPos.y, tempPos.z));
+        meNode->positions.append(glm::vec3(tempPos.x, tempPos.y, tempPos.z));
 
         // Normal coords
         if(assimpMesh->HasNormals())
         {
             auto tempNorm = assimpMesh->mNormals[i];
-            normVerts.append(glm::vec3(tempNorm.x, tempNorm.y, tempNorm.z));
+            meNode->normals.append(glm::vec3(tempNorm.x, tempNorm.y, tempNorm.z));
         }
         else
         {
-            normVerts.append(glm::vec3());
+            meNode->normals.append(glm::vec3());
         }
 
         // Tangents and Bitangets
         if(assimpMesh->HasTangentsAndBitangents())
         {
             auto tempTan = assimpMesh->mTangents[i];
-            tanVerts.append(glm::vec3(tempTan.x, tempTan.y, tempTan.z));
+            meNode->tangents.append(glm::vec3(tempTan.x, tempTan.y, tempTan.z));
 
             auto tempBiTan = assimpMesh->mBitangents[i];
-            bitanVerts.append(glm::vec3(tempBiTan.x, tempBiTan.y, tempBiTan.z));
+            meNode->bitangents.append(glm::vec3(tempBiTan.x, tempBiTan.y, tempBiTan.z));
         }
         else
         {
-            tanVerts.append(glm::vec3());
-            bitanVerts.append(glm::vec3());
+            meNode->tangents.append(glm::vec3());
+            meNode->bitangents.append(glm::vec3());
         }
 
         // Texture coords
         if(assimpMesh->HasTextureCoords(0))
         {
             auto tempTex = assimpMesh->mTextureCoords[0][i];
-            texVerts.append(glm::vec2(tempTex.x, tempTex.y));
+            meNode->textures.append(glm::vec2(tempTex.x, tempTex.y));
         }
         else
         {
-            texVerts.append(glm::vec2());
+            meNode->textures.append(glm::vec2());
         }
     }
 
@@ -261,12 +216,12 @@ void IEMeshImport::processMesh(aiMesh* assimpMesh, IEMesh* ieMesh)
 
         for(unsigned j = 0; j < face.mNumIndices; j++)
         {
-            indices.append(face.mIndices[j]);
+            meNode->indices.append(face.mIndices[j]);
         }
     }
 }
 
-void IEMeshImport::processMaterial(aiMesh* assimpMesh, const aiScene* scene, IEMaterial* ieMaterial)
+void IEMeshImport::processMaterialNode(aiMesh* assimpMesh, const aiScene* scene, const QString& filePath, IEMaterialNode* maNode)
 {
     aiMaterial* assimpMat = scene->mMaterials[assimpMesh->mMaterialIndex];
 
@@ -279,56 +234,56 @@ void IEMeshImport::processMaterial(aiMesh* assimpMesh, const aiScene* scene, IEM
     aiColor4D transparent;
 
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_AMBIENT, &ambient))
-        ieMaterial->setColor(IEColorType::Ambient, glm::vec4(ambient.r, ambient.g, ambient.b, ambient.a));
+        maNode->colors.insert(IEColorType::Ambient, glm::vec4(ambient.r, ambient.g, ambient.b, ambient.a));
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
-        ieMaterial->setColor(IEColorType::Diffuse, glm::vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
+        maNode->colors.insert(IEColorType::Diffuse, glm::vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_SPECULAR, &specular))
-        ieMaterial->setColor(IEColorType::Specular, glm::vec4(specular.r, specular.g, specular.b, specular.a));
+        maNode->colors.insert(IEColorType::Specular, glm::vec4(specular.r, specular.g, specular.b, specular.a));
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_EMISSIVE, &emissive))
-        ieMaterial->setColor(IEColorType::Emissive, glm::vec4(emissive.r, emissive.g, emissive.b, emissive.a));
+        maNode->colors.insert(IEColorType::Emissive, glm::vec4(emissive.r, emissive.g, emissive.b, emissive.a));
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_REFLECTIVE, &reflective))
-        ieMaterial->setColor(IEColorType::Reflective, glm::vec4(reflective.r, reflective.g, reflective.b, reflective.a));
+        maNode->colors.insert(IEColorType::Reflective, glm::vec4(reflective.r, reflective.g, reflective.b, reflective.a));
     if(AI_SUCCESS == aiGetMaterialColor(assimpMat, AI_MATKEY_COLOR_TRANSPARENT, &transparent))
-        ieMaterial->setColor(IEColorType::Transparent, glm::vec4(transparent.r, transparent.g, transparent.b, transparent.a));
+        maNode->colors.insert(IEColorType::Transparent, glm::vec4(transparent.r, transparent.g, transparent.b, transparent.a));
 
     // Textures
     auto* game = ApplicationWindow::instance().getGame();
     auto* texManager = game->getSystem<IEScene>()->getManager<IETexture2DManager>();
 
-    QString relPath = IEFile::extractPath(ieMaterial->getName());
-    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_AMBIENT, IETextureType::Ambient, ieMaterial, texManager);
-    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_DIFFUSE, IETextureType::Diffuse, ieMaterial, texManager);
-    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_SPECULAR, IETextureType::Specular, ieMaterial, texManager);
-    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_NORMALS, IETextureType::Normals, ieMaterial, texManager);
-    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_HEIGHT, IETextureType::Height, ieMaterial, texManager);
-    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_EMISSIVE, IETextureType::Emissive, ieMaterial, texManager);
-    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_SHININESS, IETextureType::Shininess, ieMaterial, texManager);
-    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_OPACITY, IETextureType::Opacity, ieMaterial, texManager);
-    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_DISPLACEMENT, IETextureType::Displacement, ieMaterial, texManager);
-    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_LIGHTMAP, IETextureType::Lightmap, ieMaterial, texManager);
-    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_UNKNOWN, IETextureType::Unknown, ieMaterial, texManager);
+    QString relPath = IEFile::extractPath(filePath);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_AMBIENT, IETextureType::Ambient, maNode, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_DIFFUSE, IETextureType::Diffuse, maNode, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_SPECULAR, IETextureType::Specular, maNode, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_NORMALS, IETextureType::Normals, maNode, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_HEIGHT, IETextureType::Height, maNode, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_EMISSIVE, IETextureType::Emissive, maNode, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_SHININESS, IETextureType::Shininess, maNode, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_OPACITY, IETextureType::Opacity, maNode, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_DISPLACEMENT, IETextureType::Displacement, maNode, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_LIGHTMAP, IETextureType::Lightmap, maNode, texManager);
+    load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_UNKNOWN, IETextureType::Unknown, maNode, texManager);
 }
 
-void IEMeshImport::processRenderable(IEMesh* mesh, IERenderable* renderable)
+void IEMeshImport::processRenderableNode(IEMeshNode* meNode, IERenderableNode* rNode, QObject* parent)
 {
-    renderable->addBuffer("aPos", IEBufferType::Vec3, 0, 0, 0);
-    renderable->addBuffer("aNormal", IEBufferType::Vec3, 0, 0, 0);
-    renderable->addBuffer("aTangent", IEBufferType::Vec3, 0, 0, 0);
-    renderable->addBuffer("aBitangent", IEBufferType::Vec3, 0, 0, 0);
-    renderable->addBuffer("aTexCoord", IEBufferType::Vec2, 0, 0, 0);
+    rNode->buffers.insert("aPos", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, parent));
+    rNode->buffers.insert("aNormal", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, parent));
+    rNode->buffers.insert("aTangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, parent));
+    rNode->buffers.insert("aBitangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, parent));
+    rNode->buffers.insert("aTexCoord", IEBufferObjectFactory::make(IEBufferType::Vec2, 0, 0, 0, parent));
 
-    renderable->setBufferValues("aPos", mesh->getPosVertices());
-    renderable->setBufferValues("aNormal", mesh->getNormVertices());
-    renderable->setBufferValues("aTangent", mesh->getTanVertices());
-    renderable->setBufferValues("aBitangent", mesh->getBiTanVertices());
-    renderable->setBufferValues("aTexCoord", mesh->getTexVertices());
+    rNode->buffers["aPos"]->setValues(meNode->positions);
+    rNode->buffers["aNormal"]->setValues(meNode->normals);
+    rNode->buffers["aTangent"]->setValues(meNode->tangents);
+    rNode->buffers["aBitangent"]->setValues(meNode->bitangents);
+    rNode->buffers["aTexCoord"]->setValues(meNode->textures);
 }
 
 void IEMeshImport::load2DTextures(const QString& relPath,
                                   aiMaterial* assimpMat,
                                   aiTextureType assimpTexType,
                                   IETextureType ieTexType,
-                                  IEMaterial* ieMaterial,
+                                  IEMaterialNode* maNode,
                                   IETexture2DManager* manager)
 {
     for(unsigned i = 0; i < assimpMat->GetTextureCount(assimpTexType); i++)
@@ -356,14 +311,14 @@ void IEMeshImport::load2DTextures(const QString& relPath,
                 continue;
             }
 
-            if(!manager->add(texture->getId(), texture))
+            if(!manager->add(texture->getID(), texture))
             {
                 delete texture;
                 continue;
             }
         }
 
-        ieMaterial->appendTextureID(ieTexType, hashID);
+        maNode->textureIDs[ieTexType].append(hashID);
     }
 }
 

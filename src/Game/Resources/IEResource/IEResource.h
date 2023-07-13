@@ -25,7 +25,7 @@ public:
     virtual uint64_t updateId(const QString& path) = 0;
 
     const QString& getName() const { return name; }
-    uint64_t getId() const { return id; }
+    uint64_t getID() const { return id; }
 
     QDataStream& serialize(QDataStream& out, const IESerializable& obj) const override;
     QDataStream& deserialize(QDataStream& in, IESerializable& obj) override;

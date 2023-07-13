@@ -28,7 +28,7 @@ public:
     void onUpdateFrame() override;
 
     IEEntity create();
-    void remove(const IEEntity entity);
+    bool remove(const IEEntity entity);
     int entityCount() const;
 
     bool appendSystem(IEECSSystem* system);

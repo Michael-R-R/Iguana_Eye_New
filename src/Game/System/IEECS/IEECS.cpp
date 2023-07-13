@@ -95,7 +95,7 @@ IEEntity IEECS::create()
     return entity;
 }
 
-void IEECS::remove(const IEEntity entity)
+bool IEECS::remove(const IEEntity entity)
 {
     // Recursively remove child entities
     auto* hierarchySystem = getComponent<IEECSHierarchySystem>();
@@ -112,9 +112,12 @@ void IEECS::remove(const IEEntity entity)
         detachComponent(entity, systems[i]->getID());
     }
 
-    entityManager->remove(entity);
+    if(!entityManager->remove(entity))
+        return false;
 
     emit entityRemoved(entity);
+
+    return true;
 }
 
 int IEECS::entityCount() const

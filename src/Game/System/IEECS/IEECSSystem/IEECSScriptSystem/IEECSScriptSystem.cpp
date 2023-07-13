@@ -196,11 +196,11 @@ void IEECSScriptSystem::sleep(const int index, const uint64_t id)
 
 void IEECSScriptSystem::attach(const int index, IEScript* script)
 {
-    if(hasScript(index, script->getId()))
+    if(hasScript(index, script->getID()))
         return;
 
-    delete data.scripts[index][script->getId()];
-    data.scripts[index][script->getId()] = script;
+    delete data.scripts[index][script->getID()];
+    data.scripts[index][script->getID()] = script;
 }
 
 void IEECSScriptSystem::remove(const int index, const uint64_t id)

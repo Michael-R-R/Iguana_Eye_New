@@ -24,7 +24,8 @@ EGridRenderable::~EGridRenderable()
 
 void EGridRenderable::setup()
 {
-    posBuffer->setValues(gridMesh->getPosVertices());
+    IEMeshNode* meshNode = gridMesh->getNode(0);
+    posBuffer->setValues(meshNode->positions);
 
     gridShader->build();
     vao->create();

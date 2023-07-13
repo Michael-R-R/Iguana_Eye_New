@@ -1,73 +1,110 @@
 #include "IEIndexRenderable.h"
-#include "IEIndexBufferObject.h"
 #include <QOpenGLContext>
 #include <QOpenGLExtraFunctions>
 
 IEIndexRenderable::IEIndexRenderable(QObject* parent) :
     IERenderable(IERenderableType::Index, parent),
-    IBO(new IEIndexBufferObject(parent))
+    indexNodes()
 {
 
 }
 
-IEIndexRenderable::IEIndexRenderable(const QString& path, const uint64_t meID,
-                                     const uint64_t maID, const uint64_t sID,
-                                     QObject* parent) :
-    IERenderable(IERenderableType::Index, path, meID, maID, sID, parent),
-    IBO(new IEIndexBufferObject(parent))
+IEIndexRenderable::IEIndexRenderable(const QString& path, QObject* parent) :
+    IERenderable(IERenderableType::Index, path, parent),
+    indexNodes()
 {
 
 }
 
 IEIndexRenderable::IEIndexRenderable(IERenderable* parent) :
     IERenderable(parent),
-    IBO(new IEIndexBufferObject(parent))
+    indexNodes()
 {
 
 }
 
 IEIndexRenderable::~IEIndexRenderable()
 {
-    if(IBO)
-    {
-        IBO->destroy();
-        delete IBO;
-        IBO = nullptr;
-    }
+    cleanup();
 }
 
-bool IEIndexRenderable::handleBuild()
+bool IEIndexRenderable::handleBuild(const int index)
 {
-    if(!IBO)
+    if(index < 0 || index >= indexNodes.size())
         return false;
 
-    IBO->build();
+    indexNodes[index]->IBO->build();
 
     return true;
 }
 
-bool IEIndexRenderable::handleBuildRelease()
+bool IEIndexRenderable::handleBuildRelease(const int index)
 {
-    if(!IBO)
+    if(index < 0 || index >= indexNodes.size())
         return false;
 
-    IBO->release();
+    indexNodes[index]->IBO->release();
 
     return true;
 }
 
-void IEIndexRenderable::handleDraw(const QVector<std::any>&)
+void IEIndexRenderable::handleDraw(const int index, const QVector<std::any>&)
 {
-    if(!VAO || !IBO)
+    if(index < 0 || index >= nodes.size())
         return;
 
-    VAO->bind();
+    IERenderableNode* rNode = nodes[index];
+    IEIndexRenderableNode* iNode = indexNodes[index];
+
+    rNode->VAO->bind();
 
     auto* gl = QOpenGLContext::currentContext()->extraFunctions();
-    gl->glDrawElements(primitiveMode,
-                       IBO->count(),
+    gl->glDrawElements(rNode->primitiveMode,
+                       iNode->IBO->count(),
                        GL_UNSIGNED_INT,
                        0);
+}
+
+int IEIndexRenderable::appendNode(IERenderableNode* node)
+{
+    const int index = IERenderable::appendNode(node);
+    if(index < 0) { return -1; }
+
+    indexNodes.append(new IEIndexRenderableNode());
+
+    return index;
+}
+
+bool IEIndexRenderable::removeNode(const int index)
+{
+    if(!IERenderable::removeNode(index))
+        return false;
+
+    auto* temp = indexNodes[index];
+    indexNodes.removeAt(index);
+    delete temp;
+
+    return true;
+}
+
+void IEIndexRenderable::cleanup()
+{
+    IERenderable::cleanup();
+
+    foreach (auto* i, indexNodes)
+    {
+        delete i;
+    }
+
+    indexNodes.clear();
+}
+
+IEIndexRenderableNode* IEIndexRenderable::getIndexNode(const int index)
+{
+    if(index < 0 || index >= indexNodes.size())
+        return nullptr;
+
+    return indexNodes[index];
 }
 
 QDataStream& IEIndexRenderable::serialize(QDataStream& out, const IESerializable& obj) const
@@ -76,7 +113,7 @@ QDataStream& IEIndexRenderable::serialize(QDataStream& out, const IESerializable
 
     const auto& renderable = static_cast<const IEIndexRenderable&>(obj);
 
-    out << *renderable.IBO;
+    // TODO implement
 
     return out;
 }
@@ -87,7 +124,7 @@ QDataStream& IEIndexRenderable::deserialize(QDataStream& in, IESerializable& obj
 
     auto& renderable = static_cast<IEIndexRenderable&>(obj);
 
-    in >> *renderable.IBO;
+    // TODO implement
 
     return in;
 }

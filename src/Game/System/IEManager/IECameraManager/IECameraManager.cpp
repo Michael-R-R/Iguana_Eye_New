@@ -44,7 +44,7 @@ QDataStream& IECameraManager::deserialize(QDataStream& in, IESerializable& obj)
 
         in >> *camera;
 
-        if(!manager.add(camera->getId(), camera))
+        if(!manager.add(camera->getID(), camera))
             delete camera;
     }
 

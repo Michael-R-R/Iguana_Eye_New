@@ -19,10 +19,11 @@ public:
 
     IEEntity create();
     bool remove(const IEEntity key);
+
     bool attachComponent(const IEEntity& key, const size_t& component);
     bool detachComponent(const IEEntity& key, const size_t& component);
-    bool doesEntityExist(const IEEntity& key) const;
     bool hasComponent(const IEEntity& key, const size_t& component) const;
+    bool doesEntityExist(const IEEntity& key) const;
     QSet<size_t> getAttachedComponents(const IEEntity& key) const;
     int count() const;
 

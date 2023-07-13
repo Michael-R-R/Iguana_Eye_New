@@ -10,18 +10,55 @@
 class IEShader;
 class IETexture2DManager;
 
-class IEMaterial : public IEFileResource
+struct IEMaterialNode
 {
-protected:
     QHash<IEColorType, glm::vec4> colors;
     QHash<IETextureType, QVector<uint64_t>> textureIDs;
 
     QHash<IEColorType, const char*> colorNames;
     QHash<IETextureType, const char*> textureNames;
 
-    IEMaterial* parent;
-    QVector<IEMaterial*> children;
-    QVector<IEMaterial*> materials;
+    IEMaterialNode() :
+        colors(), textureIDs(),
+        colorNames(), textureNames()
+    {
+        textureIDs.insert(IETextureType::Ambient, QVector<uint64_t>{});
+        textureIDs.insert(IETextureType::Diffuse, QVector<uint64_t>{});
+        textureIDs.insert(IETextureType::Specular, QVector<uint64_t>{});
+        textureIDs.insert(IETextureType::Normals, QVector<uint64_t>{});
+        textureIDs.insert(IETextureType::Height, QVector<uint64_t>{});
+        textureIDs.insert(IETextureType::Emissive, QVector<uint64_t>{});
+        textureIDs.insert(IETextureType::Shininess, QVector<uint64_t>{});
+        textureIDs.insert(IETextureType::Opacity, QVector<uint64_t>{});
+        textureIDs.insert(IETextureType::Displacement, QVector<uint64_t>{});
+        textureIDs.insert(IETextureType::Lightmap, QVector<uint64_t>{});
+        textureIDs.insert(IETextureType::Unknown, QVector<uint64_t>{});
+
+        colorNames.insert(IEColorType::Ambient, "uc_ambient");
+        colorNames.insert(IEColorType::Diffuse, "uc_diffuse");
+        colorNames.insert(IEColorType::Specular, "uc_specular");
+        colorNames.insert(IEColorType::Emissive, "uc_emissive");
+        colorNames.insert(IEColorType::Reflective, "uc_reflective");
+        colorNames.insert(IEColorType::Transparent, "uc_transparent");
+
+        textureNames.insert(IETextureType::Ambient, "ut_ambient");
+        textureNames.insert(IETextureType::Diffuse, "ut_diffuse");
+        textureNames.insert(IETextureType::Specular, "ut_specular");
+        textureNames.insert(IETextureType::Normals, "ut_normal");
+        textureNames.insert(IETextureType::Height, "ut_height");
+        textureNames.insert(IETextureType::Emissive, "ut_emissive");
+        textureNames.insert(IETextureType::Shininess, "ut_shininess");
+        textureNames.insert(IETextureType::Opacity, "ut_opacity");
+        textureNames.insert(IETextureType::Displacement, "ut_displacement");
+        textureNames.insert(IETextureType::Lightmap, "ut_lightmap");
+        textureNames.insert(IETextureType::Unknown, "ut_unknown");
+    }
+};
+
+class IEMaterial : public IEFileResource
+{
+protected:
+    QVector<IEMaterialNode*> nodes;
 
 public:
     IEMaterial(QObject* parent = nullptr);
@@ -34,27 +71,16 @@ public:
     bool operator<(const IEMaterial& other) { return IEFileResource::operator<(other); }
     bool operator>(const IEMaterial& other) { return IEFileResource::operator>(other); }
 
-    void bindColors(IEShader& shader);
-    void bindTextures(IEShader& shader, IETexture2DManager& manager);
+    void bindColors(const int index, IEShader& shader);
+    void bindTextures(const int index, IEShader& shader, IETexture2DManager& manager);
 
-    void setColor(IEColorType type, const glm::vec4& val);
-    void removeColor(IEColorType type);
+    int appendNode(IEMaterialNode* node);
+    void remove(const int index);
+    IEMaterialNode* getNode(const int index);
+    void cleanup();
 
-    void appendTextureID(IETextureType type, const uint64_t val);
-    void setTextureID(IETextureType type, const int index, const uint64_t val);
-    void removeTextureID(IETextureType type, const int index);
-
-    const QHash<IEColorType, glm::vec4>& getColors() const { return colors; }
-    const QHash<IETextureType, QVector<uint64_t>>& getTexIDs() const { return textureIDs; }
-    IEMaterial* getParent() { return parent; }
-    QVector<IEMaterial*>& getChildren() { return children; }
-    QVector<IEMaterial*>& getMaterials() { return materials; }
-
-    void setParent(IEMaterial* val) { parent = val; }
+    QVector<IEMaterialNode*>& getNodes() { return nodes; }
 
     QDataStream& serialize(QDataStream &out, const IESerializable &obj) const override;
     QDataStream& deserialize(QDataStream &in, IESerializable &obj) override;
-
-private:
-    void setup();
 };

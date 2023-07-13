@@ -69,8 +69,8 @@ void IERenderEngine::onRenderFrame(IECamera* camera)
     for(auto* i : renderables)
     {
         auto* renderable = static_cast<IERenderable*>(i);
-        auto* material = materialManager->value<IEMaterial>(renderable->getMaterialId());
-        auto* shader = shaderManager->value<IEShader>(renderable->getShaderId());
+        auto* material = materialManager->value<IEMaterial>(renderable->getMaterialID());
+        auto* shader = shaderManager->value<IEShader>(renderable->getShaderID());
         if(!material || !shader)
             continue;
 
@@ -93,17 +93,12 @@ void IERenderEngine::draw(IEShader* shader, IEMaterial* material, IERenderable* 
 {
     shader->bind();
 
-    auto& maChildren = material->getChildren();
-    auto& rChildren = renderable->getChildren();
-    for(int i = 0; i < rChildren.size(); i++)
+    const int nodeCount = renderable->getNodes().size();
+    for(int i = 0; i < nodeCount; i++)
     {
-        auto& materials = maChildren[i]->getMaterials();
-        auto& renderables = rChildren[i]->getRenderables();
-        for(int j = 0; j < renderables.size(); j++)
-        {
-            materials[j]->bindColors(*shader);
-            materials[j]->bindTextures(*shader, *texture2DManager);
-            renderables[j]->draw();
-        }
+        material->bindColors(i, *shader);
+        material->bindTextures(i, *shader, *texture2DManager);
+
+        renderable->draw(i);
     }
 }

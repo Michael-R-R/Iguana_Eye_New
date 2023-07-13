@@ -58,7 +58,7 @@ QDataStream& IETexture2DManager::deserialize(QDataStream& in, IESerializable& ob
             continue;
         }
 
-        if(!manager.add(texture->getId(), texture))
+        if(!manager.add(texture->getID(), texture))
             delete texture;
     }
 

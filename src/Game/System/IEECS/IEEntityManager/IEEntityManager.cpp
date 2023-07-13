@@ -67,17 +67,17 @@ bool IEEntityManager::detachComponent(const IEEntity& key, const size_t& compone
     return true;
 }
 
-bool IEEntityManager::doesEntityExist(const IEEntity& key) const
-{
-    return entityMap.contains(key);
-}
-
 bool IEEntityManager::hasComponent(const IEEntity& key, const size_t& component) const
 {
     if(!doesEntityExist(key))
         return false;
 
     return entityMap[key].contains(component);
+}
+
+bool IEEntityManager::doesEntityExist(const IEEntity& key) const
+{
+    return entityMap.contains(key);
 }
 
 QSet<size_t> IEEntityManager::getAttachedComponents(const IEEntity& key) const

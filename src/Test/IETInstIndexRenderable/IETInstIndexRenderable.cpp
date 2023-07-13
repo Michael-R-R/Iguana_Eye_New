@@ -33,10 +33,10 @@ IETInstIndexRenderable::IETInstIndexRenderable() :
     renderable(nullptr),
     meshPath("./resources/root/Content/cube/cube.obj"),
     shaderPath("./resources/root/Content/default.glsl"),
-    createCount(1),
+    createCount(10),
     removeCount(1),
-    showCount(0),
-    hideCount(0)
+    showCount(1),
+    hideCount(1)
 {
     this->setup();
     this->show();
@@ -49,7 +49,6 @@ IETInstIndexRenderable::~IETInstIndexRenderable()
 
 void IETInstIndexRenderable::setup()
 {
-    this->setWindowFlag(Qt::WindowStaysOnTopHint, true);
     this->setAttribute(Qt::WA_QuitOnClose, false);
 
     auto* meLineEdit = new QLineEdit(meshPath, this);
@@ -67,6 +66,8 @@ void IETInstIndexRenderable::setup()
     auto* createEntityButton = new QPushButton("Create Entity", this);
     vLayout->addWidget(createCountSpinbox);
     vLayout->addWidget(createEntityButton);
+    createCountSpinbox->setValue(createCount);
+    createCountSpinbox->setMinimum(1);
     createCountSpinbox->setMaximum(50000);
     connect(createCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ createCount = val; });
     connect(createEntityButton, &QPushButton::clicked, this, [this](){ createEntity(); });
@@ -75,6 +76,9 @@ void IETInstIndexRenderable::setup()
     auto* removeEntityButton = new QPushButton("Remove Entity", this);
     vLayout->addWidget(removeCountSpinbox);
     vLayout->addWidget(removeEntityButton);
+    removeCountSpinbox->setValue(removeCount);
+    removeCountSpinbox->setMinimum(1);
+    removeCountSpinbox->setMaximum(50000);
     connect(removeCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ removeCount = val; });
     connect(removeEntityButton, &QPushButton::clicked, this, [this](){ removeEntity(); });
 
@@ -82,6 +86,9 @@ void IETInstIndexRenderable::setup()
     auto* showButton = new QPushButton("Show", this);
     vLayout->addWidget(showCountSpinbox);
     vLayout->addWidget(showButton);
+    showCountSpinbox->setValue(showCount);
+    showCountSpinbox->setMinimum(1);
+    showCountSpinbox->setMaximum(50000);
     connect(showCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ showCount = val; });
     connect(showButton, &QPushButton::clicked, this, [this](){ showInstances(); });
 
@@ -89,6 +96,9 @@ void IETInstIndexRenderable::setup()
     auto* hideButton = new QPushButton("Hide", this);
     vLayout->addWidget(hideCountSpinbox);
     vLayout->addWidget(hideButton);
+    hideCountSpinbox->setValue(hideCount);
+    hideCountSpinbox->setMinimum(1);
+    hideCountSpinbox->setMaximum(50000);
     connect(hideCountSpinbox, &QSpinBox::valueChanged, this, [this](int val){ hideCount = val; });
     connect(hideButton, &QPushButton::clicked, this, [this](){ hideInstances(); });
 
@@ -121,29 +131,25 @@ void IETInstIndexRenderable::createResources()
     IEGlslImport::importPath(shaderPath, *shader);
     IEMeshImport::importPath(meshPath, *mesh, *material, *shader, *renderable);
 
-    auto& meChildren = mesh->getChildren();
-    auto& rChildren = renderable->getChildren();
-    for(int i = 0; i < rChildren.size(); i++)
+    const int nodeCount = renderable->getNodes().size();
+    for(int i = 0; i < nodeCount; i++)
     {
-        auto& meshes = meChildren[i]->getMeshes();
-        auto& renderables = rChildren[i]->getRenderables();
-        for(int j = 0; j < renderables.size(); j++)
-        {
-            auto* temp = static_cast<IEInstIndexRenderable*>(renderables[j]);
-            temp->addIboValues(meshes[j]->getIndices());
-            temp->addBuffer("aModel", IEBufferType::Mat4, 64, 16, 4);
-            temp->build(*shader);
-        }
+        renderable->getInstIndexNode(i)->IBO->setValues(mesh->getNode(i)->indices);
+        renderable->addBuffer(i, "aModel", IEBufferType::Mat4, 64, 16, 4);
+        renderable->build(i, *shader);
     }
 
-    meManger->add(mesh->getId(), mesh);
-    maManger->add(material->getId(), material);
-    sManger->add(shader->getId(), shader);
-    rManger->add(renderable->getId(), renderable);
+    meManger->add(mesh->getID(), mesh);
+    maManger->add(material->getID(), material);
+    sManger->add(shader->getID(), shader);
+    rManger->add(renderable->getID(), renderable);
 }
 
 void IETInstIndexRenderable::createEntity()
 {
+    if(!renderable)
+        return;
+
     auto* game = ApplicationWindow::instance().getGame();
     auto* ecs = game->getSystem<IEECS>();
     auto* tSystem = ecs->getComponent<IEECSTransformSystem>();
@@ -155,8 +161,8 @@ void IETInstIndexRenderable::createEntity()
         IEEntity entity = ecs->create();
 
         int rIndex = ecs->attachComponent<IEECSRenderableSystem>(entity);
-        rSystem->setResourceId(rIndex, renderable->getId());
-        rSystem->addShown(rIndex);
+        rSystem->setResourceId(rIndex, renderable->getID());
+        rSystem->showInstance(rIndex);
 
         int tIndex = tSystem->lookUpIndex(entity);
         tSystem->setPosition(tIndex, glm::vec3(i * 2.5f, 0.0f, 0.0f));
@@ -167,50 +173,45 @@ void IETInstIndexRenderable::removeEntity()
 {
     auto* game = ApplicationWindow::instance().getGame();
     auto* ecs = game->getSystem<IEECS>();
-    int count = ecs->entityCount();
 
-    for(int i = 1; i <= count; i++)
+    int i = 0;
+    while(ecs->entityCount() > 0)
     {
-        if((i % removeCount) != 0)
-            continue;
-
-        ecs->remove(IEEntity(i));
+        ecs->remove(IEEntity(i++));
     }
 }
 
 void IETInstIndexRenderable::showInstances()
 {
-    auto& rChildren = renderable->getChildren();
-    for(int i = 0; i < rChildren.size(); i++)
+    auto* game = ApplicationWindow::instance().getGame();
+    auto* ecs = game->getSystem<IEECS>();
+    auto* rSystem = ecs->getComponent<IEECSRenderableSystem>();
+
+    for(int i = 1; i < 100; i++)
     {
-        auto& renderables = rChildren[i]->getRenderables();
-        for(int j = 0; j < renderables.size(); j++)
-        {
-            auto* temp = static_cast<IEInstRenderable*>(renderables[j]);
-            const int hidden = temp->getHiddenCount();
-            for(int k = hidden - 1; k > -1; k-=(showCount + 1))
-            {
-                temp->addShown(k);
-            }
-        }
+        if((i % showCount) != 0)
+            continue;
+
+        const int index = rSystem->lookUpIndex(IEEntity(i));
+
+        rSystem->showInstance(index);
     }
 }
 
 void IETInstIndexRenderable::hideInstances()
 {
-    auto& rChildren = renderable->getChildren();
-    for(int i = 0; i < rChildren.size(); i++)
+    auto* game = ApplicationWindow::instance().getGame();
+    auto* ecs = game->getSystem<IEECS>();
+    auto* rSystem = ecs->getComponent<IEECSRenderableSystem>();
+
+    for(int i = 1; i < 100; i++)
     {
-        auto& renderables = rChildren[i]->getRenderables();
-        for(int j = 0; j < renderables.size(); j++)
-        {
-            auto* temp = static_cast<IEInstRenderable*>(renderables[j]);
-            const int shown = temp->getShownCount();
-            for(int k = shown - 1; k > -1; k-=(hideCount + 1))
-            {
-                temp->addHidden(k);
-            }
-        }
+        if((i % hideCount) != 0)
+            continue;
+
+        const int index = rSystem->lookUpIndex(IEEntity(i));
+
+        rSystem->hideInstance(index);
     }
 }
 
@@ -236,20 +237,18 @@ void IETInstIndexRenderable::deserialize()
 
     QString path = renderable->getName();
 
-    rManger->remove(renderable->getId());
+    rManger->remove(renderable->getID());
     renderable = new IEInstIndexRenderable(this);
     IESerialize::read<IEInstIndexRenderable>(path, renderable);
 
-    auto* shader = sManger->value<IEShader>(renderable->getShaderId());
-    foreach(auto* child, renderable->getChildren())
+    auto* shader = sManger->value<IEShader>(renderable->getShaderID());
+    const int nodeCount = renderable->getNodes().size();
+    for(int i = 0; i < nodeCount; i++)
     {
-        foreach(auto* i, child->getRenderables())
-        {
-            i->build(*shader);
-        }
+        renderable->build(i, *shader);
     }
 
-    rManger->add(renderable->getId(), renderable);
+    rManger->add(renderable->getID(), renderable);
 }
 
 void IETInstIndexRenderable::clearManagers()

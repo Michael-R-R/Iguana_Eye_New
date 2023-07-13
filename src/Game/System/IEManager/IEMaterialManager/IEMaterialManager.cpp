@@ -53,7 +53,7 @@ QDataStream& IEMaterialManager::deserialize(QDataStream& in, IESerializable& obj
             continue;
         }
 
-        if(!manager.add(material->getId(), material))
+        if(!manager.add(material->getID(), material))
             delete material;
     }
 

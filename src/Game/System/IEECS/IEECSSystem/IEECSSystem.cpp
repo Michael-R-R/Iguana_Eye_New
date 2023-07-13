@@ -37,5 +37,6 @@ int IEECSSystem::lookUpIndex(const IEEntity& key) const
 
 bool IEECSSystem::indexBoundCheck(const int index) const
 {
+    // Valid indexing starts at: 1
     return (index > 0 && index < entityMap.size());
 }

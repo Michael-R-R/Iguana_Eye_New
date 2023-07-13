@@ -7,43 +7,45 @@
 
 IEMaterial::IEMaterial(QObject* parent) :
     IEFileResource(parent),
-    colors(), textureIDs(),
-    colorNames(), textureNames(),
-    children(), materials()
+    nodes()
 {
-    setup();
+
 }
 
 IEMaterial::IEMaterial(const QString& path, QObject* parent) :
     IEFileResource(path, parent),
-    colors(), textureIDs(),
-    colorNames(), textureNames(),
-    children(), materials()
+    nodes()
 {
-    setup();
+
 }
 
 IEMaterial::~IEMaterial()
 {
-
+    cleanup();
 }
 
-void IEMaterial::bindColors(IEShader& shader)
+void IEMaterial::bindColors(const int index, IEShader& shader)
 {
-    QHashIterator<IEColorType, glm::vec4> it(colors);
+    if(index < 0 || index >= nodes.size())
+        return;
+
+    QHashIterator<IEColorType, glm::vec4> it(nodes[index]->colors);
     while(it.hasNext())
     {
         it.next();
 
-        shader.setVec4(colorNames[it.key()], it.value());
+        shader.setVec4(nodes[index]->colorNames[it.key()], it.value());
     }
 }
 
-void IEMaterial::bindTextures(IEShader& shader, IETexture2DManager& manager)
+void IEMaterial::bindTextures(const int index, IEShader& shader, IETexture2DManager& manager)
 {
+    if(index < 0 || index >= nodes.size())
+        return;
+
     int counter = 0;
 
-    QHashIterator<IETextureType, QVector<uint64_t>> it(textureIDs);
+    QHashIterator<IETextureType, QVector<uint64_t>> it(nodes[index]->textureIDs);
     while(it.hasNext())
     {
         it.next();
@@ -51,7 +53,8 @@ void IEMaterial::bindTextures(IEShader& shader, IETexture2DManager& manager)
         const QVector<uint64_t>& values = it.value();
         for(int i = 0; i < values.size(); i++)
         {
-            QString name = QString("%1_%2").arg(textureNames[it.key()], QString::number(i));
+            const char* texName = nodes[index]->textureNames[it.key()];
+            QString name = QString("%1_%2").arg(texName, QString::number(i));
             QByteArray temp = name.toLocal8Bit();
             shader.setUniformValue(temp.data(), counter);
 
@@ -68,35 +71,44 @@ void IEMaterial::bindTextures(IEShader& shader, IETexture2DManager& manager)
     }
 }
 
-void IEMaterial::setColor(IEColorType type, const glm::vec4& val)
+int IEMaterial::appendNode(IEMaterialNode* node)
 {
-    colors.insert(type, val);
+    if(!node) { return -1; }
+
+    const int index = nodes.size();
+
+    nodes.append(node);
+
+    return index;
 }
 
-void IEMaterial::removeColor(IEColorType type)
+void IEMaterial::remove(const int index)
 {
-    colors.remove(type);
-}
-
-void IEMaterial::appendTextureID(IETextureType type, const uint64_t val)
-{
-    textureIDs[type].append(val);
-}
-
-void IEMaterial::setTextureID(IETextureType type, const int index, const uint64_t val)
-{
-    if(index < 0 || index >= textureIDs[type].size())
+    if(index < 0 || index >= nodes.size())
         return;
 
-    textureIDs[type][index] = val;
+    auto* temp = nodes[index];
+    nodes.removeAt(index);
+    delete temp;
 }
 
-void IEMaterial::removeTextureID(IETextureType type, const int index)
+IEMaterialNode* IEMaterial::getNode(const int index)
 {
-    if(index < 0 || index >= textureIDs[type].size())
-        return;
+    if(index < 0 || index >= nodes.size())
+        return nullptr;
 
-    textureIDs[type].removeAt(index);
+    return nodes[index];
+}
+
+void IEMaterial::cleanup()
+{
+     foreach(auto* i, nodes)
+    {
+        delete i;
+        i = nullptr;
+    }
+
+    nodes.clear();
 }
 
 QDataStream& IEMaterial::serialize(QDataStream& out, const IESerializable& obj) const
@@ -105,17 +117,7 @@ QDataStream& IEMaterial::serialize(QDataStream& out, const IESerializable& obj) 
 
     const auto& material = static_cast<const IEMaterial&>(obj);
 
-    out << (int)material.colors.size();
-    QHashIterator<IEColorType, glm::vec4> it(material.colors);
-    while(it.hasNext())
-    {
-        it.next();
-
-        out << it.key();
-        IESerializeConverter::write(out, it.value());
-    }
-
-    out << material.textureIDs;
+    // TODO implement
 
     return out;
 }
@@ -126,57 +128,7 @@ QDataStream& IEMaterial::deserialize(QDataStream& in, IESerializable& obj)
 
     auto& material = static_cast<IEMaterial&>(obj);
 
-    int count = 0;
-    in >> count;
-    QHash<IEColorType, glm::vec4> colVals;
-    for(int i = 0; i < count; i++)
-    {
-        IEColorType type = IEColorType::Unknown;
-        glm::vec4 col;
-
-        in >> type;
-        IESerializeConverter::read(in, col);
-
-        colVals.insert(type, col);
-    }
-
-    material.colors = colVals;
-
-    in >> material.textureIDs;
+    // TODO implement
 
     return in;
-}
-
-void IEMaterial::setup()
-{
-    textureIDs.insert(IETextureType::Ambient, QVector<uint64_t>{});
-    textureIDs.insert(IETextureType::Diffuse, QVector<uint64_t>{});
-    textureIDs.insert(IETextureType::Specular, QVector<uint64_t>{});
-    textureIDs.insert(IETextureType::Normals, QVector<uint64_t>{});
-    textureIDs.insert(IETextureType::Height, QVector<uint64_t>{});
-    textureIDs.insert(IETextureType::Emissive, QVector<uint64_t>{});
-    textureIDs.insert(IETextureType::Shininess, QVector<uint64_t>{});
-    textureIDs.insert(IETextureType::Opacity, QVector<uint64_t>{});
-    textureIDs.insert(IETextureType::Displacement, QVector<uint64_t>{});
-    textureIDs.insert(IETextureType::Lightmap, QVector<uint64_t>{});
-    textureIDs.insert(IETextureType::Unknown, QVector<uint64_t>{});
-
-    colorNames.insert(IEColorType::Ambient, "uc_ambient");
-    colorNames.insert(IEColorType::Diffuse, "uc_diffuse");
-    colorNames.insert(IEColorType::Specular, "uc_specular");
-    colorNames.insert(IEColorType::Emissive, "uc_emissive");
-    colorNames.insert(IEColorType::Reflective, "uc_reflective");
-    colorNames.insert(IEColorType::Transparent, "uc_transparent");
-
-    textureNames.insert(IETextureType::Ambient, "ut_ambient");
-    textureNames.insert(IETextureType::Diffuse, "ut_diffuse");
-    textureNames.insert(IETextureType::Specular, "ut_specular");
-    textureNames.insert(IETextureType::Normals, "ut_normal");
-    textureNames.insert(IETextureType::Height, "ut_height");
-    textureNames.insert(IETextureType::Emissive, "ut_emissive");
-    textureNames.insert(IETextureType::Shininess, "ut_shininess");
-    textureNames.insert(IETextureType::Opacity, "ut_opacity");
-    textureNames.insert(IETextureType::Displacement, "ut_displacement");
-    textureNames.insert(IETextureType::Lightmap, "ut_lightmap");
-    textureNames.insert(IETextureType::Unknown, "ut_unknown");
 }

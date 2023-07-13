@@ -59,7 +59,7 @@ QDataStream& IEShaderManager::deserialize(QDataStream& in, IESerializable& obj)
             continue;
         }
 
-        if(!manager.add(shader->getId(), shader))
+        if(!manager.add(shader->getID(), shader))
             delete shader;
     }
 
