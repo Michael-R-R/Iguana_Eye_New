@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 
 #include "IEFileResource.h"
+#include "IESerializeConverter.h"
 
 struct IEMeshNode
 {
@@ -20,6 +21,30 @@ struct IEMeshNode
         bitangents(), indices()
     {
 
+    }
+
+    friend QDataStream& operator<<(QDataStream& out, const IEMeshNode& node)
+    {
+        IESerializeConverter::write(out, node.positions);
+        IESerializeConverter::write(out, node.normals);
+        IESerializeConverter::write(out, node.textures);
+        IESerializeConverter::write(out, node.tangents);
+        IESerializeConverter::write(out, node.bitangents);
+        out << node.indices;
+
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEMeshNode& node)
+    {
+        IESerializeConverter::read(in, node.positions);
+        IESerializeConverter::read(in, node.normals);
+        IESerializeConverter::read(in, node.textures);
+        IESerializeConverter::read(in, node.tangents);
+        IESerializeConverter::read(in, node.bitangents);
+        in >> node.indices;
+
+        return in;
     }
 };
 

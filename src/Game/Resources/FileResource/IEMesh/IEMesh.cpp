@@ -1,5 +1,4 @@
 #include "IEMesh.h"
-#include "IESerializeConverter.h"
 
 IEMesh::IEMesh(QObject* parent) :
     IEFileResource(parent),
@@ -66,7 +65,11 @@ QDataStream& IEMesh::serialize(QDataStream& out, const IESerializable& obj) cons
 
     const auto& mesh = static_cast<const IEMesh&>(obj);
 
-    // TODO implement
+    out << (int)mesh.nodes.size();
+    foreach(auto* i, mesh.nodes)
+    {
+        out << *i;
+    }
 
     return out;
 }
@@ -76,8 +79,17 @@ QDataStream& IEMesh::deserialize(QDataStream& in, IESerializable& obj)
     IEFileResource::deserialize(in, obj);
 
     auto& mesh = static_cast<IEMesh&>(obj);
+    mesh.cleanup();
 
-    // TODO implement
+    int nodeCount = 0;
+    in >> nodeCount;
+    for(int i = 0; i < nodeCount; i++)
+    {
+        auto* node = new IEMeshNode();
+        in >> *node;
+
+        mesh.nodes.append(node);
+    }
 
     return in;
 }
