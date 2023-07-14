@@ -3,7 +3,6 @@
 #include "IETexture2D.h"
 #include "IETexture2DManager.h"
 #include "IESerialize.h"
-#include "IESerializeConverter.h"
 
 IEMaterial::IEMaterial(QObject* parent) :
     IEFileResource(parent),
@@ -117,7 +116,11 @@ QDataStream& IEMaterial::serialize(QDataStream& out, const IESerializable& obj) 
 
     const auto& material = static_cast<const IEMaterial&>(obj);
 
-    // TODO implement
+    out << (int)material.nodes.size();
+    foreach(auto* i, material.nodes)
+    {
+        out << *i;
+    }
 
     return out;
 }
@@ -127,8 +130,17 @@ QDataStream& IEMaterial::deserialize(QDataStream& in, IESerializable& obj)
     IEFileResource::deserialize(in, obj);
 
     auto& material = static_cast<IEMaterial&>(obj);
+    material.cleanup();
 
-    // TODO implement
+    int nodeCount = 0;
+    in >> nodeCount;
+    for(int i = 0; i < nodeCount; i++)
+    {
+        auto* node = new IEMaterialNode();
+        in >> *node;
+
+        material.nodes.append(node);
+    }
 
     return in;
 }

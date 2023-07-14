@@ -1,6 +1,5 @@
 #include "IEInstRenderable.h"
 #include "IEBufferObject.h"
-#include "IESerializeConverter.h"
 
 IEInstRenderable::IEInstRenderable(IERenderableType ieType, QObject* parent) :
     IERenderable(ieType, parent),
@@ -25,7 +24,7 @@ IEInstRenderable::IEInstRenderable(IERenderable* parent) :
 
 IEInstRenderable::~IEInstRenderable()
 {
-
+    IEInstRenderable::cleanup();
 }
 
 int IEInstRenderable::appendNode(IERenderableNode* node)
@@ -213,7 +212,13 @@ QDataStream& IEInstRenderable::serialize(QDataStream& out, const IESerializable&
 
     const auto& renderable = static_cast<const IEInstRenderable&>(obj);
 
-    // TODO implement
+    out << (int)renderable.instNodes.size();
+    foreach(auto* i, renderable.instNodes)
+    {
+        out << *i;
+    }
+
+    out << renderable.shown << renderable.hidden;
 
     return out;
 }
@@ -224,7 +229,17 @@ QDataStream& IEInstRenderable::deserialize(QDataStream& in, IESerializable& obj)
 
     auto& renderable = static_cast<IEInstRenderable&>(obj);
 
-    // TODO implement
+    int nodeCount = 0;
+    in >> nodeCount;
+    for(int i = 0; i < nodeCount; i++)
+    {
+        auto* node = new IEInstRenderableNode();
+        in >> *node;
+
+        renderable.instNodes.append(node);
+    }
+
+    in >> renderable.shown >> renderable.hidden;
 
     return in;
 }

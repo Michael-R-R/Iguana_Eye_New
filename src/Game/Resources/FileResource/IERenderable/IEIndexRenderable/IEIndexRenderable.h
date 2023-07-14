@@ -15,9 +15,26 @@ struct IEIndexRenderableNode
 
     ~IEIndexRenderableNode()
     {
+        cleanup();
+    }
+
+    void cleanup()
+    {
         IBO->destroy();
         delete IBO;
         IBO = nullptr;
+    }
+
+    friend QDataStream& operator<<(QDataStream& out, const IEIndexRenderableNode& node)
+    {
+        out << *node.IBO;
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEIndexRenderableNode& node)
+    {
+        in >> *node.IBO;
+        return in;
     }
 };
 

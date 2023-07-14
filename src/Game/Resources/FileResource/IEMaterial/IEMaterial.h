@@ -6,6 +6,7 @@
 
 #include "IEFileResource.h"
 #include "IEEnum.h"
+#include "IESerializeConverter.h"
 
 class IEShader;
 class IETexture2DManager;
@@ -52,6 +53,43 @@ struct IEMaterialNode
         textureNames.insert(IETextureType::Displacement, "ut_displacement");
         textureNames.insert(IETextureType::Lightmap, "ut_lightmap");
         textureNames.insert(IETextureType::Unknown, "ut_unknown");
+    }
+
+    friend QDataStream& operator<<(QDataStream& out, const IEMaterialNode& node)
+    {
+        out << (int)node.colors.size();
+        QHashIterator<IEColorType, glm::vec4> it1(node.colors);
+        while(it1.hasNext())
+        {
+            it1.next();
+
+            out << it1.key();
+            IESerializeConverter::write(out, it1.value());
+        }
+
+        out << node.textureIDs;
+
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEMaterialNode& node)
+    {
+        int colorCount = 0;
+        in >> colorCount;
+        for(int i = 0; i < colorCount; i++)
+        {
+            IEColorType type = IEColorType::Unknown;
+            glm::vec4 val;
+
+            in >> type;
+            IESerializeConverter::read(in, val);
+
+            node.colors.insert(type, val);
+        }
+
+        in >> node.textureIDs;
+
+        return in;
     }
 };
 

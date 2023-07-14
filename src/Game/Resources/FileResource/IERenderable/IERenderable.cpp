@@ -1,7 +1,6 @@
 #include "IERenderable.h"
 #include "IEShader.h"
 #include "IERenderableFactory.h"
-#include "IEBufferObjectFactory.h"
 #include <stdexcept>
 
 IERenderable::IERenderable(IERenderableType ieType, QObject* parent) :
@@ -248,7 +247,16 @@ QDataStream& IERenderable::serialize(QDataStream& out, const IESerializable& obj
 
     const auto& renderable = static_cast<const IERenderable&>(obj);
 
-    // TODO implement
+    out << (int)renderable.nodes.size();
+    foreach(auto* i, renderable.nodes)
+    {
+        out << *i;
+    }
+
+    out << renderable.meshID
+        << renderable.materialID
+        << renderable.shaderID
+        << renderable.type;
 
     return out;
 }
@@ -258,8 +266,21 @@ QDataStream& IERenderable::deserialize(QDataStream& in, IESerializable& obj)
     IEFileResource::deserialize(in, obj);
 
     auto& renderable = static_cast<IERenderable&>(obj);
+    renderable.cleanup();
 
-    // TODO implement
+    int nodeCount = 0;
+    in >> nodeCount;
+    for(int i = 0; i < nodeCount; i++)
+    {
+        auto* node = new IERenderableNode();
+        in >> *node;
+        renderable.nodes.append(node);
+    }
+
+    in >> renderable.meshID
+       >> renderable.materialID
+       >> renderable.shaderID
+       >> renderable.type;
 
     return in;
 }

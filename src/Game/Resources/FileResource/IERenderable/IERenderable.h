@@ -11,6 +11,7 @@
 #include "IEFileResource.h"
 #include "IEBufferObject.h"
 #include "IEEnum.h"
+#include "IEBufferObjectFactory.h"
 
 class IEShader;
 
@@ -32,6 +33,11 @@ struct IERenderableNode
 
     ~IERenderableNode()
     {
+        cleanup();
+    }
+
+    void cleanup()
+    {
         VAO->destroy();
         delete VAO;
 
@@ -43,6 +49,51 @@ struct IERenderableNode
 
         buffers.clear();
         dirtyAllocations.clear();
+    }
+
+    friend QDataStream& operator<<(QDataStream& out, const IERenderableNode& node)
+    {
+        out << (int)node.buffers.size();
+        QHashIterator<QString, IEBufferObject*> it(node.buffers);
+        while(it.hasNext())
+        {
+            it.next();
+
+            out << it.key()
+                << it.value()->getBufferType()
+                << *it.value();
+        }
+
+        out << node.dirtyAllocations << node.primitiveMode;
+
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IERenderableNode& node)
+    {
+        node.cleanup();
+
+        node.VAO = new QOpenGLVertexArrayObject();
+
+        int bufferCount = 0;
+        in >> bufferCount;
+        for(int i = 0; i < bufferCount; i++)
+        {
+            QString name = "";
+            IEBufferType type = IEBufferType::Unknown;
+            in >> name >> type;
+
+            auto* buffer = IEBufferObjectFactory::make(type);
+            if(!buffer) { continue; }
+
+            in >> *buffer;
+
+            node.buffers.insert(name, buffer);
+        }
+
+        in >> node.dirtyAllocations >> node.primitiveMode;
+
+        return in;
     }
 };
 

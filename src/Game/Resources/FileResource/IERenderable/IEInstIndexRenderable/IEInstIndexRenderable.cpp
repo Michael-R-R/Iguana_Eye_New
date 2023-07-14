@@ -26,7 +26,7 @@ IEInstIndexRenderable::IEInstIndexRenderable(IERenderable* parent) :
 
 IEInstIndexRenderable::~IEInstIndexRenderable()
 {
-    cleanup();
+    IEInstIndexRenderable::cleanup();
 }
 
 bool IEInstIndexRenderable::handleBuild(const int index)
@@ -119,7 +119,11 @@ QDataStream& IEInstIndexRenderable::serialize(QDataStream& out, const IESerializ
 
     const auto& renderable = static_cast<const IEInstIndexRenderable&>(obj);
 
-    // TODO implement
+    out << (int)renderable.instIndexNodes.size();
+    foreach(auto* i, renderable.instIndexNodes)
+    {
+        out << *i;
+    }
 
     return out;
 }
@@ -130,7 +134,15 @@ QDataStream& IEInstIndexRenderable::deserialize(QDataStream& in, IESerializable&
 
     auto& renderable = static_cast<IEInstIndexRenderable&>(obj);
 
-    // TODO implement
+    int nodeCount = 0;
+    in >> nodeCount;
+    for(int i = 0; i < nodeCount; i++)
+    {
+        auto* node = new IEInstIndexRenderableNode();
+        in >> *node;
+
+        renderable.instIndexNodes.append(node);
+    }
 
     return in;
 }

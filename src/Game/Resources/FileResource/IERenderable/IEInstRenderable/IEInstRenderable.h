@@ -7,6 +7,7 @@
 #include <any>
 
 #include "IERenderable.h"
+#include "IESerializeConverter.h"
 
 struct IEInstRenderableNode
 {
@@ -16,6 +17,51 @@ struct IEInstRenderableNode
         hiddenData()
     {
 
+    }
+
+    friend QDataStream& operator<<(QDataStream& out, const IEInstRenderableNode& node)
+    {
+        out << (int)node.hiddenData.size();
+        foreach(auto& i, node.hiddenData)
+        {
+            out << (int)i.size();
+            QHashIterator<QString, std::any> it(i);
+            while(it.hasNext())
+            {
+                it.next();
+                out << it.key();
+                IESerializeConverter::write(out, it.value());
+            }
+        }
+
+        return out;
+    }
+
+    friend QDataStream& operator>>(QDataStream& in, IEInstRenderableNode& node)
+    {
+        int instCount = 0;
+        in >> instCount;
+        for(int i = 0; i < instCount; i++)
+        {
+            QHash<QString, std::any> values;
+
+            int dataCount = 0;
+            in >> dataCount;
+            for(int j = 0; j < dataCount; j++)
+            {
+                QString name = "";
+                std::any val;
+
+                in >> name;
+                IESerializeConverter::read(in, val);
+
+                values.insert(name, val);
+            }
+
+            node.hiddenData.append(values);
+        }
+
+        return in;
     }
 };
 
