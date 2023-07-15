@@ -7,9 +7,6 @@
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
 #include "IEECS.h"
-#include "IEECSMeshSystem.h"
-#include "IEECSMaterialSystem.h"
-#include "IEECSShaderSystem.h"
 #include "IEECSRenderableSystem.h"
 #include "IEMesh.h"
 #include "IEMaterial.h"
@@ -19,6 +16,7 @@
 #include "IEFile.h"
 #include "IEHash.h"
 #include "IEMeshImport.h"
+#include "IERenderableImport.h"
 #include "Editor.h"
 #include "EGUI.h"
 #include "EWindowManager.h"
@@ -51,10 +49,35 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
 {
     auto& application = ApplicationWindow::instance();
     auto* game = application.getGame();
+    auto* scene = game->getSystem<IEScene>();
+    auto* meManager = scene->getManager<IEMeshManager>();
+    auto* maManager = scene->getManager<IEMaterialManager>();
+    auto* sManager = scene->getManager<IEShaderManager>();
+    auto* rManager = scene->getManager<IERenderableManager>();
+    auto* ecs = game->getSystem<IEECS>();
     game->makeCurrent();
 
+    uint64_t sID = sManager->getDefaultID();
+
     // --- Create or get mesh --- //
-    // TODO implement
+    uint64_t meID = IEHash::Compute(IEMeshImport::convertMeshPath(path));
+    uint64_t maID = IEHash::Compute(IEMeshImport::convertMaterialPath(path));
+    uint64_t rID = IEHash::Compute(IERenderableImport::convertRenderablePath(path));
+
+    bool isMesh = meManager->doesExist(meID);
+    bool isMaterial = maManager->doesExist(meID);
+
+    auto* renderable = rManager->value<IERenderable>(rID);
+    if(renderable)
+    {
+        if(renderable->getShaderID() != sID)
+        {
+            // TODO implement
+        }
+    }
+
+    IEEntity entity = ecs->create();
+    int rIndex = ecs->attachComponent<IEECSRenderableSystem>(entity);
 }
 
 void OpenGLFileHandler::handleGlslFile(const QString& path)

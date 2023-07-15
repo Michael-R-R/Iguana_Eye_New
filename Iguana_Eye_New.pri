@@ -178,10 +178,7 @@ INCLUDEPATH += $$PWD/src/Game/System/IEECS/IEECSSystem \
     $$PWD/src/Game/System/IEECS/IEECSSystem/IEECSTransformSystem \
 
 INCLUDEPATH += $$PWD/src/Game/System/IEECS/IEECSSystem/IEECSResourceSystem \
-    $$PWD/src/Game/System/IEECS/IEECSSystem/IEECSResourceSystem/IEECSMaterialSystem \
-    $$PWD/src/Game/System/IEECS/IEECSSystem/IEECSResourceSystem/IEECSMeshSystem \
     $$PWD/src/Game/System/IEECS/IEECSSystem/IEECSResourceSystem/IEECSRenderableSystem \
-    $$PWD/src/Game/System/IEECS/IEECSSystem/IEECSResourceSystem/IEECSShaderSystem \
 
 INCLUDEPATH += $$PWD/src/Game/System/IEPhysicsEngine \
     $$PWD/src/Game/System/IEPhysicsEngine/IESimulationCallback \
@@ -270,3 +267,4 @@ INCLUDEPATH += $$PWD/src/Utility/IESerialize \
 INCLUDEPATH += $$PWD/src/Utility/Import \
     $$PWD/src/Utility/Import/IEMeshImport \
     $$PWD/src/Utility/Import/IEGlslImport \
+    $$PWD/src/Utility/Import/IERenderableImport \

@@ -20,14 +20,12 @@ IEGameStopState::IEGameStopState(QObject* parent) :
     erEngine(nullptr),
     eCamera(nullptr)
 {
-    // TODO test
-    test = new IETInstIndexRenderable();
+
 }
 
 IEGameStopState::~IEGameStopState()
 {
-    // TODO test
-    delete test;
+
 }
 
 void IEGameStopState::enter(IEGame& game)

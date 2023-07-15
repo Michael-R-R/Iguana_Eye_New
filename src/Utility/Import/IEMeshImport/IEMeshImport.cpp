@@ -2,10 +2,7 @@
 #include "IEMesh.h"
 #include "IEMaterial.h"
 #include "IEShader.h"
-#include "IERenderable.h"
 #include "IETexture2D.h"
-#include "IERenderableFactory.h"
-#include "IEBufferObjectFactory.h"
 #include "IEFile.h"
 #include "IEHash.h"
 #include "ApplicationWindow.h"
@@ -50,29 +47,6 @@ bool IEMeshImport::importPath(const QString& path, IEMesh& me, IEMaterial& ma)
     return true;
 }
 
-bool IEMeshImport::importPath(const QString& path, IEMesh& me, IEMaterial& ma, IEShader& s, IERenderable& r)
-{
-    Assimp::Importer importer;
-    const aiScene* scene = importer.ReadFile(path.toStdString(), aiProcessPreset_TargetRealtime_MaxQuality);
-    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-    {
-        qDebug() << "ERROR::ASSIMP::" << importer.GetErrorString();
-        return false;
-    }
-
-    me.updateId(convertMeshPath(path));
-    ma.updateId(convertMaterialPath(path));
-    r.updateId(convertRenderablePath(path));
-
-    r.setMeshID(me.getID());
-    r.setMaterialID(ma.getID());
-    r.setShaderID(s.getID());
-
-    processNode(scene->mRootNode, scene, &me, &ma, &r);
-
-    return true;
-}
-
 QString IEMeshImport::convertMeshPath(const QString& path)
 {
     QString newPath = path;
@@ -87,14 +61,6 @@ QString IEMeshImport::convertMaterialPath(const QString& path)
     QString oldExt = IEFile::extractExtension(path);
 
     return newPath.replace(oldExt, ".iemat");
-}
-
-QString IEMeshImport::convertRenderablePath(const QString& path)
-{
-    QString newPath = path;
-    QString oldExt = IEFile::extractExtension(path);
-
-    return newPath.replace(oldExt, ".ierend");
 }
 
 void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* me)
@@ -135,31 +101,6 @@ void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* me, I
     for(unsigned i = 0; i < node->mNumChildren; i++)
     {
         processNode(node->mChildren[i], scene, me, ma);
-    }
-}
-
-void IEMeshImport::processNode(aiNode* node, const aiScene* scene, IEMesh* me, IEMaterial* ma, IERenderable* r)
-{
-    for(unsigned i = 0; i < node->mNumMeshes; i++)
-    {
-        aiMesh* assimpMesh = scene->mMeshes[node->mMeshes[i]];
-
-        IEMeshNode* meNode = new IEMeshNode();
-        IEMaterialNode* maNode = new IEMaterialNode();
-        IERenderableNode* rNode = new IERenderableNode();
-
-        processMeshNode(assimpMesh, meNode);
-        processMaterialNode(assimpMesh, scene, ma->getName(), maNode);
-        processRenderableNode(meNode, rNode, r);
-
-        me->appendNode(meNode);
-        ma->appendNode(maNode);
-        r->appendNode(rNode);
-    }
-
-    for(unsigned i = 0; i < node->mNumChildren; i++)
-    {
-        processNode(node->mChildren[i], scene, me, ma, r);
     }
 }
 
@@ -262,21 +203,6 @@ void IEMeshImport::processMaterialNode(aiMesh* assimpMesh, const aiScene* scene,
     load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_DISPLACEMENT, IETextureType::Displacement, maNode, texManager);
     load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_LIGHTMAP, IETextureType::Lightmap, maNode, texManager);
     load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_UNKNOWN, IETextureType::Unknown, maNode, texManager);
-}
-
-void IEMeshImport::processRenderableNode(IEMeshNode* meNode, IERenderableNode* rNode, QObject* parent)
-{
-    rNode->buffers.insert("aPos", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, parent));
-    rNode->buffers.insert("aNormal", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, parent));
-    rNode->buffers.insert("aTangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, parent));
-    rNode->buffers.insert("aBitangent", IEBufferObjectFactory::make(IEBufferType::Vec3, 0, 0, 0, parent));
-    rNode->buffers.insert("aTexCoord", IEBufferObjectFactory::make(IEBufferType::Vec2, 0, 0, 0, parent));
-
-    rNode->buffers["aPos"]->setValues(meNode->positions);
-    rNode->buffers["aNormal"]->setValues(meNode->normals);
-    rNode->buffers["aTangent"]->setValues(meNode->tangents);
-    rNode->buffers["aBitangent"]->setValues(meNode->bitangents);
-    rNode->buffers["aTexCoord"]->setValues(meNode->textures);
 }
 
 void IEMeshImport::load2DTextures(const QString& relPath,

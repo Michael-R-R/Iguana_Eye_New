@@ -7,7 +7,7 @@
 #include "IEVertexBufferObject.h"
 #include "IEGlslImport.h"
 #include "IEMeshImport.h"
-#include "IECamera.h"
+#include "IERenderableImport.h"
 #include "IEBufferObjectFactory.h"
 #include "ApplicationWindow.h"
 #include "IEGame.h"
@@ -129,7 +129,8 @@ void IETInstIndexRenderable::createResources()
     renderable = new IEInstIndexRenderable(this);
 
     IEGlslImport::importPath(shaderPath, *shader);
-    IEMeshImport::importPath(meshPath, *mesh, *material, *shader, *renderable);
+    IEMeshImport::importPath(meshPath, *mesh, *material);
+    IERenderableImport::importPath(meshPath, *renderable, *mesh, material->getID(), shader->getID());
 
     const int nodeCount = renderable->getNodes().size();
     for(int i = 0; i < nodeCount; i++)

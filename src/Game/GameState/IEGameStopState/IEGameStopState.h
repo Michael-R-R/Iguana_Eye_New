@@ -10,9 +10,6 @@ class IERenderEngine;
 class ERenderEngine;
 class ECamera;
 
-// TODO test
-#include "IETInstIndexRenderable.h"
-
 class IEGameStopState : public IEGameState
 {
     IETime* time;
@@ -22,9 +19,6 @@ class IEGameStopState : public IEGameState
 
     ERenderEngine* erEngine;
     ECamera* eCamera;
-
-    // TODO test
-    IETInstIndexRenderable* test;
 
 public:
     IEGameStopState(QObject* parent = nullptr);

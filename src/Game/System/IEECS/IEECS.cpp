@@ -8,9 +8,6 @@
 #include "IEECSRigidbody3DSystem.h"
 #include "IEECSTransformSystem.h"
 #include "IEECSCameraSystem.h"
-#include "IEECSMeshSystem.h"
-#include "IEECSMaterialSystem.h"
-#include "IEECSShaderSystem.h"
 #include "IEECSRenderableSystem.h"
 
 IEECS::IEECS(QObject* parent) :
@@ -35,9 +32,6 @@ void IEECS::startup(IEGame& game)
     appendSystem(new IEECSRigidbody3DSystem(this));
     appendSystem(new IEECSTransformSystem(this));
     appendSystem(new IEECSCameraSystem(this));
-    appendSystem(new IEECSMeshSystem(this));
-    appendSystem(new IEECSMaterialSystem(this));
-    appendSystem(new IEECSShaderSystem(this));
     appendSystem(new IEECSRenderableSystem(this));
 
     foreach (auto* i, qAsConst(systems))
