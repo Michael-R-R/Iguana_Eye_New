@@ -189,7 +189,7 @@ void IEMeshImport::processMaterialNode(aiMesh* assimpMesh, const aiScene* scene,
 
     // Textures
     auto* game = ApplicationWindow::instance().getGame();
-    auto* texManager = game->getSystem<IEScene>()->getManager<IETexture2DManager>();
+    auto* texManager = game->getSystem<IEScene>()->getSystem<IETexture2DManager>();
 
     QString relPath = IEFile::extractPath(filePath);
     load2DTextures(relPath, assimpMat, aiTextureType::aiTextureType_AMBIENT, IETextureType::Ambient, maNode, texManager);

@@ -41,7 +41,6 @@ public:
     void onSerialize();
     void onDeserialize();
     void changeState(IEGameState* val);
-    bool doesSystemExist(size_t key) const;
 
     QOpenGLFunctions* getGlFunc() const { return glFunc; }
     QOpenGLExtraFunctions* getGlExtraFunc() const { return glExtraFunc; }
@@ -62,10 +61,10 @@ public:
     template<class T>
     bool appendSystem(IESystem* system)
     {
-        size_t key = typeid(T).hash_code();
-        if(!system || doesSystemExist(key))
+        if(!system || doesSystemExist<T>())
                 return false;
 
+        size_t key = typeid(T).hash_code();
         const int index = systems.size();
         systems.append(system);
         systemsIndex.insert(key, index);
@@ -74,12 +73,19 @@ public:
     }
 
     template<class T>
-    T* getSystem() const
+    bool doesSystemExist() const
     {
         size_t key = typeid(T).hash_code();
+        return systemsIndex.contains(key);
+    }
 
-        if(!doesSystemExist(key))
+    template<class T>
+    T* getSystem() const
+    {
+        if(!doesSystemExist<T>())
             return nullptr;
+
+        size_t key = typeid(T).hash_code();
 
         return static_cast<T*>(systems[systemsIndex[key]]);
     }

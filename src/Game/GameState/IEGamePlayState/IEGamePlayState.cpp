@@ -1,6 +1,7 @@
 #include "IEGamePlayState.h"
 #include "ApplicationProperties.h"
 #include "IEGame.h"
+#include "IEScene.h"
 #include "IETime.h"
 #include "IEECS.h"
 #include "IEPhysicsEngine.h"
@@ -26,10 +27,12 @@ IEGamePlayState::~IEGamePlayState()
 
 void IEGamePlayState::enter(IEGame& game)
 {
+    auto* scene = game.getSystem<IEScene>();
+
     time = game.getSystem<IETime>();
     pEngine = game.getSystem<IEPhysicsEngine>();
     rEngine = game.getSystem<IERenderEngine>();
-    ecs = game.getSystem<IEECS>();
+    ecs = scene->getSystem<IEECS>();
 
     cameraSystem = ecs->getComponent<IEECSCameraSystem>();
 

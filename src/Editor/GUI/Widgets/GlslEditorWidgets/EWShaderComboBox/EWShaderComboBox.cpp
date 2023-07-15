@@ -41,7 +41,7 @@ void EWShaderComboBox::startup()
 {
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* shaderManager = scene->getManager<IEShaderManager>();
+    auto* shaderManager = scene->getSystem<IEShaderManager>();
 
     this->initialBuild(shaderManager);
 
@@ -117,7 +117,7 @@ void EWShaderComboBox::currentShaderChanged(int index)
 
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* shaderManager = scene->getManager<IEShaderManager>();
+    auto* shaderManager = scene->getSystem<IEShaderManager>();
 
     auto* shader = shaderManager->value<IEShader>(resourceId);
     if(!shader)
@@ -172,7 +172,7 @@ void EWShaderComboBox::changeShaderKey(const uint64_t oldKey, const uint64_t new
 
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* shaderManager = scene->getManager<IEShaderManager>();
+    auto* shaderManager = scene->getSystem<IEShaderManager>();
 
     auto* shader = shaderManager->value<IEShader>(newKey);
 

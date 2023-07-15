@@ -3,7 +3,6 @@
 #include "IERenderEngine.h"
 #include "IEPhysicsEngine.h"
 #include "IEScene.h"
-#include "IEECS.h"
 #include "IEInput.h"
 #include "IEScriptEngine.h"
 #include "IEUboManager.h"
@@ -72,11 +71,10 @@ void IEGame::startUp()
     this->makeCurrent();
 
     appendSystem<IEInput>(new IEInput(this));
-    appendSystem<IEScene>(new IEScene(this));
     appendSystem<IEScriptEngine>(new IEScriptEngine(this));
     appendSystem<IEPhysicsEngine>(new IEPhysicsEngine(this));
+    appendSystem<IEScene>(new IEScene(this));
     appendSystem<IERenderEngine>(new IERenderEngine(this));
-    appendSystem<IEECS>(new IEECS(this));
     appendSystem<IEUboManager>(new IEUboManager(this));
     appendSystem<IETime>(new IETime(this));
 
@@ -129,11 +127,6 @@ void IEGame::changeState(IEGameState* val)
     state->enter(*this);
 
     emit stateChanged(val);
-}
-
-bool IEGame::doesSystemExist(size_t key) const
-{
-    return systemsIndex.contains(key);
 }
 
 void IEGame::onUpdateFrame()

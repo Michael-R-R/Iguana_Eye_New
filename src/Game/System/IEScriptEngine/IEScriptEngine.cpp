@@ -1,5 +1,6 @@
 #include "IEScriptEngine.h"
 #include "IEGame.h"
+#include "IEScene.h"
 #include "IETime.h"
 #include "IEInput.h"
 #include "IEECS.h"
@@ -25,6 +26,8 @@ IEScriptEngine::~IEScriptEngine()
 
 void IEScriptEngine::startup(IEGame& game)
 {
+    auto* scene = game.getSystem<IEScene>();
+
     lua.open_libraries(sol::lib::base, sol::lib::math);
 
     // Create namespaces
@@ -38,7 +41,7 @@ void IEScriptEngine::startup(IEGame& game)
     LuaApplication::addToLua(gameTable);
     LuaIETime::addToLua(game.getSystem<IETime>(), gameTable);
     LuaIEInput::addToLua(game.getSystem<IEInput>(), gameTable);
-    LuaIEECS::addToLua(game.getSystem<IEECS>(), lua, gameTable);
+    LuaIEECS::addToLua(scene->getSystem<IEECS>(), lua, gameTable);
 }
 
 void IEScriptEngine::shutdown(IEGame&)

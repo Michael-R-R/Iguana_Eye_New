@@ -1,6 +1,7 @@
 #include "IEGameStopState.h"
 #include "ApplicationProperties.h"
 #include "IEGame.h"
+#include "IEScene.h"
 #include "IETime.h"
 #include "IEInput.h"
 #include "IERenderEngine.h"
@@ -30,9 +31,11 @@ IEGameStopState::~IEGameStopState()
 
 void IEGameStopState::enter(IEGame& game)
 {
+    auto* scene = game.getSystem<IEScene>();
+
     time = game.getSystem<IETime>();
     input = game.getSystem<IEInput>();
-    ecs = game.getSystem<IEECS>();
+    ecs = scene->getSystem<IEECS>();
     grEngine = game.getSystem<IERenderEngine>();
 
     erEngine = new ERenderEngine(this);

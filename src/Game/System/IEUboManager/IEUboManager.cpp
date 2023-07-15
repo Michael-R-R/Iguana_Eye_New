@@ -23,7 +23,7 @@ IEUboManager::~IEUboManager()
 void IEUboManager::startup(IEGame& game)
 {
     auto* scene = game.getSystem<IEScene>();
-    auto* sManager = scene->getManager<IEShaderManager>();
+    auto* sManager = scene->getSystem<IEShaderManager>();
     connect(sManager, &IEShaderManager::added, this, &IEUboManager::linkProgramToBlock);
 
     vpBuffer = new IEUniformBufferObject<GLSViewProjection>("ubViewProjection", 0, 1, this);
@@ -36,7 +36,7 @@ void IEUboManager::startup(IEGame& game)
 void IEUboManager::shutdown(IEGame& game)
 {
     auto* scene = game.getSystem<IEScene>();
-    auto* sManager = scene->getManager<IEShaderManager>();
+    auto* sManager = scene->getSystem<IEShaderManager>();
     disconnect(sManager, &IEShaderManager::added, this, &IEUboManager::linkProgramToBlock);
 
     cleanup();
@@ -60,7 +60,7 @@ void IEUboManager::linkProgramToBlock(const uint64_t key, const QString&)
 {
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* sManager = scene->getManager<IEShaderManager>();
+    auto* sManager = scene->getSystem<IEShaderManager>();
     auto* shader = sManager->value<IEShader>(key);
     if(!shader)
         return;

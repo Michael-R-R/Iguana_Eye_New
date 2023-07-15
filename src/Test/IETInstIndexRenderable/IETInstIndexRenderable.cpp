@@ -114,10 +114,10 @@ void IETInstIndexRenderable::createResources()
 {
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* meManger = scene->getManager<IEMeshManager>();
-    auto* maManger = scene->getManager<IEMaterialManager>();
-    auto* sManger = scene->getManager<IEShaderManager>();
-    auto* rManger = scene->getManager<IERenderableManager>();
+    auto* meManger = scene->getSystem<IEMeshManager>();
+    auto* maManger = scene->getSystem<IEMaterialManager>();
+    auto* sManger = scene->getSystem<IEShaderManager>();
+    auto* rManger = scene->getSystem<IERenderableManager>();
 
     game->makeCurrent();
 
@@ -152,7 +152,8 @@ void IETInstIndexRenderable::createEntity()
         return;
 
     auto* game = ApplicationWindow::instance().getGame();
-    auto* ecs = game->getSystem<IEECS>();
+    auto* scene = game->getSystem<IEScene>();
+    auto* ecs = scene->getSystem<IEECS>();
     auto* tSystem = ecs->getComponent<IEECSTransformSystem>();
     auto* rSystem = ecs->getComponent<IEECSRenderableSystem>();
     int count = ecs->entityCount();
@@ -173,7 +174,8 @@ void IETInstIndexRenderable::createEntity()
 void IETInstIndexRenderable::removeEntity()
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto* ecs = game->getSystem<IEECS>();
+    auto* scene = game->getSystem<IEScene>();
+    auto* ecs = scene->getSystem<IEECS>();
 
     int i = 0;
     while(ecs->entityCount() > 0)
@@ -185,7 +187,8 @@ void IETInstIndexRenderable::removeEntity()
 void IETInstIndexRenderable::showInstances()
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto* ecs = game->getSystem<IEECS>();
+    auto* scene = game->getSystem<IEScene>();
+    auto* ecs = scene->getSystem<IEECS>();
     auto* rSystem = ecs->getComponent<IEECSRenderableSystem>();
 
     for(int i = 1; i < 100; i++)
@@ -202,7 +205,8 @@ void IETInstIndexRenderable::showInstances()
 void IETInstIndexRenderable::hideInstances()
 {
     auto* game = ApplicationWindow::instance().getGame();
-    auto* ecs = game->getSystem<IEECS>();
+    auto* scene = game->getSystem<IEScene>();
+    auto* ecs = scene->getSystem<IEECS>();
     auto* rSystem = ecs->getComponent<IEECSRenderableSystem>();
 
     for(int i = 1; i < 100; i++)
@@ -231,8 +235,8 @@ void IETInstIndexRenderable::deserialize()
 
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* sManger = scene->getManager<IEShaderManager>();
-    auto* rManger = scene->getManager<IERenderableManager>();
+    auto* sManger = scene->getSystem<IEShaderManager>();
+    auto* rManger = scene->getSystem<IERenderableManager>();
 
     game->makeCurrent();
 
@@ -256,10 +260,10 @@ void IETInstIndexRenderable::clearManagers()
 {
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* meManger = scene->getManager<IEMeshManager>();
-    auto* maManger = scene->getManager<IEMaterialManager>();
-    auto* sManger = scene->getManager<IEShaderManager>();
-    auto* rManger = scene->getManager<IERenderableManager>();
+    auto* meManger = scene->getSystem<IEMeshManager>();
+    auto* maManger = scene->getSystem<IEMaterialManager>();
+    auto* sManger = scene->getSystem<IEShaderManager>();
+    auto* rManger = scene->getSystem<IERenderableManager>();
 
     meManger->cleanup();
     maManger->cleanup();

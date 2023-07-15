@@ -52,9 +52,9 @@ QDataStream& IERenderableManager::deserialize(QDataStream& in, IESerializable& o
 
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* meManager = scene->getManager<IEMeshManager>();
-    auto* maManager = scene->getManager<IEMaterialManager>();
-    auto* sManager = scene->getManager<IEShaderManager>();
+    auto* meManager = scene->getSystem<IEMeshManager>();
+    auto* maManager = scene->getSystem<IEMaterialManager>();
+    auto* sManager = scene->getSystem<IEShaderManager>();
 
     QString path = "";
     IERenderableType type = IERenderableType::Unknown;

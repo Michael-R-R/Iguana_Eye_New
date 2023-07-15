@@ -1,5 +1,6 @@
 #include "IEECSRigidbody3DSystem.h"
 #include "IEGame.h"
+#include "IEScene.h"
 #include "IEPhysicsEngine.h"
 #include "IESimulationCallback.h"
 #include "IEECS.h"
@@ -72,12 +73,14 @@ bool IEECSRigidbody3DSystem::detach(const IEEntity entity)
 
 void IEECSRigidbody3DSystem::startUp(const IEGame& game)
 {
+    auto* scene = game.getSystem<IEScene>();
+
     pEngine = game.getSystem<IEPhysicsEngine>();
     auto& simCallback = pEngine->getSimulationCallback();
     connect(&simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::wakeRigidbody);
     connect(&simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::sleepRigidbody);
 
-    tSystem = game.getSystem<IEECS>()->getComponent<IEECSTransformSystem>();
+    tSystem = scene->getSystem<IEECS>()->getComponent<IEECSTransformSystem>();
 }
 
 void IEECSRigidbody3DSystem::shutdown(const IEGame&)

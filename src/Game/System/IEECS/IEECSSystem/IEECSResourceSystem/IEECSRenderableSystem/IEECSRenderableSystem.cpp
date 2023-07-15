@@ -52,7 +52,7 @@ bool IEECSRenderableSystem::detach(const IEEntity entity)
 
 void IEECSRenderableSystem::startUp(const IEGame& game)
 {
-    renderableManager = game.getSystem<IEScene>()->getManager<IERenderableManager>();
+    renderableManager = game.getSystem<IEScene>()->getSystem<IERenderableManager>();
 }
 
 void IEECSRenderableSystem::shutdown(const IEGame&)

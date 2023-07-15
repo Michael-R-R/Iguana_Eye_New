@@ -50,11 +50,11 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
     auto& application = ApplicationWindow::instance();
     auto* game = application.getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* meManager = scene->getManager<IEMeshManager>();
-    auto* maManager = scene->getManager<IEMaterialManager>();
-    auto* sManager = scene->getManager<IEShaderManager>();
-    auto* rManager = scene->getManager<IERenderableManager>();
-    auto* ecs = game->getSystem<IEECS>();
+    auto* meManager = scene->getSystem<IEMeshManager>();
+    auto* maManager = scene->getSystem<IEMaterialManager>();
+    auto* sManager = scene->getSystem<IEShaderManager>();
+    auto* rManager = scene->getSystem<IERenderableManager>();
+    auto* ecs = scene->getSystem<IEECS>();
     game->makeCurrent();
 
     uint64_t sID = sManager->getDefaultID();

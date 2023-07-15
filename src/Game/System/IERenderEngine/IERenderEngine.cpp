@@ -33,10 +33,10 @@ IERenderEngine::~IERenderEngine()
 void IERenderEngine::startup(IEGame& game)
 {
     auto* scene = game.getSystem<IEScene>();
-    materialManager = scene->getManager<IEMaterialManager>();
-    shaderManager = scene->getManager<IEShaderManager>();
-    renderableManager = scene->getManager<IERenderableManager>();
-    texture2DManager = scene->getManager<IETexture2DManager>();
+    materialManager = scene->getSystem<IEMaterialManager>();
+    shaderManager = scene->getSystem<IEShaderManager>();
+    renderableManager = scene->getSystem<IERenderableManager>();
+    texture2DManager = scene->getSystem<IETexture2DManager>();
     uboManager = game.getSystem<IEUboManager>();
 }
 

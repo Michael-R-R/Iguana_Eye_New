@@ -73,10 +73,11 @@ bool IEECSTransformSystem::detach(const IEEntity entity)
 
 void IEECSTransformSystem::startUp(const IEGame& game)
 {
-    auto* ecs = game.getSystem<IEECS>();
+    auto* scene = game.getSystem<IEScene>();
+    auto* ecs = scene->getSystem<IEECS>();
     hSystem = ecs->getComponent<IEECSHierarchySystem>();
     rSystem = ecs->getComponent<IEECSRenderableSystem>();
-    renderableManager = game.getSystem<IEScene>()->getManager<IERenderableManager>();
+    renderableManager = game.getSystem<IEScene>()->getSystem<IERenderableManager>();
 }
 
 void IEECSTransformSystem::shutdown(const IEGame&)
