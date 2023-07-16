@@ -1,8 +1,6 @@
 #pragma once
 
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions>
-#include <QOpenGLExtraFunctions>
 #include <QVector>
 #include <QMap>
 
@@ -16,8 +14,6 @@ class IEGame : public QOpenGLWidget, public IESerializable
     Q_OBJECT
 
     QSurfaceFormat format;
-    QOpenGLFunctions* glFunc;
-    QOpenGLExtraFunctions* glExtraFunc;
 
     QVector<IESystem*> systems;
     QHash<size_t, int> systemsIndex;
@@ -41,9 +37,6 @@ public:
     void onSerialize();
     void onDeserialize();
     void changeState(IEGameState* val);
-
-    QOpenGLFunctions* getGlFunc() const { return glFunc; }
-    QOpenGLExtraFunctions* getGlExtraFunc() const { return glExtraFunc; }
 
 public slots:
     void onUpdateFrame();

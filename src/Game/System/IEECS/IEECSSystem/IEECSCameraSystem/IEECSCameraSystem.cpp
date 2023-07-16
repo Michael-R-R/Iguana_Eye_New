@@ -72,7 +72,7 @@ void IEECSCameraSystem::startUp(const IEGame& game)
     auto* scene = game.getSystem<IEScene>();
 
     cameraManager = game.getSystem<IEScene>()->getSystem<IECameraManager>();
-    sEngine = game.getSystem<IEScriptEngine>();
+    sEngine = scene->getSystem<IEScriptEngine>();
     tSystem = scene->getSystem<IEECS>()->getComponent<IEECSTransformSystem>();
 }
 

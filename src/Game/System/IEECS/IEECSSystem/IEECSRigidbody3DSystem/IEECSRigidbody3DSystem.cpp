@@ -75,7 +75,7 @@ void IEECSRigidbody3DSystem::startUp(const IEGame& game)
 {
     auto* scene = game.getSystem<IEScene>();
 
-    pEngine = game.getSystem<IEPhysicsEngine>();
+    pEngine = scene->getSystem<IEPhysicsEngine>();
     auto& simCallback = pEngine->getSimulationCallback();
     connect(&simCallback, &IESimulationCallback::onWakeRigidbody, this, &IEECSRigidbody3DSystem::wakeRigidbody);
     connect(&simCallback, &IESimulationCallback::onSleepRigidbody, this, &IEECSRigidbody3DSystem::sleepRigidbody);

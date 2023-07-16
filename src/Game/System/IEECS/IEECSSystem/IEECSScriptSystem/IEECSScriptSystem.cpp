@@ -1,5 +1,6 @@
 #include "IEECSScriptSystem.h"
 #include "IEGame.h"
+#include "IEScene.h"
 #include "IEScriptEngine.h"
 #include "IEPhysicsEngine.h"
 #include "IESimulationCallback.h"
@@ -64,19 +65,23 @@ bool IEECSScriptSystem::detach(const IEEntity entity)
 
 void IEECSScriptSystem::startUp(const IEGame& game)
 {
-    auto* physicsEngine = game.getSystem<IEPhysicsEngine>();
+    auto* scene = game.getSystem<IEScene>();
+
+    auto* physicsEngine = scene->getSystem<IEPhysicsEngine>();
     auto& simCallback = physicsEngine->getSimulationCallback();
     connect(&simCallback, &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
     connect(&simCallback, &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);
 
-    sEngine = game.getSystem<IEScriptEngine>();
+    sEngine = scene->getSystem<IEScriptEngine>();
 }
 
 void IEECSScriptSystem::shutdown(const IEGame& game)
 {
     removeAll();
 
-    auto* physicsEngine = game.getSystem<IEPhysicsEngine>();
+    auto* scene = game.getSystem<IEScene>();
+
+    auto* physicsEngine = scene->getSystem<IEPhysicsEngine>();
     auto& simCallback = physicsEngine->getSimulationCallback();
     disconnect(&simCallback, &IESimulationCallback::onTriggerEnter, this, &IEECSScriptSystem::callOnTriggerEnter);
     disconnect(&simCallback, &IESimulationCallback::onTriggerLeave, this, &IEECSScriptSystem::callOnTriggerLeave);

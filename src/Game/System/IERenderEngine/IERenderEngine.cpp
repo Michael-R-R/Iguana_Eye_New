@@ -37,7 +37,7 @@ void IERenderEngine::startup(IEGame& game)
     shaderManager = scene->getSystem<IEShaderManager>();
     renderableManager = scene->getSystem<IERenderableManager>();
     texture2DManager = scene->getSystem<IETexture2DManager>();
-    uboManager = game.getSystem<IEUboManager>();
+    uboManager = scene->getSystem<IEUboManager>();
 }
 
 void IERenderEngine::shutdown(IEGame&)

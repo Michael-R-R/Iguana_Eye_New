@@ -30,8 +30,8 @@ void IEGamePlayState::enter(IEGame& game)
     auto* scene = game.getSystem<IEScene>();
 
     time = game.getSystem<IETime>();
-    pEngine = game.getSystem<IEPhysicsEngine>();
-    rEngine = game.getSystem<IERenderEngine>();
+    pEngine = scene->getSystem<IEPhysicsEngine>();
+    rEngine = scene->getSystem<IERenderEngine>();
     ecs = scene->getSystem<IEECS>();
 
     cameraSystem = ecs->getComponent<IEECSCameraSystem>();

@@ -1,19 +1,15 @@
 #include "IEGame.h"
 #include "ApplicationProperties.h"
-#include "IERenderEngine.h"
-#include "IEPhysicsEngine.h"
-#include "IEScene.h"
 #include "IEInput.h"
-#include "IEScriptEngine.h"
-#include "IEUboManager.h"
+#include "IEScene.h"
 #include "IETime.h"
 #include "IEGameState.h"
+#include <QOpenGLFunctions>
+#include <QOpenGLExtraFunctions>
 
 IEGame::IEGame(QWidget* parent) :
     QOpenGLWidget(parent),
     format(),
-    glFunc(nullptr),
-    glExtraFunc(nullptr),
     systems(), systemsIndex(),
     state(nullptr)
 {
@@ -35,19 +31,19 @@ IEGame::~IEGame()
 
 void IEGame::initializeGL()
 {
-    glFunc = QOpenGLContext::currentContext()->functions();
-    glExtraFunc = QOpenGLContext::currentContext()->extraFunctions();
+    auto* gl = QOpenGLContext::currentContext()->functions();
+    auto* glExtra = QOpenGLContext::currentContext()->extraFunctions();
 
-    glFunc->initializeOpenGLFunctions();
-    glExtraFunc->initializeOpenGLFunctions();
+    gl->initializeOpenGLFunctions();
+    glExtra->initializeOpenGLFunctions();
 
-    glExtraFunc->glEnable(GL_DEPTH_TEST);
-    glExtraFunc->glEnable(GL_STENCIL_TEST);
-    glExtraFunc->glEnable(GL_MULTISAMPLE);
-    glExtraFunc->glEnable(GL_BLEND);
+    glExtra->glEnable(GL_DEPTH_TEST);
+    glExtra->glEnable(GL_STENCIL_TEST);
+    glExtra->glEnable(GL_MULTISAMPLE);
+    glExtra->glEnable(GL_BLEND);
 
-    glExtraFunc->glDepthFunc(GL_LESS);
-    glExtraFunc->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glExtra->glDepthFunc(GL_LESS);
+    glExtra->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     emit initialized();
 }
@@ -59,7 +55,9 @@ void IEGame::paintGL()
 
 void IEGame::resizeGL(int w, int h)
 {
-    glFunc->glViewport(0, 0, w, h);
+    auto* gl = QOpenGLContext::currentContext()->functions();
+
+    gl->glViewport(0, 0, w, h);
 
     ApplicationProperties::viewportDimensions = glm::vec2(w, h);
 
@@ -71,11 +69,7 @@ void IEGame::startUp()
     this->makeCurrent();
 
     appendSystem<IEInput>(new IEInput(this));
-    appendSystem<IEScriptEngine>(new IEScriptEngine(this));
-    appendSystem<IEPhysicsEngine>(new IEPhysicsEngine(this));
     appendSystem<IEScene>(new IEScene(this));
-    appendSystem<IERenderEngine>(new IERenderEngine(this));
-    appendSystem<IEUboManager>(new IEUboManager(this));
     appendSystem<IETime>(new IETime(this));
 
     foreach (auto* i, qAsConst(systems))

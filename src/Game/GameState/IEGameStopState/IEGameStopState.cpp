@@ -36,7 +36,7 @@ void IEGameStopState::enter(IEGame& game)
     time = game.getSystem<IETime>();
     input = game.getSystem<IEInput>();
     ecs = scene->getSystem<IEECS>();
-    grEngine = game.getSystem<IERenderEngine>();
+    grEngine = scene->getSystem<IERenderEngine>();
 
     erEngine = new ERenderEngine(this);
     eCamera = new ECamera(this);

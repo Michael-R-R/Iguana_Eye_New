@@ -1,4 +1,6 @@
 #include "IEScene.h"
+#include "IEScriptEngine.h"
+#include "IEPhysicsEngine.h"
 #include "IEECS.h"
 #include "IEMeshManager.h"
 #include "IEMaterialManager.h"
@@ -6,6 +8,8 @@
 #include "IERenderableManager.h"
 #include "IECameraManager.h"
 #include "IETexture2DManager.h"
+#include "IEUboManager.h"
+#include "IERenderEngine.h"
 
 IEScene::IEScene(QObject* parent) :
     IESystem(parent),
@@ -21,6 +25,8 @@ IEScene::~IEScene()
 
 void IEScene::startup(IEGame& game)
 {
+    appendSystem<IEScriptEngine>(new IEScriptEngine(this));
+    appendSystem<IEPhysicsEngine>(new IEPhysicsEngine(this));
     appendSystem<IEECS>(new IEECS(this));
     appendSystem<IEMeshManager>(new IEMeshManager(this));
     appendSystem<IEMaterialManager>(new IEMaterialManager(this));
@@ -28,6 +34,8 @@ void IEScene::startup(IEGame& game)
     appendSystem<IERenderableManager>(new IERenderableManager(this));
     appendSystem<IECameraManager>(new IECameraManager(this));
     appendSystem<IETexture2DManager>(new IETexture2DManager(this));
+    appendSystem<IEUboManager>(new IEUboManager(this));
+    appendSystem<IERenderEngine>(new IERenderEngine(this));
 
     foreach(auto* i, systems)
     {
