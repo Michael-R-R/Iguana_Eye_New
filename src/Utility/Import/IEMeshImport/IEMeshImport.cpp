@@ -247,9 +247,3 @@ void IEMeshImport::load2DTextures(const QString& relPath,
         maNode->textureIDs[ieTexType].append(hashID);
     }
 }
-
-
-
-
-
-

@@ -1,7 +1,7 @@
 #include "EWOpenGLViewportDropZone.h"
 #include "ApplicationWindow.h"
 #include "IEGame.h"
-#include "OpenGLFileHandler.h"
+#include "GLFileHandler.h"
 #include <QFileInfo>
 #include <QOpenGLWidget>
 
@@ -58,7 +58,7 @@ void EWOpenGLViewportDropZone::dropEvent(QDropEvent* event)
     if(!data->hasUrls())
         return;
 
-    OpenGLFileHandler glFileHandler;
+    GLFileHandler glFileHandler;
 
     foreach(auto url, data->urls())
     {

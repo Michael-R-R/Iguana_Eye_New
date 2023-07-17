@@ -4,11 +4,9 @@
 #include "IEShader.h"
 #include "IEGame.h"
 #include "IEScene.h"
-#include "IEMeshManager.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IERenderableFactory.h"
-#include "IESerialize.h"
 
 IERenderableManager::IERenderableManager(QObject* parent) :
     IEResourceManager(parent)
@@ -33,9 +31,8 @@ QDataStream& IERenderableManager::serialize(QDataStream& out, const IESerializab
     {
         auto* r = static_cast<IERenderable*>(i);
 
-        out << r->getName() << r->getType();
-
-        IESerialize::write<IERenderable>(r->getName(), r);
+        out << r->getType();
+        out << *r;
     }
 
     return out;
@@ -52,28 +49,21 @@ QDataStream& IERenderableManager::deserialize(QDataStream& in, IESerializable& o
 
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* meManager = scene->getSystem<IEMeshManager>();
     auto* maManager = scene->getSystem<IEMaterialManager>();
     auto* sManager = scene->getSystem<IEShaderManager>();
 
-    QString path = "";
     IERenderableType type = IERenderableType::Unknown;
     for(int i = 0; i < count; i++)
     {
-        in >> path >> type;
+        in >> type;
 
         auto* renderable = IERenderableFactory::make(type, &manager);
         if(!renderable)
             continue;
 
-        if(!IESerialize::read<IERenderable>(path, renderable))
-        {
-            delete renderable;
-            continue;
-        }
+        in >> *renderable;
 
-        if(!meManager->doesExist(renderable->getMeshID()) ||
-           !maManager->doesExist(renderable->getMaterialID()) ||
+        if(!maManager->doesExist(renderable->getMaterialID()) ||
            !sManager->doesExist(renderable->getShaderID()))
         {
             delete renderable;

@@ -1,7 +1,5 @@
 #include "IEMaterialManager.h"
 #include "IEMaterial.h"
-#include "IEFile.h"
-#include "IESerialize.h"
 
 IEMaterialManager::IEMaterialManager(QObject* parent) :
     IEResourceManager(parent)
@@ -22,11 +20,9 @@ QDataStream& IEMaterialManager::serialize(QDataStream& out, const IESerializable
 
     out << (int)manager.resources.size();
 
-    for(auto& i : qAsConst(manager.resources))
+    foreach(auto* i, manager.resources)
     {
-        out << i->getName();
-
-        IESerialize::write<IEMaterial>(i->getName(), static_cast<IEMaterial*>(i));
+        out << *i;
     }
 
     return out;
@@ -41,17 +37,10 @@ QDataStream& IEMaterialManager::deserialize(QDataStream& in, IESerializable& obj
     int count = 0;
     in >> count;
 
-    QString path = "";
     for(int i = 0; i < count; i++)
     {
-        in >> path;
-
-        auto* material = new IEMaterial(path, &manager);
-        if(!IESerialize::read<IEMaterial>(path, material))
-        {
-            delete material;
-            continue;
-        }
+        auto* material = new IEMaterial(&manager);
+        in >> *material;
 
         if(!manager.add(material->getID(), material))
             delete material;

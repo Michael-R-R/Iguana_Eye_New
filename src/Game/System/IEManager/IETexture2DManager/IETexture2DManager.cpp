@@ -1,6 +1,5 @@
 #include "IETexture2DManager.h"
 #include "IETexture2D.h"
-#include "IESerialize.h"
 
 IETexture2DManager::IETexture2DManager(QObject* parent) :
     IEResourceManager(parent)
@@ -23,9 +22,7 @@ QDataStream& IETexture2DManager::serialize(QDataStream& out, const IESerializabl
 
     foreach (auto* i, manager.resources)
     {
-        out << i->getName();
-
-        IESerialize::write<IETexture2D>(i->getName(), static_cast<IETexture2D*>(i));
+        out << *i;
     }
 
     return out;
@@ -40,17 +37,10 @@ QDataStream& IETexture2DManager::deserialize(QDataStream& in, IESerializable& ob
     int count = 0;
     in >> count;
 
-    QString path = "";
     for(int i = 0; i < count; i++)
     {
-        in >> path;
-
         auto* texture = new IETexture2D(&manager);
-        if(!IESerialize::read<IETexture2D>(path, texture))
-        {
-            delete texture;
-            continue;
-        }
+        in >> *texture;
 
         if(!texture->build())
         {

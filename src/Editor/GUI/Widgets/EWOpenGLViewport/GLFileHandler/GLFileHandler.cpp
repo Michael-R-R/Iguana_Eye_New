@@ -1,17 +1,17 @@
-#include "OpenGLFileHandler.h"
+#include "GLFileHandler.h"
 #include "ApplicationWindow.h"
 #include "IEGame.h"
 #include "IEScene.h"
-#include "IEMeshManager.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
 #include "IEECS.h"
+#include "IEECSTransformSystem.h"
 #include "IEECSRenderableSystem.h"
 #include "IEMesh.h"
 #include "IEMaterial.h"
 #include "IEShader.h"
-#include "IERenderable.h"
+#include "IEInstIndexRenderable.h"
 #include "IEEntity.h"
 #include "IEFile.h"
 #include "IEHash.h"
@@ -22,17 +22,17 @@
 #include "EWindowManager.h"
 #include "EGlslEditorWindow.h"
 
-OpenGLFileHandler::OpenGLFileHandler()
+GLFileHandler::GLFileHandler()
 {
 
 }
 
-OpenGLFileHandler::~OpenGLFileHandler()
+GLFileHandler::~GLFileHandler()
 {
 
 }
 
-void OpenGLFileHandler::handle(const QString& path)
+void GLFileHandler::handle(const QString& path)
 {
     if(path.isEmpty())
         return;
@@ -45,12 +45,11 @@ void OpenGLFileHandler::handle(const QString& path)
         handleGlslFile(path);
 }
 
-void OpenGLFileHandler::handleObjFile(const QString& path)
+void GLFileHandler::handleObjFile(const QString& path)
 {
     auto& application = ApplicationWindow::instance();
     auto* game = application.getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* meManager = scene->getSystem<IEMeshManager>();
     auto* maManager = scene->getSystem<IEMaterialManager>();
     auto* sManager = scene->getSystem<IEShaderManager>();
     auto* rManager = scene->getSystem<IERenderableManager>();
@@ -58,29 +57,59 @@ void OpenGLFileHandler::handleObjFile(const QString& path)
     game->makeCurrent();
 
     uint64_t sID = sManager->getDefaultID();
+    IEShader* shader = sManager->value<IEShader>(sID);
 
-    // --- Create or get mesh --- //
-    uint64_t meID = IEHash::Compute(IEMeshImport::convertMeshPath(path));
+    // --- Get renderable --- //
     uint64_t maID = IEHash::Compute(IEMeshImport::convertMaterialPath(path));
     uint64_t rID = IEHash::Compute(IERenderableImport::convertRenderablePath(path));
 
-    bool isMesh = meManager->doesExist(meID);
-    bool isMaterial = maManager->doesExist(meID);
-
-    auto* renderable = rManager->value<IERenderable>(rID);
-    if(renderable)
+    if(!rManager->doesExist(rID))
     {
-        if(renderable->getShaderID() != sID)
+        IEMesh mesh;
+        IEMaterial* material = nullptr;
+        IEInstIndexRenderable* renderable = nullptr;
+
+        if(!maManager->doesExist(maID))
         {
-            // TODO implement
+            material = new IEMaterial(maManager);
+            IEMeshImport::importPath(path, mesh, *material);
         }
+        else
+        {
+            material = maManager->value<IEMaterial>(maID);
+        }
+
+        renderable = new IEInstIndexRenderable(rManager);
+        IERenderableImport::importPath(path, *renderable, mesh, maID, sID);
+
+        const int nodeCount = renderable->getNodes().size();
+        for(int i = 0; i < nodeCount; i++)
+        {
+            auto* ibo = renderable->getInstIndexNode(i)->IBO;
+            ibo->setValues(mesh.getNode(i)->indices);
+            renderable->addBuffer(i, "aModel", IEBufferType::Mat4, 64, 16, 4);
+            renderable->build(i, *shader);
+        }
+
+        maManager->add(maID, material);
+        rManager->add(rID, renderable);
     }
+
+    // --- Create entity --- //
+    auto* tSystem = ecs->getComponent<IEECSTransformSystem>();
+    auto* rSystem = ecs->getComponent<IEECSRenderableSystem>();
 
     IEEntity entity = ecs->create();
     int rIndex = ecs->attachComponent<IEECSRenderableSystem>(entity);
+    int tIndex = tSystem->lookUpIndex(entity);
+
+    rSystem->setResourceId(rIndex, rID);
+    rSystem->showInstance(rIndex);
+
+    tSystem->setPosition(tIndex, glm::vec3(0.0f));
 }
 
-void OpenGLFileHandler::handleGlslFile(const QString& path)
+void GLFileHandler::handleGlslFile(const QString& path)
 {
     auto& application = ApplicationWindow::instance();
     auto editor = application.getEditor();

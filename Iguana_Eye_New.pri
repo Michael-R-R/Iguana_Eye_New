@@ -64,7 +64,7 @@ INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportDropZone \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportInput \
     $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/EWOpenGLViewportTime \
-    $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/OpenGLFileHandler \
+    $$PWD/src/Editor/GUI/Widgets/EWOpenGLViewport/GLFileHandler \
 
 INCLUDEPATH += $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets \
     $$PWD/src/Editor/GUI/Widgets/FileExplorerWidgets/EWDirectoryButton \
@@ -225,7 +225,6 @@ INCLUDEPATH += $$PWD/src/Game/System/IETime \
 INCLUDEPATH += $$PWD/src/Game/System/IEManager \
     $$PWD/src/Game/System/IEManager/IECameraManager \
     $$PWD/src/Game/System/IEManager/IEMaterialManager \
-    $$PWD/src/Game/System/IEManager/IEMeshManager \
     $$PWD/src/Game/System/IEManager/IERenderableManager \
     $$PWD/src/Game/System/IEManager/IEResourceManager \
     $$PWD/src/Game/System/IEManager/IEShaderManager \

@@ -2,12 +2,12 @@
 
 #include <QString>
 
-class OpenGLFileHandler
+class GLFileHandler
 {
 
 public:
-    OpenGLFileHandler();
-    ~OpenGLFileHandler();
+    GLFileHandler();
+    ~GLFileHandler();
 
     void handle(const QString& path);
 

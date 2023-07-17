@@ -11,7 +11,7 @@ public:
 
     virtual QDataStream& serialize(QDataStream& out, const IESerializable& obj) const = 0;
     virtual QDataStream& deserialize(QDataStream& in, IESerializable& obj) = 0;
-};
 
-QDataStream& operator<<(QDataStream& out, const IESerializable& obj);
-QDataStream& operator>>(QDataStream& in, IESerializable& obj);
+    friend QDataStream& operator<<(QDataStream& out, const IESerializable& obj);
+    friend QDataStream& operator>>(QDataStream& in, IESerializable& obj);
+};

@@ -1,6 +1,5 @@
 #include "IECameraManager.h"
 #include "IECamera.h"
-#include "IESerialize.h"
 
 IECameraManager::IECameraManager(QObject* parent) :
     IEResourceManager(parent)

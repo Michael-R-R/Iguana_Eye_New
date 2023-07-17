@@ -15,7 +15,6 @@
 #include "IEECS.h"
 #include "IEECSTransformSystem.h"
 #include "IEECSRenderableSystem.h"
-#include "IEMeshManager.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
@@ -31,8 +30,8 @@ IETInstIndexRenderable::IETInstIndexRenderable() :
     QWidget(),
     vLayout(new QVBoxLayout(this)),
     renderable(nullptr),
-    meshPath("./resources/root/Content/cube/cube.obj"),
-    shaderPath("./resources/root/Content/default.glsl"),
+    meshPath("./resources/root/content/meshes/cube/cube.obj"),
+    shaderPath("./resources/root/content/shaders/default.glsl"),
     createCount(10),
     removeCount(1),
     showCount(1),
@@ -114,7 +113,6 @@ void IETInstIndexRenderable::createResources()
 {
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* meManger = scene->getSystem<IEMeshManager>();
     auto* maManger = scene->getSystem<IEMaterialManager>();
     auto* sManger = scene->getSystem<IEShaderManager>();
     auto* rManger = scene->getSystem<IERenderableManager>();
@@ -123,24 +121,23 @@ void IETInstIndexRenderable::createResources()
 
     clearManagers();
 
-    auto* mesh = new IEMesh(this);
+    auto mesh = IEMesh();
     auto* material = new IEMaterial(this);
     auto* shader = new IEShader(this);
     renderable = new IEInstIndexRenderable(this);
 
     IEGlslImport::importPath(shaderPath, *shader);
-    IEMeshImport::importPath(meshPath, *mesh, *material);
-    IERenderableImport::importPath(meshPath, *renderable, *mesh, material->getID(), shader->getID());
+    IEMeshImport::importPath(meshPath, mesh, *material);
+    IERenderableImport::importPath(meshPath, *renderable, mesh, material->getID(), shader->getID());
 
     const int nodeCount = renderable->getNodes().size();
     for(int i = 0; i < nodeCount; i++)
     {
-        renderable->getInstIndexNode(i)->IBO->setValues(mesh->getNode(i)->indices);
+        renderable->getInstIndexNode(i)->IBO->setValues(mesh.getNode(i)->indices);
         renderable->addBuffer(i, "aModel", IEBufferType::Mat4, 64, 16, 4);
         renderable->build(i, *shader);
     }
 
-    meManger->add(mesh->getID(), mesh);
     maManger->add(material->getID(), material);
     sManger->add(shader->getID(), shader);
     rManger->add(renderable->getID(), renderable);
@@ -260,12 +257,10 @@ void IETInstIndexRenderable::clearManagers()
 {
     auto* game = ApplicationWindow::instance().getGame();
     auto* scene = game->getSystem<IEScene>();
-    auto* meManger = scene->getSystem<IEMeshManager>();
     auto* maManger = scene->getSystem<IEMaterialManager>();
     auto* sManger = scene->getSystem<IEShaderManager>();
     auto* rManger = scene->getSystem<IERenderableManager>();
 
-    meManger->cleanup();
     maManger->cleanup();
     sManger->cleanup();
     rManger->cleanup();

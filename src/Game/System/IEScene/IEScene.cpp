@@ -2,7 +2,6 @@
 #include "IEScriptEngine.h"
 #include "IEPhysicsEngine.h"
 #include "IEECS.h"
-#include "IEMeshManager.h"
 #include "IEMaterialManager.h"
 #include "IEShaderManager.h"
 #include "IERenderableManager.h"
@@ -28,7 +27,6 @@ void IEScene::startup(IEGame& game)
     appendSystem<IEScriptEngine>(new IEScriptEngine(this));
     appendSystem<IEPhysicsEngine>(new IEPhysicsEngine(this));
     appendSystem<IEECS>(new IEECS(this));
-    appendSystem<IEMeshManager>(new IEMeshManager(this));
     appendSystem<IEMaterialManager>(new IEMaterialManager(this));
     appendSystem<IEShaderManager>(new IEShaderManager(this));
     appendSystem<IERenderableManager>(new IERenderableManager(this));

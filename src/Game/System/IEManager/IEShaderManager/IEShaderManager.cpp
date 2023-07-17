@@ -1,8 +1,7 @@
 #include "IEShaderManager.h"
 #include "IEShader.h"
-#include "IEGlslImport.h"
 #include "IEFile.h"
-#include "IESerialize.h"
+#include "IEGlslImport.h"
 
 IEShaderManager::IEShaderManager(QObject* parent) :
     IEResourceManager(parent),
@@ -18,12 +17,7 @@ IEShaderManager::~IEShaderManager()
 
 void IEShaderManager::startup(IEGame&)
 {
-    QString path = IEFile::absolutePath("./resources/shaders/game/default.glsl");
-    auto* shader = new IEShader(this);
-    IEGlslImport::importPath(path, *shader);
-    defaultID = shader->getID();
-    if(!add(shader->getID(), shader))
-        delete shader;
+    createDefaults();
 }
 
 QDataStream& IEShaderManager::serialize(QDataStream& out, const IESerializable& obj) const
@@ -36,9 +30,7 @@ QDataStream& IEShaderManager::serialize(QDataStream& out, const IESerializable& 
 
     foreach(auto* i, manager.resources)
     {
-        out << i->getName();
-
-        IESerialize::write<IEShader>(i->getName(), static_cast<IEShader*>(i));
+        out << *i;
     }
 
     out << manager.defaultID;
@@ -55,17 +47,10 @@ QDataStream& IEShaderManager::deserialize(QDataStream& in, IESerializable& obj)
     int count = 0;
     in >> count;
 
-    QString path = "";
     for(int i = 0; i < count; i++)
     {
-        in >> path;
-
         auto* shader = new IEShader(&manager);
-        if(!IESerialize::read<IEShader>(path, shader))
-        {
-            delete shader;
-            continue;
-        }
+        in >> *shader;
 
         if(!shader->build())
         {
@@ -80,4 +65,14 @@ QDataStream& IEShaderManager::deserialize(QDataStream& in, IESerializable& obj)
     in >> manager.defaultID;
 
     return in;
+}
+
+void IEShaderManager::createDefaults()
+{
+    QString path = IEFile::absolutePath("./resources/scene/global/shaders/default.glsl");
+    auto* shader = new IEShader(this);
+    IEGlslImport::importPath(path, *shader);
+    defaultID = shader->getID();
+    if(!add(shader->getID(), shader))
+        delete shader;
 }

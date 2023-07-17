@@ -1,5 +1,5 @@
 #include "EWFileExplorerTreeView.h"
-#include "OpenGLFileHandler.h"
+#include "GLFileHandler.h"
 
 EWFileExplorerTreeView::EWFileExplorerTreeView(QFileSystemModel* model, QWidget* parent) :
     QTreeView(parent),
@@ -43,7 +43,7 @@ void EWFileExplorerTreeView::onDoubleClicked(QModelIndex index)
     }
     else
     {
-        OpenGLFileHandler fileHandler;
+        GLFileHandler fileHandler;
         fileHandler.handle(info.absoluteFilePath());
     }
 }
